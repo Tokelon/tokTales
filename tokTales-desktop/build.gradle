@@ -1,0 +1,63 @@
+// tokTales-desktop build.gradle
+group "com.tokelon.toktales"
+version "0.0.6"
+
+
+// Apply the java-library plugin to add support for Java Library
+apply plugin: 'java-library'
+
+apply plugin: 'eclipse'
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+		}
+		resources {
+			srcDir 'src/main/resources'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+		}
+	}
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+dependencies {
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+    
+    
+    api project(':tokTales-core')
+    
+    api files('libs/LWJGL/jar/lwjgl.jar')
+    
+    runtime files('libs/XStream/xmlpull-1.1.3.1.jar')
+
+}
+
+
+eclipse.classpath.file.withXml { XmlProvider provider ->
+	provider.asNode().classpathentry.findAll{it.'@path'.contains('libs/LWJGL/jar/lwjgl.jar')}
+	.each {
+		it.appendNode('attributes')
+		.appendNode('attribute', [name:'org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY', value:'tokTales-desktop/libs/LWJGL/native'])
+	}
+}
+
+tasks.withType(Test) { // or instead only for 'test'
+    systemProperty "java.library.path", "/libs/LWJGL/native"
+}
+
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}

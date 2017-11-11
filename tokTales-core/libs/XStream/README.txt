@@ -1,0 +1,1 @@
+xstream-1.4.8-no-lambda.jar is the xstream-1.4.8.jar with two classes (LambdaMapper and LambdaConverter) removed that run on Java 8 and cannot be compiled for Android at this time.

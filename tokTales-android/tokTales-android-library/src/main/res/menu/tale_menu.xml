@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item android:id="@+id/itemMenuTaleOrientation" android:title="@string/menu_tale_orientation">
+        <menu>
+            <item android:id="@+id/itemMenuTaleOrientationPortrait" android:title="@string/menu_tale_orientation_portrait"/>
+            <item android:id="@+id/itemMenuTaleOrientationLandscape" android:title="@string/menu_tale_orientation_landscape"/>
+        </menu>
+    </item>
+    <item android:id="@+id/itemMenuTaleSettings" android:title="@string/menu_tale_settings"/>
+
+</menu>

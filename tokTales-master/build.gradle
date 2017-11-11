@@ -1,0 +1,40 @@
+// tokTales-master build.gradle
+group "com.tokelon.toktales"
+version "1.0"
+
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
+
+        classpath "net.swisstech:gradle-elasticdependencies:1.0.0"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    apply plugin: 'eclipse'
+
+    task printVersion {
+        doLast {
+            println project.version
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

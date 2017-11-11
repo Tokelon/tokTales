@@ -1,0 +1,15 @@
+// tokTales-extensions-default-core build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+    //implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api project(':tokTales-core')
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

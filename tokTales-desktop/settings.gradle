@@ -1,0 +1,5 @@
+// tokTales-desktop settings.gradle
+
+rootProject.name = 'tokTales-desktop'
+
+includeFlat 'tokTales-core'

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item android:id="@+id/itemMenuGameOrientation" android:title="@string/menu_game_orientation">
+        <menu>
+            <item android:id="@+id/itemMenuGameOrientationPortrait" android:title="@string/menu_game_orientation_portrait"/>
+            <item android:id="@+id/itemMenuGameOrientationLandscape" android:title="@string/menu_game_orientation_landscape"/>
+        </menu>
+    </item>
+
+</menu>

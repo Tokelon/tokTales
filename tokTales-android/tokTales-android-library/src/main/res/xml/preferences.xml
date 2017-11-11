@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference android:title="@string/pref_debug_d_text" android:key="pref_debug_dynamic">
+        <intent
+            android:action="com.asera.tokelon.android.activity.DebugPrefsActivity"
+            android:targetClass="com.asera.tokelon.android.activity.DebugPrefsActivity"/>
+    </Preference>
+    
+    <PreferenceScreen
+        android:key="pref_screen_about_key"
+        android:title="@string/pref_screen_about_text"
+        android:persistent="false">
+        
+        <PreferenceCategory
+            android:key="pref_category_about_about"
+            android:title="@string/pref_category_about_about_text">
+            
+            <Preference android:key="pref_about_version" android:title="@string/pref_about_version_text" android:summary="@string/pref_about_version_summary"/>
+            <Preference android:key="pref_about_author" android:title="@string/pref_about_author_text" android:summary="@string/pref_about_author_summary"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
+    
+
+</PreferenceScreen>

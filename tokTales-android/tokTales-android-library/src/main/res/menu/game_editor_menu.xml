@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/itemMenuGameEditorMapEditor" android:title="@string/menu_game_editor_editor_disabled" android:icon="@android:drawable/ic_menu_manage"></item>
+    <item android:id="@+id/itemMenuGameEditorMapFunctions" android:title="@string/menu_game_editor_map_functions" android:icon="@android:drawable/ic_menu_more">
+        <menu>
+            <item android:id="@+id/itemMenuGameEditorMapEdit" android:title="@string/menu_game_editor_map_edit"/>
+            <item android:id="@+id/itemMenuGameEditorMapSave" android:title="@string/menu_game_editor_map_save"/>
+            <item android:id="@+id/itemMenuGameEditorMapLoad" android:title="@string/menu_game_editor_map_load"/>
+            <item android:id="@+id/itemMenuGameEditorMapNew" android:title="@string/menu_game_editor_map_new"/>
+        </menu>
+    </item>
+    <item android:id="@+id/itemMenuGameEditorOrientation" android:title="@string/menu_game_editor_orientation" android:icon="@android:drawable/ic_menu_always_landscape_portrait">
+        <menu>
+            <item android:id="@+id/itemMenuGameEditorOrientationPortrait" android:title="@string/menu_game_editor_orientation_portrait"/>
+            <item android:id="@+id/itemMenuGameEditorOrientationLandscape" android:title="@string/menu_game_editor_orientation_landscape"/>
+        </menu>
+    </item>
+    <item android:id="@+id/itemMenuGameEditorSettings" android:title="@string/menu_game_editor_settings" android:icon="@android:drawable/ic_menu_preferences"/>
+
+</menu>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_exit">Exit</string>
+    <string name="dialog_button_exit_positive">Yes</string>
+    <string name="dialog_button_exit_negative">No</string>
+    <string name="menu_game_editor_map_editor">Editor</string>
+    <string name="menu_game_editor_orientation">Orientation</string>
+    <string name="menu_game_editor_orientation_portrait">Portrait</string>
+    <string name="menu_game_editor_orientation_landscape">Landscape</string>
+    <string name="menu_game_editor_editor_enabled">Editor (Enabled)</string>
+    <string name="menu_game_editor_editor_disabled">Editor (Disabled)</string>
+    <string name="dialog_sprites_button_up_external">Up</string>
+    <string name="dialog_sprites_button_up_internal">Up</string>
+    <string name="menu_game_editor_map_functions">Map</string>
+    <string name="menu_game_editor_map_save">Save</string>
+    <string name="menu_game_editor_map_load">Load</string>
+    <string name="menu_game_editor_map_new">New</string>
+    <string name="menu_game_editor_map_edit">Edit</string>
+    <string name="menu_game_editor_settings">Settings</string>
+    <string name="textViewCreateMapTitle">Create Map</string>
+    <string name="textViewCreateMapName">Name</string>
+    <string name="textViewCreateMapWidth">Width</string>
+    <string name="textViewCreateMapHeight">Height</string>
+    <string name="button_create_map_create">Create</string>
+    
+    <string name="pref_screen_about_text">About</string>
+    <string name="pref_category_debug_display_text">Display</string>
+    <string name="pref_list_debug_render_grid_creation_type_text">Render Grid creation type</string>
+    <string name="pref_render_grid_creation_mode_adjust_to_rectangle">Adjust_To_Rectangle</string>
+    <string name="pref_render_grid_creation_mode_fill_off_block_pixel_size">Fill_Off_Block_Pixel_Size</string>
+    <string name="pref_render_grid_creation_mode_adjust_to_short_side">Adjust_To_Short_Side</string>
+    <string name="pref_debug_render_grid_blocks_horizontal_text">Blocks horizontal</string>
+    <string name="pref_debug_render_grid_blocks_vertical_text">Blocks vertical</string>
+    <string name="pref_debug_render_grid_block_pixel_size_text">Block pixel size</string>
+    <string name="pref_debug_display_apply_text">Apply</string>
+    <string name="pref_debug_display_apply_summary">Apply changes to Display</string>
+    <string name="pref_debug_d_text">Debug</string>
+    <string name="pref_category_about_about_text">About this App</string>
+    <string name="pref_about_version_text">Version</string>
+    <string name="pref_about_version_summary">0.0.3</string>
+    <string name="pref_about_author_text">Author</string>
+    <string name="pref_about_author_summary">Elias Paralikes</string>
+
+
+    <string name="menu_tale_orientation">Orientation</string>
+    <string name="menu_tale_orientation_portrait">Portrait</string>
+    <string name="menu_tale_orientation_landscape">Landscape</string>
+    <string name="menu_tale_settings">Settings</string>
+    
+    <string name="menu_game_orientation">Orientation</string>
+    <string name="menu_game_orientation_portrait">Portrait</string>
+    <string name="menu_game_orientation_landscape">Landscape</string>
+    
+</resources>

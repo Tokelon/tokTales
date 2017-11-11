@@ -1,0 +1,49 @@
+// tokTales-demos settings.gradle
+
+rootProject.name = 'tokTales-demos'
+
+include ':tokTales-demos-app'
+
+
+
+// if project dir contains other projects, include those
+
+def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
+if (tokTalesCore.exists()) {
+    include ':tokTales-core'
+    project(':tokTales-core').projectDir = tokTalesCore
+}
+
+
+def tokTalesAndroid = new File(rootProject.projectDir, '../tokTales-android')
+if (tokTalesCore.exists() && tokTalesAndroid.exists()) {
+    include ':tokTales-android'
+    project(':tokTales-android').projectDir = tokTalesAndroid
+
+    include ':tokTales-android-library'
+    project(':tokTales-android-library').projectDir = new File(tokTalesAndroid, 'tokTales-android-library')
+    include ':tokTales-android-app'
+    project(':tokTales-android-app').projectDir = new File(tokTalesAndroid, 'tokTales-android-app')
+}
+
+
+def tokTalesDesktop = new File(rootProject.projectDir, '../tokTales-desktop')
+if (tokTalesCore.exists() && tokTalesDesktop.exists()) {
+    include ':tokTales-desktop'
+    project(':tokTales-desktop').projectDir = tokTalesDesktop
+}
+
+
+def tokTalesExtensions = new File(rootProject.projectDir, '../tokTales-extensions')
+if (tokTalesCore.exists() && tokTalesAndroid.exists() && tokTalesDesktop.exists() && tokTalesExtensions.exists()) {
+    include ':tokTales-extensions'
+    project(':tokTales-extensions').projectDir = tokTalesExtensions
+
+    include ':tokTales-extensions-default-android'
+    project(':tokTales-extensions-default-android').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-default-android')
+    include ':tokTales-extensions-default-core'
+    project(':tokTales-extensions-default-core').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-default-core')
+    include ':tokTales-extensions-default-desktop'
+    project(':tokTales-extensions-default-desktop').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-default-desktop')
+}
+

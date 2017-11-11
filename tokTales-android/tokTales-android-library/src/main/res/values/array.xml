@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="PrefsDebugRenderGridCreationTypeOptions">
+        <item>@string/pref_render_grid_creation_mode_adjust_to_rectangle</item>
+        <item>@string/pref_render_grid_creation_mode_fill_off_block_pixel_size</item>
+        <item>@string/pref_render_grid_creation_mode_adjust_to_short_side</item>
+    </string-array>
+    
+</resources>
