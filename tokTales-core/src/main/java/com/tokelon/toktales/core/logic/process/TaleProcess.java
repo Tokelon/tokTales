@@ -268,23 +268,14 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		
 		// Load main Tale file
-		
-		InputStream mainFileIn = storageService.readAppFileOnExternal(taleLocation, mainFileName);
 
-		CiniTaleConfig taleConfig;
-		try {
+		CiniTaleConfig taleConfig = null;
+		try(InputStream mainFileIn = storageService.readAppFileOnExternal(taleLocation, mainFileName)) {
 			CiniConfigStreamReader ccReader = new CiniConfigStreamReader();
 			MutableCiniConfig cConfig = ccReader.readConfig(mainFileIn);
 			
-			taleConfig = new CiniTaleConfig(cConfig);
-		}
-		finally {
-			try {
-				mainFileIn.close();
-			} catch (IOException e) {
-				/* Nothing */
-			}
-		}
+			taleConfig = new CiniTaleConfig(cConfig);			
+		} catch (IOException e3) { /* Nothing */ }
 		
 		
 		IGameState activeState = game.getStateControl().getState(gamestateName);
@@ -294,43 +285,71 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		String initialSceneCodename = taleConfig.getConfigTaleInitialSceneCodename().trim();
 		if(!initialSceneCodename.isEmpty()) {
 			String sceneClassName = initialSceneCodename + TALE_SCENE_CLASS_POSTFIX;
-			TokTales.getLog().i(TAG, "Loading initial scene with class: " +sceneClassName);
 			
+			Class<?> sceneClass = null;
 			try {
-				Class<?> sceneClass = Class.forName(sceneClassName);
-				if(IGameScene.class.isAssignableFrom(sceneClass)) {
-					Constructor<?> defaultContr = sceneClass.getConstructor();
-					IGameScene scene = (IGameScene) defaultContr.newInstance();
+				String platformName = TokTales.getEngine().getEnvironment().getPlatformName();
+				String[] sceneClassNameSplit = sceneClassName.split("\\.");
+				
+				String sceneClassNameWithPlatform = sceneClassName;
+				if(sceneClassNameSplit.length < 2) {    // Needs at least one package
+	                // Replace class name
+	                sceneClassNameSplit[sceneClassNameSplit.length-1] = platformName + sceneClassNameSplit[sceneClassNameSplit.length-1];
+	                // Replace package name
+	                sceneClassNameSplit[sceneClassNameSplit.length-2] = platformName.toLowerCase();
+	                sceneClassNameWithPlatform = String.join(".", sceneClassNameSplit);
+				}
+				
+				TokTales.getLog().i(TAG, "Looking for platform version of initial scene with class: " +sceneClassNameWithPlatform);
+				
+				sceneClass = Class.forName(sceneClassNameWithPlatform);
+			} catch (ClassNotFoundException e1) {
+				try {
+					TokTales.getLog().i(TAG, "Looking for default version of initial scene with class: " +sceneClassName);
 					
-					// Add
-					int lastIndexOfDot = initialSceneCodename.lastIndexOf('.');
-					String sceneName = initialSceneCodename.substring(lastIndexOfDot == -1 ? 0 : lastIndexOfDot + 1);
-					
-					if(activeState.assignScene(sceneName, scene)) { 
-						activeState.changeScene(sceneName);
-						TokTales.getLog().i(TAG, "Loading scene success");
+					sceneClass = Class.forName(sceneClassName);
+				} catch (ClassNotFoundException e2) {
+					TokTales.getLog().e(TAG, "Loading scene failed | Scene class not found");
+				}
+			}
+
+			
+			if(sceneClass != null) {
+				TokTales.getLog().i(TAG, "Loading initial scene with class: " +sceneClass.getName());
+
+				try {
+					if(IGameScene.class.isAssignableFrom(sceneClass)) {
+						Constructor<?> defaultContr = sceneClass.getConstructor();
+						IGameScene scene = (IGameScene) defaultContr.newInstance();
+
+						// Add
+						int lastIndexOfDot = initialSceneCodename.lastIndexOf('.');
+						String sceneName = initialSceneCodename.substring(lastIndexOfDot == -1 ? 0 : lastIndexOfDot + 1);
+
+						if(activeState.assignScene(sceneName, scene)) { 
+							activeState.changeScene(sceneName);
+							TokTales.getLog().i(TAG, "Loading scene success");
+						}
+						else {
+							TokTales.getLog().e(TAG, "Loading scene failed | Scene is not compatible with gamestate: " + activeStateName);
+						}
 					}
 					else {
-						TokTales.getLog().e(TAG, "Loading scene failed | Scene is not compatible with gamestate: " + activeStateName);
+						TokTales.getLog().e(TAG, "Loading scene failed | Scene class is not an IGameScene: " + sceneClassName);
 					}
+				} catch (NoSuchMethodException e) {
+					TokTales.getLog().e(TAG, "Loading scene failed | Scene class has no default constructor");
+				} catch (SecurityException e) {
+					TokTales.getLog().e(TAG, String.format("Loading scene failed | SecurityException: %s ", e.getMessage()));
+				} catch (InstantiationException e) {
+					TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class is abstract | InstantiationException: %s ", e.getMessage()));
+				} catch (IllegalAccessException e) {
+					TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class constructor is innacessible | IllegalAccessException: %s ", e.getMessage()));
+				} catch (IllegalArgumentException e) {
+					TokTales.getLog().e(TAG, String.format("Loading scene failed | IllegalArgumentException: %s ", e.getMessage()));
+				} catch (InvocationTargetException e) {
+					TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class constructor threw exception | InvocationTargetException: %s ", e.getCause().getMessage()));
 				}
-				else {
-					TokTales.getLog().e(TAG, "Loading scene failed | Scene class is not an IGameScene: " + sceneClassName);
-				}
-			} catch (ClassNotFoundException e) {
-				TokTales.getLog().e(TAG, "Loading scene failed | Scene class not found");
-			} catch (NoSuchMethodException e) {
-				TokTales.getLog().e(TAG, "Loading scene failed | Scene class has no default constructor");
-			} catch (SecurityException e) {
-				TokTales.getLog().e(TAG, String.format("Loading scene failed | SecurityException: %s ", e.getMessage()));
-			} catch (InstantiationException e) {
-				TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class is abstract | InstantiationException: %s ", e.getMessage()));
-			} catch (IllegalAccessException e) {
-				TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class constructor is innacessible | IllegalAccessException: %s ", e.getMessage()));
-			} catch (IllegalArgumentException e) {
-				TokTales.getLog().e(TAG, String.format("Loading scene failed | IllegalArgumentException: %s ", e.getMessage()));
-			} catch (InvocationTargetException e) {
-				TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class constructor threw exception | InvocationTargetException: %s ", e.getCause().getMessage()));
 			}
 		}
 		
