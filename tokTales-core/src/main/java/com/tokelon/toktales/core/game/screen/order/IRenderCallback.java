@@ -1,5 +1,8 @@
 package com.tokelon.toktales.core.game.screen.order;
 
+import com.tokelon.toktales.core.prog.annotation.CustomFunctionalInterface;
+
+@CustomFunctionalInterface
 public interface IRenderCallback {
 	
 	// add prepare() and isReady()/canRender() ?
@@ -12,11 +15,12 @@ public interface IRenderCallback {
 	 * @param stackPosition the stack position of the calling context.
 	 */
 	public void renderCall(String layerName, double stackPosition);
-	
-	
+
 	/**
 	 * @return A brief description or name for this callback.
 	 */
-	public String getDescription();
-	
+	public default String getDescription() {
+        return "Renders something";
+    }
+
 }
