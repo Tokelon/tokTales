@@ -4,8 +4,6 @@ import com.tokelon.toktales.core.game.IGameAdapter;
 
 public interface IEngineLauncher {
 
-	//public void launch() throws EngineException;
-	
 	
 	/** Launches the engine with the given game adapter.
 	 * The default setup will be used.

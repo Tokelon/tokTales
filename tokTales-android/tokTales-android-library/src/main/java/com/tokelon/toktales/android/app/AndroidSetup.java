@@ -1,5 +1,6 @@
 package com.tokelon.toktales.android.app;
 
+import com.google.inject.Injector;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.engine.ui.AndroidUIConsoleExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
@@ -19,15 +20,16 @@ import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.core.engine.BaseSetup;
 import com.tokelon.toktales.core.engine.Engine;
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
+import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
-import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.states.TokelonStates;
 
 import android.content.Context;
@@ -47,7 +49,7 @@ public class AndroidSetup extends BaseSetup {
 
 	
 	@Override
-	protected Engine createEngine(EngineFactory defaultEngineFactory) {
+	protected Engine createEngine(Injector injector, EngineFactory defaultEngineFactory) throws EngineException {
 		
 		AndroidEnvironment androidEnv = new AndroidEnvironment();
 		defaultEngineFactory.setEnvironment(androidEnv);
@@ -96,7 +98,7 @@ public class AndroidSetup extends BaseSetup {
 	
 	
 	@Override
-	protected ILogger createLogger(IEngine engine, MainLogger defaultLogger) {
+	protected ILogger createLogger(Injector injector, IEngine engine, MainLogger defaultLogger) throws EngineException {
 		/*
 		ILogFramework logFramework = (ILogFramework) mInterfaceProvider.getProgramInterface(IPIP.IID_FRAMEWORK_LOG);
 		MainLogger mainLogger = new MainLogger(logFramework);
@@ -109,7 +111,7 @@ public class AndroidSetup extends BaseSetup {
 	
 	
 	@Override
-	protected IGame createGame(IEngine engine, ILogger logger, GameFactory defaultGameFactory) {
+	protected IGame createGame(Injector injector, IEngine engine, ILogger logger, GameFactory defaultGameFactory) throws EngineException {
 		
 		if(engine.getInputService() instanceof IAndroidInputService) {
 			AndroidGameStateManager gamestateControl = new AndroidGameStateManager((IAndroidInputService) engine.getInputService());
@@ -126,7 +128,7 @@ public class AndroidSetup extends BaseSetup {
 	
 	
 	@Override
-	protected void doRun(IEngineContext context) {
+	protected void doRun(IEngineContext context) throws EngineException {
 		super.doRun(context);
 		
 		AndroidInitialGamestate initialState = new AndroidInitialGamestate(context);

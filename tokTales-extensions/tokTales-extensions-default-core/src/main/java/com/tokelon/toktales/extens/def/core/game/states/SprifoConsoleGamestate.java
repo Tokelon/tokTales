@@ -3,7 +3,6 @@ package com.tokelon.toktales.extens.def.core.game.states;
 import java.io.InputStream;
 
 import com.tokelon.toktales.core.content.text.SpriteFontImpl;
-import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -88,7 +87,7 @@ public class SprifoConsoleGamestate extends BaseGamestate {
 		//textBox.setText("I'm not even angry. \\\\ I'm being so sincere right now. \\\\ Even though you broke my heart and killed me. \\\\ And tore me to pieces. \\\\ And threw every piece into a fire. \\\\ As they burned it hurt because \\\\ I was so happy for you!");
 
 		
-		SprifoTextRenderer textSegmentRenderer = new SprifoTextRenderer(new EngineContext(getEngine(), getLog(), getGame()), textBox);
+		SprifoTextRenderer textSegmentRenderer = new SprifoTextRenderer(TokTales.getContext(), textBox);
 		
 		baseStateRenderer.addSegmentRenderer(RENDERER_TEXT_NAME, textSegmentRenderer);
 		

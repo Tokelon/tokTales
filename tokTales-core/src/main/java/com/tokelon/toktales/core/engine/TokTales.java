@@ -1,21 +1,23 @@
 package com.tokelon.toktales.core.engine;
 
+import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.IGame;
 
 public final class TokTales {
 
-	
-	
+    private static Injector injector;
+
+    private static IEngineContext context;
+
 	private static IEngine engine;
-	
 	private static IGame game;
-	
 	private static ILogger logger;
-	
-	private static IEngineContext context;
-	
-	
+
+
+    public static Injector getInjector() {
+        return injector;
+    }
 	
 	public static IEngine getEngine() {
 		return engine;
@@ -35,12 +37,12 @@ public final class TokTales {
 	
 	
 	public static void load(IEngineContext engineContext) {
-		engine = engineContext.getEngine();
+	    context = engineContext;
+	    
+	    injector = engineContext.getInjector();
+	    engine = engineContext.getEngine();
 		game = engineContext.getGame();
 		logger = engineContext.getLog();
-		
-		context = engineContext;
 	}
-	
 	
 }

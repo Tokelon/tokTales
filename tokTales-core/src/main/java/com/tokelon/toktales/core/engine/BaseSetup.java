@@ -42,7 +42,7 @@ public abstract class BaseSetup extends AbstractSetup {
 	
 	
 	@Override
-	protected void doRun(IEngineContext context) {
+	protected void doRun(IEngineContext context) throws EngineException {
 		
 		IMainConfig mainConfig = loadConfig(context.getEngine().getStorageService(), context.getLog());
 		context.getGame().getConfigManager().loadConfig(IConfigManager.MAIN_CONFIG, mainConfig);

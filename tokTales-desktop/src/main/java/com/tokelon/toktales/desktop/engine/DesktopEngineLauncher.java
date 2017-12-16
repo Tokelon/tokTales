@@ -3,10 +3,12 @@ package com.tokelon.toktales.desktop.engine;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
 
+import com.tokelon.toktales.core.engine.CoreInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.IEngineSetup;
+import com.tokelon.toktales.core.engine.IInjectConfig;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.game.IGameAdapter;
@@ -27,7 +29,26 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 	private int windowHeight = 720;
 	private String windowTitle = "";
 	
+	private final IInjectConfig injectConfig;
 	
+	/** Ctor with a default inject config.
+	 * <p>
+	 * The default config includes {@link CoreInjectModule} and {@link DesktopInjectModule}.
+	 * 
+	 */
+	public DesktopEngineLauncher() {
+	    this(new DesktopInjectConfig());
+	}
+	
+	/** Ctor with an inject config.
+	 * 
+	 * @param injectConfig
+	 */
+	public DesktopEngineLauncher(IInjectConfig injectConfig) {
+	    this.injectConfig = injectConfig;
+	}
+	
+		
 	@Override
 	public void launch(IGameAdapter adapter) throws EngineException {
 		DesktopSetup setup = new DesktopSetup(adapter);
@@ -37,11 +58,13 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 	
 	@Override
 	public void launchAndSetup(IEngineSetup setup) throws EngineException {
-		IEngineContext engineContext = setup.create();
+	    // Create engine context
+		IEngineContext engineContext = setup.create(injectConfig);
 		
 		// Load into TokTales
 		TokTales.load(engineContext);
 
+		
 		// Run after setting up TokTales
 		setup.run(engineContext);
 		

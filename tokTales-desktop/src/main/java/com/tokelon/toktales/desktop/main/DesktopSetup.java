@@ -2,16 +2,18 @@ package com.tokelon.toktales.desktop.main;
 
 import java.io.File;
 
+import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.BaseSetup;
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
+import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
-import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.states.TokelonStates;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateManager;
@@ -46,7 +48,7 @@ public class DesktopSetup extends BaseSetup {
 	
 	
 	@Override
-	protected IEngine createEngine(EngineFactory defaultEngineFactory) {
+	protected IEngine createEngine(Injector injector, EngineFactory defaultEngineFactory) throws EngineException {
 		
 		
 		DesktopEnvironment desktopEnv = new DesktopEnvironment();
@@ -94,13 +96,13 @@ public class DesktopSetup extends BaseSetup {
 
 	
 	@Override
-	protected ILogger createLogger(IEngine engine, MainLogger defaultLogger) {
+	protected ILogger createLogger(Injector injector, IEngine engine, MainLogger defaultLogger) throws EngineException {
 		return defaultLogger;
 	}
 
 	
 	@Override
-	protected IGame createGame(IEngine engine, ILogger logger, GameFactory defaultGameFactory) {
+	protected IGame createGame(Injector injector, IEngine engine, ILogger logger, GameFactory defaultGameFactory) throws EngineException {
 		
 		if(engine.getInputService() instanceof IDesktopInputService) {
 			DesktopGameStateManager gamestateControl = new DesktopGameStateManager((IDesktopInputService)engine.getInputService());
@@ -116,7 +118,7 @@ public class DesktopSetup extends BaseSetup {
 
 	
 	@Override
-	protected void doRun(IEngineContext context) {
+	protected void doRun(IEngineContext context) throws EngineException {
 		super.doRun(context);
 		
 		

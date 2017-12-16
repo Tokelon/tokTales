@@ -1,18 +1,17 @@
 package com.tokelon.toktales.core.engine;
 
-
 public interface IEngineSetup {
 	
-	
-	// ConfigurationModule
 	
 	/** Creates the engine context.
 	 * <br><br> 
 	 * Put any code in here that creates your dependencies.
 	 * 
+	 * @param injectConfig The inject config.
+	 * 
 	 * @return The engine context including the engine and the game.
 	 */
-	public IEngineContext create();
+	public IEngineContext create(IInjectConfig injectConfig) throws EngineException;
 	
 	
 	/** Runs any logic to setup the engine and game.
@@ -22,7 +21,7 @@ public interface IEngineSetup {
 	 * 
 	 * @param context The engine context.
 	 */
-	public void run(IEngineContext context);
+	public void run(IEngineContext context) throws EngineException;
 	
 	
 }

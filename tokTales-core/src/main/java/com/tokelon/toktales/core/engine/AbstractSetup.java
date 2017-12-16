@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.engine;
 
+import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -10,7 +11,7 @@ import com.tokelon.toktales.core.game.Game.GameFactory;
 
 public abstract class AbstractSetup implements IEngineSetup {
 
-	
+	private Injector injector;
 	private IGame resultGame;
 	private IEngine resultEngine;
 	private ILogger resultLogger;
@@ -23,12 +24,15 @@ public abstract class AbstractSetup implements IEngineSetup {
 	
 	
 	@Override
-	public IEngineContext create() {
+	public IEngineContext create(IInjectConfig injectConfig) throws EngineException {
+	    /* Setup injector */
+        injector = createInjector(injectConfig);
 
+        
 		/* Setup engine */
 		EngineFactory defaultEngineFactory = new EngineFactory();
 		
-		resultEngine = createEngine(defaultEngineFactory);
+		resultEngine = createEngine(injector, defaultEngineFactory);
 		afterCreateEngine(resultEngine);
 		
 		
@@ -36,58 +40,72 @@ public abstract class AbstractSetup implements IEngineSetup {
 		ILogService logService = resultEngine.getLogService();
 		MainLogger defaultLogger = new MainLogger(logService);
 		
-		resultLogger = createLogger(resultEngine, defaultLogger);
+		resultLogger = createLogger(injector, resultEngine, defaultLogger);
 		afterCreateLogger(resultLogger);
 		
 		
 		/* Setup game */
 		GameFactory defaultGameFactory = new GameFactory(resultEngine, gameAdapter);
 		
-		resultGame = createGame(resultEngine, resultLogger, defaultGameFactory);
+		resultGame = createGame(injector, resultEngine, resultLogger, defaultGameFactory);
 		afterCreateGame(resultGame);
 		
 		
 		finishCreate();
 		
-		return new EngineContext(resultEngine, resultLogger, resultGame);
+		return new EngineContext(injector, resultEngine, resultLogger, resultGame);
 	}
 	
 	
 	@Override
-	public void run(IEngineContext context) {
+	public void run(IEngineContext context) throws EngineException {
 		doRun(context);
 	}
 	
 	
+
+	protected Injector createInjector(IInjectConfig injectConfig) throws EngineException {
+	    long before = System.currentTimeMillis();
+	    injector = injectConfig.createInjector();
+
+	    //Object obj = injector.getInstance(Object.class);
+	    System.out.println("Injector creation time (ms): " + (System.currentTimeMillis() - before));        
+
+	    return injector;
+	}
+
+	protected void afterCreateInjector(Injector injector) throws EngineException {
+	    // Nothing
+	}
 	
 	
-	protected abstract IEngine createEngine(EngineFactory defaultEngineFactory);
+	protected abstract IEngine createEngine(Injector injector, EngineFactory defaultEngineFactory) throws EngineException;
 	
-	protected void afterCreateEngine(IEngine engine) {
+	protected void afterCreateEngine(IEngine engine) throws EngineException {
 		// Nothing
 	}
 	
 	
-	protected abstract ILogger createLogger(IEngine engine, MainLogger defaultLogger);
+	protected abstract ILogger createLogger(Injector injector, IEngine engine, MainLogger defaultLogger) throws EngineException;
 	
-	protected void afterCreateLogger(ILogger logger) {
+	protected void afterCreateLogger(ILogger logger) throws EngineException {
 		// Nothing
 	}
 	
 	
-	protected abstract IGame createGame(IEngine engine, ILogger logger, GameFactory defaultGameFactory);
+	protected abstract IGame createGame(Injector injector, IEngine engine, ILogger logger, GameFactory defaultGameFactory) throws EngineException;
 	
-	protected void afterCreateGame(IGame game) {
+	protected void afterCreateGame(IGame game) throws EngineException {
 		// Nothing
 	}
 	
 	
-	protected void finishCreate() {
+	protected void finishCreate() throws EngineException {
 		// Nothing
 	}
 	
 	
-	protected abstract void doRun(IEngineContext context);
+	protected abstract void doRun(IEngineContext context) throws EngineException;
 	
 
 }
