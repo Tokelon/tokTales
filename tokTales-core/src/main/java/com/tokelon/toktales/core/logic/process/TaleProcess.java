@@ -2,8 +2,6 @@ package com.tokelon.toktales.core.logic.process;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.tokelon.toktales.core.config.CiniAnimConfig;
@@ -70,7 +68,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 	
 	private String objTaleAppPath;
 
-	
+
 	public TaleProcess(IPauseableProcess parentProcess, IEngineContext context, String gamestateName) {
 		super(parentProcess);
 		
@@ -261,7 +259,6 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 	}
 	
 	
-	
 	private void loadTale(IStorageService storageService, LocationImpl taleLocation, String mainFileName) throws StorageException, ConfigFormatException, ConfigDataException {
 
 		TokTales.getLog().d(TAG, "Reading Tale: Started");
@@ -284,75 +281,37 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 
 		String initialSceneCodename = taleConfig.getConfigTaleInitialSceneCodename().trim();
 		if(!initialSceneCodename.isEmpty()) {
-			String sceneClassName = initialSceneCodename + TALE_SCENE_CLASS_POSTFIX;
-			
-			Class<?> sceneClass = null;
-			try {
-				String platformName = TokTales.getEngine().getEnvironment().getPlatformName();
-				String[] sceneClassNameSplit = sceneClassName.split("\\.");
-				
-				String sceneClassNameWithPlatform = sceneClassName;
-				if(sceneClassNameSplit.length < 2) {    // Needs at least one package
-	                // Replace class name
-	                sceneClassNameSplit[sceneClassNameSplit.length-1] = platformName + sceneClassNameSplit[sceneClassNameSplit.length-1];
-	                // Replace package name
-	                sceneClassNameSplit[sceneClassNameSplit.length-2] = platformName.toLowerCase();
-	                sceneClassNameWithPlatform = String.join(".", sceneClassNameSplit);
-				}
-				
-				TokTales.getLog().i(TAG, "Looking for platform version of initial scene with class: " +sceneClassNameWithPlatform);
-				
-				sceneClass = Class.forName(sceneClassNameWithPlatform);
-			} catch (ClassNotFoundException e1) {
-				try {
-					TokTales.getLog().i(TAG, "Looking for default version of initial scene with class: " +sceneClassName);
-					
-					sceneClass = Class.forName(sceneClassName);
-				} catch (ClassNotFoundException e2) {
-					TokTales.getLog().e(TAG, "Loading scene failed | Scene class not found");
-				}
-			}
+		    String sceneClassName = initialSceneCodename + TALE_SCENE_CLASS_POSTFIX;
 
-			
-			if(sceneClass != null) {
-				TokTales.getLog().i(TAG, "Loading initial scene with class: " +sceneClass.getName());
+		    try {
+		        Class<?> sceneClass = Class.forName(sceneClassName);
+		        TokTales.getLog().i(TAG, "Loading initial scene with class: " +sceneClass.getName());
+		        
+		        if(IGameScene.class.isAssignableFrom(sceneClass)) {
+		            // TODO: Implement catching Exception and disregarding custom scene
+		            IGameScene scene = (IGameScene) TokTales.getInjector().getInstance(sceneClass);
+		            TokTales.getLog().i(TAG, "Loaded scene with implementation: " + scene.getClass().getName());
 
-				try {
-					if(IGameScene.class.isAssignableFrom(sceneClass)) {
-						Constructor<?> defaultContr = sceneClass.getConstructor();
-						IGameScene scene = (IGameScene) defaultContr.newInstance();
 
-						// Add
-						int lastIndexOfDot = initialSceneCodename.lastIndexOf('.');
-						String sceneName = initialSceneCodename.substring(lastIndexOfDot == -1 ? 0 : lastIndexOfDot + 1);
+		            int lastIndexOfDot = initialSceneCodename.lastIndexOf('.');
+		            String sceneName = initialSceneCodename.substring(lastIndexOfDot == -1 ? 0 : lastIndexOfDot + 1);
 
-						if(activeState.assignScene(sceneName, scene)) { 
-							activeState.changeScene(sceneName);
-							TokTales.getLog().i(TAG, "Loading scene success");
-						}
-						else {
-							TokTales.getLog().e(TAG, "Loading scene failed | Scene is not compatible with gamestate: " + activeStateName);
-						}
-					}
-					else {
-						TokTales.getLog().e(TAG, "Loading scene failed | Scene class is not an IGameScene: " + sceneClassName);
-					}
-				} catch (NoSuchMethodException e) {
-					TokTales.getLog().e(TAG, "Loading scene failed | Scene class has no default constructor");
-				} catch (SecurityException e) {
-					TokTales.getLog().e(TAG, String.format("Loading scene failed | SecurityException: %s ", e.getMessage()));
-				} catch (InstantiationException e) {
-					TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class is abstract | InstantiationException: %s ", e.getMessage()));
-				} catch (IllegalAccessException e) {
-					TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class constructor is innacessible | IllegalAccessException: %s ", e.getMessage()));
-				} catch (IllegalArgumentException e) {
-					TokTales.getLog().e(TAG, String.format("Loading scene failed | IllegalArgumentException: %s ", e.getMessage()));
-				} catch (InvocationTargetException e) {
-					TokTales.getLog().e(TAG, String.format("Loading scene failed | Scene class constructor threw exception | InvocationTargetException: %s ", e.getCause().getMessage()));
-				}
-			}
+		            if(activeState.assignScene(sceneName, scene)) { 
+		                activeState.changeScene(sceneName);
+		                TokTales.getLog().i(TAG, "Loading scene success");
+		            }
+		            else {
+		                TokTales.getLog().e(TAG, "Loading scene failed | Scene is not compatible with gamestate: " + activeStateName);
+		            }
+		        }
+		        else {
+		            TokTales.getLog().e(TAG, "Loading scene failed | Scene class is not an IGameScene: " + sceneClassName);
+		        }
+		    } catch (ClassNotFoundException e) {
+		        TokTales.getLog().e(TAG, "Loading scene failed | Scene class not found");
+		    }
 		}
-		
+
 		
 		// Setup the initial map location
 		LocationImpl mapsLocation = new LocationImpl(taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesMapDirectory()));

@@ -6,11 +6,14 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.inject.Module;
+import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 
 public class AdvancedInjectConfig implements IInjectConfig {
 
     private List<Module> moduleList = new ArrayList<>();
+    
+    private Stage defaultStage = Stage.PRODUCTION;
     
     
     /** Combines all current modules with the given ones.
@@ -65,11 +68,25 @@ public class AdvancedInjectConfig implements IInjectConfig {
         return this;
     }
     
+
+    /** Sets the default stage.
+     * 
+     * @param stage The stage that will be used if none is provided.
+     * @return This object.
+     */
+    public AdvancedInjectConfig setDefaultStage(Stage stage) {
+        this.defaultStage = stage;
+        return this;
+    }
+    
+    @Override
+    public Stage getDefaultStage() {
+        return defaultStage;
+    }    
     
     @Override
     public Collection<Module> getModules() {
         return moduleList;
     }
-    
     
 }
