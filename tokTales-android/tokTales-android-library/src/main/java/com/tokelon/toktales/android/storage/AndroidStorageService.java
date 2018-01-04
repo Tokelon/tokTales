@@ -108,8 +108,13 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 		if(!dir.isDirectory()) {
 			throw new StorageException("Not a directory: " +location.getLocationPath().getPath());	
 		}
-		
-		return dir.list();
+
+		String[] list = dir.list();
+		if(list == null) {
+			throw new StorageException("IO Error while listing files for directory: " +location.getLocationPath().getPath());
+		}
+
+		return list;
 	}
 	
 

@@ -358,7 +358,14 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 
 	@Override
 	public ITextureFont loadFontFromFile(File file) throws ContentException {
-		Typeface typeface = Typeface.createFromFile(file);
+		Typeface typeface;
+		try {
+			 typeface = Typeface.createFromFile(file);
+		} catch(Exception ex) {
+		    // Wrap any exception into content exception
+			throw new ContentException(ex);
+		}
+
 		return fontFromTypeface(typeface);
 	}
 	
