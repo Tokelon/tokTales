@@ -1,26 +1,5 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.TextWatcher;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.AbstractBaseActivity;
 import com.tokelon.toktales.android.activity.IConsoleActivity;
@@ -32,6 +11,28 @@ import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.logic.process.GameProcess;
 import com.tokelon.toktales.extens.def.android.logic.process.AndroidTaleProcess;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Process;
+import android.text.TextWatcher;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class TaleActivity extends AbstractBaseActivity implements IConsoleActivity, IDebugActivity {
 
@@ -128,11 +129,11 @@ public class TaleActivity extends AbstractBaseActivity implements IConsoleActivi
 		
 		// WORKAROUND
 		TokTales.getGame().getGameControl().pauseGame();
-		TokTales.getGame().getGameControl().stopGame();		
+		TokTales.getGame().getGameControl().stopGame();
 		
 		taleProcess.startProcess();
 
-		
+
 	}
 	
 	
@@ -222,6 +223,9 @@ public class TaleActivity extends AbstractBaseActivity implements IConsoleActivi
 			taleProcess.endProcess();
 			renderingProcess.endProcess();
 		}
+
+		// Make sure application is terminated completely
+		Process.killProcess(Process.myPid());
 	}
 
 	
