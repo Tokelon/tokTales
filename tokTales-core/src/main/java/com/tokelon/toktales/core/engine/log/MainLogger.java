@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 
 public class MainLogger implements ILogger {
 
@@ -14,7 +16,7 @@ public class MainLogger implements ILogger {
 	
 	private final ILogService logService;
 	
-	
+	@Inject
 	public MainLogger(ILogService logService) {
 		this.logService = logService;
 		

@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.content;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.SpriteManager;
 import com.tokelon.toktales.core.engine.IEngine;
@@ -17,7 +19,7 @@ public class ContentManager implements IContentManager {
 	private ResourceManager managerResource;
 	private SpriteManager managerSprite;
 	
-	
+	@Inject
 	public ContentManager(IEngine engine) {
 		
 		IStorageService storageService = engine.getStorageService();

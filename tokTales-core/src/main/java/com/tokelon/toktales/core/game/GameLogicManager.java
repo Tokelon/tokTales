@@ -1,5 +1,8 @@
 package com.tokelon.toktales.core.game;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 
@@ -8,7 +11,16 @@ public class GameLogicManager implements IGameLogicManager {
 
 	private IGame game;
 	
-	public GameLogicManager() {	}
+	private final Provider<IGame> gameProvider;
+	
+	public GameLogicManager() { 
+	    gameProvider = () -> game;
+	}
+	
+	@Inject
+	public GameLogicManager(Provider<IGame> gameProvider) {
+	    this.gameProvider = gameProvider;
+	}
 	
 	
 	public void setupGame(IGame game) {
@@ -19,7 +31,8 @@ public class GameLogicManager implements IGameLogicManager {
 	@Override
 	public void onGameCreate() {
 		if(game == null) {
-			throw new IllegalStateException("No game was provided");
+		    game = gameProvider.get();
+			//throw new IllegalStateException("No game was provided");
 		}
 
 		// TODO: Important - Fix this

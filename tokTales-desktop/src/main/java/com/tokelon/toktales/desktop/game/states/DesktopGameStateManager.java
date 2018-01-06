@@ -1,16 +1,18 @@
 package com.tokelon.toktales.desktop.game.states;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.game.states.GameStateControl;
+import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICursorMoveCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IMouseButtonCallback;
-import com.tokelon.toktales.core.game.states.GameStateControl;
-import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 
 public class DesktopGameStateManager extends GameStateControl {
 
-	
+	@Inject
 	public DesktopGameStateManager(IDesktopInputService inputService) {
 		inputService.getInputDispatcher().registerMouseButtonCallback(new GamestateControlMouseButtonCallback());
 		inputService.getInputDispatcher().registerCursorMoveCallback(new GamestateControlCursorMoveCallback());

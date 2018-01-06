@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.content.ContentManager;
@@ -35,7 +37,8 @@ public class Game implements IGame, IGameScriptManagerProvider {
 
 	private final IGameAdapter mGameAdapter;
 	
-	private Game(
+	@Inject
+	public Game(
 			IGameControl gameControl,
 			IGameStateControl stateControl,
 			ITimeManager timeManager,

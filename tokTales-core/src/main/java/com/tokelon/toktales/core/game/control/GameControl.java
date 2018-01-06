@@ -3,6 +3,8 @@ package com.tokelon.toktales.core.game.control;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.IGameLogicManager;
 
 public class GameControl implements IGameControl {
@@ -27,6 +29,7 @@ public class GameControl implements IGameControl {
 	// TODO: Important - Reevaluate the thread safe implementation
 	// -> TODO: Do not make thread safe, and remove the runtime exceptions
 	
+	@Inject
 	public GameControl(IGameLogicManager logicManager) {
 		this.logicManager = logicManager;
 	}

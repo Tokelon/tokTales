@@ -1,8 +1,8 @@
 package com.tokelon.toktales.extens.def.desktop.engine;
 
-import com.google.inject.AbstractModule;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 
-public class DesktopDefaultExtensionsInjectModule extends AbstractModule {
+public class DesktopDefaultExtensionsInjectModule extends AbstractInjectModule {
 
     @Override
     protected void configure() {

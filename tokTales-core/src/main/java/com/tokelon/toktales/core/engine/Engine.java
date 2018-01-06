@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.engine;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
@@ -18,8 +20,8 @@ public class Engine implements IEngine {
 	private IRenderService mRenderService;
 	private IInputService mInputService;
 	
-	
-	private Engine(
+	@Inject
+	public Engine(
 			IEnvironment environment,
 			IUIService uiService,
 			IContentService contentService,
