@@ -1,18 +1,21 @@
 package com.tokelon.toktales.android.states;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
+import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 
 public class AndroidInitialGamestate extends InitialGamestate {
 
 	
 	private final AndroidGameStateInput input = new AndroidGameStateInput();
 	
+
 	public AndroidInitialGamestate(IEngineContext context) {
 		super(context);
 		
@@ -20,7 +23,7 @@ public class AndroidInitialGamestate extends InitialGamestate {
 		setStateInput(input);
 	}
 	
-	
+	@Inject
 	public AndroidInitialGamestate(IEngineContext context, IRenderOrder baseOrder) {
 		super(context, baseOrder);
 
