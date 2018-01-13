@@ -1,54 +1,48 @@
 package com.tokelon.toktales.android.engine;
 
-import com.tokelon.toktales.android.app.AndroidSetup;
-import com.tokelon.toktales.core.engine.CoreInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.IEngineSetup;
-import com.tokelon.toktales.core.engine.IInjectConfig;
+import com.tokelon.toktales.core.engine.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 import android.content.Context;
 
 public class AndroidEngineLauncher implements IEngineLauncher {
 
+	private final IHierarchicalInjectConfig injectConfig;
 	private final Context appContext;
-	private final IInjectConfig injectConfig;
-
 	
-	/** Ctor with the application context and a default inject config.
-	 * <p>
-	 * The default config includes {@link CoreInjectModule} and {@link AndroidInjectModule}.
-	 * 
-	 * @param applicationContext
-	 */
-	public AndroidEngineLauncher(Context applicationContext) { // TODO: Inject the context
-		this(applicationContext, new AndroidInjectConfig());
-	}
 	
-	/** Ctor with the application context and an inject config.
+	/** Ctor with an inject config and an application context.
 	 * 
-	 * @param applicationContext
 	 * @param injectConfig
+	 * @param applicationContext
+	 * 
+	 * @see AndroidInjectConfig
 	 */
-	public AndroidEngineLauncher(Context applicationContext, IInjectConfig injectConfig) {
+	public AndroidEngineLauncher(IHierarchicalInjectConfig injectConfig, Context applicationContext) {
         this.appContext = applicationContext;
         this.injectConfig = injectConfig;
     }
-	
+
 	
 
 	@Override
 	public void launch(IGameAdapter adapter) throws EngineException {
-		AndroidSetup setup = new AndroidSetup(adapter, appContext);
-		launchAndSetup(setup);
+		BaseInjectSetup setup = new BaseInjectSetup();
+		launchWithSetup(adapter, setup);
 	}
 
 	
 	@Override
-	public void launchAndSetup(IEngineSetup setup) throws EngineException {
+	public void launchWithSetup(IGameAdapter adapter, IEngineSetup setup) throws EngineException {
+		// Inject game adapter and context
+		injectConfig.override(new AndroidSetupInjectModule(appContext, adapter));
+
 	    // Create engine context
 		IEngineContext engineContext = setup.create(injectConfig);
 		

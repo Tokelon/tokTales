@@ -5,9 +5,9 @@ import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
+import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
-import com.tokelon.toktales.core.game.Game.GameFactory;
 
 public abstract class AbstractSetup implements IEngineSetup {
 
@@ -24,7 +24,7 @@ public abstract class AbstractSetup implements IEngineSetup {
 	
 	
 	@Override
-	public IEngineContext create(IInjectConfig injectConfig) throws EngineException {
+	public IEngineContext create(IHierarchicalInjectConfig injectConfig) throws EngineException {
 	    /* Setup injector */
         injector = createInjector(injectConfig);
 

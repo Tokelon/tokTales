@@ -10,9 +10,10 @@ import com.tokelon.toktales.core.engine.IEngineLauncher;
 
 public class TokTellerApp extends TokTalesApp {
 
-    @Override
-    protected void launch(IEngineLauncher defaultLauncher) throws EngineException {
-        TokTellerAdapter adapter = new TokTellerAdapter();
-        defaultLauncher.launch(adapter);
-    }
+	@Override
+	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
+		TokTellerAdapter adapter = new TokTellerAdapter();
+		defaultLauncher.launch(adapter);
+	}
+	
 }

@@ -11,7 +11,7 @@ public interface IEngineSetup {
 	 * 
 	 * @return The engine context including the engine and the game.
 	 */
-	public IEngineContext create(IInjectConfig injectConfig) throws EngineException;
+	public IEngineContext create(IHierarchicalInjectConfig injectConfig) throws EngineException;
 	
 	
 	/** Runs any logic to setup the engine and game.

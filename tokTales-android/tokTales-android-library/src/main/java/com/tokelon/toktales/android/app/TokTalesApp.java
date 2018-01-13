@@ -1,23 +1,27 @@
 package com.tokelon.toktales.android.app;
 
-import android.app.Application;
-import android.content.res.Configuration;
-
 import com.tokelon.toktales.android.engine.AndroidEngineLauncher;
+import com.tokelon.toktales.android.engine.AndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.IGameAdapter.EmptyGameAdapter;
 
+import android.app.Application;
+import android.content.res.Configuration;
+import android.util.Log;
+
 public class TokTalesApp extends Application {
 
 	
-	/** Override this to implement custom launching.
+	/** Override to implement launching with a custom game adapter or setup.
 	 * 
 	 * @param launcher
 	 * @throws EngineException 
 	 */
-	protected void launch(IEngineLauncher defaultLauncher) throws EngineException {
+	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
+		Log.i("App", "No custom game adapter used. Override TokTalesApp.launch() to use your custom game adapter");
+		
 		// Default implementation
 		defaultLauncher.launch(new EmptyGameAdapter());
 	}
@@ -27,10 +31,9 @@ public class TokTalesApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		
-		AndroidEngineLauncher androidLauncher = new AndroidEngineLauncher(getApplicationContext());
-		
+		AndroidEngineLauncher androidLauncher = new AndroidEngineLauncher(new AndroidInjectConfig(), getApplicationContext());
 		try {
-			launch(androidLauncher);
+			launchEngine(androidLauncher);
 		} catch (EngineException e) {
 			// TODO: What to do here?
 			e.printStackTrace();

@@ -1,11 +1,11 @@
 package com.tokelon.toktales.extens.def.desktop.engine;
 
-import com.tokelon.toktales.core.engine.AdvancedInjectConfig;
+import com.tokelon.toktales.core.engine.HierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.CoreInjectModule;
 import com.tokelon.toktales.desktop.engine.DesktopInjectModule;
 import com.tokelon.toktales.extens.def.core.engine.CoreDefaultExtensionsInjectModule;
 
-public class DesktopDefaultExtensionsInjectConfig extends AdvancedInjectConfig {
+public class DesktopDefaultExtensionsInjectConfig extends HierarchicalInjectConfig {
 
     public DesktopDefaultExtensionsInjectConfig() {        
         override(new CoreInjectModule());

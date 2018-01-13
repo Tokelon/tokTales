@@ -7,7 +7,15 @@ public class DesktopSetupInjectModule extends AbstractInjectModule {
 
     private final IGameAdapter gameAdapter;
     
+    /**
+     * @param gameAdapter
+     * @throws NullPointerException If gameAdapter is null.
+     */
     public DesktopSetupInjectModule(IGameAdapter gameAdapter) {
+    	if(gameAdapter == null) {
+    		throw new NullPointerException();
+    	}
+    	
         this.gameAdapter = gameAdapter;
     }
 

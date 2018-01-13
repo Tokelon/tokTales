@@ -5,8 +5,7 @@ import com.tokelon.toktales.core.game.IGameAdapter;
 public interface IEngineLauncher {
 
 	
-	/** Launches the engine with the given game adapter.
-	 * The default setup will be used.
+	/** Launches with the given game adapter and a default setup.
 	 * 
 	 * @param adapter
 	 * @throws EngineException
@@ -14,11 +13,11 @@ public interface IEngineLauncher {
 	public void launch(IGameAdapter adapter) throws EngineException;
 	
 	
-	/** Launches the engine with a custom setup.
+	/** Launches with the given game adapter and setup.
 	 * 
 	 * @param setup
 	 * @throws EngineException
 	 */
-	public void launchAndSetup(IEngineSetup setup) throws EngineException;
+	public void launchWithSetup(IGameAdapter adapter, IEngineSetup setup) throws EngineException;
 	
 }

@@ -3,14 +3,14 @@ package com.tokelon.toktales.desktop.engine;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
 
-import com.tokelon.toktales.core.engine.CoreInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.IEngineSetup;
-import com.tokelon.toktales.core.engine.IInjectConfig;
+import com.tokelon.toktales.core.engine.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.render.ISurface;
+import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.logic.process.GameProcess;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
@@ -20,44 +20,39 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLRenderer;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
-import com.tokelon.toktales.desktop.main.DesktopSetup;
 
 public class DesktopEngineLauncher implements IEngineLauncher {
 
-	
 	private int windowWidth = 1280;
 	private int windowHeight = 720;
 	private String windowTitle = "";
 	
-	private final IInjectConfig injectConfig;
+	private final IHierarchicalInjectConfig injectConfig;
 	
-	/** Ctor with a default inject config.
-	 * <p>
-	 * The default config includes {@link CoreInjectModule} and {@link DesktopInjectModule}.
-	 * 
-	 */
-	public DesktopEngineLauncher() {
-	    this(new DesktopInjectConfig());
-	}
 	
 	/** Ctor with an inject config.
 	 * 
 	 * @param injectConfig
+	 * 
+	 * @see DesktopInjectConfig
 	 */
-	public DesktopEngineLauncher(IInjectConfig injectConfig) {
+	public DesktopEngineLauncher(IHierarchicalInjectConfig injectConfig) {
 	    this.injectConfig = injectConfig;
 	}
+
 	
-		
 	@Override
 	public void launch(IGameAdapter adapter) throws EngineException {
-		DesktopSetup setup = new DesktopSetup(adapter);
-		launchAndSetup(setup);
+		BaseInjectSetup setup = new BaseInjectSetup();
+		launchWithSetup(adapter, setup);
 	}
 	
 	
 	@Override
-	public void launchAndSetup(IEngineSetup setup) throws EngineException {
+	public void launchWithSetup(IGameAdapter adapter, IEngineSetup setup) throws EngineException {
+		// Inject game adapter
+		injectConfig.override(new DesktopSetupInjectModule(adapter));
+		
 	    // Create engine context
 		IEngineContext engineContext = setup.create(injectConfig);
 		
