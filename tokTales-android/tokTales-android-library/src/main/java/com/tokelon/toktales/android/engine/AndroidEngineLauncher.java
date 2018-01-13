@@ -1,12 +1,14 @@
 package com.tokelon.toktales.android.engine;
 
+import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
+import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
-import com.tokelon.toktales.core.engine.IEngineSetup;
-import com.tokelon.toktales.core.engine.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 import android.content.Context;

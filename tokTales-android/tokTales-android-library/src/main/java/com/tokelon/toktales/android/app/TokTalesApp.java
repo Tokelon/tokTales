@@ -1,7 +1,7 @@
 package com.tokelon.toktales.android.app;
 
 import com.tokelon.toktales.android.engine.AndroidEngineLauncher;
-import com.tokelon.toktales.android.engine.AndroidInjectConfig;
+import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;

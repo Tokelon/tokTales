@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine;
+package com.tokelon.toktales.core.engine.inject;
 
 public class CoreInjectConfig extends HierarchicalInjectConfig {
 

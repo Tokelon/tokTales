@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine;
+package com.tokelon.toktales.core.engine.inject;
 
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -6,11 +6,10 @@ import com.tokelon.toktales.core.content.ContentManager;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
-import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.EngineScope;
-import com.tokelon.toktales.core.engine.inject.EngineScoped;
-import com.tokelon.toktales.core.engine.inject.GameScope;
-import com.tokelon.toktales.core.engine.inject.GameScoped;
+import com.tokelon.toktales.core.engine.Engine;
+import com.tokelon.toktales.core.engine.EngineContext;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.game.Game;

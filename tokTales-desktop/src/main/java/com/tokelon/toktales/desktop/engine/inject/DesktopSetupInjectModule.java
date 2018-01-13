@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.engine;
+package com.tokelon.toktales.desktop.engine.inject;
 
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.game.IGameAdapter;

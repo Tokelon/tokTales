@@ -3,9 +3,8 @@ package com.tokelon.toktales.core.engine.setup;
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.IEngineSetup;
-import com.tokelon.toktales.core.engine.IHierarchicalInjectConfig;
-import com.tokelon.toktales.core.engine.IInjectConfig;
+import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 
 public abstract class AbstractInjectSetup implements IEngineSetup {
 

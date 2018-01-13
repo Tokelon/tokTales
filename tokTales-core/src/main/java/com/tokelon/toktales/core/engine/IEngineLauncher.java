@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.engine;
 
+import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 public interface IEngineLauncher {

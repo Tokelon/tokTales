@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.engine;
+package com.tokelon.toktales.desktop.engine.inject;
 
 import java.io.File;
 

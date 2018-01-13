@@ -1,4 +1,8 @@
-package com.tokelon.toktales.core.engine;
+package com.tokelon.toktales.core.engine.setup;
+
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 
 public interface IEngineSetup {
 	

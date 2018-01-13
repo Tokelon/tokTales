@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.engine;
+package com.tokelon.toktales.android.engine.inject;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
