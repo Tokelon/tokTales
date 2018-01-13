@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.states;
+package com.tokelon.toktales.extens.def.desktop.game.states;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;

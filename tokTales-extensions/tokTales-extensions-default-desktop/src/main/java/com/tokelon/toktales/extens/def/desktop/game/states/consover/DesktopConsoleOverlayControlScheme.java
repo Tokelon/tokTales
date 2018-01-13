@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.states.consover;
+package com.tokelon.toktales.extens.def.desktop.game.states.consover;
 
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.desktop.input.TInput;

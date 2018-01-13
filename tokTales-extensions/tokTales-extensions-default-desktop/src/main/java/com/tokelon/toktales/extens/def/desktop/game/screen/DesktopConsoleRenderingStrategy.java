@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.screen;
+package com.tokelon.toktales.extens.def.desktop.game.screen;
 
 import org.lwjgl.opengl.GL11;
 

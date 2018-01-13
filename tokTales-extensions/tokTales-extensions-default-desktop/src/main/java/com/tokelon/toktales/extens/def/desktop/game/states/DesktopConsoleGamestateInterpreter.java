@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.states;
+package com.tokelon.toktales.extens.def.desktop.game.states;
 
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.IConsole;
@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.logic.process.GameProcess;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
-import com.tokelon.toktales.extens.def.desktop.desktop.game.logic.process.DesktopTaleProcess;
+import com.tokelon.toktales.extens.def.desktop.game.logic.process.DesktopTaleProcess;
 
 public class DesktopConsoleGamestateInterpreter implements IConsoleInterpreter {
 

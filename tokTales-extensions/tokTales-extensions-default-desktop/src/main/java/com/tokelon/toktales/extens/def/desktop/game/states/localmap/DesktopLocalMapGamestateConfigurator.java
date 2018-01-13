@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.states.localmap;
+package com.tokelon.toktales.extens.def.desktop.game.states.localmap;
 
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateConfigurator;

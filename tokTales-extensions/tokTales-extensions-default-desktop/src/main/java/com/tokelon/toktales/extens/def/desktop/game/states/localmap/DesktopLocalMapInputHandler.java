@@ -1,10 +1,10 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.states.localmap;
+package com.tokelon.toktales.extens.def.desktop.game.states.localmap;
 
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
-import com.tokelon.toktales.extens.def.desktop.desktop.game.states.consover.DesktopConsoleOverlayInputHandler;
+import com.tokelon.toktales.extens.def.desktop.game.states.consover.DesktopConsoleOverlayInputHandler;
 
 public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandler {
 

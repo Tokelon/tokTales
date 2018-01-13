@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.desktop.game.logic.process;
+package com.tokelon.toktales.extens.def.desktop.game.logic.process;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.logic.process.IPauseableProcess;
 import com.tokelon.toktales.core.logic.process.TaleProcess;
 import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
-import com.tokelon.toktales.extens.def.desktop.desktop.game.states.localmap.DesktopLocalMapGamestateConfigurator;
+import com.tokelon.toktales.extens.def.desktop.game.states.localmap.DesktopLocalMapGamestateConfigurator;
 
 public class DesktopTaleProcess extends TaleProcess {
 
