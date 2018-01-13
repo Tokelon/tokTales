@@ -1,7 +1,14 @@
-package com.tokelon.toktales.core.engine;
+package com.tokelon.toktales.core.engine.setup.manual;
 
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.Engine.EngineFactory;
+import com.tokelon.toktales.core.engine.EngineContext;
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.IEngineSetup;
+import com.tokelon.toktales.core.engine.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.IInjectConfig;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;

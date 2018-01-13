@@ -1,5 +1,7 @@
-package com.tokelon.toktales.core.engine;
+package com.tokelon.toktales.core.engine.setup.manual;
 
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.scripts.InitScriptingSetupScript;
 import com.tokelon.toktales.core.engine.setup.scripts.LoadMainConfigSetupScript;
 import com.tokelon.toktales.core.game.IGameAdapter;

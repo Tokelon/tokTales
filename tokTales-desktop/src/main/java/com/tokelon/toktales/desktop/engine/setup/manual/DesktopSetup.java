@@ -1,9 +1,8 @@
-package com.tokelon.toktales.desktop.main;
+package com.tokelon.toktales.desktop.engine.setup.manual;
 
 import java.io.File;
 
 import com.google.inject.Injector;
-import com.tokelon.toktales.core.engine.BaseSetup;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.IEngine;
@@ -11,6 +10,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
+import com.tokelon.toktales.core.engine.setup.manual.BaseSetup;
 import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
@@ -28,6 +28,8 @@ import com.tokelon.toktales.desktop.lwjgl.render.GLKeyedTextureManager;
 import com.tokelon.toktales.desktop.lwjgl.render.GLShapeDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteFontDriver;
+import com.tokelon.toktales.desktop.main.DesktopEnvironment;
+import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 import com.tokelon.toktales.desktop.ui.DesktopUIService;

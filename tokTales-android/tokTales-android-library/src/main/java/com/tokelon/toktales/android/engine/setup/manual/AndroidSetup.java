@@ -1,6 +1,8 @@
-package com.tokelon.toktales.android.app;
+package com.tokelon.toktales.android.engine.setup.manual;
 
 import com.google.inject.Injector;
+import com.tokelon.toktales.android.app.AndroidEnvironment;
+import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.engine.ui.AndroidUIConsoleExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
@@ -18,7 +20,6 @@ import com.tokelon.toktales.android.states.AndroidGameStateManager;
 import com.tokelon.toktales.android.states.AndroidInitialGamestate;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
-import com.tokelon.toktales.core.engine.BaseSetup;
 import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.Engine.EngineFactory;
@@ -27,6 +28,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
+import com.tokelon.toktales.core.engine.setup.manual.BaseSetup;
 import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
