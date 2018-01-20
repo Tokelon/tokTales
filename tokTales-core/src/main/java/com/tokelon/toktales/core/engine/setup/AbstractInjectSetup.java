@@ -12,7 +12,9 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 	@Override
 	public IEngineContext create(IHierarchicalInjectConfig injectConfig) throws EngineException {
 		Injector injector = createInjector(injectConfig); 
-		return injector.getInstance(IEngineContext.class);
+		IEngineContext engineContext = createEngineContext(injector);
+		
+		return engineContext;
 	}
 
 	
@@ -20,7 +22,6 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 	public void run(IEngineContext context) throws EngineException {
 		doRun(context);
 	}
-
 
 	protected abstract void doRun(IEngineContext context) throws EngineException;
 
@@ -34,5 +35,14 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 		return injector;
 	}
 
+	protected IEngineContext createEngineContext(Injector injector) {
+		long before = System.currentTimeMillis();
+
+		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
+		System.out.println("EngineContext creation time (ms): " + (System.currentTimeMillis() - before));
+		
+		return engineContext;
+	}
+	
 
 }
