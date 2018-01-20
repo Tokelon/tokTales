@@ -13,3 +13,12 @@ dependencies {
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+
+
+// Export project and dependencies for Android
+eclipse.classpath.file.withXml { xml ->
+    def node = xml.asNode()
+    
+    def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+    con.@exported = 'true'
+}

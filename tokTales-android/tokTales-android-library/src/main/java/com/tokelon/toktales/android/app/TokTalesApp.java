@@ -16,7 +16,7 @@ public class TokTalesApp extends Application {
 	
 	/** Override to implement launching with a custom game adapter or setup.
 	 * 
-	 * @param launcher
+	 * @param defaultLauncher
 	 * @throws EngineException 
 	 */
 	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {

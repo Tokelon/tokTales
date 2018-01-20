@@ -37,6 +37,9 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    // Use Mockito
+    testImplementation 'org.mockito:mockito-core:2.13.0'
+    
 
 	// this should be api but causes a lint error
 	implementation files('libs/Luaj/luaj-jse-3.0.1.jar')
@@ -52,7 +55,6 @@ dependencies {
     api ('com.google.inject.extensions:guice-assistedinject:4.1.0') {
 		transitive = false
 	}
-    //api 'com.google.inject.extensions:guice-multibindings:4.1.0'
 }
 
 
