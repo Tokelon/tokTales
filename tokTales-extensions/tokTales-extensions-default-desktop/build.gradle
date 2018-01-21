@@ -6,8 +6,6 @@ version "0.0.1"
 apply plugin: 'java-library'
 
 dependencies {
-    //implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     api project(':tokTales-desktop')
     api project(':tokTales-extensions-default-core')
 }
