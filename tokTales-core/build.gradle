@@ -54,6 +54,9 @@ dependencies {
     api ('com.google.inject.extensions:guice-assistedinject:4.1.0') {
 		transitive = false
 	}
+	api ('com.google.inject.extensions:guice-multibindings:4.1.0') {
+    	transitive = false
+    }
 }
 
 

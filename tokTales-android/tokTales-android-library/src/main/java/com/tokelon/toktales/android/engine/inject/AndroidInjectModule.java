@@ -2,6 +2,7 @@ package com.tokelon.toktales.android.engine.inject;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
@@ -31,6 +32,9 @@ import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
+import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
+import com.tokelon.toktales.core.render.IRenderDriverFactory;
+import com.tokelon.toktales.core.render.ITextureManagerFactory;
 
 import android.content.Context;
 
@@ -57,11 +61,20 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		// Game bindings
 		bindInScopeAndForNotScoped(IGameStateControl.class, AndroidGameStateManager.class, GameScoped.class);
 
+		
+		Multibinder<IRenderDriverFactory> renderDriverFactoryBinder = Multibinder.newSetBinder(binder(), IRenderDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLSpriteDriver.GLSpriteDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLSpriteFontDriver.GLSpriteFontDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
+		
+		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLTextureManagerFactory.class);
+		bind(ITextureManagerFactory.class).to(GLBitmapTextureManager.GLBitmapTextureManagerFactory.class);
 	}
 
 
 	private static class ProviderIRenderService implements Provider<IRenderService> {
-		// TODO: Try multibindings ?
 		
 		@Override
 		public IRenderService get() {

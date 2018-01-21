@@ -3,6 +3,7 @@ package com.tokelon.toktales.desktop.engine.inject;
 import java.io.File;
 
 import com.google.inject.Provider;
+import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -13,6 +14,9 @@ import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
+import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
+import com.tokelon.toktales.core.render.IRenderDriverFactory;
+import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateManager;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
@@ -55,12 +59,24 @@ public class DesktopInjectModule extends AbstractInjectModule {
 
 		// Game bindings
 		bindInGameScopeAndForNotScoped(IGameStateControl.class, DesktopGameStateManager.class);
-
+		
+		
+		/* Overriding bindings does not work with Multibinder or MapBinder,
+		 * because the final value is always arbitrary
+		 */
+		Multibinder<IRenderDriverFactory> renderDriverFactoryBinder = Multibinder.newSetBinder(binder(), IRenderDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLSpriteDriver.GLSpriteDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLSpriteFontDriver.GLSpriteFontDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
+		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
+		
+		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLTextureManagerFactory.class);
+		bind(ITextureManagerFactory.class).to(GLBitmapTextureManager.GLBitmapTextureManagerFactory.class);
 	}
 
 
 	public static class ProviderIRenderService implements Provider<IRenderService> {
-		// TODO: Try multibindings ?
 		
 		@Override
 		public IRenderService get() {
