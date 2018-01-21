@@ -13,12 +13,10 @@ import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
-import com.tokelon.toktales.core.game.states.IGameStateControl;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
-import com.tokelon.toktales.desktop.game.states.DesktopGameStateManager;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
@@ -45,8 +43,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 
 	@Override
 	protected void configure() {
+		/* Engine bindings */
 
-		// Engine bindings
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);
 		bindInEngineScope(ILogService.class, DesktopLogService.class);
 		bindInEngineScope(IUIService.class, DesktopUIService.class);
@@ -57,12 +55,10 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		 bind(IDesktopInputService.class).to(DesktopInputService.class);
 		 bindInEngineScope(DesktopInputService.class);
 
-		// Game bindings
-		bindInGameScopeAndForNotScoped(IGameStateControl.class, DesktopGameStateManager.class);
-		
-		
-		/* Overriding bindings does not work with Multibinder or MapBinder,
-		 * because the final value is always arbitrary
+
+		/* Unused so far - everything under here */
+
+		/* Overriding bindings does not work with Multibinder or MapBinder, because the final value is always arbitrary
 		 */
 		Multibinder<IRenderDriverFactory> renderDriverFactoryBinder = Multibinder.newSetBinder(binder(), IRenderDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLSpriteDriver.GLSpriteDriverFactory.class);

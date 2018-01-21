@@ -6,9 +6,12 @@ import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 public class CoreDefaultExtensionsInjectConfig extends HierarchicalInjectConfig {
 
     public CoreDefaultExtensionsInjectConfig() {
-        override(new CoreInjectModule());
+    	// Core - base
+        extend(new CoreInjectModule());
 
-        override(new CoreDefaultExtensionsInjectModule());
+        // DefaultExtensions - override first then extend
+        override(new CoreDefaultExtensionsOverrideInjectModule());
+        extend(new CoreDefaultExtensionsInjectModule());
     }
     
 }

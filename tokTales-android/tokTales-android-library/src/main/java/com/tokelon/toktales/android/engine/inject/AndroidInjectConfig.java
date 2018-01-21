@@ -5,10 +5,14 @@ import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 
 public class AndroidInjectConfig extends HierarchicalInjectConfig {
 
+	
     public AndroidInjectConfig() {
-        override(new CoreInjectModule());
+    	// Core - base
+        extend(new CoreInjectModule());
 
-        override(new AndroidInjectModule());
+        // Android - override first then extend
+        override(new AndroidOverrideInjectModule());
+        extend(new AndroidInjectModule());
     }
     
 }

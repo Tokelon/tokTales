@@ -5,10 +5,14 @@ import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 
 public class DesktopInjectConfig extends HierarchicalInjectConfig {
 
+	
     public DesktopInjectConfig() {
-        override(new CoreInjectModule());
+    	// Core - base
+        extend(new CoreInjectModule());
 
-        override(new DesktopInjectModule());
+        // Desktop - override first then extend
+        override(new DesktopOverrideInjectModule());
+        extend(new DesktopInjectModule());
     }
     
 }

@@ -4,10 +4,10 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 
 public class CoreDefaultExtensionsInjectModule extends AbstractInjectModule {
 
+	
     @Override
     protected void configure() {
-        // TODO Auto-generated method stub
-
+    	// Nothing yet
     }
 
 }
