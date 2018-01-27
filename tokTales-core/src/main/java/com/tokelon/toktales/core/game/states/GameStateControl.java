@@ -3,7 +3,9 @@ package com.tokelon.toktales.core.game.states;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.engine.log.ILogger;
 
 public class GameStateControl implements IGameStateControl {
 
@@ -17,14 +19,18 @@ public class GameStateControl implements IGameStateControl {
 	private boolean logAcessCurrentState = enableLogAccessCurrentState;
 	
 	
-	
-	
 	private final Map<String, IGameState> states = new HashMap<String, IGameState>();
 	
 	private IGameState currentState;
 	private String currentStateName;
 	
+	private final ILogger logger;
 
+	@Inject
+	public GameStateControl(ILogger logger) {
+		this.logger = logger;
+	}
+	
 
 	@Override
 	public void update(long timeMillis) {
@@ -44,10 +50,8 @@ public class GameStateControl implements IGameStateControl {
 		
 		logAcessState = enableLogAccessState;
 		logAcessCurrentState = enableLogAccessCurrentState;
-
 	}
 
-	
 	
 	
 	@Override
@@ -66,7 +70,7 @@ public class GameStateControl implements IGameStateControl {
 		
 		currentState.onEnter();
 		
-		TokTales.getLog().d(TAG, "State changed to: " +stateName);
+		logger.d(TAG, "State changed to: " +stateName);
 	}
 	
 	
@@ -79,7 +83,7 @@ public class GameStateControl implements IGameStateControl {
 		states.put(name, state);
 		state.onEngage();
 		
-		TokTales.getLog().d(TAG, "State added: " +name);
+		logger.d(TAG, "State added: " +name);
 	}
 	
 	
@@ -103,7 +107,7 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public synchronized IGameState getState(String stateName) {
 		if(logAcessState) {
-			TokTales.getLog().d(TAG, "Access to state: " +stateName);
+			logger.d(TAG, "Access to state: " +stateName);
 			
 			StringBuilder sb = new StringBuilder();
 			for(StackTraceElement el: Thread.currentThread().getStackTrace()) {
@@ -114,7 +118,7 @@ public class GameStateControl implements IGameStateControl {
 				}
 			}
 			
-			TokTales.getLog().d(TAG, sb.toString());
+			logger.d(TAG, sb.toString());
 		}
 		
 		
@@ -126,7 +130,7 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public IGameState getActiveState() {
 		if(logAcessCurrentState) {
-			TokTales.getLog().d(TAG, "Access to current state (" +currentStateName +")");
+			logger.d(TAG, "Access to current state (" +currentStateName +")");
 			
 			StringBuilder sb = new StringBuilder();
 			for(StackTraceElement el: Thread.currentThread().getStackTrace()) {
@@ -137,7 +141,7 @@ public class GameStateControl implements IGameStateControl {
 				}
 			}
 			
-			TokTales.getLog().d(TAG, sb.toString());
+			logger.d(TAG, sb.toString());
 		}
 		
 		

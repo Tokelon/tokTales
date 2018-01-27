@@ -22,20 +22,22 @@ import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineException;
-import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.setup.manual.BaseSetup;
-import com.tokelon.toktales.core.game.Game.GameFactory;
+import com.tokelon.toktales.core.engine.setup.manual.EngineFactory;
+import com.tokelon.toktales.core.engine.setup.manual.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.game.states.TokelonStates;
 
 import android.content.Context;
+import android.os.Environment;
 
+@Deprecated
 public class AndroidSetup extends BaseSetup {
 
 	public static final String TAG = "AndroidSetup";
@@ -59,21 +61,19 @@ public class AndroidSetup extends BaseSetup {
 		
 		AndroidLogService androidLogService = new AndroidLogService();
 		defaultEngineFactory.setLogService(androidLogService);
+		ILogger mainLogger = new MainLogger(androidLogService); // TODO: Should be the created logger and not the default
 		
-		
-		AndroidUIService androidUIService = new AndroidUIService();
+		AndroidUIService androidUIService = new AndroidUIService(mainLogger);
 		defaultEngineFactory.setUIService(androidUIService);
 		
 		androidUIService.addExtension("console", new AndroidUIConsoleExtension());
 		
 		
-		AndroidContentService androidContentService = new AndroidContentService();
-		androidContentService.setGlobalContext(mApplicationContext);
+		AndroidContentService androidContentService = new AndroidContentService(mainLogger, mApplicationContext);
 		defaultEngineFactory.setContentService(androidContentService);
 		
 		
-		AndroidStorageService androidStorageService = new AndroidStorageService();
-		androidStorageService.setGlobalContext(mApplicationContext);
+		AndroidStorageService androidStorageService = new AndroidStorageService(mainLogger, Environment.getExternalStorageDirectory());
 		defaultEngineFactory.setStorageService(androidStorageService);
 		
 		
@@ -116,7 +116,7 @@ public class AndroidSetup extends BaseSetup {
 	protected IGame createGame(Injector injector, IEngine engine, ILogger logger, GameFactory defaultGameFactory) throws EngineException {
 		
 		if(engine.getInputService() instanceof IAndroidInputService) {
-			AndroidGameStateManager gamestateControl = new AndroidGameStateManager((IAndroidInputService) engine.getInputService());
+			AndroidGameStateManager gamestateControl = new AndroidGameStateManager(logger, (IAndroidInputService) engine.getInputService());
 			//gamestateControl.setInputMaster(inputMaster);	// Maybe this should be done after the game has been created
 			defaultGameFactory.setStateControl(gamestateControl);
 		}

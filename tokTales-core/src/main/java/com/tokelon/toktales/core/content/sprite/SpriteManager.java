@@ -4,23 +4,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.prog.annotation.ProgRequiresLog;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.IStructuredLocation;
 import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
 
-@ProgRequiresLog
 public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 
 	public static final String TAG = SpriteManager.class.getSimpleName();
@@ -32,7 +33,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	private static final ISpecialContent SPECIAL_SPRITE_LOAD_ERROR = IContentManager.SpecialContent.SPRITE_LOAD_ERROR;
 	
 	
-	
+	private final ILogger logger;
 	private final IContentService contentService;
 	private final IStorageService storageService;
 	
@@ -46,12 +47,13 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	private final SpritesetCache spritesetCache;
 	
 
-	
-	public SpriteManager(IContentService contentService, IStorageService storageService, IResourceManager resourceManager) {
-		if(contentService == null || storageService == null || resourceManager == null) {
+	@Inject
+	public SpriteManager(ILogger logger, IContentService contentService, IStorageService storageService, @Assisted IResourceManager resourceManager) {
+		if(logger == null || contentService == null || storageService == null || resourceManager == null) {
 			throw new NullPointerException();
 		}
 		
+		this.logger = logger;
 		this.contentService = contentService;
 		this.storageService = storageService;
 
@@ -61,10 +63,11 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 		
 		specials = Collections.synchronizedMap(new HashMap<ISpecialContent, ISpriteAsset>());
 		
-		spriteLoader = new SpriteLoader(contentService, storageService, resourceManager, this);
+		spriteLoader = new SpriteLoader(logger, contentService, storageService, resourceManager, this);
 	}
 	
 	
+	@Override
 	public void startLoading() {
 		spriteLoader.addSpecial(SPECIAL_SPRITE_EMPTY);
 		spriteLoader.addSpecial(SPECIAL_SPRITE_NOT_FOUND);
@@ -75,6 +78,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 		loaderThread.start();
 	}
 	
+	@Override
 	public void stopLoading() {
 		spriteLoader.stopLoader();
 	}
@@ -83,7 +87,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	
 	@Override
 	public void runClearAll() {
-		TokTales.getLog().i(TAG, "SpriteCache: Clearing all");
+		logger.i(TAG, "SpriteCache: Clearing all");
 		
 		spriteCache.runClearAll();
 		spritesetCache.runClearAll();
@@ -91,7 +95,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	
 	@Override
 	public void runClearMissing() {
-		TokTales.getLog().i(TAG, "SpriteCache: Clearing missing");
+		logger.i(TAG, "SpriteCache: Clearing missing");
 		
 		spriteCache.runClearErrorSprites();
 		spritesetCache.runClearErrorSprites();
@@ -107,7 +111,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	
 	@Override
 	public void failedToLoadSpecial(ISpecialContent special) {
-		TokTales.getLog().e(TAG, "!! Failed to load special: " +special.toString());
+		logger.e(TAG, "!! Failed to load special: " +special.toString());
 		
 		specials.put(special, AbstractCache.CACHE_SPECIAL_LOAD_ERROR);
 	}
@@ -126,7 +130,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	
 	@Override
 	public void spriteNotFound(ISprite sprite) {
-		TokTales.getLog().w(TAG, "Sprite not found: " +sprite.getSpriteName());
+		logger.w(TAG, "Sprite not found: " +sprite.getSpriteName());
 		
 		if(sprite.isEnclosed()) {
 			spritesetCache.store(sprite.getSpriteset(), AbstractCache.CACHE_SPECIAL_NOT_FOUND);
@@ -138,7 +142,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	
 	@Override
 	public void failedToLoadSprite(ISprite sprite, String errorMessage) {
-		TokTales.getLog().w(TAG, "Failed to load sprite (" +sprite.getSpriteName() + ") with error: " +errorMessage);
+		logger.w(TAG, "Failed to load sprite (" +sprite.getSpriteName() + ") with error: " +errorMessage);
 		
 		if(sprite.isEnclosed()) {
 			spritesetCache.store(sprite.getSpriteset(), AbstractCache.CACHE_SPECIAL_LOAD_ERROR);

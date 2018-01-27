@@ -2,6 +2,7 @@ package com.tokelon.toktales.desktop.game.states;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.states.GameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
@@ -13,7 +14,9 @@ import com.tokelon.toktales.desktop.input.IDesktopInputService;
 public class DesktopGameStateManager extends GameStateControl {
 
 	@Inject
-	public DesktopGameStateManager(IDesktopInputService inputService) {
+	public DesktopGameStateManager(ILogger logger, IDesktopInputService inputService) {
+		super(logger);
+		
 		inputService.getInputDispatcher().registerMouseButtonCallback(new GamestateControlMouseButtonCallback());
 		inputService.getInputDispatcher().registerCursorMoveCallback(new GamestateControlCursorMoveCallback());
 		inputService.getInputDispatcher().registerKeyInputCallback(new GamestateControlKeyInputCallback());

@@ -4,42 +4,28 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.TokTales;
 
 
 public class GameLogicManager implements IGameLogicManager {
 
 	private IGame game;
 	
+	private final Provider<IEngineContext> engineContextProvider;
 	private final Provider<IGame> gameProvider;
 	
-	public GameLogicManager() { 
-	    gameProvider = () -> game;
-	}
-	
 	@Inject
-	public GameLogicManager(Provider<IGame> gameProvider) {
+	public GameLogicManager(Provider<IEngineContext> engineContextProvider, Provider<IGame> gameProvider) {
+		this.engineContextProvider = engineContextProvider;
 	    this.gameProvider = gameProvider;
-	}
-	
-	
-	public void setupGame(IGame game) {
-		this.game = game;
 	}
 	
 	
 	@Override
 	public void onGameCreate() {
-		if(game == null) {
-		    game = gameProvider.get();
-			//throw new IllegalStateException("No game was provided");
-		}
-
-		// TODO: Important - Fix this
-		// Either take the values from the game, or pass the context as a parameter
-		IEngineContext engineContext = TokTales.getContext();
+		game = gameProvider.get();
 		
-		game.getGameAdapter().onCreate(engineContext);		
+		IEngineContext engineContext = engineContextProvider.get();
+		game.getGameAdapter().onCreate(engineContext);
 	}
 
 	@Override

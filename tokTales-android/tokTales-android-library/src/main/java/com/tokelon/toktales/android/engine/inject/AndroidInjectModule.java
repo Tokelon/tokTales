@@ -25,6 +25,7 @@ import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -34,6 +35,7 @@ import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
 
 import android.content.Context;
+import android.os.Environment;
 
 public class AndroidInjectModule extends AbstractInjectModule {
 
@@ -43,11 +45,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		bindInEngineScope(IEnvironment.class, AndroidEnvironment.class);
 		bindInEngineScope(ILogService.class, AndroidLogService.class);
-		bindToProviderInEngineScope(IUIService.class, () -> {
-			AndroidUIService androidUIService = new AndroidUIService();
-			androidUIService.addExtension("console", new AndroidUIConsoleExtension());
-			return androidUIService;
-		});
+		bindToProviderInEngineScope(IUIService.class, ProviderIUIService.class);
 		bindToProviderInEngineScope(IContentService.class, ProviderIContentService.class);
 		bindToProviderInEngineScope(IStorageService.class, ProviderIStorageService.class);
 		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
@@ -90,35 +88,51 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		}
 	}
 
+	
+	private static class ProviderIUIService implements Provider<IUIService> {
+		private final ILogger logger;
+		
+		@Inject
+		public ProviderIUIService(ILogger logger) {
+			this.logger = logger;
+		}
+		
+		@Override
+		public IUIService get() {
+			AndroidUIService androidUIService = new AndroidUIService(logger);
+			androidUIService.addExtension("console", new AndroidUIConsoleExtension());
+			return androidUIService;
+		}
+	}
 
 	private static class ProviderIContentService implements Provider<IContentService> {
+		private final ILogger logger;
 		private final Context appContext;
 
 		@Inject
-		public ProviderIContentService(Context applicationContext) {
+		public ProviderIContentService(ILogger logger, Context applicationContext) {
+			this.logger = logger;
 			this.appContext = applicationContext;
 		}
 
 		@Override
 		public IContentService get() {
-			AndroidContentService androidContentService = new AndroidContentService();
-			androidContentService.setGlobalContext(appContext);
+			AndroidContentService androidContentService = new AndroidContentService(logger, appContext);
 			return androidContentService;
 		}
 	}
 
 	private static class ProviderIStorageService implements Provider<IStorageService> {
-		private final Context appContext;
+		private final ILogger logger;
 
 		@Inject
-		public ProviderIStorageService(Context applicationContext) {
-			this.appContext = applicationContext;
+		public ProviderIStorageService(ILogger logger) {
+			this.logger = logger;
 		}
 
 		@Override
 		public IStorageService get() {
-			AndroidStorageService androidStorageService = new AndroidStorageService();
-			androidStorageService.setGlobalContext(appContext);
+			AndroidStorageService androidStorageService = new AndroidStorageService(logger, Environment.getExternalStorageDirectory());
 			return androidStorageService;
 		}
 	}

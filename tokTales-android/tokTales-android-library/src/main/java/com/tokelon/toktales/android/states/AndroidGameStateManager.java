@@ -6,13 +6,16 @@ import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButto
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPointerCallback;
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.IAndroidInputService;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.states.GameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 
 public class AndroidGameStateManager extends GameStateControl {
 	
 	@Inject
-	public AndroidGameStateManager(IAndroidInputService inputService) {
+	public AndroidGameStateManager(ILogger logger, IAndroidInputService inputService) {
+		super(logger);
+		
 		inputService.getInputDispatcher().registerScreenButtonCallback(new GamestateControlScreenButtonCallback());
 		inputService.getInputDispatcher().registerScreenPressCallback(new GamestateControlScreenPressCallback());
 		inputService.getInputDispatcher().registerScreenPointerCallback(new GamestateControlScreenPointerCallback());

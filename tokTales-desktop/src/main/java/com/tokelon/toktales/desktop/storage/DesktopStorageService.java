@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.AbstractEngineService;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IListing;
@@ -19,26 +22,20 @@ import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
 public class DesktopStorageService extends AbstractEngineService implements IStorageService {
+	/* Most implementation is copied from AndroidStorageService */
 
-	/* Most implementation is copied from AndroidStorageFramework */
-	
-	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl("");			// Is empty
-
-	private static final String APP_DIR_NAME = "StorageData";
-	//private static final ILocation EXTERNAL_APP_DIR = new LocationImpl(APP_DIR_NAME);
+	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty | TODO: Should this mirror extStorageRoot?
 
 	
+	private final ILogger logger;
 	private final File extStorageRoot;
 	private final String storageDirName;
-	
-	public DesktopStorageService() {
-		this(new File(""), APP_DIR_NAME);
-	}
-	
-	public DesktopStorageService(File externalStorageRoot, String storageDirectoryName) {
+
+	@Inject
+	public DesktopStorageService(ILogger logger, File externalStorageRoot, String storageDirectoryName) {
+		this.logger = logger;
 		this.extStorageRoot = externalStorageRoot;
 		this.storageDirName = storageDirectoryName;
-		
 	}
 	
 	

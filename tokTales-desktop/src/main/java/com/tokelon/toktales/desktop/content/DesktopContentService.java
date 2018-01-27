@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
 
 import com.tokelon.toktales.core.content.IAssetContainer;
@@ -17,11 +18,11 @@ import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.IRenderTexture;
@@ -39,18 +40,15 @@ public class DesktopContentService extends AbstractEngineService implements ICon
 	public static final String TAG = "DesktopContentService";
 	
 	
-	private static final String CONTENT_DIR_NAME = "ContentData";
-	
 	private final DesktopStorageService assetStorageService;
 	
-	
-	public DesktopContentService() {
-		this(new File(""), CONTENT_DIR_NAME);
-	}
+	private final ILogger logger;
 
-	public DesktopContentService(File externalStorageRoot, String contentDirectoryName) {
-		//File fakeRootContent = new File(externalStorageRoot, contentDirectoryName);
-		assetStorageService = new DesktopStorageService(externalStorageRoot, contentDirectoryName);
+	@Inject
+	public DesktopContentService(ILogger logger, File externalStorageRoot, String contentDirectoryName) {
+		this.logger = logger;
+		
+		this.assetStorageService = new DesktopStorageService(logger, externalStorageRoot, contentDirectoryName);
 	}
 	
 	
@@ -178,7 +176,7 @@ public class DesktopContentService extends AbstractEngineService implements ICon
 			ITextureFont font = loadFontFromSource(fontInputStream);
 			return font;
 		} catch (ContentException e) {
-			TokTales.getLog().e(TAG, e.getMessage());
+			logger.e(TAG, e.getMessage());
 			return null;
 		} finally {
 			try {

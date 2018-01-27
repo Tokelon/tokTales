@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.AbstractEngineService;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.engine.storage.StorageUnavailableException;
@@ -21,38 +24,27 @@ import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;
 
-import android.content.Context;
 import android.os.Environment;
 
 public class AndroidStorageService extends AbstractEngineService implements IStorageService {
 
 	
-	private Context globalContext;
-
 	private static final ILocation EXTERNAL_APP_DIR = LocationsAndPlaces.LOCATION_EXTERNAL;
-	
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl("");			// Is empty
 	
-	
+
+	private final ILogger logger;
 	private final File extStorageRoot;
 	
-	public AndroidStorageService() {
-		this(Environment.getExternalStorageDirectory());
-	}
-	
-	public AndroidStorageService(File externalStorageRoot) {
+	@Inject
+	public AndroidStorageService(ILogger logger, File externalStorageRoot) {
+		this.logger = logger;
 		this.extStorageRoot = externalStorageRoot;
 	}
-	
-	
-	public void setGlobalContext(Context applicationContext) {
-		globalContext = applicationContext;
-	}
-	
+
 	
 	
 	//TODO: !! CHeck if all the streams are being closed correctly!
-	
 	
 	
 	@Override

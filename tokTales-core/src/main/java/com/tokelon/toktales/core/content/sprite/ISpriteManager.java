@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.content.sprite;
 
+import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
@@ -10,6 +11,16 @@ import com.tokelon.toktales.core.storage.IStructuredLocation;
 
 public interface ISpriteManager {
 
+	
+	public interface ISpriteManagerFactory {
+		
+		public ISpriteManager create(IResourceManager resourceManager);
+	}
+	
+	
+	
+	public void startLoading();
+	public void stopLoading();
 	
 	
 	public ISprite[] getSpriteList(IStructuredLocation location, int maxResults, int index) throws ContentException, StorageException;

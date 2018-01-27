@@ -1,21 +1,20 @@
 package com.tokelon.toktales.core.engine.setup.manual;
 
 import com.google.inject.Injector;
-import com.tokelon.toktales.core.engine.Engine.EngineFactory;
-import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
-import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
-import com.tokelon.toktales.core.game.Game.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
+@Deprecated
 public abstract class AbstractSetup implements IEngineSetup {
 
 	private Injector injector;
@@ -52,7 +51,7 @@ public abstract class AbstractSetup implements IEngineSetup {
 		
 		
 		/* Setup game */
-		GameFactory defaultGameFactory = new GameFactory(resultEngine, gameAdapter);
+		GameFactory defaultGameFactory = new GameFactory(resultLogger, resultEngine, gameAdapter);
 		
 		resultGame = createGame(injector, resultEngine, resultLogger, defaultGameFactory);
 		afterCreateGame(resultGame);

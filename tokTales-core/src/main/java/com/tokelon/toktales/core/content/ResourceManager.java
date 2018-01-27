@@ -6,13 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.prog.annotation.ProgRequiresLog;
 import com.tokelon.toktales.core.resources.IListing;
+import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
 import com.tokelon.toktales.core.resources.IListingBatch;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.core.resources.IResourceLookup;
@@ -20,10 +22,8 @@ import com.tokelon.toktales.core.resources.IResourceSet;
 import com.tokelon.toktales.core.resources.ListingBatch;
 import com.tokelon.toktales.core.resources.ResourceFilterView;
 import com.tokelon.toktales.core.resources.ResourceSet;
-import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
 import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
 
-@ProgRequiresLog
 public class ResourceManager implements IResourceManager {
 
 	private static final String TAG = ResourceManager.class.getSimpleName();
@@ -32,7 +32,7 @@ public class ResourceManager implements IResourceManager {
 	public static final String TEMP_RESOURCES_IDENTIFIER = "resource_manager_temp_resources_identifier";
 	
 	
-	
+	private final ILogger logger;
 	private final IContentService contentService;
 	private final IStorageService storageService;
 	
@@ -44,11 +44,13 @@ public class ResourceManager implements IResourceManager {
 	private ResourceFilterView filterSpriteManager;
 	
 	
-	public ResourceManager(IContentService contentService, IStorageService storageService) {
-		if(contentService == null || storageService == null) {
+	@Inject
+	public ResourceManager(ILogger logger, IContentService contentService, IStorageService storageService) {
+		if(logger == null || contentService == null || storageService == null) {
 			throw new NullPointerException();
 		}
 		
+		this.logger = logger;
 		this.contentService = contentService;
 		this.storageService = storageService;
 		
@@ -98,10 +100,10 @@ public class ResourceManager implements IResourceManager {
 				batch.addListing(res, listing);
 			} catch (ContentException e) {
 				
-				TokTales.getLog().w(TAG, "Bad resource (internal). Ignoring: " +res.getName() +" (" +e.getMessage() +")");
+				logger.w(TAG, "Bad resource (internal). Ignoring: " +res.getName() +" (" +e.getMessage() +")");
 			} catch (StorageException e) {
 
-				TokTales.getLog().w(TAG, "Bad resource (external). Ignoring: " +res.getName() +" (" +e.getMessage() +")");
+				logger.w(TAG, "Bad resource (external). Ignoring: " +res.getName() +" (" +e.getMessage() +")");
 			}			
 		}
 		

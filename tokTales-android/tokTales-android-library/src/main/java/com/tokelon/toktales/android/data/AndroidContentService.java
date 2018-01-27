@@ -5,12 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.Typeface;
+import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.render.opengl.AndroidBitmapTexture;
@@ -20,11 +15,11 @@ import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
@@ -32,21 +27,31 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Typeface;
+
 public class AndroidContentService extends AbstractEngineService implements IContentService {
 	
 	public static final String TAG = "AndroidContentService";
 
+	
 	private Context globalContext;
+	
+	private final ILogger logger;
+	
+	@Inject
+	public AndroidContentService(ILogger logger, Context globalContext) {
+		this.logger = logger;
+	}
 	
 	
 	public Context getGlobalContext() {
 		return globalContext;
 	}
-	
-	public void setGlobalContext(Context globalContext) {
-		this.globalContext = globalContext;
-	}
-	
 
 	
 	@Override
@@ -241,7 +246,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		
 		if(bitmap == null) {
 			// Error ?
-			TokTales.getLog().e(TAG, "Failed to decode bitmap resource!");
+			logger.e(TAG, "Failed to decode bitmap resource!");
 		}
 		else {
 
@@ -338,7 +343,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		try {
 			return loadFontFromSource(location.getLocationPath().getPath());
 		} catch (ContentException ce) {
-			TokTales.getLog().e(TAG, ce.getMessage());
+			logger.e(TAG, ce.getMessage());
 			return null;
 		}
 	}

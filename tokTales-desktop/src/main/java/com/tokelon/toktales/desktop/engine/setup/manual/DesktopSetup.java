@@ -4,14 +4,14 @@ import java.io.File;
 
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
-import com.tokelon.toktales.core.engine.Engine.EngineFactory;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.setup.manual.BaseSetup;
-import com.tokelon.toktales.core.game.Game.GameFactory;
+import com.tokelon.toktales.core.engine.setup.manual.EngineFactory;
+import com.tokelon.toktales.core.engine.setup.manual.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.game.states.TokelonStates;
@@ -34,6 +34,7 @@ import com.tokelon.toktales.desktop.render.DesktopRenderService;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 import com.tokelon.toktales.desktop.ui.DesktopUIService;
 
+@Deprecated
 public class DesktopSetup extends BaseSetup {
 
 	public static final String TAG = "DesktopSetup";
@@ -59,19 +60,19 @@ public class DesktopSetup extends BaseSetup {
 		
 		DesktopLogService desktopLogService = new DesktopLogService();
 		defaultEngineFactory.setLogService(desktopLogService);
-		
+		ILogger logger = new MainLogger(desktopLogService); // TODO: Should be the created logger and not the default
 		
 		DesktopUIService desktopUIService = new DesktopUIService();
 		defaultEngineFactory.setUIService(desktopUIService);
 		
 		
 		File dataRootContent = new File(DATA_LOCATION_NAME);
-		DesktopContentService desktopContentService = new DesktopContentService(dataRootContent, CONTENT_LOCATION_NAME);
+		DesktopContentService desktopContentService = new DesktopContentService(logger, dataRootContent, CONTENT_LOCATION_NAME);
 		defaultEngineFactory.setContentService(desktopContentService);
 		
 		
 		File dataRootStorage = new File(DATA_LOCATION_NAME);
-		DesktopStorageService desktopStorageService = new DesktopStorageService(dataRootStorage, STORAGE_LOCATION_NAME);
+		DesktopStorageService desktopStorageService = new DesktopStorageService(logger, dataRootStorage, STORAGE_LOCATION_NAME);
 		defaultEngineFactory.setStorageService(desktopStorageService);
 		
 		
@@ -107,7 +108,7 @@ public class DesktopSetup extends BaseSetup {
 	protected IGame createGame(Injector injector, IEngine engine, ILogger logger, GameFactory defaultGameFactory) throws EngineException {
 		
 		if(engine.getInputService() instanceof IDesktopInputService) {
-			DesktopGameStateManager gamestateControl = new DesktopGameStateManager((IDesktopInputService)engine.getInputService());
+			DesktopGameStateManager gamestateControl = new DesktopGameStateManager(logger, (IDesktopInputService)engine.getInputService());
 			defaultGameFactory.setStateControl(gamestateControl);
 		}
 		else {

@@ -3,36 +3,29 @@ package com.tokelon.toktales.core.content;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.content.sprite.SpriteManager;
-import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.engine.content.IContentService;
-import com.tokelon.toktales.core.engine.storage.IStorageService;
-import com.tokelon.toktales.core.prog.annotation.TokTalesRequired;
+import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
 
-@TokTalesRequired
 public class ContentManager implements IContentManager {
 
 	private static final String TAG = ContentManager.class.getSimpleName();
 	
 	
-	/* Managers */
-	private ResourceManager managerResource;
-	private SpriteManager managerSprite;
+	private IResourceManager managerResource;
+	private ISpriteManager managerSprite;
 	
 	@Inject
-	public ContentManager(IEngine engine) {
+	public ContentManager(IResourceManager resourceManager, ISpriteManagerFactory spriteManagerFactory) {
+		if(resourceManager == null || spriteManagerFactory == null) {
+			throw new NullPointerException();
+		}
 		
-		IStorageService storageService = engine.getStorageService();
-		IContentService contentService = engine.getContentService();
+		this.managerResource = resourceManager;
+		this.managerSprite = spriteManagerFactory.create(resourceManager);
 		
-		
-		managerResource = new ResourceManager(contentService, storageService);
-		managerSprite = new SpriteManager(contentService, storageService, managerResource);
-		
-		
+
 		managerSprite.startLoading();
 		
-		//managerSprite.stopLoading();	// TODO: Stop this when terminating!
+		//managerSprite.stopLoading();	// TODO: Important - Stop this when terminating!
 	}
 	
 

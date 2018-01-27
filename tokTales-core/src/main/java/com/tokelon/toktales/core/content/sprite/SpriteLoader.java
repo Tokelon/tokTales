@@ -13,26 +13,24 @@ import com.tokelon.toktales.core.content.GenericAsset;
 import com.tokelon.toktales.core.content.IAssetContainer;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.prog.annotation.ProgRequiresLog;
+import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.core.resources.IResourceLookup;
 import com.tokelon.toktales.core.resources.ResourceLookup;
 import com.tokelon.toktales.core.resources.ResourceTypeFilter;
-import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.IStructuredLocation;
 import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
 
-@ProgRequiresLog
-public class SpriteLoader implements ISpriteLoader, Runnable {
+class SpriteLoader implements ISpriteLoader, Runnable {
 
 	public static final String TAG = "SpriteLoader";
 	
@@ -44,7 +42,7 @@ public class SpriteLoader implements ISpriteLoader, Runnable {
 	private final Set<ISpriteset> spritesetLoading = Collections.synchronizedSet(new HashSet<ISpriteset>());
 	
 	
-
+	private final ILogger logger;
 	private final IContentService contentService;
 	private final IStorageService storageService;
 	private final ISpriteLoaderReceiver spriteLoaderReceiver;
@@ -54,11 +52,8 @@ public class SpriteLoader implements ISpriteLoader, Runnable {
 	private boolean running = true;
 	
 	
-	public SpriteLoader(IContentService contentService, IStorageService storageService, IResourceManager resourceManager, ISpriteLoaderReceiver spriteLoaderReceiver) {
-		if(contentService == null || storageService == null || resourceManager == null || resourceManager == null || spriteLoaderReceiver == null) {
-			throw new NullPointerException();
-		}
-		
+	public SpriteLoader(ILogger logger, IContentService contentService, IStorageService storageService, IResourceManager resourceManager, ISpriteLoaderReceiver spriteLoaderReceiver) {
+		this.logger = logger;
 		this.contentService = contentService;
 		this.storageService = storageService;
 		this.spriteLoaderReceiver = spriteLoaderReceiver;
@@ -75,20 +70,20 @@ public class SpriteLoader implements ISpriteLoader, Runnable {
 		if(!specialLoadingQueue.contains(special)) {
 			specialLoadingQueue.add(special);
 		}
-		
 	}
+	
 	
 	@Override
 	public void addInQueue(ISprite sprite, IGraphicLoadingOptions options) {
 		if(sprite.isEnclosed() && !spritesetLoading.contains(sprite.getSpriteset())) {
-			TokTales.getLog().d(TAG, String.format("Sprite \"%s\" from spriteset \"%s\" was added to loading queue", sprite.getSpriteName(), sprite.getSpriteset().getSpritesetName()));
+			logger.d(TAG, String.format("Sprite \"%s\" from spriteset \"%s\" was added to loading queue", sprite.getSpriteName(), sprite.getSpriteset().getSpritesetName()));
 			
 			spritesetLoading.add(sprite.getSpriteset());
 			optionsMap.put(sprite, options);	// This need to be before add !! (synchronization)
 			loadingQueue.add(sprite);
 		}
 		else if(!sprite.isEnclosed() && !loadingQueue.contains(sprite)) {
-			TokTales.getLog().d(TAG, String.format("Sprite \"%s\" was added to loading queue", sprite.getSpriteName()));
+			logger.d(TAG, String.format("Sprite \"%s\" was added to loading queue", sprite.getSpriteName()));
 			
 			optionsMap.put(sprite, options);	// This need to be before add !! (synchronization)
 			loadingQueue.add(sprite);			
@@ -143,12 +138,12 @@ public class SpriteLoader implements ISpriteLoader, Runnable {
 					}*/
 				} catch (InterruptedException e) {
 					// ?
-					TokTales.getLog().d(TAG, "Loader thread was interrupted while waiting!");
+					logger.d(TAG, "Loader thread was interrupted while waiting!");
 				}
 			}
 		}		
 		
-		TokTales.getLog().d(TAG, "Loader Thread terminated");
+		logger.d(TAG, "Loader Thread terminated");
 	}
 	
 	
@@ -386,7 +381,7 @@ public class SpriteLoader implements ISpriteLoader, Runnable {
 			
 			break;
 		default:
-			TokTales.getLog().w(TAG, "Ignoring resource: " +resource.getName() +" (Unsupported location)");
+			logger.w(TAG, "Ignoring resource: " +resource.getName() +" (Unsupported location)");
 			break;
 		}
 		

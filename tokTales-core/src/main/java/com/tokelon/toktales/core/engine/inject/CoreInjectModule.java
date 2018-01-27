@@ -1,9 +1,15 @@
 package com.tokelon.toktales.core.engine.inject;
 
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.content.ContentManager;
 import com.tokelon.toktales.core.content.IContentManager;
+import com.tokelon.toktales.core.content.IResourceManager;
+import com.tokelon.toktales.core.content.ResourceManager;
+import com.tokelon.toktales.core.content.sprite.ISpriteManager;
+import com.tokelon.toktales.core.content.sprite.SpriteManager;
+import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
 import com.tokelon.toktales.core.engine.Engine;
@@ -37,7 +43,11 @@ public class CoreInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		// you can use untargeted bindings so that the injector may prepare dependencies eagerly
-
+		// e.g. bind(Engine.class)
+		
+		// you can use optional bindings
+		// e.g. OptionalBinder.newOptionalBinder(binder(), IEngine.class).setDefault(Engine.class).setBinding(...);
+		
 		
 		// Engine Scope
 		EngineScope engineScope = new EngineScope();
@@ -70,6 +80,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 		  bindInGameScopeAndForNotScoped(IConfigManager.class, ConfigManager.class);
 		  bindInGameScopeAndForNotScoped(IEditorManager.class, EditorManager.class);
 		  bindInGameScopeAndForNotScoped(IContentManager.class, ContentManager.class);
+		   bind(IResourceManager.class).to(ResourceManager.class);
+		   install(new FactoryModuleBuilder()
+				   .implement(ISpriteManager.class, SpriteManager.class)
+				   .build(ISpriteManagerFactory.class));
 		  bindToProviderInGameScopeAndForNotScoped(IWorld.class, () -> new World(32.0f));  // Maybe do param with @Named
 		  bindInGameScopeAndForNotScoped(IGameAdapter.class, EmptyGameAdapter.class);
 

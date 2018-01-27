@@ -6,6 +6,7 @@ import com.tokelon.toktales.core.engine.setup.scripts.InitScriptingSetupScript;
 import com.tokelon.toktales.core.engine.setup.scripts.LoadMainConfigSetupScript;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
+@Deprecated
 public abstract class BaseSetup extends AbstractSetup {
 
 	

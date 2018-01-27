@@ -1,22 +1,29 @@
 package com.tokelon.toktales.android.ui;
 
-import android.app.Activity;
+import javax.inject.Inject;
 
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.ui.IUIService;
+
+import android.app.Activity;
 
 public class AndroidUIService extends AbstractEngineService implements IUIService {
 
 	private static final String TAG = "AndroidUIService";
 	
+	
+	// TODO: Inject this
 	private final IUserInterface userInterface;
 	
+	private final ILogger logger;
 	
-	
-	public AndroidUIService() {
-		userInterface = new UserInterface();
+	@Inject
+	public AndroidUIService(ILogger logger) {
+		this.logger = logger;
+		
+		this.userInterface = new UserInterface();
 	}
 	
 	public IUserInterface getUserInterface() {
@@ -37,13 +44,12 @@ public class AndroidUIService extends AbstractEngineService implements IUIServic
 				da.openContextMenu();
 			}
 			else {
-				TokTales.getLog().d(TAG, "Could not open external UI. Unsupported Activity running");
+				logger.d(TAG, "Could not open external UI. Unsupported Activity running");
 			}
 		}
 		else {
-			TokTales.getLog().w(TAG, "Unknown UI Code: " +uiCode);
+			logger.w(TAG, "Unknown UI Code: " +uiCode);
 		}
-		
 	}
 	
 	

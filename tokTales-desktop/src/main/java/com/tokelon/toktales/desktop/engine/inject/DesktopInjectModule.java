@@ -2,6 +2,7 @@ package com.tokelon.toktales.desktop.engine.inject;
 
 import java.io.File;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.engine.IEnvironment;
@@ -9,6 +10,7 @@ import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -48,8 +50,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);
 		bindInEngineScope(ILogService.class, DesktopLogService.class);
 		bindInEngineScope(IUIService.class, DesktopUIService.class);
-		bindToProviderInEngineScope(IContentService.class, () -> new DesktopContentService(new File(DATA_LOCATION_NAME), CONTENT_LOCATION_NAME));
-		bindToProviderInEngineScope(IStorageService.class, () -> new DesktopStorageService(new File(DATA_LOCATION_NAME), STORAGE_LOCATION_NAME));
+		bindToProviderInEngineScope(IContentService.class, ProviderIContentService.class);
+		bindToProviderInEngineScope(IStorageService.class, ProviderIStorageService.class);
 		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
 		bind(IInputService.class).to(IDesktopInputService.class);
 		 bind(IDesktopInputService.class).to(DesktopInputService.class);
@@ -92,5 +94,33 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		}
 	}
 
+	public static class ProviderIContentService implements Provider<IContentService> {
+		private final ILogger logger;
+		
+		@Inject
+		public ProviderIContentService(ILogger logger) {
+			this.logger = logger;
+		}
+		
+		@Override
+		public IContentService get() {
+			return new DesktopContentService(logger, new File(DATA_LOCATION_NAME), CONTENT_LOCATION_NAME);
+		}
+	}
+	
+	public static class ProviderIStorageService implements Provider<IStorageService> {
+		private final ILogger logger;
+		
+		@Inject
+		public ProviderIStorageService(ILogger logger) {
+			this.logger = logger;
+		}
 
+		@Override
+		public IStorageService get() {
+			return new DesktopStorageService(logger, new File(DATA_LOCATION_NAME), STORAGE_LOCATION_NAME);
+		}
+	}
+
+	
 }

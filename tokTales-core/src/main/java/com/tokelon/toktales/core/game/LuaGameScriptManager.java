@@ -3,18 +3,18 @@ package com.tokelon.toktales.core.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
-import com.tokelon.toktales.core.prog.annotation.TokTalesRequired;
 import com.tokelon.toktales.tools.script.lua.ILuaClass;
 import com.tokelon.toktales.tools.script.lua.ILuaObject;
 import com.tokelon.toktales.tools.script.lua.LuaScriptEnvironment;
 
 @ThreadSafe
-@TokTalesRequired
 public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameScriptManager {
 	
 	public static final String TAG = "LuaGameScriptManager";
@@ -30,15 +30,15 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 	
 	
 	private final Map<ILuaClass<?>, ILuaObject> luaMappings;
-
 	private final LuaValue loadModuleFunction;
 	
+	private final ILogger logger;
 	
-	public LuaGameScriptManager() {
+	@Inject
+	public LuaGameScriptManager(ILogger logger) {
+		this.logger = logger;
 		
 		luaMappings = new HashMap<ILuaClass<?>, ILuaObject>();
-		
-		
 		loadModuleFunction = initLoadModuleFunction();
 	}
 	
@@ -54,7 +54,7 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 			lmfunc = getScriptState().getGlobals().get(FUNCTION_LOAD_MODULE);
 		}
 		catch (LuaError le) {
-			TokTales.getLog().e(TAG, "Failed call load module script | " +le.getMessage());
+			logger.e(TAG, "Failed call load module script | " +le.getMessage());
 		}
 
 		return lmfunc;
@@ -64,7 +64,6 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 	/*
 	 * TODO: Is synchronization correct ?
 	 */
-	
 
 	@Override
 	public synchronized void addLuaObject(ILuaClass<?> luaClass, String moduleName) {
@@ -88,11 +87,10 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 			luaMappings.put(luaClass, luaObject);
 		}
 		catch (LuaError le) {
-			TokTales.getLog().e(TAG, "Failed to pass Object to Lua | " +le.getMessage());
+			logger.e(TAG, "Failed to pass Object to Lua | " +le.getMessage());
 		}
 		
 	}
-	
 	
 	
 }
