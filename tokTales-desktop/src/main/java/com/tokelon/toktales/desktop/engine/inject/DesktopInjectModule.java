@@ -43,10 +43,15 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	private static final String CONTENT_LOCATION_NAME = "ContentData";      // This is the CONTENT location
 
 
+	/* It is possible to use assisted inject bindings together with provider bindings
+	 * so DesktopContentService could get assisted inject as an alternative to the provider,
+	 * however it will be differentiated by the type injected so IContentService or IContentServiceFactory
+	 */
+	
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-
+		
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);
 		bindInEngineScope(ILogService.class, DesktopLogService.class);
 		bindInEngineScope(IUIService.class, DesktopUIService.class);
@@ -56,8 +61,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(IInputService.class).to(IDesktopInputService.class);
 		 bind(IDesktopInputService.class).to(DesktopInputService.class);
 		 bindInEngineScope(DesktopInputService.class);
-
-
+		
+		
 		/* Unused so far - everything under here */
 
 		/* Overriding bindings does not work with Multibinder or MapBinder, because the final value is always arbitrary
@@ -73,12 +78,13 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(ITextureManagerFactory.class).to(GLBitmapTextureManager.GLBitmapTextureManagerFactory.class);
 	}
 
+	
 
 	public static class ProviderIRenderService implements Provider<IRenderService> {
-		
-		@Override
-		public IRenderService get() {
-			DesktopRenderService desktopRenderService = new DesktopRenderService();
+		private final IRenderService renderService;
+		@Inject
+		public ProviderIRenderService(DesktopRenderService desktopRenderService) {
+			this.renderService = desktopRenderService;
 
 			IRenderAccess renderAccess = desktopRenderService.getRenderAccess();
 			renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLTextureManagerFactory());
@@ -89,36 +95,37 @@ public class DesktopInjectModule extends AbstractInjectModule {
 			renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory());
 			renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory());
 			renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory());
-
-			return desktopRenderService;
+		}
+		
+		@Override
+		public IRenderService get() {
+			return renderService;
 		}
 	}
 
 	public static class ProviderIContentService implements Provider<IContentService> {
-		private final ILogger logger;
-		
+		private final IContentService contentService;
 		@Inject
 		public ProviderIContentService(ILogger logger) {
-			this.logger = logger;
+			this.contentService = new DesktopContentService(logger, new File(DATA_LOCATION_NAME), CONTENT_LOCATION_NAME);
 		}
 		
 		@Override
 		public IContentService get() {
-			return new DesktopContentService(logger, new File(DATA_LOCATION_NAME), CONTENT_LOCATION_NAME);
+			return contentService;
 		}
 	}
 	
 	public static class ProviderIStorageService implements Provider<IStorageService> {
-		private final ILogger logger;
-		
+		private final IStorageService storageService;
 		@Inject
 		public ProviderIStorageService(ILogger logger) {
-			this.logger = logger;
+			this.storageService = new DesktopStorageService(logger, new File(DATA_LOCATION_NAME), STORAGE_LOCATION_NAME);
 		}
 
 		@Override
 		public IStorageService get() {
-			return new DesktopStorageService(logger, new File(DATA_LOCATION_NAME), STORAGE_LOCATION_NAME);
+			return storageService;
 		}
 	}
 

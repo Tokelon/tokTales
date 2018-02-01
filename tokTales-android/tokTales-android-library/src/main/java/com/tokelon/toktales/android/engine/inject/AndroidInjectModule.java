@@ -20,6 +20,7 @@ import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
+import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -34,7 +35,6 @@ import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
 
-import android.content.Context;
 import android.os.Environment;
 
 public class AndroidInjectModule extends AbstractInjectModule {
@@ -45,15 +45,21 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		bindInEngineScope(IEnvironment.class, AndroidEnvironment.class);
 		bindInEngineScope(ILogService.class, AndroidLogService.class);
-		bindToProviderInEngineScope(IUIService.class, ProviderIUIService.class);
-		bindToProviderInEngineScope(IContentService.class, ProviderIContentService.class);
+		bind(IUIService.class).to(IAndroidUIService.class);
+		 bind(IAndroidUIService.class).toProvider(ProviderIUIService.class);
+		 bindInEngineScope(ProviderIUIService.class); // Bind to scope via the provider!
+		 //bindInEngineScope(AndroidUIService.class); // Do not bind implementation in this case, scoping will be done via the provider
+		
+		bindInEngineScope(IContentService.class, AndroidContentService.class);
 		bindToProviderInEngineScope(IStorageService.class, ProviderIStorageService.class);
+		 //bindInEngineScope(AndroidStorageService.class); // Does not affect IStorageService binding since provider assignment is via creation
+		
 		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
 		bind(IInputService.class).to(IAndroidInputService.class);
 		 bind(IAndroidInputService.class).to(AndroidInputService.class);
-		 bindInEngineScope(AndroidInputService.class);
+		 bindInEngineScope(AndroidInputService.class); // Bind to scope via the implementation!
 
-
+		
 		/* Unused so far - everything under here */
 		
 		Multibinder<IRenderDriverFactory> renderDriverFactoryBinder = Multibinder.newSetBinder(binder(), IRenderDriverFactory.class);
@@ -68,12 +74,20 @@ public class AndroidInjectModule extends AbstractInjectModule {
 	}
 
 
-	private static class ProviderIRenderService implements Provider<IRenderService> {
-		
-		@Override
-		public IRenderService get() {
-			AndroidRenderService androidRenderService = new AndroidRenderService();
 
+	/* When using providers, always create or inject the object once in the constructor,
+	 * this is to adhere to the scope of the provider.
+	 * 
+	 * When injected be aware that it might have it's own scope.
+	 */
+	
+	private static class ProviderIRenderService implements Provider<IRenderService> {
+		private final IRenderService renderService;
+		
+		@Inject
+		public ProviderIRenderService(AndroidRenderService androidRenderService) {
+			this.renderService = androidRenderService;
+			
 			IRenderAccess renderAccess = androidRenderService.getRenderAccess();
 			renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLTextureManagerFactory());
 			renderAccess.registerTextureManager(new GLBitmapTextureManager.GLBitmapTextureManagerFactory());
@@ -83,57 +97,41 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory());
 			renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory());
 			renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory());
-
-			return androidRenderService;
-		}
-	}
-
-	
-	private static class ProviderIUIService implements Provider<IUIService> {
-		private final ILogger logger;
-		
-		@Inject
-		public ProviderIUIService(ILogger logger) {
-			this.logger = logger;
 		}
 		
 		@Override
-		public IUIService get() {
-			AndroidUIService androidUIService = new AndroidUIService(logger);
-			androidUIService.addExtension("console", new AndroidUIConsoleExtension());
-			return androidUIService;
+		public IRenderService get() {
+			return renderService;
 		}
 	}
 
-	private static class ProviderIContentService implements Provider<IContentService> {
-		private final ILogger logger;
-		private final Context appContext;
-
+	private static class ProviderIUIService implements Provider<IAndroidUIService> {
+		private final IAndroidUIService uiService;
 		@Inject
-		public ProviderIContentService(ILogger logger, Context applicationContext) {
-			this.logger = logger;
-			this.appContext = applicationContext;
+		public ProviderIUIService(AndroidUIService androidUIService) {
+			// Object assignment via injection; scope of AndroidUIService will apply!
+			this.uiService = androidUIService;
+			
+			uiService.addExtension("console", new AndroidUIConsoleExtension()); // Possibly refactor
 		}
-
+		
 		@Override
-		public IContentService get() {
-			AndroidContentService androidContentService = new AndroidContentService(logger, appContext);
-			return androidContentService;
+		public IAndroidUIService get() {
+			return uiService;
 		}
 	}
 
 	private static class ProviderIStorageService implements Provider<IStorageService> {
-		private final ILogger logger;
-
+		private final IStorageService storageService;
 		@Inject
 		public ProviderIStorageService(ILogger logger) {
-			this.logger = logger;
+			// Object assignment via creation; scope of AndroidStorageService will not apply!
+			storageService = new AndroidStorageService(logger, Environment.getExternalStorageDirectory());
 		}
 
 		@Override
 		public IStorageService get() {
-			AndroidStorageService androidStorageService = new AndroidStorageService(logger, Environment.getExternalStorageDirectory());
-			return androidStorageService;
+			return storageService;
 		}
 	}
 
