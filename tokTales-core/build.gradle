@@ -13,7 +13,7 @@ sourceSets {
 		java {
 			srcDir 'src/main/java'
 			srcDir 'tools/main/java'
-			
+
 			srcDir 'libs/JOML/src'
 		}
 		resources {
@@ -34,12 +34,14 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 dependencies {
+	/* This causes cyclic dependency errors in Eclipse.
+	 * Eclipse, as opposed to Gradle, does not understand that the dependency is only for the tests.
+	 *
+	 * The current workaround is to change the error to a warning, as described here:
+	 * https://github.com/eclipse/buildship/issues/460
+	 */
+	testImplementation project(':tokTales-test-core')
 
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
-    // Mockito
-    testImplementation 'org.mockito:mockito-core:2.13.0'
-    
 
 	// LuaJ
 	implementation files('libs/Luaj/luaj-jse-3.0.1.jar')
@@ -73,5 +75,7 @@ eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
     
     def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
-    con.@exported = 'true'
+	if(con) {
+		con.@exported = 'true'
+	}
 }

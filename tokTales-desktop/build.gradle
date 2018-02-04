@@ -28,10 +28,10 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 dependencies {
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+	testImplementation project(':tokTales-test-desktop')
 
-    api project(':tokTales-core')
+
+	api project(':tokTales-core')
 
 	// LWJGL
     api files('libs/LWJGL/jar/lwjgl.jar')
@@ -41,8 +41,10 @@ dependencies {
 }
 
 
-eclipse.classpath.file.withXml { XmlProvider provider ->
-	provider.asNode().classpathentry.findAll{it.'@path'.contains('libs/LWJGL/jar/lwjgl.jar')}
+eclipse.classpath.file.withXml { xml ->
+    def node = xml.asNode()
+
+	node.classpathentry.findAll{it.'@path'.contains('libs/LWJGL/jar/lwjgl.jar')}
 	.each {
 		it.appendNode('attributes')
 		.appendNode('attribute', [name:'org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY', value:'tokTales-desktop/libs/LWJGL/native'])

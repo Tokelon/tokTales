@@ -6,6 +6,8 @@ version "0.0.1"
 apply plugin: 'java-library'
 
 dependencies {
+    testImplementation project(':tokTales-test-core')
+
     api project(':tokTales-core')
 }
 
@@ -18,5 +20,7 @@ eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
     
     def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
-    con.@exported = 'true'
+    if(con) {
+        con.@exported = 'true'
+    }
 }

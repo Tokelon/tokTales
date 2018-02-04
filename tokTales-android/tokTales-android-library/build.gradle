@@ -33,13 +33,16 @@ android {
 
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    
+
+    testImplementation project(':tokTales-test-android')
+
+
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+
     api project(':tokTales-core')
 }
 
@@ -48,8 +51,11 @@ dependencies {
 eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
     
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core' ])
+    // Testing | tokTales-test-android
+    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-test-android' ])
+
     
+    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core' ])
     
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])

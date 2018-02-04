@@ -26,6 +26,18 @@ include ':tokTales-desktop'
 project(':tokTales-desktop').projectDir = tokTalesDesktop
 
 
+def tokTalesTest = new File(rootProject.projectDir, '../tokTales-test')
+include ':tokTales-test'
+project(':tokTales-test').projectDir = tokTalesTest
+
+include ':tokTales-test-android'
+project(':tokTales-test-android').projectDir = new File(tokTalesTest, 'tokTales-test-android')
+include ':tokTales-test-core'
+project(':tokTales-test-core').projectDir = new File(tokTalesTest, 'tokTales-test-core')
+include ':tokTales-test-desktop'
+project(':tokTales-test-desktop').projectDir = new File(tokTalesTest, 'tokTales-test-desktop')
+
+
 def tokTalesExtensions = new File(rootProject.projectDir, '../tokTales-extensions')
 include ':tokTales-extensions'
 project(':tokTales-extensions').projectDir = tokTalesExtensions
