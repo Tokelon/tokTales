@@ -1,0 +1,16 @@
+// tokTales-test settings.gradle
+
+rootProject.name = 'tokTales-test'
+
+include ':tokTales-test-android', ':tokTales-test-core', ':tokTales-test-desktop'
+
+
+includeFlat 'tokTales-core'
+includeFlat 'tokTales-desktop'
+includeFlat 'tokTales-android'
+
+
+include ':tokTales-android-library'
+project(':tokTales-android-library').projectDir = new File('../tokTales-android/tokTales-android-library')
+include ':tokTales-android-app'
+project(':tokTales-android-app').projectDir = new File('../tokTales-android/tokTales-android-app')

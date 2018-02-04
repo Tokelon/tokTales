@@ -1,0 +1,31 @@
+// tokTales-test-core build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+    // Use JUnit test framework
+    api 'junit:junit:4.12'
+    // Mockito
+    api 'org.mockito:mockito-core:2.13.0'
+
+
+	// Cyclic dependency, see toktales-core build.gradle
+    implementation project(':tokTales-core')
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+// Export project and dependencies for Android
+eclipse.classpath.file.withXml { xml ->
+    def node = xml.asNode()
+
+    def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+    if(con) {
+        con.@exported = 'true'
+    }
+}
