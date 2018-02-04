@@ -39,13 +39,14 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 	public static final String TAG = "AndroidContentService";
 
 	
-	private Context globalContext;
+	private final Context globalContext;
 	
 	private final ILogger logger;
 	
 	@Inject
 	public AndroidContentService(ILogger logger, Context globalContext) {
 		this.logger = logger;
+		this.globalContext = globalContext;
 	}
 	
 	
