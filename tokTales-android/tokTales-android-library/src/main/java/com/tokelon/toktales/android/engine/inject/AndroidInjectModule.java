@@ -14,6 +14,7 @@ import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
+import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
@@ -133,7 +134,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			
 			// TODO: Possibly refactor | Also refactor strings into static references
 			uiService.addExtension("console", new AndroidConsoleUIExtension());
-			uiService.addExtension("debug", new AndroidConsoleUIExtension());
+			uiService.addExtension("debug", new AndroidDebugUIExtension());
 		}
 		
 		@Override
