@@ -5,11 +5,10 @@ import javax.inject.Inject;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.ui.IUIService;
 
 import android.app.Activity;
 
-public class AndroidUIService extends AbstractEngineService implements IUIService {
+public class AndroidUIService extends AbstractEngineService implements IAndroidUIService {
 
 	private static final String TAG = "AndroidUIService";
 	
@@ -26,6 +25,7 @@ public class AndroidUIService extends AbstractEngineService implements IUIServic
 		this.userInterface = new UserInterface();
 	}
 	
+	@Override
 	public IUserInterface getUserInterface() {
 		return userInterface;
 	}
