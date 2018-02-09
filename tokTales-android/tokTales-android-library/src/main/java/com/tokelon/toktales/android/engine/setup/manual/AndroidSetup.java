@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
+import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.engine.ui.AndroidUIConsoleExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
@@ -64,10 +65,11 @@ public class AndroidSetup extends BaseSetup {
 		defaultEngineFactory.setLogService(androidLogService);
 		ILogger mainLogger = new MainLogger(androidLogService); // TODO: Should be the created logger and not the default
 		
-		AndroidUIService androidUIService = new AndroidUIService(mainLogger, new UserInterface());
+		AndroidUIService androidUIService = new AndroidUIService(new UserInterface());
 		defaultEngineFactory.setUIService(androidUIService);
 		
 		androidUIService.addExtension("console", new AndroidUIConsoleExtension());
+		androidUIService.addExtension("debug", new AndroidDebugUIExtension());
 		
 		
 		AndroidContentService androidContentService = new AndroidContentService(mainLogger, mApplicationContext);

@@ -4,8 +4,9 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
@@ -68,11 +69,13 @@ public class AndroidInitialGamestate extends InitialGamestate {
 		}
 
 		private void buttonBPressed() {
-		
-			//IUIFramework uiFramework = (IUIFramework) Prog.getPIP().getProgramInterface(IPIP.IID_FRAMEWORK_UI);
-			IUIService uiService = TokTales.getEngine().getUIService();
+			IUIService uiService = getEngine().getUIService();
 			
-			uiService.openExternalUI(IUIService.EXTERNAL_UI_CODE_DEBUG);
+			try {
+				uiService.getExtensionByTypeOrFail(IDebugUIExtension.class).openContextMenu();
+			} catch (EngineException e) {
+				getLog().e(TAG, "Error opening context menu: " + e.getMessage());
+			}
 		}
 
 	}

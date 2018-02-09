@@ -1,45 +1,39 @@
 package com.tokelon.toktales.android.engine.ui;
 
-import android.app.Activity;
-import android.text.Editable;
-import android.text.TextWatcher;
-
 import com.tokelon.toktales.android.activity.IConsoleActivity;
-import com.tokelon.toktales.android.ui.AndroidUIService;
+import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
+import com.tokelon.toktales.android.ui.IAndroidUIService;
+import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.engine.ServiceException;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.ui.IUIConsoleExtension;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+
 public class AndroidUIConsoleExtension implements IUIConsoleExtension {
 
 	public static final String TAG = "AndroidUIConsoleModule";
 	
 	
-	private AndroidUIService mUIService;
+	private IAndroidUIService mUIService;
 	
 	public AndroidUIConsoleExtension() {
 		// UI service will be attached
 	}
 	
-	public AndroidUIConsoleExtension(AndroidUIService androidUIService) {
-		this.mUIService = androidUIService;
-		this.mUIService.addExtension(TAG, this);
-	}
-	
 	
 	@Override
-	public int openConsoleInput(IConsoleController consoleController) {
-		
-		Activity currentActivity = mUIService.getUserInterface().getCurrentActivity().asActivity();
+	public void openConsoleInput(IConsoleController consoleController) throws EngineException {
+		IIntegratedActivity currentActivity = mUIService.getUserInterface().getCurrentActivity();
 		
 		if(currentActivity instanceof IConsoleActivity) {
 			((IConsoleActivity)currentActivity).getConsoleInput(new ConsoleTextWatcher(consoleController));
-			return 0;
 		}
 		else {
-			return 1;
+			throw new EngineException("Failed to get console input: The activity running must be of type " + IConsoleActivity.class.getName());
 		}
 	}
 
@@ -94,11 +88,11 @@ public class AndroidUIConsoleExtension implements IUIConsoleExtension {
 
 	@Override
 	public void attachService(IEngineService service) {
-		if(!(service instanceof AndroidUIService)) {
-			throw new ServiceException(AndroidUIService.class.getSimpleName() + " is required for this extension to work");
+		if(!(service instanceof IAndroidUIService)) {
+			throw new ServiceException(IAndroidUIService.class.getSimpleName() + " is required for this extension to work");
 		}
 		
-		mUIService = (AndroidUIService) service;
+		mUIService = (IAndroidUIService) service;
 	}
 
 

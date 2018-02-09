@@ -1,12 +1,13 @@
 package com.tokelon.toktales.extens.def.android.states;
 
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIConsoleExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
-import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 
 public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScreenButtonCallback {
 
@@ -50,13 +51,23 @@ public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScre
 	
 
 	private void buttonSP1Pressed() {
-		IUIConsoleExtension cons = TokTales.getEngine().getUIService().getExtensionAs("console", IUIConsoleExtension.class);
-		cons.openConsoleInput(consoleGamestate.getConsoleController());
+		IUIService uiService = consoleGamestate.getEngine().getUIService();
+		
+		try {
+			uiService.getExtensionByTypeOrFail(IUIConsoleExtension.class).openConsoleInput(consoleGamestate.getConsoleController());
+		} catch (EngineException e) {
+			consoleGamestate.getLog().e(TAG, "Error opening console input: " + e.getMessage());
+		}
 	}
 	
 	private void buttonSETPressed() {
-		IUIService uiService = TokTales.getEngine().getUIService();
-		uiService.openExternalUI(IUIService.EXTERNAL_UI_CODE_DEBUG);
+		IUIService uiService = consoleGamestate.getEngine().getUIService();
+		
+		try {
+			uiService.getExtensionByTypeOrFail(IDebugUIExtension.class).openContextMenu();
+		} catch (EngineException e) {
+			consoleGamestate.getLog().e(TAG, "Error opening context menu: " + e.getMessage());
+		}
 	}
 	
 

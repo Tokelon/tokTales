@@ -1,6 +1,7 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.extens.def.core.game.states.consover.ConsoleOverlayControlHandler;
 
@@ -73,8 +74,13 @@ public class LocalMapControlHandler extends ConsoleOverlayControlHandler impleme
 	@Override
 	public boolean handleDebugOpen() {
 		if(!gamestate.getActiveScene().getSceneControlHandler().handleDebugOpen()) {
-			IUIService uiService = TokTales.getEngine().getUIService();
-			uiService.openExternalUI(IUIService.EXTERNAL_UI_CODE_DEBUG);
+			IUIService uiService = gamestate.getEngine().getUIService();
+			
+			try {
+				uiService.getExtensionByTypeOrFail(IDebugUIExtension.class).openContextMenu();
+			} catch (EngineException e) {
+				gamestate.getLog().e(TAG, "Error opening context menu: " + e.getMessage());
+			}
 		}
 		
 		return true;

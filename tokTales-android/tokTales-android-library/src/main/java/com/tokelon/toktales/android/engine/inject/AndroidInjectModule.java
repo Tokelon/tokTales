@@ -76,7 +76,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 				.build(IActivityIntegratorFactory.class));
 		bind(IUIServiceIntegration.class).to(IUIServiceIntegration.UIServiceIntegration.class);
 		bind(IKeyboardActivityIntegration.class).to(KeyboardActivityIntegration.class);
-		bind(IUserInterface.class).to(UserInterface.class);
+		bind(IUserInterface.class).to(UserInterface.class); // Maybe bind to Game scope
 		
 		
 		/* Unused so far - everything under here */
@@ -131,7 +131,9 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			// Object assignment via injection; scope of AndroidUIService will apply!
 			this.uiService = androidUIService;
 			
-			uiService.addExtension("console", new AndroidUIConsoleExtension()); // Possibly refactor
+			// TODO: Possibly refactor | Also refactor strings into static references
+			uiService.addExtension("console", new AndroidUIConsoleExtension());
+			uiService.addExtension("debug", new AndroidUIConsoleExtension());
 		}
 		
 		@Override
