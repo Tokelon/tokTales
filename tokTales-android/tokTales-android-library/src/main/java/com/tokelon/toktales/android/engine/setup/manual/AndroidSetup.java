@@ -5,7 +5,7 @@ import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
-import com.tokelon.toktales.android.engine.ui.AndroidUIConsoleExtension;
+import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
@@ -68,7 +68,7 @@ public class AndroidSetup extends BaseSetup {
 		AndroidUIService androidUIService = new AndroidUIService(new UserInterface());
 		defaultEngineFactory.setUIService(androidUIService);
 		
-		androidUIService.addExtension("console", new AndroidUIConsoleExtension());
+		androidUIService.addExtension("console", new AndroidConsoleUIExtension());
 		androidUIService.addExtension("debug", new AndroidDebugUIExtension());
 		
 		

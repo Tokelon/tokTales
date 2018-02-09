@@ -7,20 +7,20 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.engine.ServiceException;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.ui.IUIConsoleExtension;
+import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 
-public class AndroidUIConsoleExtension implements IUIConsoleExtension {
+public class AndroidConsoleUIExtension implements IConsoleUIExtension {
 
 	public static final String TAG = "AndroidUIConsoleModule";
 	
 	
 	private IAndroidUIService mUIService;
 	
-	public AndroidUIConsoleExtension() {
+	public AndroidConsoleUIExtension() {
 		// UI service will be attached
 	}
 	

@@ -4,7 +4,7 @@ import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButto
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
-import com.tokelon.toktales.core.engine.ui.IUIConsoleExtension;
+import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
@@ -54,7 +54,7 @@ public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScre
 		IUIService uiService = consoleGamestate.getEngine().getUIService();
 		
 		try {
-			uiService.getExtensionByTypeOrFail(IUIConsoleExtension.class).openConsoleInput(consoleGamestate.getConsoleController());
+			uiService.getExtensionByTypeOrFail(IConsoleUIExtension.class).openConsoleInput(consoleGamestate.getConsoleController());
 		} catch (EngineException e) {
 			consoleGamestate.getLog().e(TAG, "Error opening console input: " + e.getMessage());
 		}
