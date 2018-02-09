@@ -13,7 +13,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 
-public abstract class AbstractBaseActivity extends Activity implements IIntegratedActivity {
+public abstract class AbstractIntegratedActivity extends Activity implements IIntegratedActivity {
 	
 	public static final String ACTIVITY_INTEGRATION_UI_SERVICE = "AbstractBaseActivity_Integration_UIService";
 	public static final String ACTIVITY_INTEGRATION_KEYBOARD = "AbstractBaseActivity_Integration_Keyboard";
@@ -23,7 +23,7 @@ public abstract class AbstractBaseActivity extends Activity implements IIntegrat
 	private final IActivityIntegrator integrator;
 	
 
-	public AbstractBaseActivity() {
+	public AbstractIntegratedActivity() {
 		integrationsMap = createActivityIntegrations();
 		integrator = ActivityHelper.createActivityIntegrator(this, integrationsMap.values());
 	}

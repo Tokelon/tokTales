@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;
 
-public class LoadMapActivity extends AbstractBaseActivity {
+public class LoadMapActivity extends AbstractIntegratedActivity {
 	//StartGameActivity
 	
 	public static final String ACTIVITY_RESULT_MAP_FILE_NAME = "ACTIVITY_RESULT_MAP_FILE_NAME";

@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 
-public class LoadTaleActivity extends AbstractBaseActivity {
+public class LoadTaleActivity extends AbstractIntegratedActivity {
 
 	public static final String TAG = "LoadTaleActivity";
 	

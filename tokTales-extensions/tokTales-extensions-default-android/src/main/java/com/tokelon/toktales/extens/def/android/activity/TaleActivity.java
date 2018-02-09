@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.AbstractBaseActivity;
+import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
@@ -36,7 +36,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class TaleActivity extends AbstractBaseActivity implements IConsoleActivity, IDebugActivity {
+public class TaleActivity extends AbstractIntegratedActivity implements IConsoleActivity, IDebugActivity {
 
 	public static final String TAG = "TaleActivity";
 	

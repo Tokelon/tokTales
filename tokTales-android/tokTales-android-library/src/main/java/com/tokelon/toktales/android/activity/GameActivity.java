@@ -27,7 +27,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class GameActivity extends AbstractBaseActivity implements IConsoleActivity, IDebugActivity {
+public class GameActivity extends AbstractIntegratedActivity implements IConsoleActivity, IDebugActivity {
 
 	public static final String TAG = "GameActivity";
 	
