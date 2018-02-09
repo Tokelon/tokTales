@@ -28,6 +28,8 @@ import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
+import com.tokelon.toktales.android.ui.IUserInterface;
+import com.tokelon.toktales.android.ui.UserInterface;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -74,6 +76,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 				.build(IActivityIntegratorFactory.class));
 		bind(IUIServiceIntegration.class).to(IUIServiceIntegration.UIServiceIntegration.class);
 		bind(IKeyboardActivityIntegration.class).to(KeyboardActivityIntegration.class);
+		bind(IUserInterface.class).to(UserInterface.class);
 		
 		
 		/* Unused so far - everything under here */

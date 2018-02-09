@@ -20,6 +20,7 @@ import com.tokelon.toktales.android.states.AndroidGameStateManager;
 import com.tokelon.toktales.android.states.AndroidInitialGamestate;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
+import com.tokelon.toktales.android.ui.UserInterface;
 import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngine;
@@ -63,7 +64,7 @@ public class AndroidSetup extends BaseSetup {
 		defaultEngineFactory.setLogService(androidLogService);
 		ILogger mainLogger = new MainLogger(androidLogService); // TODO: Should be the created logger and not the default
 		
-		AndroidUIService androidUIService = new AndroidUIService(mainLogger);
+		AndroidUIService androidUIService = new AndroidUIService(mainLogger, new UserInterface());
 		defaultEngineFactory.setUIService(androidUIService);
 		
 		androidUIService.addExtension("console", new AndroidUIConsoleExtension());

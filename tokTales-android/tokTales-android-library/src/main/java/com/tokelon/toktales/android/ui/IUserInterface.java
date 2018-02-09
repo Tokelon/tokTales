@@ -1,30 +1,25 @@
 package com.tokelon.toktales.android.ui;
 
-import android.app.Activity;
+import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 
 public interface IUserInterface {
 
-	public boolean isValid();
 	
-	public Activity getCurrentActivity();
+	public boolean hasActivity();
+	public IIntegratedActivity getCurrentActivity();
 
-	public void updateCurrentActivity(Activity activity);
-	
+	public void updateCurrentActivity(IIntegratedActivity activity);
 	public void clearCurrentActivity();
 	
 	
-	public void addListener(UserInterfaceListener listener);
+	public void addListener(IUserInterfaceListener listener);
+	public boolean removeListener(IUserInterfaceListener listener);
+
 	
-	public boolean removeListener(UserInterfaceListener listener);
-	
-	
-	
-	public interface UserInterfaceListener {
+	public interface IUserInterfaceListener {
 		
-		public void activityUpdated(Activity newActivity);
-		
+		public void activityUpdated(IIntegratedActivity newActivity);
 		public void activityCleared();
-		
 	}
 
 }

@@ -13,17 +13,15 @@ public class AndroidUIService extends AbstractEngineService implements IAndroidU
 	private static final String TAG = "AndroidUIService";
 	
 	
-	// TODO: Inject this
-	private final IUserInterface userInterface;
-	
 	private final ILogger logger;
-	
+	private final IUserInterface userInterface;
+
 	@Inject
-	public AndroidUIService(ILogger logger) {
+	public AndroidUIService(ILogger logger, IUserInterface userInterface) {
 		this.logger = logger;
-		
-		this.userInterface = new UserInterface();
+		this.userInterface = userInterface;
 	}
+	
 	
 	@Override
 	public IUserInterface getUserInterface() {
@@ -35,7 +33,7 @@ public class AndroidUIService extends AbstractEngineService implements IAndroidU
 	@Override
 	public void openExternalUI(int uiCode) {
 		
-		Activity currentActivity = userInterface.getCurrentActivity();
+		Activity currentActivity = userInterface.getCurrentActivity().asActivity();
 		
 		// TODO: Refactor as debug module ?
 		if(uiCode == EXTERNAL_UI_CODE_DEBUG) {

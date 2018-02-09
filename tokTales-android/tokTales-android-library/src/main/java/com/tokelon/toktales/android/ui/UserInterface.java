@@ -1,33 +1,42 @@
 package com.tokelon.toktales.android.ui;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.app.Activity;
+import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 
 public class UserInterface implements IUserInterface {
 
-	private final Set<UserInterfaceListener> listeners = new HashSet<UserInterfaceListener>();
 	
-	private Activity currentActivity;
+	private final Set<IUserInterfaceListener> listeners;
+	
+	private IIntegratedActivity currentActivity;
+
+	
+	public UserInterface() {
+		this.listeners = Collections.synchronizedSet(new HashSet<IUserInterfaceListener>());
+	}
 	
 
 	@Override
-	public boolean isValid() {
+	public boolean hasActivity() {
 		return currentActivity != null;
 	}
 	
 	
 	@Override
-	public void updateCurrentActivity(Activity activity) {
+	public void updateCurrentActivity(IIntegratedActivity activity) {
 		if(activity == null) {
 			throw new NullPointerException();
 		}
 		
 		currentActivity = activity;
 		
-		for(UserInterfaceListener l: listeners) {
-			l.activityUpdated(currentActivity);
+		synchronized (listeners) {
+			for(IUserInterfaceListener l: listeners) {
+				l.activityUpdated(currentActivity);
+			}	
 		}
 	}
 	
@@ -35,29 +44,30 @@ public class UserInterface implements IUserInterface {
 	public void clearCurrentActivity() {
 		currentActivity = null;
 		
-		for(UserInterfaceListener l: listeners) {
-			l.activityCleared();
+		synchronized (listeners) {
+			for(IUserInterfaceListener l: listeners) {
+				l.activityCleared();
+			}
 		}
 	}
 	
 	@Override
-	public Activity getCurrentActivity() {
+	public IIntegratedActivity getCurrentActivity() {
 		return currentActivity;
 	}
 
 
 	
 	@Override
-	public void addListener(UserInterfaceListener listener) {
+	public void addListener(IUserInterfaceListener listener) {
 		listeners.add(listener);
-		
-		// TODO: Call updateCurrentActivity on listener if currentActivity is not null ?
 	}
 
 	@Override
-	public boolean removeListener(UserInterfaceListener listener) {
+	public boolean removeListener(IUserInterfaceListener listener) {
 		return listeners.remove(listener);
 	}
+	
 	
 }
 

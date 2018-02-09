@@ -32,7 +32,7 @@ public class AndroidUIConsoleExtension implements IUIConsoleExtension {
 	@Override
 	public int openConsoleInput(IConsoleController consoleController) {
 		
-		Activity currentActivity = mUIService.getUserInterface().getCurrentActivity();
+		Activity currentActivity = mUIService.getUserInterface().getCurrentActivity().asActivity();
 		
 		if(currentActivity instanceof IConsoleActivity) {
 			((IConsoleActivity)currentActivity).getConsoleInput(new ConsoleTextWatcher(consoleController));

@@ -18,12 +18,12 @@ public interface IUIServiceIntegration extends IActivityIntegration {
 
 		@Override
 		public void onActivityCreate(IIntegratedActivity activity) {
-			uiService.getUserInterface().updateCurrentActivity(activity.asActivity());
+			uiService.getUserInterface().updateCurrentActivity(activity);
 		}
 
 		@Override
 		public void onActivityResume(IIntegratedActivity activity) {
-			uiService.getUserInterface().updateCurrentActivity(activity.asActivity());
+			uiService.getUserInterface().updateCurrentActivity(activity);
 		}
 
 		@Override
