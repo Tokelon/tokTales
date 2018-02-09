@@ -2,7 +2,11 @@ package com.tokelon.toktales.android.engine.inject;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
+import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
@@ -58,6 +62,13 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IInputService.class).to(IAndroidInputService.class);
 		 bind(IAndroidInputService.class).to(AndroidInputService.class);
 		 bindInEngineScope(AndroidInputService.class); // Bind to scope via the implementation!
+		
+		
+		/* Other bindings */
+		
+		install(new FactoryModuleBuilder()
+				.implement(IActivityIntegrator.class, ActivityIntegrator.class)
+				.build(IActivityIntegratorFactory.class));
 
 		
 		/* Unused so far - everything under here */
