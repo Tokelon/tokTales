@@ -1,7 +1,8 @@
 package com.tokelon.toktales.core.engine;
 
 public interface IEngineService {
-
+	
+	
 	/** Adds the given extension with the given name.
 	 * 
 	 * @param name
@@ -30,6 +31,13 @@ public interface IEngineService {
 	 * @return The extension for the given name, or null if there is none.
 	 */
 	public IServiceExtension getExtension(String name);
+
+	/**
+	 * @param name
+	 * @param type
+	 * @return The extension for the given name or null if there is none, or if not compatible with the given type.
+	 */
+	public <T> T getExtensionAs(String name, Class<T> type);
 	
 	/**
 	 * @param name
@@ -37,15 +45,20 @@ public interface IEngineService {
 	 * @return The extension for the given name, in the given type.
 	 * @throws ServiceException If the extension is not compatible with the given type or is null.
 	 */
-	public <T> T getExtensionAs(String name, Class<T> type);
+	public <T> T getExtensionAsOrFail(String name, Class<T> type);
 	
 	/**
-	 * @param name
 	 * @param type
-	 * @return The extension for the given name or null if there is none, or if not compatible with the given type.
+	 * @return The extension for the given type, or null if there is none.
 	 */
-	public <T> T getExtensionAsIf(String name, Class<T> type);
+	public <T extends IServiceExtension> T getExtensionByType(Class<T> type);
 	
+	/**
+	 * @param type
+	 * @return The extension for the given type.
+	 * @throws ServiceException If there is no extension for the given type.
+	 */
+	public <T extends IServiceExtension> T getExtensionByTypeOrFail(Class<T> type);
 	
 	
 	
