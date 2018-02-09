@@ -4,7 +4,9 @@ import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.AbstractBaseActivity;
 import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
+import com.tokelon.toktales.android.activity.ProxyTextWatcher;
 import com.tokelon.toktales.android.activity.SettingsActivity;
+import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.logic.process.GLRenderingProcess;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -285,7 +287,13 @@ public class TaleActivity extends AbstractBaseActivity implements IConsoleActivi
 	public void getConsoleInput(TextWatcher consoleInputTextWatcher) {
 		textViewProxyTextWatcher.setClient(consoleInputTextWatcher);
 		
-		showKeyboard(textView);
+		IKeyboardActivityIntegration keyboardIntegration = getIntegrator().getIntegrationByType(IKeyboardActivityIntegration.class);
+		if(keyboardIntegration == null) {
+			TokTales.getLog().e(TAG, "No integration for IKeyboardIntegration");
+		}
+		else {
+			keyboardIntegration.showKeyboard(textView);	
+		}
 	}
 	
 

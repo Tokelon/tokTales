@@ -1,48 +1,86 @@
 package com.tokelon.toktales.android.activity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
+import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration.UIServiceIntegration;
+import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
+
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
-import com.tokelon.toktales.android.ui.AndroidUIService;
-import com.tokelon.toktales.core.engine.TokTales;
-
-public abstract class AbstractBaseActivity extends Activity {	// Rename to AbstractAndroidUIActivity ?
+public abstract class AbstractBaseActivity extends Activity implements IIntegratedActivity {
+	
+	public static final String ACTIVITY_INTEGRATION_UI_SERVICE = "AbstractBaseActivity_Integration_UIService";
+	public static final String ACTIVITY_INTEGRATION_KEYBOARD = "AbstractBaseActivity_Integration_Keyboard";
 
 	
-	// 
-	/* TODO: Implement an open keyboard method,
-	 * and a listener for keyboard events that calls the master input handler for ICharInputCallback
-	 * 
-	 */
-
-	private Handler handler;
+	private final Map<String, IActivityIntegration> integrationsMap;
+	private final IActivityIntegrator integrator;
+	
 
 	public AbstractBaseActivity() {
-		handler = new Handler();
+		integrationsMap = createActivityIntegrations();
+		integrator = ActivityHelper.createActivityIntegrator(this, integrationsMap.values());
 	}
+	
+	
+	
+	/**
+	 * @return A map containing all integrations that are used in this activity, with their names as keys.
+	 */
+	protected Map<String, IActivityIntegration> getActivityIntegrations() {
+		return integrationsMap;
+	}
+
+	/**
+	 * @return A map containing all integrations that should be used in this activity, with their names as keys.
+	 */
+	protected Map<String, IActivityIntegration> createActivityIntegrations() {
+		HashMap<String, IActivityIntegration> map = new HashMap<>();
+		
+		map.put(ACTIVITY_INTEGRATION_UI_SERVICE, new UIServiceIntegration());
+		map.put(ACTIVITY_INTEGRATION_KEYBOARD, new KeyboardActivityIntegration(new Handler()));
+		
+		return map;
+	}
+
+	
+	@Override
+	public Activity asActivity() {
+		return this;
+	}
+	
+	@Override
+	public IActivityIntegrator getIntegrator() {
+		return integrator;
+	}
+
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Need this or we can't use the UI framework in onCreate()
-		AndroidUIService as = (AndroidUIService) TokTales.getEngine().getUIService();
-		as.getUserInterface().updateCurrentActivity(this);
+		integrator.onCreate();
 	}
 	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		integrator.onStart();
+	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		AndroidUIService as = (AndroidUIService) TokTales.getEngine().getUIService();
-		as.getUserInterface().updateCurrentActivity(this);
+				
+		integrator.onResume();
 	}
 
 
@@ -50,101 +88,22 @@ public abstract class AbstractBaseActivity extends Activity {	// Rename to Abstr
 	protected void onPause() {
 		super.onPause();
 		
-		AndroidUIService as = (AndroidUIService) TokTales.getEngine().getUIService();
-		as.getUserInterface().clearCurrentActivity();
+		integrator.onPause();
 	}
-
-	
-	
-
-	/* UI methods */
-	
-	public void showKeyboard(final View view) {
 		
-		handler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-
-				InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				
-				view.setFocusable(true);
-				view.setFocusableInTouchMode(true);
-				view.requestFocus();
-				
-				manager.showSoftInput(view, 0);
-				
-			}
-		});
+	@Override
+	protected void onStop() {
+		super.onStop();
 		
-		
-		//manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-		//manager.toggleSoftInputFromWindow(mRenderView.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-		/*
-		if(editText.requestFocus()) {
-			InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			
-			inputMethodManager.showSoftInput(editText, 0);	//
-			//inputMethodManager.toggleSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-			
-			//inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-			//inputMethodManager.toggleSoftInputFromWindow(getWindowToken(),0,0);
-			//inputMethodManager.toggleSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-		 */
+		integrator.onStop();
 	}
 	
-	public void hideKeyboard(final View view) {
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 		
-		handler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-				InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-				manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-				
-			}
-		});
-
-
-		/*
-		mRenderView.setFocusable(true);
-		mRenderView.setFocusableInTouchMode(true);
-		boolean gotFocus = mRenderView.requestFocus();
-		TokTales.getLog().d(TAG, "gotFocus: " +gotFocus);
-		*/
+		integrator.onDestroy();
 	}
 
-	
-	protected class ProxyTextWatcher implements TextWatcher {
-		
-		private TextWatcher client;
-		
-		public ProxyTextWatcher() {
-			// Needed for subclass access
-		}
-		
-		public void setClient(TextWatcher textWatcher) {
-			this.client = textWatcher;
-		}
-
-		
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			client.beforeTextChanged(s, start, count, after);
-		}
-
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			client.onTextChanged(s, start, before, count);
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-			client.afterTextChanged(s);
-		}
-		
-	}
-	
 	
 }

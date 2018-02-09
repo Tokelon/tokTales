@@ -7,6 +7,9 @@ import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration;
+import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
@@ -69,7 +72,9 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		install(new FactoryModuleBuilder()
 				.implement(IActivityIntegrator.class, ActivityIntegrator.class)
 				.build(IActivityIntegratorFactory.class));
-
+		bind(IUIServiceIntegration.class).to(IUIServiceIntegration.UIServiceIntegration.class);
+		bind(IKeyboardActivityIntegration.class).to(KeyboardActivityIntegration.class);
+		
 		
 		/* Unused so far - everything under here */
 		

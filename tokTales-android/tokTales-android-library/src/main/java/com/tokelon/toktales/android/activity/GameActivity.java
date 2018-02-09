@@ -1,5 +1,11 @@
 package com.tokelon.toktales.android.activity;
 
+import com.tokelon.toktales.android.R;
+import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
+import com.tokelon.toktales.android.logic.process.GLRenderingProcess;
+import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
+import com.tokelon.toktales.core.engine.TokTales;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,11 +26,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.logic.process.GLRenderingProcess;
-import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
-import com.tokelon.toktales.core.engine.TokTales;
 
 public class GameActivity extends AbstractBaseActivity implements IConsoleActivity, IDebugActivity {
 
@@ -263,7 +264,13 @@ public class GameActivity extends AbstractBaseActivity implements IConsoleActivi
 	public void getConsoleInput(TextWatcher consoleInputTextWatcher) {
 		textViewProxyTextWatcher.setClient(consoleInputTextWatcher);
 		
-		showKeyboard(mTextView);
+		IKeyboardActivityIntegration keyboardIntegration = getIntegrator().getIntegrationByType(IKeyboardActivityIntegration.class);
+		if(keyboardIntegration == null) {
+			TokTales.getLog().e(TAG, "No integration for IKeyboardIntegration");
+		}
+		else {
+			keyboardIntegration.showKeyboard(mTextView);
+		}
 	}
 	
 	
