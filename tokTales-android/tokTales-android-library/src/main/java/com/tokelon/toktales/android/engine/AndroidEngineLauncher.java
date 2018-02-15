@@ -34,16 +34,16 @@ public class AndroidEngineLauncher implements IEngineLauncher {
 	
 
 	@Override
-	public void launch(IGameAdapter adapter) throws EngineException {
+	public void launch(Class<? extends IGameAdapter> adapter) throws EngineException {
 		BaseInjectSetup setup = new BaseInjectSetup();
 		launchWithSetup(adapter, setup);
 	}
 
 	
 	@Override
-	public void launchWithSetup(IGameAdapter adapter, IEngineSetup setup) throws EngineException {
+	public void launchWithSetup(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
 		// Inject game adapter and context
-		injectConfig.override(new AndroidSetupInjectModule(appContext, adapter));
+		injectConfig.override(new AndroidSetupInjectModule(adapter, appContext));
 
 	    // Create engine context
 		IEngineContext engineContext = setup.create(injectConfig);

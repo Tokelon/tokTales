@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.inject.Injector;
 import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
-import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
 import android.content.Context;
 
@@ -19,7 +19,7 @@ public class TestAndroidDefaultExtensionsInjection {
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		AndroidDefaultExtensionsInjectConfig injectConfig = new AndroidDefaultExtensionsInjectConfig();
 		
-		injectConfig.override(new AndroidSetupInjectModule(mockedContext, new IGameAdapter.EmptyGameAdapter()));
+		injectConfig.override(new AndroidSetupInjectModule(DummyGameAdapter.class, mockedContext));
 		
 		Injector injector = injectConfig.createInjector();
 	}

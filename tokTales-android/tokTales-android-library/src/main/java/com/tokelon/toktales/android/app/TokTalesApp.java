@@ -5,7 +5,7 @@ import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.game.IGameAdapter.EmptyGameAdapter;
+import com.tokelon.toktales.core.game.IGameAdapter;
 
 import android.app.Application;
 import android.content.res.Configuration;
@@ -23,7 +23,7 @@ public class TokTalesApp extends Application {
 		Log.i("App", "No custom game adapter used. Override TokTalesApp.launch() to use your custom game adapter");
 		
 		// Default implementation
-		defaultLauncher.launch(new EmptyGameAdapter());
+		defaultLauncher.launch(EmptyGameAdapter.class); // TODO: Load classname from manifest if possible
 	}
 	
 	
@@ -62,6 +62,10 @@ public class TokTalesApp extends Application {
 		
 		TokTales.getLog().i("TokelonApp", "Info: configuration has changed");
 	}
+	
+	
+	// Default
+	private class EmptyGameAdapter implements IGameAdapter { }
 	
 	
 }

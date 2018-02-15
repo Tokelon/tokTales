@@ -17,7 +17,7 @@ public final class TestInjectionHelper {
 		{
 				"IEnvironment", "IContentService", "IInputService",
 				"ILogService", "IRenderService", "IStorageService",
-				"IUIService"
+				"IUIService", "IGameAdapter"
 		};
 	
 

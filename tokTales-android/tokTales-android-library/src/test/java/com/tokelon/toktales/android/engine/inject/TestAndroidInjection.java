@@ -9,15 +9,16 @@ import com.google.inject.ProvisionException;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
+import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
 import android.content.Context;
 
 public class TestAndroidInjection {
 
-	public static final String[] ANDROID_EXPECTED_BINDING_TYPES = { "android.content.Context" };
+	public static final String[] ANDROID_EXPECTED_BINDING_TYPES = { "android.content.Context", "IGameAdapter" };
 	
 	private static final Context mockedContext = mock(Context.class);
 
@@ -43,7 +44,7 @@ public class TestAndroidInjection {
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
 		
-		injectConfig.override(new AndroidSetupInjectModule(mockedContext, new IGameAdapter.EmptyGameAdapter()));
+		injectConfig.override(new AndroidSetupInjectModule(DummyGameAdapter.class, mockedContext));
 		
 		Injector injector = injectConfig.createInjector();
 	}
@@ -52,7 +53,7 @@ public class TestAndroidInjection {
 	@Test(expected = ProvisionException.class)
 	public void engineCreationWithStubs_ShouldFail() {
 		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
-		injectConfig.override(new AndroidSetupInjectModule(mockedContext, new IGameAdapter.EmptyGameAdapter()));
+		injectConfig.override(new AndroidSetupInjectModule(DummyGameAdapter.class, mockedContext));
 
 		Injector injector = injectConfig.createInjector();
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
@@ -62,7 +63,7 @@ public class TestAndroidInjection {
 	@Test(expected = ProvisionException.class)
 	public void setupCreationWithStubs_ShouldFail() throws EngineException {
 		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
-		injectConfig.override(new AndroidSetupInjectModule(mockedContext, new IGameAdapter.EmptyGameAdapter()));
+		injectConfig.override(new AndroidSetupInjectModule(DummyGameAdapter.class, mockedContext));
 
 		BaseInjectSetup setup = new BaseInjectSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
@@ -72,6 +73,7 @@ public class TestAndroidInjection {
 	private static class AndroidFakeSetupInjectModule extends AbstractInjectModule {
 		@Override
 		protected void configure() {
+			bind(IGameAdapter.class).to(DummyGameAdapter.class);
 	        bind(Context.class).toInstance(mockedContext);
 		}
 	}

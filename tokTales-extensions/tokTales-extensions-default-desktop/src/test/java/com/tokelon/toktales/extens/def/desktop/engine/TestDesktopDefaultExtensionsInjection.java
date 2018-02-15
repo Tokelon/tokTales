@@ -3,8 +3,8 @@ package com.tokelon.toktales.extens.def.desktop.engine;
 import org.junit.Test;
 
 import com.google.inject.Injector;
-import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.desktop.engine.inject.DesktopSetupInjectModule;
+import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
 public class TestDesktopDefaultExtensionsInjection {
 
@@ -13,8 +13,7 @@ public class TestDesktopDefaultExtensionsInjection {
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		DesktopDefaultExtensionsInjectConfig injectConfig = new DesktopDefaultExtensionsInjectConfig();
 		
-		IGameAdapter adapter = new IGameAdapter.EmptyGameAdapter();
-		injectConfig.override(new DesktopSetupInjectModule(adapter));
+		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
 		
 		Injector injector = injectConfig.createInjector();
 	}

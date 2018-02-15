@@ -5,24 +5,24 @@ import com.tokelon.toktales.core.game.IGameAdapter;
 
 public class DesktopSetupInjectModule extends AbstractInjectModule {
 
-    private final IGameAdapter gameAdapter;
+    private final Class<? extends IGameAdapter> adapterClass;
     
     /**
-     * @param gameAdapter
-     * @throws NullPointerException If gameAdapter is null.
+     * @param adapterClass
+     * @throws NullPointerException If adapterClass is null.
      */
-    public DesktopSetupInjectModule(IGameAdapter gameAdapter) {
-    	if(gameAdapter == null) {
+    public DesktopSetupInjectModule(Class<? extends IGameAdapter> adapterClass) {
+    	if(adapterClass == null) {
     		throw new NullPointerException();
     	}
     	
-        this.gameAdapter = gameAdapter;
+        this.adapterClass = adapterClass;
     }
 
     
     @Override
     protected void configure() {
-        bind(IGameAdapter.class).toInstance(gameAdapter);
+    	bindInGameScope(IGameAdapter.class, adapterClass);
     }
 
 }

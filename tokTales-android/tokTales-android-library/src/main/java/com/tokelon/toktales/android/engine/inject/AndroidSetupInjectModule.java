@@ -7,29 +7,29 @@ import android.content.Context;
 
 public class AndroidSetupInjectModule extends AbstractInjectModule {
 
-    private final Context appContext;
-    private final IGameAdapter gameAdapter;
+	
+    private final Class<? extends IGameAdapter> adapterClass;
+	private final Context appContext;
     
     /**
-     * 
      * @param applicationContext
-     * @param gameAdapter
+     * @param adapterClass
      * @throws NullPointerException If applicationContext or gameAdapter is null.
      */
-    public AndroidSetupInjectModule(Context applicationContext, IGameAdapter gameAdapter) {
-        if(applicationContext == null || gameAdapter == null) {
+    public AndroidSetupInjectModule(Class<? extends IGameAdapter> adapterClass, Context applicationContext) {
+        if(applicationContext == null || adapterClass == null) {
             throw new NullPointerException();
         }
         
+        this.adapterClass = adapterClass;
         this.appContext = applicationContext;
-        this.gameAdapter = gameAdapter;
     }
 
     
     @Override
     protected void configure() {
-        bind(Context.class).toInstance(appContext);
-        bind(IGameAdapter.class).toInstance(gameAdapter);
+        bindInGameScope(IGameAdapter.class, adapterClass);
+    	bind(Context.class).toInstance(appContext);
     }
 
     

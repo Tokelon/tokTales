@@ -11,55 +11,23 @@ public interface IGameAdapter {
 	
 
 	//onGameCreate() ?
-	public void onCreate(IEngineContext engineContext);
-
+	public default void onCreate(IEngineContext engineContext) { }
+	
+	public default void onStart() { }
+	
+	public default void onResume() { }
+	
+	public default void onPause() { }
+	
+	public default void onStop() { }
+	
 	/** This method is not guaranteed to be called.
-	 * 
 	 */
-	public void onDestroy();
-
-	
-	public void onStart();
-	
-	public void onResume();
-	
-	public void onPause();
-	
-	public void onStop();
+	public default void onDestroy() { }
 	
 	
-	public void onUpdate();
+	public default void onUpdate() { }
 	
-	public void onRender();
-	
-
-	
-	
-	public class EmptyGameAdapter implements IGameAdapter {
-		@Override
-		public void onCreate(IEngineContext engineContext) { }
-
-		@Override
-		public void onDestroy() { }
-
-		@Override
-		public void onStart() {	}
-		
-		@Override
-		public void onResume() { }
-
-		@Override
-		public void onPause() { }
-
-		@Override
-		public void onStop() { }
-		
-		@Override
-		public void onUpdate() { }
-		
-		@Override
-		public void onRender() { }
-	}
-	
+	public default void onRender() { }
 	
 }

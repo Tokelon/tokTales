@@ -44,14 +44,14 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 
 	
 	@Override
-	public void launch(IGameAdapter adapter) throws EngineException {
+	public void launch(Class<? extends IGameAdapter> adapter) throws EngineException {
 		BaseInjectSetup setup = new BaseInjectSetup();
 		launchWithSetup(adapter, setup);
 	}
 	
 	
 	@Override
-	public void launchWithSetup(IGameAdapter adapter, IEngineSetup setup) throws EngineException {
+	public void launchWithSetup(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
 		// Inject game adapter
 		injectConfig.override(new DesktopSetupInjectModule(adapter));
 		

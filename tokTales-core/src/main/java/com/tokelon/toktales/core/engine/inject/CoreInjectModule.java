@@ -8,8 +8,8 @@ import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.content.sprite.SpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
+import com.tokelon.toktales.core.content.sprite.SpriteManager;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
 import com.tokelon.toktales.core.engine.Engine;
@@ -21,8 +21,6 @@ import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.game.Game;
 import com.tokelon.toktales.core.game.GameLogicManager;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.IGameAdapter;
-import com.tokelon.toktales.core.game.IGameAdapter.EmptyGameAdapter;
 import com.tokelon.toktales.core.game.IGameLogicManager;
 import com.tokelon.toktales.core.game.IGameScriptManager;
 import com.tokelon.toktales.core.game.LuaGameScriptManager;
@@ -47,6 +45,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		// you can use optional bindings
 		// e.g. OptionalBinder.newOptionalBinder(binder(), IEngine.class).setDefault(Engine.class).setBinding(...);
+		
+		// you can bind TypeListener, InjectListener and MembersInjector
+		// e.g. bindListener(new ClassMatcherAdapter(Matchers.subclassesOf(ILogger.class)), new LoggerTypeListener());
 		
 		
 		// Engine Scope
@@ -85,7 +86,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 				   .implement(ISpriteManager.class, SpriteManager.class)
 				   .build(ISpriteManagerFactory.class));
 		  bindToProviderInGameScopeAndForNotScoped(IWorld.class, () -> new World(32.0f));  // Maybe do param with @Named
-		  bindInGameScopeAndForNotScoped(IGameAdapter.class, EmptyGameAdapter.class);
 
 		// Other
 		bind(InitialGamestate.class);

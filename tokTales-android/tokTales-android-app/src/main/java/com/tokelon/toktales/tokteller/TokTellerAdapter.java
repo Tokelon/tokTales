@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.game.IGameAdapter;
  * Created by Tokelon on 04/10/2017.
  */
 
-public class TokTellerAdapter extends IGameAdapter.EmptyGameAdapter {
+public class TokTellerAdapter implements IGameAdapter {
 
     @Override
     public void onCreate(IEngineContext engineContext) {

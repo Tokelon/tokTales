@@ -12,8 +12,7 @@ public class TokTellerApp extends TokTalesApp {
 
 	@Override
 	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
-		TokTellerAdapter adapter = new TokTellerAdapter();
-		defaultLauncher.launch(adapter);
+		defaultLauncher.launch(TokTellerAdapter.class);
 	}
 	
 }
