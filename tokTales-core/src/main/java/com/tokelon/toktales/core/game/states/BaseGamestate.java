@@ -1,17 +1,15 @@
 package com.tokelon.toktales.core.game.states;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.input.IInputCallback;
-import com.tokelon.toktales.core.engine.input.InputCallbackException;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.AbstractStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.screen.order.RenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 
@@ -23,142 +21,250 @@ import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSc
  */
 public class BaseGamestate implements IGameState {
 
-	public static final String TAG = "BaseGamestate";
-	
+	public static final String BASE_TAG = "BaseGamestate";
+
 	public static final String INITIAL_SCENE_NAME = "base_gamestate_initial_scene";
-
 	
 	
-	private final IEngineContext engineContext;
-	
-	private final IEngine engine;
-	private final ILogger log;
-	private final IGame game;
-
-	
-	private final IRenderOrder stateRenderOrder;
-	private final RenderRunner renderRunner;
+	/* Base objects */
 	
 	private final IModifiableGameSceneControl<IGameScene> stateSceneControl;
-	
-	
-	private IStateRender stateRender;
-	
+
+	private RenderRunner renderRunner;
+
+
+	/* Injected base objects */
+	private IEngineContext engineContext;
+	private IEngine engine;
+	private ILogger log;
+	private IGame game;
+
+	private IRenderOrder stateRenderOrder;
+
 	private IGameStateInput stateInput;
+
+	
+	/* State objects */
+
+	private IStateRender stateRender;
 	
 	private IGameStateInputHandler stateInputHandler;
 	private IControlScheme stateControlScheme;
 	private IControlHandler stateControlHandler;
 
-	
-	
-	/** Ctor with defaults.
+
+	/** Default ctor.
 	 * 
-	 * @param context
 	 */
-	public BaseGamestate(IEngineContext context) {
-		this(context, null, null, null);
+	@Inject
+	public BaseGamestate() {
+		this.stateSceneControl = new GameSceneControl<IGameScene>();
 	}
+
 	
-	/** Ctor with a base render order.
+	/** Ctor with state objects.
+	 * <p>
+	 * You can pass any objects you'd like to assign. Null values are permitted.
+	 * <p>
+	 * <b>Note: Injected base objects like the context will not be available here.</b>
+	 * <p>
+	 * Useful with custom ctor injection, for manual creation see {@link #initStateDependencies(IStateRender, IGameStateInputHandler, IControlScheme, IControlHandler)}.<br>
+	 * Alternatively you can use method injection, which will be called after base injection has happened.
 	 * 
-	 * @param context
-	 * @param baseOrder
+	 * @param defaultRender
+	 * @param defaultInputHandler
+	 * @param defaultControlScheme
+	 * @param defaultControlHandler
 	 */
-	public BaseGamestate(IEngineContext context, IRenderOrder baseOrder) {
-		this(context, RenderOrder.CreateFromBase(baseOrder), null, null);
-	}
-	
-	
-	/* Shortcut for not having to extend a class to pass platform dependent implementations.
-	 * Pass all the things that are platform dependent
-	 * 
-	 * TODO: Document which things actually have to be set separately
-	 */
-	
-	/** Ctor with platform dependencies. 
-	 * 
-	 * @param context
-	 * @param stateInput
-	 * @param stateRender
-	 */
-	public BaseGamestate(IEngineContext context, IGameStateInput stateInput, IStateRender stateRender) {
-		this(context, null, stateInput, stateRender);
-	}
-	
-	
-	private BaseGamestate(IEngineContext context, IRenderOrder renderOrder, IGameStateInput stateInput, IStateRender stateRender) {
-		if(context == null) {
-			throw new NullPointerException();
-		}
+	public BaseGamestate(
+			IStateRender defaultRender,
+			IGameStateInputHandler defaultInputHandler,
+			IControlScheme defaultControlScheme,
+			IControlHandler defaultControlHandler
+	) {
+		this();
 		
+
+		// Any of these can be null
+		this.stateRender = defaultRender;
+		this.stateInputHandler = defaultInputHandler;
+		this.stateControlScheme = defaultControlScheme;
+		this.stateControlHandler = defaultControlHandler;
+	}
+
+
+	/*
+	 * Only base dependencies are injected here,
+	 * anything that is a state dependency must be set separately.
+	 */
+	
+	/** Injects the base objects and starts state object creation.
+	 * <p>
+	 * Overriding this method will usually not be necessary, however if you do you must call super().
+	 * <p>
+	 * Note that this method will be called before any method injections of subtypes.
+	 * 
+	 * @param context
+	 * @param renderOrder
+	 * @param input
+	 * 
+	 * @see #afterInjectBaseDependencies()
+	 */
+	@Inject
+	protected void injectBaseDependencies(
+			IEngineContext context,
+			IRenderOrder renderOrder,
+			IGameStateInput input
+			) {
 		this.engineContext = context;
 		this.engine = context.getEngine();
 		this.log = context.getLog();
 		this.game = context.getGame();
-	
-		
-		this.stateSceneControl = new GameSceneControl<IGameScene>();
-		this.stateInputHandler = new EmptyStateInputHandler();
-		this.stateControlScheme = new IControlScheme.EmptyControlScheme();
-		this.stateControlHandler = new IControlHandler.EmptyControlHandler();
-		
-		
-		if(renderOrder == null) {
-			this.stateRenderOrder = new RenderOrder();
-		}
-		else {
-			this.stateRenderOrder = renderOrder;
-		}
+
+		this.stateRenderOrder = renderOrder;
+		this.stateInput = input;
+
+
 		this.renderRunner = new RenderRunner(stateRenderOrder);
 
-		
-		if(stateRender == null) {
-			this.stateRender = new EmptyStateRender(context.getEngine().getRenderService().getSurfaceHandler(), this);
-		}
-		else {
-			this.stateRender = stateRender;
-		}
+		// After inject callback
+		afterInjectBaseDependencies();
 
 		
-		if(stateInput == null) {
-			this.stateInput = new EmptyStateInput();
+		// Create defaults if not already set
+		IStateRender defaultStateRender;
+		if(stateRender == null) {
+			defaultStateRender = new EmptyStateRender(context.getEngine().getRenderService().getSurfaceHandler()); 
 		}
 		else {
-			this.stateInput = stateInput;
+			defaultStateRender = stateRender;
 		}
+		
+		IGameStateInputHandler defaultStateInputHandler;
+		if(stateInputHandler == null) {
+			defaultStateInputHandler = new IGameStateInputHandler.EmptyGameStateInputHandler();
+		}
+		else {
+			defaultStateInputHandler = stateInputHandler;
+		}
+		
+		IControlScheme defaultStateControlScheme;
+		if(stateControlScheme == null) {
+			defaultStateControlScheme = new IControlScheme.EmptyControlScheme();
+		}
+		else {
+			defaultStateControlScheme = stateControlScheme;
+		}
+		
+		IControlHandler defaultStateControlHandler;
+		if(stateControlHandler == null) {
+			defaultStateControlHandler = new IControlHandler.EmptyControlHandler();
+		}
+		else {
+			defaultStateControlHandler = stateControlHandler;
+		}
+		
+		initStateDependencies(defaultStateRender, defaultStateInputHandler, defaultStateControlScheme, defaultStateControlHandler);
+	}
+
+	/** Callback for after base injection has happened.
+	 * 
+	 */
+	protected void afterInjectBaseDependencies() { }
+
+
+	
+	/* There is no point in injecting these here.
+	 * 1. Usually the state needs these in their specific types anyways (or the other way around)
+	 * 2. To inject the state we would have to pass them as factories, which would limit subclasses.
+	 * 
+	 * Subclasses can inject them better, with the proper types and factories when needed.
+	 * 
+	 * Therefore in the base, these fields will be set manually, either in this init or with the setters.
+	 */
+	
+	/** Sets the state objects to the defaults.
+	 * Can be overridden to pass custom state objects.
+	 * <p>
+	 * If any state objects have been set before this call (ex. in the constructor),
+	 * those will be passed here as parameters.
+	 * <p>
+	 * This method will be called after {@link #injectBaseDependencies(IEngineContext, IRenderOrder, IGameStateInput)} and {@link #afterInjectBaseDependencies()},
+	 * so the context and any other injected objects will have their injected values.
+	 * 
+	 * @param defaultRender
+	 * @param defaultInputHandler
+	 * @param defaultControlScheme
+	 * @param defaultControlHandler
+	 * 
+	 * @see #afterInitStateDependencies()
+	 */
+	protected void initStateDependencies(
+			IStateRender defaultRender,
+			IGameStateInputHandler defaultInputHandler,
+			IControlScheme defaultControlScheme,
+			IControlHandler defaultControlHandler
+	) {
+		// TODO: Check for null
+		this.stateRender = defaultRender;
+		this.stateInputHandler = defaultInputHandler;
+		this.stateControlScheme = defaultControlScheme;
+		this.stateControlHandler = defaultControlHandler;
+
+		//injectGamestate(); // TODO: Implement
+		
+		afterInitStateDependencies();
 	}
 	
+	/** Callback for after state dependencies have been initialized.
+	 * <p>
+	 * The default implementation for this will:<br>
+	 * - Register the state input handler given by {@link #getStateInputHandler()}, to the state input given by {@link #getStateInput()}
+	 * by calling {@link IGameStateInputHandler#register(IGameStateInput)}.
+	 */
+	protected void afterInitStateDependencies() {
+		// Register input handler
+		IGameStateInput stateInput = getStateInput();
+		IGameStateInputHandler stateInputHandler = getStateInputHandler();
+		getLog().d(getTag(), String.format("Registering state input handler [%s] to state input [%s]", stateInputHandler, stateInput));
+		stateInputHandler.register(stateInput);
+	}
 	
+
 	
+	/* Lifecycle callbacks */
+
 	@Override
 	public void onEngage() {
-		IGameScene initialScene = new EmptyGamescene();
+		IGameScene initialScene = new BaseGamescene();
 		initialScene.assign(this); // Assumed succeeded
-		
+
 		stateSceneControl.addScene(INITIAL_SCENE_NAME, initialScene);
 		stateSceneControl.changeScene(INITIAL_SCENE_NAME);
 	}
+
 	
 	@Override
 	public void onEnter() {
 		stateSceneControl.getActiveScene().onStart();
 	}
 
+	
 	@Override
 	public void onExit() {
 		stateSceneControl.getActiveScene().onStop();
 	}
+
 	
 	@Override
 	public void onDisengage() {
 		// TODO: Implement
-		
+
 		// Iterate over all scenes and remove them
 		//getSceneControl().clear();
 	}
 
-	
+
 	@Override
 	public void update(long timeMillis) {
 		getActiveScene().onUpdate(timeMillis);
@@ -168,23 +274,26 @@ public class BaseGamestate implements IGameState {
 	public void render() {
 		renderRunner.run();
 	}
+	
 
+
+	/* Other methods */
 	
 	@Override
 	public boolean assignScene(String name, IGameScene scene) {
 		if(name == null || scene == null) {
 			throw new IllegalArgumentException("name and scene must not be null");
 		}
-		
+
 		boolean assigned = scene.assign(this);
 		if(assigned) {
 			stateSceneControl.addScene(name, scene);	
 		}
-		
+
 		return assigned;
 	}
-	
-	
+
+
 	/** Does what {@link #assignScene(String, IGameScene)} does except with a given scene control and custom class.
 	 * 
 	 * @param sceneClass
@@ -197,47 +306,48 @@ public class BaseGamestate implements IGameState {
 		if(sceneClass == null || sceneControl == null) {
 			throw new NullPointerException();
 		}
-		
+
 		if(sceneName == null || scene == null) {
 			throw new IllegalArgumentException("name and scene must not be null");
 		}
 
 		// Check if correct type
 		if(!sceneClass.isInstance(scene)) {
-			TokTales.getLog().e(TAG, String.format("Scene \"%s\" is not assignable to gamestate \"%s\"", sceneName, this.getClass().getSimpleName()));
+			getLog().e(getTag(), String.format("Scene \"%s\" is not assignable to gamestate \"%s\"", sceneName, this.getClass().getSimpleName()));
 			return false;
 		}
-		
+
 		T typedScene = sceneClass.cast(scene);
-		
+
 		boolean assigned = scene.assign(this);
 		if(assigned) {
 			sceneControl.addScene(sceneName, typedScene);
 		}
-		
+
 		return assigned;
 	}
-	
-	
+
+
 	@Override
 	public boolean changeScene(String name) {
 		IGameScene scene = getSceneControl().getScene(name);
 		if(scene == null) {
 			return false;
 		}
-		
+
 		getSceneControl().changeScene(name);
 		getStateRender().updateCamera(scene.getCameraController().getCamera());
 		return true;
 	}
-	
-	
+
+
 	@Override
 	public IGameScene getActiveScene() {
 		return getSceneControl().getActiveScene();
 	}
+
 	
-	
+
 	/* Getters */
 
 	@Override
@@ -249,28 +359,28 @@ public class BaseGamestate implements IGameState {
 	public IEngine getEngine() {
 		return engine;
 	}
-	
+
 	@Override
 	public ILogger getLog() {
 		return log;
 	}
-	
+
 	@Override
 	public IGame getGame() {
 		return game;
 	}
-	
+
 	@Override
 	public IRenderOrder getRenderOrder() {
 		return stateRenderOrder;
 	}
-	
-	
+
+
 	@Override
 	public IStateRender getStateRender() {
 		return stateRender;
 	}
-	
+
 	@Override
 	public IGameStateInput getStateInput() {
 		return stateInput;
@@ -280,111 +390,103 @@ public class BaseGamestate implements IGameState {
 	public IGameStateInputHandler getStateInputHandler() {
 		return stateInputHandler;
 	}
-	
+
 	@Override
 	public IControlScheme getStateControlScheme() {
 		return stateControlScheme;
 	}
-	
+
 	@Override
 	public IControlHandler getStateControlHandler() {
 		return stateControlHandler;
 	}
-	
-	
+
+
 	@Override
 	public IModifiableGameSceneControl<? extends IGameScene> getSceneControl() {
 		return stateSceneControl;
 	}
+
+
+	/** Override to return you custom tag.
+	 * 
+	 * @return The tag for this state.
+	 */
+	protected String getTag() {
+		return BASE_TAG;
+	}
 	
 	
 	
+	/* Setters */
+
 	/** Sets the state render.
-	 * <br><br>
-	 * There is a default implementation that you can use.
+	 * <p>
+	 * The default is an empty state render.
 	 * 
 	 * @param stateRender
 	 * @throws NullPointerException If stateRender is null.
 	 */
-	public void setStateRender(IStateRender stateRender) {
+	protected void setStateRender(IStateRender stateRender) {
 		if(stateRender == null) {
 			throw new NullPointerException();
 		}
-		
+
 		this.stateRender = stateRender;
 	}
-	
-	/** Sets the state input.
-	 * <br><br>
-	 * The default is an empty state input.
-	 * 
-	 * @param input
-	 * @throws NullPointerException If stateInput is null.
-	 */
-	public void setStateInput(IGameStateInput stateInput) {
-		if(stateInput == null) {
-			throw new NullPointerException();
-		}
-		
-		this.stateInput = stateInput;
-	}
-	
+
 	/** Sets the state input handler.
-	 * <br><br>
+	 * <p>
 	 * The default is an empty input handler.
 	 * 
 	 * @param inputHandler
 	 * @throws NullPointerException If inputHandler is null.
 	 */
-	public void setStateInputHandler(IGameStateInputHandler inputHandler) {
+	protected void setStateInputHandler(IGameStateInputHandler inputHandler) {
 		if(inputHandler == null) {
 			throw new NullPointerException();
 		}
-		
+
 		this.stateInputHandler = inputHandler;
 	}
-	
+
 	/** Sets the state control scheme.
-	 * <br><br>
+	 * <p>
 	 * The default is an empty control scheme.
 	 * 
 	 * @param controlScheme
 	 * @throws NullPointerException If controlScheme is null.
 	 */
-	public void setStateControlScheme(IControlScheme controlScheme) {
+	protected void setStateControlScheme(IControlScheme controlScheme) {
 		if(controlScheme == null) {
 			throw new NullPointerException();
 		}
-		
+
 		this.stateControlScheme = controlScheme;
 	}
-	
+
 	/** Sets the state control handler.
-	 * <br><br>
+	 * <p>
 	 * The default is an empty control handler.
 	 * 
 	 * @param controlHandler
 	 * @throws NullPointerException If controlHandler is null.
 	 */
-	public void setStateControlHandler(IControlHandler controlHandler) {
+	protected void setStateControlHandler(IControlHandler controlHandler) {
 		if(controlHandler == null) {
 			throw new NullPointerException();
 		}
-		
+
 		this.stateControlHandler = controlHandler;
 	}
-	
-	
-	
-	// Should be protected
-	public class EmptyGamescene extends BaseGamescene {
-		
-	}
 
-	public class EmptyStateRender extends AbstractStateRender {
 
-		public EmptyStateRender(ISurfaceHandler surfaceHandler, IGameState gamestate) {
-			super(surfaceHandler, gamestate);
+
+	public static class EmptyStateRender extends AbstractStateRender { // TODO: Refactor into external possible?
+
+		@Inject
+		public EmptyStateRender(ISurfaceHandler surfaceHandler) {
+			super(surfaceHandler);
 		}
 
 		@Override
@@ -403,45 +505,6 @@ public class BaseGamestate implements IGameState {
 
 		@Override
 		protected void onSurfaceDestroyed() { }
-		
 	}
-	
-	private class EmptyStateInput implements IGameStateInput {
 
-		@Override
-		public boolean registerInputCallback(IInputCallback callback) {	return false; }
-
-		@Override
-		public <T extends IInputCallback> boolean registerInputCallback(T callback, Class<T> callbackType) { return false; }
-
-		@Override
-		public void registerInputCallbackOrFail(IInputCallback callback) throws InputCallbackException {
-			throw new InputCallbackException("This implementation does not support any callbacks");
-		}
-
-		@Override
-		public boolean unregisterInputCallback(IInputCallback callback) { return false; }
-
-		@Override
-		public <T extends IInputCallback> boolean unregisterInputCallback(T callback, Class<T> callbackType) { return false; }
-
-		@Override
-		public boolean hasInputCallback(IInputCallback callback) { return false; }
-
-		@Override
-		public <T extends IInputCallback> boolean hasInputCallback(T callback, Class<T> callbackType) {	return false; }
-	}
-	
-	private class EmptyStateInputHandler implements IGameStateInputHandler {
-		
-	}
-	
-	
-	// Could do this but when would this even be used?
-	/*
-	public static BaseGamestate newDefaultInstance() {
-		return new BaseGamestate(TokTales.getEngine(), TokTales.getLog(), TokTales.getGame());
-	}
-	*/
-	
 }
