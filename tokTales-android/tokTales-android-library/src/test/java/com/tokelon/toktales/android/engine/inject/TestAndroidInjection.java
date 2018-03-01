@@ -8,9 +8,8 @@ import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
-import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.test.android.engine.inject.AndroidMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
@@ -27,17 +26,7 @@ public class TestAndroidInjection {
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
 		
-		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES);
-	}
-	
-	
-	@Test
-	public void injectorCreation_ShouldSucceed() {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
-		
-		injectConfig.extend(new AndroidFakeSetupInjectModule());
-
-		Injector injector = injectConfig.createInjector();
+		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new String[0][0]);
 	}
 	
 	@Test
@@ -59,7 +48,6 @@ public class TestAndroidInjection {
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 	}
 	
-	
 	@Test(expected = ProvisionException.class)
 	public void setupCreationWithStubs_ShouldFail() throws EngineException {
 		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
@@ -68,15 +56,16 @@ public class TestAndroidInjection {
 		BaseInjectSetup setup = new BaseInjectSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
+	
 
-	
-	private static class AndroidFakeSetupInjectModule extends AbstractInjectModule {
-		@Override
-		protected void configure() {
-			bind(IGameAdapter.class).to(DummyGameAdapter.class);
-	        bind(Context.class).toInstance(mockedContext);
-		}
+	@Test
+	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
+		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		
+		injectConfig.override(new AndroidMockPlatformInjectModule());
+		
+		BaseInjectSetup setup = new BaseInjectSetup();
+		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
 	
 }

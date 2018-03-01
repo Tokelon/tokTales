@@ -5,11 +5,10 @@ import org.junit.Test;
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
-import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
+import com.tokelon.toktales.test.desktop.engine.inject.DesktopMockPlatformInjectModule;
 
 public class TestDesktopInjection {
 
@@ -20,8 +19,9 @@ public class TestDesktopInjection {
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 		
-		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES);
+		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new String[0][0]);
 	}
+	
 	
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
@@ -30,17 +30,6 @@ public class TestDesktopInjection {
 		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
 		
 		Injector injector = injectConfig.createInjector();
-	}
-	
-	
-	@Test
-	public void engineCreation_ShouldSucceed() {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
-		
-		injectConfig.extend(new DesktopFakeSetupInjectModule());
-
-		Injector injector = injectConfig.createInjector();
-		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 	}
 	
 	@Test
@@ -52,10 +41,9 @@ public class TestDesktopInjection {
 		Injector injector = injectConfig.createInjector();
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 	}
-	
-	
+
 	@Test
-	public void setupCreation_ShouldSucceed() throws EngineException {
+	public void setupCreationWithSetupModule_ShouldSucceed() throws EngineException {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 
 		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
@@ -65,12 +53,14 @@ public class TestDesktopInjection {
 	}
 	
 	
-	private static class DesktopFakeSetupInjectModule extends AbstractInjectModule {
-		@Override
-		protected void configure() {
-			bind(IGameAdapter.class).to(DummyGameAdapter.class);
-		}
+	@Test
+	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
+		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		
+		injectConfig.extend(new DesktopMockPlatformInjectModule());
+		
+		BaseInjectSetup setup = new BaseInjectSetup();
+		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
 	
 }
