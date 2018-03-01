@@ -13,7 +13,6 @@ import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.IRenderer;
 
 public abstract class AbstractStateRender implements IStateRender {
@@ -36,10 +35,7 @@ public abstract class AbstractStateRender implements IStateRender {
 	private ICamera currentCamera;
 
 	
-	private final IGameState gamestate;
-
-	public AbstractStateRender(ISurfaceHandler surfaceHandler, IGameState gamestate) {
-		this.gamestate = gamestate;
+	public AbstractStateRender(ISurfaceHandler surfaceHandler) {
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());
 		
@@ -48,10 +44,6 @@ public abstract class AbstractStateRender implements IStateRender {
 		surfaceHandler.addCallback(new SurfaceCallback());
 	}
 	
-	
-	protected IGameState getGamestate() {
-		return gamestate;
-	}
 	
 	
 	protected boolean hasView() {
