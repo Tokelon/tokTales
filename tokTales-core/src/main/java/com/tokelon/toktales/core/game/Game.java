@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.game;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.content.IContentManager;
@@ -13,6 +14,8 @@ import com.tokelon.toktales.core.game.world.IWorld;
 
 public class Game implements IGame, IGameScriptManagerProvider {
 
+	
+	private final Object gameAdapterLock = new Object();
 
 	private final IGameControl mGameControl;
 	private final IGameStateControl mStateControl;
@@ -27,7 +30,8 @@ public class Game implements IGame, IGameScriptManagerProvider {
 	
 	private final IWorld mWorld;
 
-	private final IGameAdapter mGameAdapter;
+	private final Provider<IGameAdapter> mGameAdapterProvider;
+	private IGameAdapter mGameAdapter;
 	
 	@Inject
 	public Game(
@@ -40,7 +44,7 @@ public class Game implements IGame, IGameScriptManagerProvider {
 			IEditorManager editorManager,
 			IContentManager contentManager,
 			IWorld world,
-			IGameAdapter gameAdapter
+			Provider<IGameAdapter> gameAdapterProvider // Pass provider to avoid generation here
 			) {
 		
 		this.mGameControl = gameControl;
@@ -52,13 +56,22 @@ public class Game implements IGame, IGameScriptManagerProvider {
 		this.mEditorManager = editorManager;
 		this.mContentManager = contentManager;
 		this.mWorld = world;
-		this.mGameAdapter = gameAdapter;
+		this.mGameAdapterProvider = gameAdapterProvider;
 	}
 
 	
 	
 	@Override
 	public IGameAdapter getGameAdapter() {
+		if(mGameAdapter == null) { // Check before locking to avoid overhead
+			
+			synchronized (gameAdapterLock) {
+				if(mGameAdapter == null) {
+					mGameAdapter = mGameAdapterProvider.get();
+				}
+			}
+		}
+		
 		return mGameAdapter;
 	}
 

@@ -8,8 +8,6 @@ public interface IEngineSetup {
 	
 	
 	/** Creates the engine context.
-	 * <br><br> 
-	 * Put any code in here that creates your dependencies.
 	 * 
 	 * @param injectConfig The inject config.
 	 * 
@@ -19,9 +17,8 @@ public interface IEngineSetup {
 	
 	
 	/** Runs any logic to setup the engine and game.
-	 * Called after {@link #create()}, so all dependencies should be available.
-	 * <br><br>
-	 * Put any code in here that configures the engine.
+	 * <p>
+	 * Called after {@link #create()}, so the engine context is available at this point.
 	 * 
 	 * @param context The engine context.
 	 */

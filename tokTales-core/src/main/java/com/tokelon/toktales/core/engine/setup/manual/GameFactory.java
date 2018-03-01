@@ -87,7 +87,7 @@ public class GameFactory {
 				editorManager,
 				contentManager,
 				world,
-				gameAdapter);
+				() -> gameAdapter);
 		
 		return game;
 	}
