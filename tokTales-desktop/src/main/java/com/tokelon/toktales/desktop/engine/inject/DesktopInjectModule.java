@@ -8,6 +8,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -15,10 +16,15 @@ import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
+import com.tokelon.toktales.core.game.states.IGameStateInput;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
+import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
+import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
@@ -63,6 +69,15 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		 bindInEngineScope(DesktopInputService.class);
 		
 		
+		/* Other bindings*/
+		
+		bind(IGameStateInput.class).to(IDesktopGameStateInput.class);
+		bind(IDesktopGameStateInput.class).to(DesktopGameStateInput.class);
+		
+		// Use inexact annotation binding? Just ForClass.class
+		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
+		
+		
 		/* Unused so far - everything under here */
 
 		/* Overriding bindings does not work with Multibinder or MapBinder, because the final value is always arbitrary
@@ -79,7 +94,14 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	}
 
 	
+	/* Apparently this also works? What about scope though?
+	@ForClass(InitialGamestate.class)
+	@Provides
+	protected IGameStateInputHandler providesIGameStateInputHandler() {
+		return new BaseGamestate.EmptyStateInputHandler();
+	}*/
 
+	
 	public static class ProviderIRenderService implements Provider<IRenderService> {
 		private final IRenderService renderService;
 		@Inject

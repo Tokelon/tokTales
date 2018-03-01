@@ -26,6 +26,9 @@ import com.tokelon.toktales.android.render.opengl.GLKeyedTextureManager;
 import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
+import com.tokelon.toktales.android.states.AndroidGameStateInput;
+import com.tokelon.toktales.android.states.AndroidInitialGamestateInputHandler;
+import com.tokelon.toktales.android.states.IAndroidGameStateInput;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
@@ -34,6 +37,7 @@ import com.tokelon.toktales.android.ui.UserInterface;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -41,6 +45,9 @@ import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
+import com.tokelon.toktales.core.game.states.IGameStateInput;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
@@ -78,6 +85,11 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IUIServiceIntegration.class).to(IUIServiceIntegration.UIServiceIntegration.class);
 		bind(IKeyboardActivityIntegration.class).to(KeyboardActivityIntegration.class);
 		bind(IUserInterface.class).to(UserInterface.class); // Maybe bind to Game scope
+		
+		bind(IGameStateInput.class).to(IAndroidGameStateInput.class);
+		bind(IAndroidGameStateInput.class).to(AndroidGameStateInput.class);
+		
+		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
 		
 		
 		/* Unused so far - everything under here */
