@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.joml.Matrix4f;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
@@ -17,11 +19,11 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
 
 public class LocalMapStateRenderer implements ILocalMapStateRenderer {
@@ -64,10 +66,11 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private Matrix4f currentProjectionMatrix;
 	private ISurface currentSurface;
 	
-	private final IGameState gamestate;
+	private final ILocalMapGamestate gamestate;
 	
 	
-	public LocalMapStateRenderer(IGameState gamestate) {
+	@Inject
+	public LocalMapStateRenderer(@Assisted ILocalMapGamestate gamestate) {
 		this.gamestate = gamestate;
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());

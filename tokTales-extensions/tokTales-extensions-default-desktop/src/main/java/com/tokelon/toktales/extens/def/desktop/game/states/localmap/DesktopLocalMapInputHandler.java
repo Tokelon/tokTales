@@ -1,12 +1,15 @@
 package com.tokelon.toktales.extens.def.desktop.game.states.localmap;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
 import com.tokelon.toktales.extens.def.desktop.game.states.consover.DesktopConsoleOverlayInputHandler;
 
-public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandler {
+public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandler implements ILocalMapInputHandler {
 
 	public static final String TAG = "DesktopLocalMapInput";
 	
@@ -15,7 +18,8 @@ public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandl
 
 	private String lastKeyDown = "";
 	
-	public DesktopLocalMapInputHandler(ILocalMapGamestate gamestate) {
+	@Inject
+	public DesktopLocalMapInputHandler(@Assisted ILocalMapGamestate gamestate) {
 		super(gamestate);
 		
 		this.gamestate = gamestate;

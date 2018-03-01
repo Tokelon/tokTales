@@ -9,6 +9,7 @@ import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer;
 
 public interface ILocalMapStateRenderer extends IStateRender {
+	
 
 	//public void enableSegmentRendering(String segmentName, boolean enabled);
 	
@@ -28,5 +29,12 @@ public interface ILocalMapStateRenderer extends IStateRender {
 	public IObjectRenderer getObjectRenderer();
 	
 	public IPlayerRenderer getPlayerRenderer();
+	
+	
+
+	public interface ILocalMapStateRendererFactory {
+		
+		public ILocalMapStateRenderer create(ILocalMapGamestate gamestate);
+	}
 	
 }

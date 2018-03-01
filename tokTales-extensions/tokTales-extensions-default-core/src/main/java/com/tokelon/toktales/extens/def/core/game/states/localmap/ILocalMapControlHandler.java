@@ -4,6 +4,7 @@ import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlay
 
 public interface ILocalMapControlHandler extends IConsoleOverlayControlHandler {
 
+	
 	public static final String MOVE_LEFT = "local_map_move_left";
 	public static final String MOVE_UP = "local_map_move_up";
 	public static final String MOVE_RIGHT = "local_map_move_right";
@@ -30,28 +31,21 @@ public interface ILocalMapControlHandler extends IConsoleOverlayControlHandler {
 	 */
 
 	
-	public boolean handleJump();
-	public boolean handleInteract();
-	public boolean handleMove(int direction);
-	public boolean handleStopMove();
-	public boolean handleDebugOpen();
+	public default boolean handleJump() { return false; }
+	public default boolean handleInteract() { return false; }
+	public default boolean handleMove(int direction) { return false; }
+	public default boolean handleStopMove() { return false; }
+	public default boolean handleDebugOpen() { return false; }
 	
+	
+	public interface ILocalMapControlHandlerFactory {
+		
+		public ILocalMapControlHandler create(ILocalMapGamestate gamestate);
+	}
+
 	
 	public class EmptyLocalMapControlHandler extends EmptyConsoleOverlayControlHandler implements ILocalMapControlHandler {
-		@Override
-		public boolean handleJump() { return false; }
 
-		@Override
-		public boolean handleInteract() { return false; }
-
-		@Override
-		public boolean handleMove(int direction) { return false; }
-
-		@Override
-		public boolean handleStopMove() { return false; }
-
-		@Override
-		public boolean handleDebugOpen() { return false; }
 	}
 	
 }

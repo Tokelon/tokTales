@@ -3,27 +3,33 @@ package com.tokelon.toktales.extens.def.core.game.states.localmap;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IFileConfig;
-import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.config.IFileConfig.OnConfigChangeListener;
+import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.IConsole;
+import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
+import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.GameSceneControl;
+import com.tokelon.toktales.core.game.states.IControlHandler;
+import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameScene;
-import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.util.FrameTool;
@@ -32,6 +38,9 @@ import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.model.Console;
 import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
 
 public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamestate {
 
@@ -68,13 +77,70 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	private ITextureFont font;
 	
 
-	public LocalMapGamestate(IEngineContext context) {
-		super(context);
-
-		this.sceneControl = new GameSceneControl<ILocalMapGamescene>();
+	private final ILocalMapStateRendererFactory stateRendererFactory;
+	private final ILocalMapInputHandlerFactory inputHandlerFactory;
+	private final IControlScheme controlScheme;
+	private final ILocalMapControlHandlerFactory controlHandlerFactory;
+	
+	@Inject
+	public LocalMapGamestate(
+			ILocalMapStateRendererFactory stateRendererFactory,
+			ILocalMapInputHandlerFactory inputHandlerFactory,
+			@ForClass(LocalMapGamestate.class) IControlScheme controlScheme,
+			ILocalMapControlHandlerFactory controlHandlerFactory
+	) {
+		this.stateRendererFactory = stateRendererFactory;
+		this.inputHandlerFactory = inputHandlerFactory;
+		this.controlScheme = controlScheme;
+		this.controlHandlerFactory = controlHandlerFactory;
 		
-		this.customControlHandler = new ILocalMapControlHandler.EmptyLocalMapControlHandler();
+		this.sceneControl = new GameSceneControl<ILocalMapGamescene>();
 	}
+
+	@Override
+	protected void initStateDependencies(
+			IStateRender defaultRender,
+			IGameStateInputHandler defaultInputHandler,
+			IControlScheme defaultControlScheme,
+			IControlHandler defaultControlHandler
+	) {
+		ILocalMapStateRenderer stateRenderer = stateRendererFactory.create(this);
+		ILocalMapInputHandler stateInputHandler = inputHandlerFactory.create(this);
+		ILocalMapControlHandler stateControlHandler = controlHandlerFactory.create(this);
+		
+		// Set the custom values
+		this.customRenderer = stateRenderer;
+		this.customControlHandler = stateControlHandler;
+		
+		super.initStateDependencies(stateRenderer, stateInputHandler, controlScheme, stateControlHandler);
+	}
+	
+	
+	
+	protected void setStateRenderCustom(ILocalMapStateRenderer renderer) {
+		this.customRenderer = renderer;
+		
+		setStateRender(renderer); // Important	
+	}
+	
+	@Override
+	public ILocalMapStateRenderer getStateRenderCustom() {
+		return customRenderer;
+	}
+	
+	
+	protected void setStateControlHandlerCustom(ILocalMapControlHandler controlHandler) {
+		this.customControlHandler = controlHandler;
+		
+		setStateControlHandler(controlHandler);
+	}
+	
+	@Override
+	public ILocalMapControlHandler getStateControlHandler() {
+		return customControlHandler;
+	}
+	
+	
 	
 	
 	@Override
@@ -111,40 +177,6 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 		
 		consoleRenderCallback = new ConsoleRenderCallback(getStateRenderCustom(), consoleController, getRenderOrder());
 	}
-	
-	
-	// Do not use after init
-	public void setStateRenderCustom(ILocalMapStateRenderer renderer) {
-		this.customRenderer = renderer;
-		
-		setStateRender(renderer); // Important	
-	}
-	
-	@Override
-	public ILocalMapStateRenderer getStateRenderCustom() {
-		return customRenderer;
-	}
-	
-	
-	// Not actually custom interfaced right now, but may be in the future
-	public void setStateInputCustom(IGameStateInput input) {
-		setStateInput(input);
-	}
-
-	
-	public void setStateControlHandlerCustom(ILocalMapControlHandler controlHandler) {
-		this.customControlHandler = controlHandler;
-		
-		// set for base class -> not necessary as long as we override getStateControlHandler, which we do anyways to override the return type
-		// let's do it anyways
-		setStateControlHandler(controlHandler);
-	}
-	
-	@Override
-	public ILocalMapControlHandler getStateControlHandler() {
-		return customControlHandler;
-	}
-	
 	
 	
 	@Override
@@ -237,6 +269,10 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	}
 	
 	
+	@Override
+	protected String getTag() {
+		return TAG + "_" + BASE_TAG;
+	}
 	
 	
 	
@@ -351,7 +387,7 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 		return new EmptyLocalMapGamescene();
 	}
 	
-	protected class EmptyLocalMapGamescene extends EmptyGamescene implements ILocalMapGamescene {
+	protected class EmptyLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
 		private final EmptyLocalMapControlHandler emptyControlHandler = new EmptyLocalMapControlHandler();
 		
 		@Override
@@ -380,6 +416,5 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 			return null;
 		}
 	}
-	
 	
 }

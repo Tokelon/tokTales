@@ -1,17 +1,20 @@
 package com.tokelon.toktales.extens.def.android.states.localmap;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapControlHandler;
-import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
 
 public class AndroidLocalMapControlHandler extends LocalMapControlHandler {
 
 	
-	private final LocalMapGamestate localMapGamestate;
+	private final ILocalMapGamestate localMapGamestate;
 	
-	public AndroidLocalMapControlHandler(LocalMapGamestate gamestate) {
+	@Inject
+	public AndroidLocalMapControlHandler(@Assisted ILocalMapGamestate gamestate) {
 		super(gamestate);
 		
 		this.localMapGamestate = gamestate;

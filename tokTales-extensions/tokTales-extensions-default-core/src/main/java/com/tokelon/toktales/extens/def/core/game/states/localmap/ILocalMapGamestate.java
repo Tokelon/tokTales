@@ -16,7 +16,7 @@ public interface ILocalMapGamestate extends IConsoleOverlayGamestate {
 	/**
 	 * @return The custom state render, or null if there is none.
 	 */
-	public ILocalMapStateRenderer getStateRenderCustom();
+	public ILocalMapStateRenderer getStateRenderCustom(); // TODO: Change to getStateRender() ?
 	
 	
 	
@@ -25,5 +25,8 @@ public interface ILocalMapGamestate extends IConsoleOverlayGamestate {
 	@Override
 	public ILocalMapControlHandler getStateControlHandler();
 	
+	
+	@Override
+	public ILocalMapGamescene getActiveScene();
 
 }

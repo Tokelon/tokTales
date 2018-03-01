@@ -1,19 +1,22 @@
 package com.tokelon.toktales.extens.def.android.states.localmap;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPressCallback;
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
-import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
 
-public class AndroidLocalMapInputHandler implements IGameStateInputHandler, IScreenButtonCallback, IScreenPressCallback {
+public class AndroidLocalMapInputHandler implements ILocalMapInputHandler, IScreenButtonCallback, IScreenPressCallback {
 
 
 	private final ILocalMapGamestate gamestate;
 	
-	public AndroidLocalMapInputHandler(ILocalMapGamestate gamestate) {
+	@Inject
+	public AndroidLocalMapInputHandler(@Assisted ILocalMapGamestate gamestate) {
 		this.gamestate = gamestate;
 	}
 

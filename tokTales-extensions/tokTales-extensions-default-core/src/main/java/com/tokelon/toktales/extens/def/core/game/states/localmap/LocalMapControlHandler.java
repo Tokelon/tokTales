@@ -1,5 +1,7 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
@@ -9,10 +11,11 @@ public class LocalMapControlHandler extends ConsoleOverlayControlHandler impleme
 	
 	public static final String TAG = "LocalMapControlHandler";
 	
-	private final LocalMapGamestate gamestate;
+	private final ILocalMapGamestate gamestate;
 
 	
-	public LocalMapControlHandler(LocalMapGamestate gamestate) {
+	@Inject
+	public LocalMapControlHandler(@Assisted ILocalMapGamestate gamestate) {
 		super(gamestate);
 		
 		this.gamestate = gamestate;

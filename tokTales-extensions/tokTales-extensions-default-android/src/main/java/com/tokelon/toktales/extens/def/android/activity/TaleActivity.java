@@ -12,7 +12,9 @@ import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.logic.process.GameProcess;
-import com.tokelon.toktales.extens.def.android.logic.process.AndroidTaleProcess;
+import com.tokelon.toktales.core.logic.process.TaleProcess;
+import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -58,7 +60,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	
 	private GLRenderingProcess renderingProcess;
 
-	private AndroidTaleProcess taleProcess;
+	private TaleProcess taleProcess;
 	
 	
 	private boolean errorLoadingActivity = false;
@@ -124,9 +126,13 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		// Game / Tale process
 		GameProcess gameProcess = new GameProcess(TokTales.getContext());
-		
-		taleProcess = new AndroidTaleProcess(TokTales.getContext(), gameProcess);
 
+		
+		// TODO: Refactor - Inject state via ActivityHelper
+		ILocalMapGamestate state = TokTales.getContext().getInjector().getInstance(ILocalMapGamestate.class);
+		TokTales.getGame().getStateControl().addState(TokelonGameStates.STATE_LOCAL_MAP, state);
+
+		taleProcess = new TaleProcess(gameProcess, TokTales.getContext(), TokelonGameStates.STATE_LOCAL_MAP);
 		taleProcess.setObjTaleAppPath(taleApplicationPath);
 		
 		// WORKAROUND

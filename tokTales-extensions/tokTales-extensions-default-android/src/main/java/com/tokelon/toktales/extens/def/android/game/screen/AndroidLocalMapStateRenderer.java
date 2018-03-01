@@ -1,5 +1,7 @@
 package com.tokelon.toktales.extens.def.android.game.screen;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.engine.render.ISurface;
@@ -8,17 +10,18 @@ import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.IWorldGrid;
 import com.tokelon.toktales.extens.def.core.game.screen.LocalMapStateRenderer;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 
 public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 
 	public static final String TAG = "AndroidLocalMapStateRenderer";
 	
-	private final IGameState gamestate;
+	private final ILocalMapGamestate gamestate;
 	
-	public AndroidLocalMapStateRenderer(IGameState gamestate) {
+	@Inject
+	public AndroidLocalMapStateRenderer(@Assisted ILocalMapGamestate gamestate) {
 		super(gamestate);
 		
 		this.gamestate = gamestate;
