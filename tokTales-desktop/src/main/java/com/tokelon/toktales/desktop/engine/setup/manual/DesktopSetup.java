@@ -8,16 +8,19 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
+import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
+import com.tokelon.toktales.core.engine.render.DefaultSurfaceHandler;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.setup.manual.BaseSetup;
 import com.tokelon.toktales.core.engine.setup.manual.EngineFactory;
 import com.tokelon.toktales.core.engine.setup.manual.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.states.TokelonStates;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateManager;
-import com.tokelon.toktales.desktop.game.states.DesktopInitialGamestate;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
@@ -76,7 +79,7 @@ public class DesktopSetup extends BaseSetup {
 		defaultEngineFactory.setStorageService(desktopStorageService);
 		
 		
-		DesktopRenderService desktopRenderService = new DesktopRenderService();
+		DesktopRenderService desktopRenderService = new DesktopRenderService(new DefaultSurfaceHandler(), new DefaultRenderAccess());
 		defaultEngineFactory.setRenderService(desktopRenderService);
 		
 		IRenderAccess renderAccess = desktopRenderService.getRenderAccess();
@@ -125,7 +128,7 @@ public class DesktopSetup extends BaseSetup {
 		super.doRun(context);
 		
 		
-		DesktopInitialGamestate initialState = new DesktopInitialGamestate(context);
+		InitialGamestate initialState = new InitialGamestate(new IGameStateInputHandler.EmptyGameStateInputHandler());
 		
 		context.getGame().getStateControl().addState(TokelonStates.STATE_INITIAL, initialState);
 		context.getGame().getStateControl().changeState(TokelonStates.STATE_INITIAL);

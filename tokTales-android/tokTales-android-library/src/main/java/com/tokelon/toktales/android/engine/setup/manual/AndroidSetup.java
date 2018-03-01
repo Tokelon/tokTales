@@ -4,8 +4,8 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
-import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
+import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
@@ -18,7 +18,7 @@ import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
 import com.tokelon.toktales.android.states.AndroidGameStateManager;
-import com.tokelon.toktales.android.states.AndroidInitialGamestate;
+import com.tokelon.toktales.android.states.AndroidInitialGamestateInputHandler;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.UserInterface;
@@ -28,12 +28,15 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
+import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
+import com.tokelon.toktales.core.engine.render.DefaultSurfaceHandler;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.setup.manual.BaseSetup;
 import com.tokelon.toktales.core.engine.setup.manual.EngineFactory;
 import com.tokelon.toktales.core.engine.setup.manual.GameFactory;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.states.TokelonStates;
 
 import android.content.Context;
@@ -80,7 +83,7 @@ public class AndroidSetup extends BaseSetup {
 		defaultEngineFactory.setStorageService(androidStorageService);
 		
 		
-		AndroidRenderService androidRenderService = new AndroidRenderService();
+		AndroidRenderService androidRenderService = new AndroidRenderService(new DefaultSurfaceHandler(), new DefaultRenderAccess());
 		defaultEngineFactory.setRenderService(androidRenderService);
 		
 		IRenderAccess renderAccess = androidRenderService.getRenderAccess();
@@ -136,7 +139,7 @@ public class AndroidSetup extends BaseSetup {
 	protected void doRun(IEngineContext context) throws EngineException {
 		super.doRun(context);
 		
-		AndroidInitialGamestate initialState = new AndroidInitialGamestate(context);
+		InitialGamestate initialState = new InitialGamestate(new AndroidInitialGamestateInputHandler(context.getLog(), context.getEngine().getUIService()));
 		//InitialGamestate initialState = BaseGamestate.createGamestate(InitialGamestate.class, getEngine(), getLogger(), getGame(), new ParamsImpl());
 		
 		context.getGame().getStateControl().addState(TokelonStates.STATE_INITIAL, initialState);

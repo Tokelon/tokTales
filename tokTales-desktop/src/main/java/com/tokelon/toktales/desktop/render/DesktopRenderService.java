@@ -1,8 +1,8 @@
 package com.tokelon.toktales.desktop.render;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
-import com.tokelon.toktales.core.engine.render.DefaultSurfaceHandler;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
@@ -10,24 +10,25 @@ import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 public class DesktopRenderService extends AbstractEngineService implements IRenderService {
 	
 	
-	private final DefaultSurfaceHandler mSurfaceHandler;
-	private final DefaultRenderAccess mRenderAccess;
+	private final ISurfaceHandler surfaceHandler;
+	private final IRenderAccess renderAccess;
 	
-	public DesktopRenderService() {
-		mSurfaceHandler = new DefaultSurfaceHandler();
-		mRenderAccess = new DefaultRenderAccess();
+	@Inject
+	public DesktopRenderService(ISurfaceHandler surfaceHandler, IRenderAccess renderAccess) {
+		this.surfaceHandler = surfaceHandler;
+		this.renderAccess = renderAccess;
 	}
 	
 	
 	@Override
 	public ISurfaceHandler getSurfaceHandler() {
-		return mSurfaceHandler;
+		return surfaceHandler;
 	}
 
 
 	@Override
 	public IRenderAccess getRenderAccess() {
-		return mRenderAccess;
+		return renderAccess;
 	}
 
 
