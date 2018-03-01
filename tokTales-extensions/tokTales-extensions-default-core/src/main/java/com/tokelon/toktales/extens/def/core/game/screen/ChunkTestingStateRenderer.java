@@ -48,8 +48,12 @@ public class ChunkTestingStateRenderer extends AbstractStateRender {
 	private IRenderTexture renderTexture01;
 	
 	
+	private final IGameState gamestate;
+	
 	public ChunkTestingStateRenderer(ISurfaceHandler surfaceHandler, IGameState gamestate) {
-		super(surfaceHandler, gamestate);
+		super(surfaceHandler);
+		
+		this.gamestate = gamestate;
 		
 		charRenderer = new CharRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
 		shapeRenderer = new ShapeRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
@@ -67,7 +71,7 @@ public class ChunkTestingStateRenderer extends AbstractStateRender {
 	
 	
 	private void load() {
-		IContentService contentService = getGamestate().getEngine().getContentService();
+		IContentService contentService = gamestate.getEngine().getContentService();
 		
 		LocationImpl location = new LocationImpl("graphics" + File.separator + "special" + File.separator);
 		try {

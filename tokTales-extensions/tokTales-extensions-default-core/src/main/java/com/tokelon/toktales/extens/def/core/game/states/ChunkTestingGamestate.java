@@ -2,22 +2,30 @@ package com.tokelon.toktales.extens.def.core.game.states;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.extens.def.core.game.screen.ChunkTestingStateRenderer;
 
 public class ChunkTestingGamestate extends BaseGamestate {
+	// TODO: Remove from this project
 	
-	public ChunkTestingGamestate(IEngineContext context) {
-		super(context);
-	}
+	public static final String TAG = "ChunkTestingGamestate";
+	
 
+	@Inject
+	public ChunkTestingGamestate(@ForClass(ChunkTestingGamestate.class) IGameStateInputHandler inputHandler) {
+		super(null, inputHandler, null, null);
+	}
+	
 
 	@Override
 	public void onEngage() {
