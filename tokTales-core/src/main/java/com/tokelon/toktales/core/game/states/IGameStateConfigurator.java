@@ -13,44 +13,15 @@ public interface IGameStateConfigurator<T extends IGameState> {
 	public void configureState(T gamestate);
 	
 	
-	public IStateRender createStateRender(T gamestate);
+	public default IStateRender createStateRender(T gamestate) { return null; }
 	
-	public IGameStateInput createStateInput(T gamestate);
+	public default IGameStateInput createStateInput(T gamestate) { return null; }
 	
-	public IGameStateInputHandler createStateInputHandler(T gamestate);
+	public default IGameStateInputHandler createStateInputHandler(T gamestate) { return null; }
 	
-	public IControlScheme createStateControlScheme(T gamestate);
+	public default IControlScheme createStateControlScheme(T gamestate) { return null; }
 	
-	public IControlHandler createStateControlHandler(T gamestate);
-	
-	
-	
-	public abstract class AbstractGamestateConfigurator<T extends IGameState> implements IGameStateConfigurator<T> {
+	public default IControlHandler createStateControlHandler(T gamestate) { return null; }
 
-		@Override
-		public IStateRender createStateRender(T gamestate) {
-			return null;
-		}
-
-		@Override
-		public IGameStateInput createStateInput(T gamestate) {
-			return null;
-		}
-
-		@Override
-		public IGameStateInputHandler createStateInputHandler(T gamestate) {
-			return null;
-		}
-
-		@Override
-		public IControlScheme createStateControlScheme(T gamestate) {
-			return null;
-		}
-
-		@Override
-		public IControlHandler createStateControlHandler(T gamestate) {
-			return null;
-		}
-	}
 	
 }

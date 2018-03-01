@@ -3,7 +3,6 @@ package com.tokelon.toktales.extens.def.core.game.states;
 import java.io.InputStream;
 
 import com.tokelon.toktales.core.content.text.SpriteFontImpl;
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.storage.StorageException;
@@ -30,11 +29,10 @@ import com.tokelon.toktales.tools.tiledmap.TiledSpriteset;
 import com.tokelon.toktales.tools.tiledmap.model.TiledMapTilesetImpl;
 
 // Obsolete and broken
-public class SprifoConsoleGamestate extends BaseGamestate {
+@Deprecated
+public class SprifoConsoleGamestate extends BaseGamestate { // TODO: Delete
 	
-	//TODO: Rename "predef" package to "builtin" or "buildin" or "buildn"
-	
-	public static final String TAG = "ConsoleGamestate";
+	public static final String TAG = "SprifoConsoleGamestate";
 	
 	
 	public static final String RENDERER_CONSOLE_NAME = "renderer_console";
@@ -51,9 +49,7 @@ public class SprifoConsoleGamestate extends BaseGamestate {
 	
 
 	// TODO: Get the strategy from a protected method or like this through the constructor?
-	public SprifoConsoleGamestate(IEngineContext context, IRenderingStrategy renderingStrategy) {
-		super(context);
-		
+	public SprifoConsoleGamestate(IRenderingStrategy renderingStrategy) {
 		this.mRenderingStrategy = renderingStrategy;
 	}
 

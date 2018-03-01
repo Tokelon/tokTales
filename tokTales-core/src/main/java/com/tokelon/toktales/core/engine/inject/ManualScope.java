@@ -19,21 +19,23 @@ public class ManualScope implements Scope {
 		}
 	}
 	
+	@Override
 	public <T> Provider<T> scope(Key<T> key, Provider<T> unscoped) {
-		return new GameScopeProvider<>(key, unscoped);
+		return new ManualScopeProvider<>(key, unscoped);
 	}
 
 	
-	private class GameScopeProvider<T> implements Provider<T> {
+	private class ManualScopeProvider<T> implements Provider<T> {
 		private final Key<T> key;
 		private final Provider<T> unscoped;
 		
-		public GameScopeProvider(Key<T> key, Provider<T> unscoped) {
+		public ManualScopeProvider(Key<T> key, Provider<T> unscoped) {
 			this.key = key;
 			this.unscoped = unscoped;
 		}
 
 		
+		@Override
 		@SuppressWarnings("unchecked")
 		public T get() {
 			synchronized (values) {
@@ -57,7 +59,7 @@ public class ManualScope implements Scope {
 		
 		@Override
 		public String toString() {
-			return "GameScopeProvider backed by: " + unscoped.toString();
+			return "ManualScopeProvider backed by: " + unscoped.toString();
 		}
 	}
 	

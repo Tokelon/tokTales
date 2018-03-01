@@ -100,7 +100,10 @@ public interface IGameState {
 	public IStateRender getStateRender();
 
 	
-	/**
+	/** The state input is a manager that collects input handlers,
+	 *  and notifies them when new events happen.
+	 *  <p>
+	 *  The implementation is platform specific and provides extended functionality to register callbacks.
 	 * 
 	 * @return The state input.
 	 */
