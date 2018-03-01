@@ -13,7 +13,23 @@ dependencies {
 
 
 	// Cyclic dependency, see toktales-core build.gradle
-    implementation project(':tokTales-core')
+    implementation project(':tokTales-extensions-default-core')
+}
+
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+			srcDir 'arch/main/java'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+			srcDir 'arch/test/java'
+		}
+	}
 }
 
 sourceCompatibility = "1.8"

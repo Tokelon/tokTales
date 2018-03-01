@@ -30,6 +30,7 @@ android {
     }
 }
 
+
 dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
@@ -40,10 +41,11 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
 
+
     api project(':tokTales-test-core')
     
     // Cyclic dependency, see toktales-core build.gradle
-    implementation project(':tokTales-android-library')
+    implementation project(':tokTales-extensions-default-android')
 }
 
 
@@ -52,7 +54,7 @@ eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
 
     node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-test-core' ])
-    node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-android-library' ]) // Cyclic dependency
+    node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-default-android' ]) // Cyclic dependency
 
 
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
@@ -69,12 +71,15 @@ sourceSets {
     main {
         java {
             srcDir 'src/main/java'
+            srcDir 'arch/main/java'
+            
             srcDir '/build/generated/source/r/debug'
         }
     }
     test {
         java {
             srcDir 'src/test/java'
+            srcDir 'arch/test/java'
         }
     }
 }
