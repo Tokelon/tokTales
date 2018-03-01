@@ -1,16 +1,20 @@
 package com.tokelon.toktales.extens.def.desktop.game.states;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
-import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.desktop.input.TInput;
+import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestateInputHandler;
 
-public class DesktopConsoleInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
+public class DesktopConsoleInputHandler implements IConsoleGamestateInputHandler, ICharInputCallback, IKeyInputCallback {
 	
-	private final ConsoleGamestate consoleGamestate;
 	
-	public DesktopConsoleInputHandler(ConsoleGamestate consoleGamestate) {
+	private final IConsoleGamestate consoleGamestate;
+
+	@Inject
+	public DesktopConsoleInputHandler(@Assisted IConsoleGamestate consoleGamestate) {
 		this.consoleGamestate = consoleGamestate;
 	}
 
@@ -45,6 +49,5 @@ public class DesktopConsoleInputHandler implements IGameStateInputHandler, IChar
 		
 		return handled;
 	}
-
 	
 }

@@ -1,21 +1,35 @@
 package com.tokelon.toktales.extens.def.desktop.game.states;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.IConsole;
-import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.logic.process.GameProcess;
+import com.tokelon.toktales.core.logic.process.TaleProcess;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
-import com.tokelon.toktales.extens.def.desktop.game.logic.process.DesktopTaleProcess;
+import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpreter;
+import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 
-public class DesktopConsoleGamestateInterpreter implements IConsoleInterpreter {
-
-	private final IGameState gamestate;
+public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpreter implements IConsoleInterpreter {
+	// TODO: Refactor structure with super interpreter into wrapper?
 	
-	public DesktopConsoleGamestateInterpreter(IGameState gamestate) {
-		this.gamestate = gamestate;
+	
+	private final Provider<ILocalMapGamestate> localMapGamestateProvider;
+	private final IConsoleGamestate consoleGamestate;
+	
+	@Inject
+	public DesktopConsoleGamestateInterpreter(Provider<ILocalMapGamestate> localMapGamestateProvider, @Assisted IConsoleGamestate consoleGamestate) {
+		super(consoleGamestate.getGame());
+		
+		this.localMapGamestateProvider = localMapGamestateProvider;
+		this.consoleGamestate = consoleGamestate;
 	}
+	
 	
 	@Override
 	public boolean interpret(IConsole console, String input) {
@@ -32,16 +46,18 @@ public class DesktopConsoleGamestateInterpreter implements IConsoleInterpreter {
 
 				GameProcess gameProcess = new GameProcess(TokTales.getContext());
 				
-				DesktopTaleProcess taleProcess = new DesktopTaleProcess(TokTales.getContext(), gameProcess);
+				ILocalMapGamestate state = localMapGamestateProvider.get();
+				consoleGamestate.getGame().getStateControl().addState(TokelonGameStates.STATE_LOCAL_MAP, state);
+
+				TaleProcess taleProcess = new TaleProcess(gameProcess, TokTales.getContext(), TokelonGameStates.STATE_LOCAL_MAP);
 				
 				String taleDirAppPath = new MutablePathImpl(new LocationImpl("Tales").getLocationPath()).getPathAppendedBy(talename);
-
 				taleProcess.setObjTaleAppPath(taleDirAppPath);
 				
 
 				
-				gamestate.getGame().getGameControl().pauseGame();
-				gamestate.getGame().getGameControl().stopGame();
+				consoleGamestate.getGame().getGameControl().pauseGame();
+				consoleGamestate.getGame().getGameControl().stopGame();
 				
 				taleProcess.startProcess();
 				taleProcess.unpause();
@@ -52,11 +68,10 @@ public class DesktopConsoleGamestateInterpreter implements IConsoleInterpreter {
 			}
 			
 			console.print("ERROR: No tale name provided");
-			return false;
+			return false; // In this case maybe the super interpreter should get a chance
 		}
-		else {
-			return false;	
-		}
+		
+		return super.interpret(console, input);
 	}
 
 }

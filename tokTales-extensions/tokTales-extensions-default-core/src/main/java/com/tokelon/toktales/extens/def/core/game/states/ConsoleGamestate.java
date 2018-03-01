@@ -2,19 +2,24 @@ package com.tokelon.toktales.extens.def.core.game.states;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.DefaultModularStateRender;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
+import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.IControlHandler;
+import com.tokelon.toktales.core.game.states.IControlScheme;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultConsoleController;
@@ -27,10 +32,9 @@ import com.tokelon.toktales.extens.def.core.game.model.TextBox;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer;
+import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestateInputHandler.IConsoleGamestateInputHandlerFactory;
 
-public class ConsoleGamestate extends BaseGamestate {
-	
-	//TODO: Rename "predef" package to "builtin" or "buildin" or "buildn"
+public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate {
 	
 	public static final String TAG = "ConsoleGamestate";
 	
@@ -46,19 +50,37 @@ public class ConsoleGamestate extends BaseGamestate {
 	
 	private DefaultConsoleController mConsoleController;
 	
-	private IRenderingStrategy mRenderingStrategy;
 	
 	
 	private Console console;
-	private ConsoleInterpreter interpreter;
-
-	private IConsoleInterpreter customConsoleInterpreter;
 	
-	// TODO: Get the strategy from a protected method or like this through the constructor?
-	public ConsoleGamestate(IEngineContext context, IRenderingStrategy renderingStrategy) {
-		super(context);
+	private final IConsoleGamestateInputHandlerFactory inputHandlerFactory;
+	private final IRenderingStrategy mRenderingStrategy;
+	private final IConsoleGamestateInterpreterFactory consoleInterpreterFactory;
+	
+	@Inject
+	public ConsoleGamestate(
+			IConsoleGamestateInputHandlerFactory inputHandlerFactory,
+			@ForClass(ConsoleGamestate.class) IRenderingStrategy renderingStrategy,
+			IConsoleGamestateInterpreterFactory consoleInterpreterFactory
+	) {
 		
+		this.inputHandlerFactory = inputHandlerFactory;
 		this.mRenderingStrategy = renderingStrategy;
+		this.consoleInterpreterFactory = consoleInterpreterFactory;
+	}
+
+	@Override
+	protected void initStateDependencies(
+			IStateRender defaultRender,
+			IGameStateInputHandler defaultInputHandler,
+			IControlScheme defaultControlScheme,
+			IControlHandler defaultControlHandler
+	) {
+		
+		IConsoleGamestateInputHandler inputHandler = inputHandlerFactory.create(this);
+		
+		super.initStateDependencies(defaultRender, inputHandler, defaultControlScheme, defaultControlHandler);
 	}
 
 	
@@ -74,7 +96,7 @@ public class ConsoleGamestate extends BaseGamestate {
 		
 		
 		// Console
-		interpreter = new ConsoleInterpreter();
+		IConsoleInterpreter interpreter = consoleInterpreterFactory.create(this);
 		console = new Console(interpreter);
 		console.setPrompt(CONSOLE_PROMPT);
 		
@@ -193,6 +215,7 @@ public class ConsoleGamestate extends BaseGamestate {
 		
 	}
 	
+	
 	@Override
 	public void onEnter() {
 		super.onEnter();
@@ -201,69 +224,13 @@ public class ConsoleGamestate extends BaseGamestate {
 	}
 	
 	
-
-	/** Sets a custom console interpreter that will be used in addition.
-	 * 
-	 * @param interpreter
-	 */
-	public void setCustomConsoleInterpreter(IConsoleInterpreter interpreter) {
-		this.customConsoleInterpreter = interpreter;
-	}
-	
-	/**
-	 * 
-	 * @return The custom console interpreter, or null if none has been set.
-	 */
-	public IConsoleInterpreter getCustomConsoleInterpreter() {
-		return customConsoleInterpreter;
-	}
-	
-	
 	/** The console controller will be available after {@link #onEngage()}.
 	 * 
 	 * @return The console controller.
 	 */
+	@Override
 	public IConsoleController getConsoleController() {
 		return mConsoleController;
 	}
-	
-	
-	
-	
-	private class ConsoleInterpreter implements IConsoleInterpreter {
-
-		@Override
-		public boolean interpret(IConsole console, String input) {
-			String response;
-			
-			if(input.contains("Hello")) {
-				response = "Hello!";
-			}
-			else if(input.toLowerCase().contains("load module map")) {
-				response = "Not found";
-				//response = "Loading...";
-				
-				//getGame().getStateControl().changeStateTo("main_menu_state");
-			}
-			else if(input.toLowerCase().contains("load chunk_test")) {
-				response = "Loading...";
-				
-				getGame().getStateControl().changeState("chunk_test_state");
-			}
-			else {
-				if(getCustomConsoleInterpreter() == null) {
-					response = "I did not understand that.";
-				}
-				else {
-					boolean success = customConsoleInterpreter.interpret(console, input);
-					response = success ? "" : "I did not understand that.";
-				}
-			}
-			
-			console.print(response);
-			return true;
-		}
-	}
-	
 	
 }
