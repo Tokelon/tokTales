@@ -3,9 +3,9 @@ package com.tokelon.toktales.core.engine.inject;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
-public class ForClassImpl implements ForClass, Serializable {
+class ForClassImpl implements ForClass, Serializable {
 
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 2695311423672699909L;
 
 	
 	private final Class<?> value;
@@ -18,10 +18,7 @@ public class ForClassImpl implements ForClass, Serializable {
 		this.value = value;
 	}
 
-	static ForClass inClass(Class<?> clazz) {
-		return new ForClassImpl(clazz);
-	}
-
+	
 	@Override
 	public Class<?> value() {
 		return this.value;
