@@ -12,6 +12,8 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.tools.inject.IParameterInjector;
+import com.tokelon.toktales.tools.inject.ParameterInjector;
 
 /**
  *
@@ -31,6 +33,7 @@ public class BaseGamestate implements IGameState {
 	private final IModifiableGameSceneControl<IGameScene> stateSceneControl;
 
 	private RenderRunner renderRunner;
+	private IParameterInjector gamestateInjector;
 
 
 	/* Injected base objects */
@@ -59,6 +62,7 @@ public class BaseGamestate implements IGameState {
 	@Inject
 	public BaseGamestate() {
 		this.stateSceneControl = new GameSceneControl<IGameScene>();
+		this.gamestateInjector = new ParameterInjector(InjectGameState.class, this);
 	}
 
 	
@@ -205,13 +209,15 @@ public class BaseGamestate implements IGameState {
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		// TODO: Check for null
-		this.stateRender = defaultRender;
-		this.stateInputHandler = defaultInputHandler;
-		this.stateControlScheme = defaultControlScheme;
-		this.stateControlHandler = defaultControlHandler;
-
-		//injectGamestate(); // TODO: Implement
+		long before = System.currentTimeMillis();
+		
+		setStateRender(defaultRender);
+		setStateInputHandler(defaultInputHandler);
+		setStateControlScheme(defaultControlScheme);
+		setStateControlHandler(defaultControlHandler);
+		
+		getLog().d(getTag(), String.format("Gamestate injection took %d ms", System.currentTimeMillis() - before));
+		
 		
 		afterInitStateDependencies();
 	}
@@ -417,27 +423,37 @@ public class BaseGamestate implements IGameState {
 	}
 	
 	
+	/** The injector can be used to inject this gamestate into dependencies via {@link InjectGameState}.
+	 * 
+	 * @return An injector for this gamestate.
+	 */
+	protected IParameterInjector getGamestateInjector() {
+		return gamestateInjector;
+	}
+	
+	
 	
 	/* Setters */
 
 	/** Sets the state render.
 	 * <p>
-	 * The default is an empty state render.
+	 * If supported this gamestate will be injected via {@link InjectGameState}.
 	 * 
-	 * @param stateRender
+	 * @param render
 	 * @throws NullPointerException If stateRender is null.
 	 */
-	protected void setStateRender(IStateRender stateRender) {
-		if(stateRender == null) {
+	protected void setStateRender(IStateRender render) {
+		if(render == null) {
 			throw new NullPointerException();
 		}
-
-		this.stateRender = stateRender;
+		
+		gamestateInjector.injectInto(render);
+		this.stateRender = render;
 	}
 
 	/** Sets the state input handler.
 	 * <p>
-	 * The default is an empty input handler.
+	 * If supported this gamestate will be injected via {@link InjectGameState}.
 	 * 
 	 * @param inputHandler
 	 * @throws NullPointerException If inputHandler is null.
@@ -447,12 +463,13 @@ public class BaseGamestate implements IGameState {
 			throw new NullPointerException();
 		}
 
+		gamestateInjector.injectInto(inputHandler);
 		this.stateInputHandler = inputHandler;
 	}
 
 	/** Sets the state control scheme.
 	 * <p>
-	 * The default is an empty control scheme.
+	 * If supported this gamestate will be injected via {@link InjectGameState}.
 	 * 
 	 * @param controlScheme
 	 * @throws NullPointerException If controlScheme is null.
@@ -461,13 +478,14 @@ public class BaseGamestate implements IGameState {
 		if(controlScheme == null) {
 			throw new NullPointerException();
 		}
-
+		
+		gamestateInjector.injectInto(controlScheme);
 		this.stateControlScheme = controlScheme;
 	}
 
 	/** Sets the state control handler.
 	 * <p>
-	 * The default is an empty control handler.
+	 * If supported this gamestate will be injected via {@link InjectGameState}.
 	 * 
 	 * @param controlHandler
 	 * @throws NullPointerException If controlHandler is null.
@@ -477,12 +495,14 @@ public class BaseGamestate implements IGameState {
 			throw new NullPointerException();
 		}
 
+		gamestateInjector.injectInto(controlHandler);
 		this.stateControlHandler = controlHandler;
 	}
 
 
 
-	public static class EmptyStateRender extends AbstractStateRender { // TODO: Refactor into external possible?
+	// TODO: Refactor into external possible?
+	public static class EmptyStateRender extends AbstractStateRender {
 
 		@Inject
 		public EmptyStateRender(ISurfaceHandler surfaceHandler) {
