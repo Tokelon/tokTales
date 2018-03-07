@@ -51,6 +51,8 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.World;
+import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 
 public class CoreInjectModule extends AbstractInjectModule {
 
@@ -134,6 +136,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
+		
+		
+		// Tools
+		bind(IParameterInjectorFactory.class).to(ParameterInjectorFactory.class);
 		
 	}
 
