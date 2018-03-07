@@ -2,9 +2,9 @@ package com.tokelon.toktales.extens.def.desktop.game.states;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.IConsole;
+import com.tokelon.toktales.core.game.states.InjectGameState;
 import com.tokelon.toktales.core.logic.process.GameProcess;
 import com.tokelon.toktales.core.logic.process.TaleProcess;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
@@ -15,19 +15,23 @@ import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 
+@InjectGameState
 public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpreter implements IConsoleInterpreter {
 	// TODO: Refactor structure with super interpreter into wrapper?
 	
 	
 	private final Provider<ILocalMapGamestate> localMapGamestateProvider;
-	private final IConsoleGamestate consoleGamestate;
+	private IConsoleGamestate consoleGamestate;
 	
 	@Inject
-	public DesktopConsoleGamestateInterpreter(Provider<ILocalMapGamestate> localMapGamestateProvider, @Assisted IConsoleGamestate consoleGamestate) {
-		super(consoleGamestate.getGame());
-		
+	public DesktopConsoleGamestateInterpreter(Provider<ILocalMapGamestate> localMapGamestateProvider) {
 		this.localMapGamestateProvider = localMapGamestateProvider;
-		this.consoleGamestate = consoleGamestate;
+	}
+
+	@InjectGameState
+	@Override
+	protected void injectGamestate(IConsoleGamestate gamestate) {
+		this.consoleGamestate = gamestate;
 	}
 	
 	

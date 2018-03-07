@@ -1,23 +1,23 @@
 package com.tokelon.toktales.extens.def.desktop.game.states;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.InjectGameState;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
 import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestateInputHandler;
 
-public class DesktopConsoleInputHandler implements IConsoleGamestateInputHandler, ICharInputCallback, IKeyInputCallback {
+@InjectGameState
+public class DesktopConsoleInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
 	
 	
-	private final IConsoleGamestate consoleGamestate;
-
-	@Inject
-	public DesktopConsoleInputHandler(@Assisted IConsoleGamestate consoleGamestate) {
-		this.consoleGamestate = consoleGamestate;
+	private IConsoleGamestate consoleGamestate;
+	
+	@InjectGameState
+	protected void passGamestate(IConsoleGamestate gamestate) {
+		this.consoleGamestate = gamestate;
 	}
-
+	
 	
 	@Override
 	public boolean invokeCharInput(int codepoint) {

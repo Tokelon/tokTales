@@ -6,7 +6,6 @@ import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate.IConsoleGamestateInterpreterFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.desktop.game.screen.DesktopConsoleRenderingStrategy;
@@ -25,10 +24,8 @@ public class DesktopDefaultExtensionsOverrideInjectModule extends AbstractInject
 		
 		
 		// ConsoleGamestate
-		install(new FactoryModuleBuilder()
-				.implement(IConsoleInterpreter.class, DesktopConsoleGamestateInterpreter.class)
-				.build(IConsoleGamestateInterpreterFactory.class));
 	    bind(IRenderingStrategy.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(DesktopConsoleRenderingStrategy.class);
+	    bind(IConsoleInterpreter.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(DesktopConsoleGamestateInterpreter.class);
 
 	}
 	

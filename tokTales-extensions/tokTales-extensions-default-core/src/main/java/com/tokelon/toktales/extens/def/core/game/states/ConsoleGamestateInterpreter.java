@@ -1,19 +1,18 @@
 package com.tokelon.toktales.extens.def.core.game.states;
 
-import javax.inject.Inject;
-
-import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.model.IConsole;
+import com.tokelon.toktales.core.game.states.InjectGameState;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 
+@InjectGameState
 public class ConsoleGamestateInterpreter implements IConsoleInterpreter {
 	
 	
-	private final IGame game;
+	private IConsoleGamestate gamestate;
 	
-	@Inject
-	public ConsoleGamestateInterpreter(IGame game) {
-		this.game = game;
+	@InjectGameState
+	protected void injectGamestate(IConsoleGamestate gamestate) {
+		this.gamestate = gamestate;
 	}
 	
 	
@@ -33,7 +32,7 @@ public class ConsoleGamestateInterpreter implements IConsoleInterpreter {
 		else if(input.toLowerCase().contains("load chunk_test")) {
 			response = "Loading...";
 			
-			game.getStateControl().changeState("chunk_test_state");
+			gamestate.getGame().getStateControl().changeState("chunk_test_state");
 		}
 		else {
 			response = "I did not understand that.";

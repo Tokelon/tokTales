@@ -15,10 +15,7 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.DefaultModularStateRender;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
-import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
-import com.tokelon.toktales.core.game.states.IControlHandler;
-import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
@@ -32,12 +29,10 @@ import com.tokelon.toktales.extens.def.core.game.model.TextBox;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestateInputHandler.IConsoleGamestateInputHandlerFactory;
 
 public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate {
 	
 	public static final String TAG = "ConsoleGamestate";
-	
 	
 	public static final String RENDERER_CONSOLE_NAME = "renderer_console";
 	public static final String RENDERER_TEXT_NAME = "renderer_text_name";
@@ -49,38 +44,21 @@ public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate
 	
 	
 	private DefaultConsoleController mConsoleController;
-	
-	
-	
 	private Console console;
 	
-	private final IConsoleGamestateInputHandlerFactory inputHandlerFactory;
 	private final IRenderingStrategy mRenderingStrategy;
-	private final IConsoleGamestateInterpreterFactory consoleInterpreterFactory;
+	private final IConsoleInterpreter consoleInterpreter;
 	
 	@Inject
 	public ConsoleGamestate(
-			IConsoleGamestateInputHandlerFactory inputHandlerFactory,
+			@ForClass(ConsoleGamestate.class) IGameStateInputHandler inputHandler,
 			@ForClass(ConsoleGamestate.class) IRenderingStrategy renderingStrategy,
-			IConsoleGamestateInterpreterFactory consoleInterpreterFactory
+			@ForClass(ConsoleGamestate.class) IConsoleInterpreter consoleInterpreter
 	) {
+		super(null, inputHandler, null, null);
 		
-		this.inputHandlerFactory = inputHandlerFactory;
 		this.mRenderingStrategy = renderingStrategy;
-		this.consoleInterpreterFactory = consoleInterpreterFactory;
-	}
-
-	@Override
-	protected void initStateDependencies(
-			IStateRender defaultRender,
-			IGameStateInputHandler defaultInputHandler,
-			IControlScheme defaultControlScheme,
-			IControlHandler defaultControlHandler
-	) {
-		
-		IConsoleGamestateInputHandler inputHandler = inputHandlerFactory.create(this);
-		
-		super.initStateDependencies(defaultRender, inputHandler, defaultControlScheme, defaultControlHandler);
+		this.consoleInterpreter = consoleInterpreter;
 	}
 
 	
@@ -96,8 +74,7 @@ public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate
 		
 		
 		// Console
-		IConsoleInterpreter interpreter = consoleInterpreterFactory.create(this);
-		console = new Console(interpreter);
+		console = new Console(consoleInterpreter);
 		console.setPrompt(CONSOLE_PROMPT);
 		
 		mConsoleController = new DefaultConsoleController(console);

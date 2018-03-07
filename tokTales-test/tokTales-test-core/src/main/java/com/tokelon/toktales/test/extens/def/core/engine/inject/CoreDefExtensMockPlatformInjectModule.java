@@ -5,8 +5,8 @@ import static org.mockito.Mockito.mock;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.states.IControlScheme;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestateInputHandler;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestateInputHandler.IConsoleGamestateInputHandlerFactory;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
 
@@ -23,8 +23,9 @@ public class CoreDefExtensMockPlatformInjectModule extends AbstractInjectModule 
 		bind(ILocalMapInputHandlerFactory.class).toInstance(mock(ILocalMapInputHandlerFactory.class));
     	bind(IControlScheme.class).annotatedWith(For.forClass(LocalMapGamestate.class)).toInstance(mock(IControlScheme.class));
 
+    	
     	// ConsoleGamestate
-    	bind(IConsoleGamestateInputHandlerFactory.class).toInstance((gamestate) -> mock(IConsoleGamestateInputHandler.class));
+    	bind(IGameStateInputHandler.class).annotatedWith(For.forClass(ConsoleGamestate.class)).toInstance(mock(IGameStateInputHandler.class));
 	}
 
 }
