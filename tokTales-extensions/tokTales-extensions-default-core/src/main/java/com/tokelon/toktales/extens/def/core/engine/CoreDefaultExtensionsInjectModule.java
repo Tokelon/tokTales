@@ -26,10 +26,6 @@ public class CoreDefaultExtensionsInjectModule extends AbstractInjectModule {
 	
     @Override
     protected void configure() {
-    	// Inexact annotated bindings | TODO: Move into Core?
-	    bind(IGameStateInputHandler.class).annotatedWith(ForClass.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
-	    
-    	
     	// LocalMapGamestate
     	bind(ILocalMapGamestate.class).to(LocalMapGamestate.class);
 		 install(new FactoryModuleBuilder()

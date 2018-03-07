@@ -22,7 +22,8 @@ public class TestCoreDefaultExtensionsInjection {
 	
 	public static final String[][] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS = 
 	{
-			{ "IControlScheme", "ForClass", "LocalMapGamestate" }
+			{ "IControlScheme", "ForClass", "LocalMapGamestate" },
+			{ "IGameStateInputHandler", "ForClass", "ConsoleGamestate"}
 	};
 	
 	public static final String[] ALL_EXPECTED_BINDING_TYPES = 

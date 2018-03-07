@@ -115,7 +115,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		  bindInGameScopeAndForNotScoped(IGameStateControl.class, GameStateControl.class);
 		  bindInGameScopeAndForNotScoped(ITimeManager.class, TimeManager.class);
 		  bindInGameScopeAndForNotScoped(IGameScriptManager.class, LuaGameScriptManager.class);
-		  //bind(IGameLogicManager.class)
 		  bindInGameScopeAndForNotScoped(IConfigManager.class, ConfigManager.class);
 		  bindInGameScopeAndForNotScoped(IEditorManager.class, EditorManager.class);
 		  bindInGameScopeAndForNotScoped(IContentManager.class, ContentManager.class);
@@ -124,12 +123,11 @@ public class CoreInjectModule extends AbstractInjectModule {
 				   .implement(ISpriteManager.class, SpriteManager.class)
 				   .build(ISpriteManagerFactory.class));
 		  bindToProviderInGameScopeAndForNotScoped(IWorld.class, () -> new World(32.0f));  // Maybe do param with @Named
-
+		
+		
 		// Other
 		bind(IGameState.class).to(BaseGamestate.class);
 		bind(InitialGamestate.class);
-		 // Do not bind default, require platforms to bind it!
-		 //bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(BaseGamestate.EmptyStateInputHandler.class);
 		
 		bind(IRenderOrder.class).to(RenderOrder.class);
 		bind(IStateRender.class).to(BaseGamestate.EmptyStateRender.class);
