@@ -15,6 +15,17 @@ import com.tokelon.toktales.tools.inject.InjectParameters;
  * When applied to types, indicates that an {@link IGameState} dependency must be injected for it to work correctly.
  * <p>
  * When used the annotation should also be applied to the enclosing type to indicate the dependency requirement to the user.
+ * <p>
+ * A method is valid if it has one parameter of type or subtype of IGameState. This will usually look something like:
+ * <pre>
+ * {@code @InjectGamestate}
+ * protected void injectGamestate(IGameState gamestate) {
+ *     this.gamestate = gamestate; // assign the injected parameter
+ * }
+ * </pre>
+ * It is important to note that the gamestate parameter can be a subtype of IGameState,
+ * however injection will fail if an incompatible type is supplied.
+ * In practice this should not be a problem as long as dependencies are only passed to those gamestate types which they require.
  * 
  * @see InjectParameters
  */
