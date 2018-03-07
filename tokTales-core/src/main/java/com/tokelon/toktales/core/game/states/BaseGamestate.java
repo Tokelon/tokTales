@@ -6,9 +6,8 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.screen.AbstractStateRender;
+import com.tokelon.toktales.core.game.screen.EmptyStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
@@ -70,6 +69,7 @@ public class BaseGamestate implements IGameState {
 	 */
 	@Inject
 	public BaseGamestate() {
+		// Inject these?
 		this.stateSceneControl = new GameSceneControl<IGameScene>();
 		this.gamestateInjector = new ParameterInjector(InjectGameState.class, this);
 	}
@@ -503,34 +503,6 @@ public class BaseGamestate implements IGameState {
 
 		gamestateInjector.injectInto(controlHandler);
 		this.stateControlHandler = controlHandler;
-	}
-
-
-
-	// TODO: Refactor into external possible?
-	public static class EmptyStateRender extends AbstractStateRender {
-
-		@Inject
-		public EmptyStateRender(ISurfaceHandler surfaceHandler) {
-			super(surfaceHandler);
-		}
-
-		@Override
-		public void renderCall(String layerName, double stackPosition) { }
-
-		@Override
-		public String getDescription() {
-			return "EmptyStateRender";
-		}
-
-		@Override
-		protected void onSurfaceCreated() {	}
-
-		@Override
-		protected void onSurfaceChanged() { }
-
-		@Override
-		protected void onSurfaceDestroyed() { }
 	}
 
 }

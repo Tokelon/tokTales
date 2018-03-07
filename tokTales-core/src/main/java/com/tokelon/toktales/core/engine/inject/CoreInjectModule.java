@@ -38,6 +38,7 @@ import com.tokelon.toktales.core.game.control.GameControl;
 import com.tokelon.toktales.core.game.control.IGameControl;
 import com.tokelon.toktales.core.game.control.ITimeManager;
 import com.tokelon.toktales.core.game.control.TimeManager;
+import com.tokelon.toktales.core.game.screen.EmptyStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderOrder;
@@ -130,7 +131,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(InitialGamestate.class);
 		
 		bind(IRenderOrder.class).to(RenderOrder.class);
-		bind(IStateRender.class).to(BaseGamestate.EmptyStateRender.class);
+		bind(IStateRender.class).to(EmptyStateRender.class);
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
