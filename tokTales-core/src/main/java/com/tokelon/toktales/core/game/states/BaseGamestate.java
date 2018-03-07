@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.IGame;
@@ -15,12 +16,20 @@ import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSc
 import com.tokelon.toktales.tools.inject.IParameterInjector;
 import com.tokelon.toktales.tools.inject.ParameterInjector;
 
-/**
- *
+/** Use as a base for gamestates.
+ * <p>
  * Notes:<br>
- * 1. Protected set*() methods should not be called outside the constructor ?
- *
+ * <br>- Base dependencies will be injected, see {@link #injectBaseDependencies(IEngineContext, IRenderOrder, IGameStateInput)}.
+ * <br>- State dependencies need to be set via setters or {@link #initStateDependencies(IStateRender, IGameStateInputHandler, IControlScheme, IControlHandler)}, or they will default to empty implementations.
+ * <br>- State dependencies will also have the gamestate injected when set, if they use {@link InjectGameState}. To use this feature with other dependencies, see {@link #getGamestateInjector()}.
+ * <br>- Inject your own dependencies by using {@link Inject}.
+ * <br>- If needed there are hooks for {@link #afterInjectBaseDependencies()} and {@link #afterInitStateDependencies()}.
+ * <br>- Override {@link #getSceneControl()} to return your custom scene control and use the helper {@link #assignSceneGeneric(Class, IModifiableGameSceneControl, String, IGameScene)}.
+ * <br>- Override {@link #getTag()} and return your own tag to trace logs to the actual gamestate implementation.
+ * <br>- The default {@link #render()} implementation will draw using {@link #getRenderOrder()}.
+ * 
  */
+@RequiresInjection
 public class BaseGamestate implements IGameState {
 
 	public static final String BASE_TAG = "BaseGamestate";
@@ -119,7 +128,7 @@ public class BaseGamestate implements IGameState {
 			IEngineContext context,
 			IRenderOrder renderOrder,
 			IGameStateInput input
-			) {
+	) {
 		this.engineContext = context;
 		this.engine = context.getEngine();
 		this.log = context.getLog();
@@ -209,14 +218,11 @@ public class BaseGamestate implements IGameState {
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		long before = System.currentTimeMillis();
-		
+
 		setStateRender(defaultRender);
 		setStateInputHandler(defaultInputHandler);
 		setStateControlScheme(defaultControlScheme);
 		setStateControlHandler(defaultControlHandler);
-		
-		getLog().d(getTag(), String.format("Gamestate injection took %d ms", System.currentTimeMillis() - before));
 		
 		
 		afterInitStateDependencies();
