@@ -1,17 +1,23 @@
 package com.tokelon.toktales.tools.inject;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class ParameterInjector implements IParameterInjector {
 
+	
+	private final Class<? extends Annotation> targetAnnotationContainerClass;
+	private final Class<? extends Annotation> targetAnnotationType;
 
 	private final Class<? extends Annotation> targetAnnotationClass;
 	private final Annotation targetAnnotation;
+	
 	private final Object[] parameters;
 
 	public ParameterInjector(Class<? extends Annotation> annotationClass, Object... parameters) {
@@ -21,8 +27,11 @@ public class ParameterInjector implements IParameterInjector {
 		
 		this.targetAnnotationClass = annotationClass;
 		this.parameters = parameters;
-		
 		this.targetAnnotation = null;
+		
+		// Call these after setting the values
+		this.targetAnnotationType = getTargetAnnotationType();
+		this.targetAnnotationContainerClass = getPossibleContainerAnnotationClass();
 	}
 
 	public ParameterInjector(Annotation annotation, Object... parameters) {
@@ -32,10 +41,13 @@ public class ParameterInjector implements IParameterInjector {
 		
 		this.targetAnnotation = annotation;
 		this.parameters = parameters;
-		
 		this.targetAnnotationClass = null;
+		
+		// Call these after setting the values
+		this.targetAnnotationType = getTargetAnnotationType();
+		this.targetAnnotationContainerClass = getPossibleContainerAnnotationClass();
 	}
-
+	
 
 	@Override
 	public void injectInto(Object object) {
@@ -74,8 +86,7 @@ public class ParameterInjector implements IParameterInjector {
 			}
 			
 			
-			// Inherited annotations will be ignored here
-			Annotation[] methodAnnotations = method.getDeclaredAnnotationsByType(getTargetAnnotationType());
+			List<Annotation> methodAnnotations = getInjectMethodAnnotations(method);
 			
 			boolean shouldInjectIntoMethod = false;
 			for(Annotation annotation: methodAnnotations) {
@@ -157,21 +168,6 @@ public class ParameterInjector implements IParameterInjector {
 		
 	}
 	
-	private Class<? extends Annotation> getTargetAnnotationType() {
-		Class<? extends Annotation> result;
-		if(targetAnnotationClass != null) {
-			result = targetAnnotationClass;
-		}
-		else if(targetAnnotation != null) {
-			result = targetAnnotation.annotationType();
-		}
-		else {
-			assert false : "This should never happen";
-			throw new RuntimeException();
-		}
-		
-		return result;
-	}
 	
 	private boolean matchesTargetAnnotation(Annotation annotation) {
 		boolean matches;
@@ -193,6 +189,127 @@ public class ParameterInjector implements IParameterInjector {
 		}
 		
 		return matches;
+	}
+	
+	
+	private List<Annotation> getInjectMethodAnnotations(Method method) {
+		ArrayList<Annotation> injectAnnotations = new ArrayList<>();
+		
+		Annotation[] methodAnnotations = null;
+		try {
+			// Try to find the method we want to use
+			method.getClass().getMethod("getDeclaredAnnotationsByType", Class.class);
+			
+			// If we get past here hopefully we can safely use the method
+			methodAnnotations = method.getDeclaredAnnotationsByType(targetAnnotationType);
+			for(Annotation methodAnnotation: methodAnnotations) {
+				injectAnnotations.add(methodAnnotation);
+			}
+		} catch (NoSuchMethodException | SecurityException ex) {
+			/* Some methods for getting annotations introduced in Java 8 do not work on this platform.
+			 * This is mostly an Android issue (before API level 24).
+			 * 
+			 * To ensure compatibility we use a more complicated way of getting the annotations below.
+			 */
+		}
+		
+		
+		if(methodAnnotations == null) {
+			// Failed to get annotations, do things manually (compatibility mode)
+			
+			Annotation[] annotations = method.getDeclaredAnnotations(); // Inherited annotations will be ignored here
+			for(Annotation annotation: annotations) {
+
+				if(annotation.annotationType() == targetAnnotationType) {
+					// This is simple, just add the annotation
+					injectAnnotations.add(annotation);
+				}
+				else if(annotation.annotationType() == targetAnnotationContainerClass) {
+					/* Here it gets complicated.
+					 * Container annotations get checked by the compiler for a value method, that returns an array of the annotation that is being repeated.
+					 * We need this array but we have no safe way of accessing it. Our only option is reflection.
+					 */
+					try {
+						Method valueMethod = annotation.getClass().getMethod("value");
+
+						valueMethod.setAccessible(true);
+						Object valueResult = valueMethod.invoke(annotation);
+
+						Annotation[] repeatedAnnotations = (Annotation[]) valueResult; // We can only try casting and catch the exception if it fails
+						for(Annotation repeatedAnnotation: repeatedAnnotations) {
+							injectAnnotations.add(repeatedAnnotation);
+						}
+					} catch (NoSuchMethodException e) {
+						// The compiler should ensure this method exists
+						System.err.println(String.format("Failed to find value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+					} catch (SecurityException | IllegalAccessException e) {
+						System.err.println(String.format("Failed to access value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+					} catch (IllegalArgumentException | InvocationTargetException e) {
+						System.err.println(String.format("Failed to invoke value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+					} catch (ClassCastException e) {
+						// This means either the compiler screwed up really hard, or we did when checking the repeatable annotation
+						System.err.println(String.format("Failed to cast value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+					}
+				}
+			}
+		}
+		
+		return injectAnnotations;
+	}
+	
+
+	private Class<? extends Annotation> getTargetAnnotationType() {
+		Class<? extends Annotation> result;
+		if(targetAnnotationClass != null) {
+			result = targetAnnotationClass;
+		}
+		else if(targetAnnotation != null) {
+			result = targetAnnotation.annotationType();
+		}
+		else {
+			assert false : "This should never happen";
+			throw new RuntimeException();
+		}
+		
+		return result;
+	}
+	
+	
+	private Class<? extends Annotation> getPossibleContainerAnnotationClass() {
+		Class<? extends Annotation> result = null;
+		
+		try {
+			// Try to find Repeatable
+			Class.forName("java.lang.annotation.Repeatable");
+			
+			// If we get past here hopefully we can safely use the annotation
+			Repeatable possibleRepeatableAnnotation = targetAnnotationType.getAnnotation(Repeatable.class);
+			if(possibleRepeatableAnnotation != null) {
+				result = possibleRepeatableAnnotation.value();
+			}
+		} catch (ClassNotFoundException e) {
+			/* Repeatable is not supported on this platform.
+			 * 
+			 * Again this is mostly an Android issue (before API level 24),
+			 * and the only way to work around this is by using our custom CompatRepeatable to define the container annotation. 
+			 */
+		}
+		
+		if(result == null) {
+			// If lookup with Repeatable failed, try with CompatRepeatable as well
+			CompatRepeatable possibleRepeatableAnnotation = targetAnnotationType.getAnnotation(CompatRepeatable.class);
+			if(possibleRepeatableAnnotation == null) {
+				System.out.println(String.format(
+						"Warning: This platform does not support java.lang.annotation.Repeatable. "
+						+ "Make sure to use CompatRepeatable on repeatable annotations. If you already do, you can ignore this message."
+				));	
+			}
+			else {
+				result = possibleRepeatableAnnotation.value();
+			}
+		}
+		
+		return result;
 	}
 
 }

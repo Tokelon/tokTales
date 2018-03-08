@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({METHOD, TYPE})
 @Repeatable(InjectParametersContainer.class)
+@CompatRepeatable(InjectParametersContainer.class)
 @Documented
 public @interface InjectParameters {
 

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({METHOD, TYPE})
 @Documented
-@interface InjectParametersContainer {
+public @interface InjectParametersContainer {
 	
 	InjectParameters[] value();
 }
