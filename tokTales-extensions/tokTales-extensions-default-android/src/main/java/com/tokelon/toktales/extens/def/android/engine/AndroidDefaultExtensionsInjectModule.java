@@ -5,9 +5,11 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler.EmptyGameStateInputHandler;
 import com.tokelon.toktales.extens.def.android.states.AndroidConsoleInputHandler;
 import com.tokelon.toktales.extens.def.android.states.localmap.AndroidLocalMapControlScheme;
 import com.tokelon.toktales.extens.def.android.states.localmap.AndroidLocalMapInputHandler;
+import com.tokelon.toktales.extens.def.core.game.states.ChunkTestingGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
@@ -27,6 +29,11 @@ public class AndroidDefaultExtensionsInjectModule extends AbstractInjectModule {
     	
     	// ConsoleGamestate
     	bind(IGameStateInputHandler.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(AndroidConsoleInputHandler.class);
+    	
+    	
+    	// ChunkTestingGamestate
+    	// TODO: Check why no tests fail when commenting this out and add new tests if necessary
+    	bind(IGameStateInputHandler.class).annotatedWith(For.forClass(ChunkTestingGamestate.class)).to(EmptyGameStateInputHandler.class);
     }
 
 }

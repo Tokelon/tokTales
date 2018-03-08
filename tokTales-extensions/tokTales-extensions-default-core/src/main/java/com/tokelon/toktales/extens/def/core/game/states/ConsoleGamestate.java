@@ -60,6 +60,13 @@ public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate
 		this.mRenderingStrategy = renderingStrategy;
 		this.consoleInterpreter = consoleInterpreter;
 	}
+	
+	@Override
+	protected void afterInitStateDependencies() {
+		super.afterInitStateDependencies();
+		
+		getGamestateInjector().injectInto(consoleInterpreter);
+	}
 
 	
 	@Override
