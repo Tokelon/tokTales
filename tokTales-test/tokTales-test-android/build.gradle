@@ -73,6 +73,8 @@ sourceSets {
             srcDir 'src/main/java'
             srcDir 'arch/main/java'
             
+            srcDir 'exp/main/java'
+            
             srcDir '/build/generated/source/r/debug'
         }
     }
@@ -80,6 +82,8 @@ sourceSets {
         java {
             srcDir 'src/test/java'
             srcDir 'arch/test/java'
+            
+            srcDir 'exp/test/java'
         }
     }
 }

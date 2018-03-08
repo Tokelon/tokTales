@@ -15,6 +15,8 @@ sourceSets {
 			srcDir 'tools/main/java'
 
 			srcDir 'libs/JOML/src'
+
+			srcDir 'exp/main/java'
 		}
 		resources {
 			srcDir 'src/main/resources'
@@ -25,7 +27,7 @@ sourceSets {
 			srcDir 'src/test/java'
 			srcDir 'tools/test/java'
 			
-			srcDir 'libs/JOML/test'
+			//srcDir 'libs/JOML/test' // Not needed
 		}
 	}
 }

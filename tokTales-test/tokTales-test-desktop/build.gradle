@@ -17,12 +17,16 @@ sourceSets {
 		java {
 			srcDir 'src/main/java'
 			srcDir 'arch/main/java'
+			
+			srcDir 'exp/main/java'
 		}
 	}
 	test {
 		java {
 			srcDir 'src/test/java'
 			srcDir 'arch/test/java'
+			
+			srcDir 'exp/test/java'
 		}
 	}
 }
