@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.core.engine;
+package com.tokelon.toktales.extens.def.core.engine.inject;
 
 import com.tokelon.toktales.core.engine.inject.CoreInjectModule;
 import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;

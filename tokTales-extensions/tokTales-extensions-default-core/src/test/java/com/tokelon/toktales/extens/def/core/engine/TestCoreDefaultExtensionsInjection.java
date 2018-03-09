@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsInjectConfig;
 import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.test.extens.def.core.engine.inject.CoreDefExtensMockPlatformInjectModule;

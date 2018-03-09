@@ -4,8 +4,8 @@ import com.tokelon.toktales.core.engine.inject.CoreInjectModule;
 import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopInjectModule;
 import com.tokelon.toktales.desktop.engine.inject.DesktopOverrideInjectModule;
-import com.tokelon.toktales.extens.def.core.engine.CoreDefaultExtensionsInjectModule;
-import com.tokelon.toktales.extens.def.core.engine.CoreDefaultExtensionsOverrideInjectModule;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsInjectModule;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsOverrideInjectModule;
 
 public class DesktopDefaultExtensionsInjectConfig extends HierarchicalInjectConfig {
 
