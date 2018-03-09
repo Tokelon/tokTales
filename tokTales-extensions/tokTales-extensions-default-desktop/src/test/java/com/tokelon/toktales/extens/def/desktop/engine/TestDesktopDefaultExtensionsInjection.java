@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.desktop.engine.inject.DesktopSetupInjectModule;
+import com.tokelon.toktales.extens.def.desktop.engine.inject.DesktopDefaultExtensionsInjectConfig;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 import com.tokelon.toktales.test.desktop.engine.inject.DesktopMockPlatformInjectModule;
 

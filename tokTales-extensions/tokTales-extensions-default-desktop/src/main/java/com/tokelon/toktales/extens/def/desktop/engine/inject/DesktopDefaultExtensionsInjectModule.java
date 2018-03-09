@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.engine;
+package com.tokelon.toktales.extens.def.desktop.engine.inject;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
