@@ -7,7 +7,7 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
-import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsInjectConfig;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectConfig;
 import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.test.extens.def.core.engine.inject.CoreDefExtensMockPlatformInjectModule;
@@ -37,13 +37,13 @@ public class TestCoreDefaultExtensionsInjection {
 	@Test(expected = CreationException.class)
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		
-		CoreDefaultExtensionsInjectConfig injectConfig = new CoreDefaultExtensionsInjectConfig();
+		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
 		Injector injector = injectConfig.createInjector();	
 	}
 	
 	@Test
 	public void injectorCreation_ShouldOnlyFailOnExpectedBindings() {
-		CoreDefaultExtensionsInjectConfig injectConfig = new CoreDefaultExtensionsInjectConfig();
+		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
 		
 		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ALL_EXPECTED_BINDING_TYPES, ALL_EXPECTED_BINDING_ANNOTATIONS);
 	}
@@ -51,7 +51,7 @@ public class TestCoreDefaultExtensionsInjection {
 
 	@Test
 	public void injectorCreationWithMockPlatform_ShouldSucceed() {
-		CoreDefaultExtensionsInjectConfig injectConfig = new CoreDefaultExtensionsInjectConfig();
+		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreDefExtensMockPlatformInjectModule());
@@ -61,7 +61,7 @@ public class TestCoreDefaultExtensionsInjection {
 	
 	@Test
 	public void engineCreationWithMockPlatform_ShouldSucceed() {
-		CoreDefaultExtensionsInjectConfig injectConfig = new CoreDefaultExtensionsInjectConfig();
+		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreDefExtensMockPlatformInjectModule());
@@ -72,7 +72,7 @@ public class TestCoreDefaultExtensionsInjection {
 	
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		CoreDefaultExtensionsInjectConfig injectConfig = new CoreDefaultExtensionsInjectConfig();
+		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreDefExtensMockPlatformInjectModule());

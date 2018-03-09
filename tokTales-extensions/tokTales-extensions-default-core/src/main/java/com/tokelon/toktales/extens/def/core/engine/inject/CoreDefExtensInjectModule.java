@@ -18,7 +18,7 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateR
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
 
-public class CoreDefaultExtensionsInjectModule extends AbstractInjectModule {
+public class CoreDefExtensInjectModule extends AbstractInjectModule {
 
 	
     @Override

@@ -4,13 +4,13 @@ import com.tokelon.toktales.core.engine.inject.CoreInjectModule;
 import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopInjectModule;
 import com.tokelon.toktales.desktop.engine.inject.DesktopOverrideInjectModule;
-import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsInjectModule;
-import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsOverrideInjectModule;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectModule;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensOverrideInjectModule;
 
-public class DesktopDefaultExtensionsInjectConfig extends HierarchicalInjectConfig {
+public class DesktopDefExtensInjectConfig extends HierarchicalInjectConfig {
 
 	
-    public DesktopDefaultExtensionsInjectConfig() {
+    public DesktopDefExtensInjectConfig() {
     	// Core
         extend(new CoreInjectModule());
 
@@ -19,12 +19,12 @@ public class DesktopDefaultExtensionsInjectConfig extends HierarchicalInjectConf
         extend(new DesktopInjectModule());
         
         // Core DefaultExtensions
-        override(new CoreDefaultExtensionsOverrideInjectModule());
-        extend(new CoreDefaultExtensionsInjectModule());
+        override(new CoreDefExtensOverrideInjectModule());
+        extend(new CoreDefExtensInjectModule());
         
         // Desktop DefaultExtensions
-        override(new DesktopDefaultExtensionsOverrideInjectModule());
-        extend(new DesktopDefaultExtensionsInjectModule());
+        override(new DesktopDefExtensOverrideInjectModule());
+        extend(new DesktopDefExtensInjectModule());
     }
     
 }

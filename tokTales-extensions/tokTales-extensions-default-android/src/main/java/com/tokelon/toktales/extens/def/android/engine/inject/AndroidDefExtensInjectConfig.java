@@ -4,13 +4,13 @@ import com.tokelon.toktales.android.engine.inject.AndroidInjectModule;
 import com.tokelon.toktales.android.engine.inject.AndroidOverrideInjectModule;
 import com.tokelon.toktales.core.engine.inject.CoreInjectModule;
 import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
-import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsInjectModule;
-import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefaultExtensionsOverrideInjectModule;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectModule;
+import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensOverrideInjectModule;
 
-public class AndroidDefaultExtensionsInjectConfig extends HierarchicalInjectConfig {
+public class AndroidDefExtensInjectConfig extends HierarchicalInjectConfig {
 
 	
-    public AndroidDefaultExtensionsInjectConfig() {
+    public AndroidDefExtensInjectConfig() {
     	// Core
         extend(new CoreInjectModule());
 
@@ -19,12 +19,12 @@ public class AndroidDefaultExtensionsInjectConfig extends HierarchicalInjectConf
         extend(new AndroidInjectModule());
         
         // Core DefaultExtensions
-        override(new CoreDefaultExtensionsOverrideInjectModule());
-        extend(new CoreDefaultExtensionsInjectModule());
+        override(new CoreDefExtensOverrideInjectModule());
+        extend(new CoreDefExtensInjectModule());
         
         // Android DefaultExtensions
-        override(new AndroidDefaultExtensionsOverrideInjectModule());
-        extend(new AndroidDefaultExtensionsInjectModule());
+        override(new AndroidDefExtensOverrideInjectModule());
+        extend(new AndroidDefExtensInjectModule());
     }
     
 }

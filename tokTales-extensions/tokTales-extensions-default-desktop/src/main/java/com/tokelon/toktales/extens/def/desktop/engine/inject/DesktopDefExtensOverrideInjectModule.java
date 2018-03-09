@@ -12,7 +12,7 @@ import com.tokelon.toktales.extens.def.desktop.game.screen.DesktopConsoleRenderi
 import com.tokelon.toktales.extens.def.desktop.game.states.DesktopConsoleGamestateInterpreter;
 import com.tokelon.toktales.extens.def.desktop.game.states.localmap.DesktopLocalMapControlHandler;
 
-public class DesktopDefaultExtensionsOverrideInjectModule extends AbstractInjectModule {
+public class DesktopDefExtensOverrideInjectModule extends AbstractInjectModule {
 
 	
 	@Override

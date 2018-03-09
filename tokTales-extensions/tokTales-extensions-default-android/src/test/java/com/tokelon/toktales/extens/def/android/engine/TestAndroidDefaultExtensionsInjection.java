@@ -9,7 +9,7 @@ import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
-import com.tokelon.toktales.extens.def.android.engine.inject.AndroidDefaultExtensionsInjectConfig;
+import com.tokelon.toktales.extens.def.android.engine.inject.AndroidDefExtensInjectConfig;
 import com.tokelon.toktales.test.android.engine.inject.AndroidMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
@@ -22,7 +22,7 @@ public class TestAndroidDefaultExtensionsInjection {
 	
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
-		AndroidDefaultExtensionsInjectConfig injectConfig = new AndroidDefaultExtensionsInjectConfig();
+		AndroidDefExtensInjectConfig injectConfig = new AndroidDefExtensInjectConfig();
 		
 		injectConfig.override(new AndroidSetupInjectModule(DummyGameAdapter.class, mockedContext));
 		
@@ -32,7 +32,7 @@ public class TestAndroidDefaultExtensionsInjection {
 
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		AndroidDefaultExtensionsInjectConfig injectConfig = new AndroidDefaultExtensionsInjectConfig();
+		AndroidDefExtensInjectConfig injectConfig = new AndroidDefExtensInjectConfig();
 		
 		injectConfig.override(new AndroidMockPlatformInjectModule());
 		// No AndroidDefExtensMockPlatformInjectModule needed yet

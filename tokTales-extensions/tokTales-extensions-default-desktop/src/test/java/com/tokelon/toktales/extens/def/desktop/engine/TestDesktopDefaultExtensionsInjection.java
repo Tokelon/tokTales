@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.desktop.engine.inject.DesktopSetupInjectModule;
-import com.tokelon.toktales.extens.def.desktop.engine.inject.DesktopDefaultExtensionsInjectConfig;
+import com.tokelon.toktales.extens.def.desktop.engine.inject.DesktopDefExtensInjectConfig;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 import com.tokelon.toktales.test.desktop.engine.inject.DesktopMockPlatformInjectModule;
 
@@ -16,7 +16,7 @@ public class TestDesktopDefaultExtensionsInjection {
 	
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
-		DesktopDefaultExtensionsInjectConfig injectConfig = new DesktopDefaultExtensionsInjectConfig();
+		DesktopDefExtensInjectConfig injectConfig = new DesktopDefExtensInjectConfig();
 		
 		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
 		
@@ -26,7 +26,7 @@ public class TestDesktopDefaultExtensionsInjection {
 	
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		DesktopDefaultExtensionsInjectConfig injectConfig = new DesktopDefaultExtensionsInjectConfig();
+		DesktopDefExtensInjectConfig injectConfig = new DesktopDefExtensInjectConfig();
 
 		injectConfig.extend(new DesktopMockPlatformInjectModule());
 		// No DesktopDefExtensPlatformInjectModule needed yet
