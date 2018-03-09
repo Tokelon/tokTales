@@ -9,6 +9,7 @@ import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.extens.def.android.engine.inject.AndroidDefaultExtensionsInjectConfig;
 import com.tokelon.toktales.test.android.engine.inject.AndroidMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
