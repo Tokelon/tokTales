@@ -12,7 +12,7 @@ import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule
 import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.test.extens.def.core.engine.inject.CoreDefExtensMockPlatformInjectModule;
 
-public class TestCoreDefaultExtensionsInjection {
+public class TestCoreDefExtensInjection {
 	
 	
 	public static final String[] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES =

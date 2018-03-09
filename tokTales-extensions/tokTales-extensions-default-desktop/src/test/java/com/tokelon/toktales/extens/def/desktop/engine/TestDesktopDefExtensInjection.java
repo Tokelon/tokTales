@@ -11,7 +11,7 @@ import com.tokelon.toktales.extens.def.desktop.engine.inject.DesktopDefExtensInj
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 import com.tokelon.toktales.test.desktop.engine.inject.DesktopMockPlatformInjectModule;
 
-public class TestDesktopDefaultExtensionsInjection {
+public class TestDesktopDefExtensInjection {
 
 	
 	@Test

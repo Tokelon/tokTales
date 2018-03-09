@@ -1,21 +1,27 @@
-package com.tokelon.toktales.extens.def.core;
+package com.tokelon.toktales.extens.def.desktop;
 
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.test.core.CoreTestDepsIntegrity;
+import com.tokelon.toktales.test.desktop.DesktopTestDepsIntegrity;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class CoreDefaultExtensionsDepsIntegrity {
+public class DesktopDefExtensDepsIntegrity {
 	
-	public static final String TAG = CoreDefaultExtensionsDepsIntegrity.class.getSimpleName();
+	public static final String TAG = DesktopDefExtensDepsIntegrity.class.getSimpleName();
 	
 	
 	@Test
-	public void testImplementation_TestCore() {
+	public void testInherited_TestCore() {
 		String tag = CoreTestDepsIntegrity.TAG;
+	}
+	
+	@Test
+	public void testImplementation_TestDesktop() {
+		String tag = DesktopTestDepsIntegrity.TAG;
 	}
 	
 	

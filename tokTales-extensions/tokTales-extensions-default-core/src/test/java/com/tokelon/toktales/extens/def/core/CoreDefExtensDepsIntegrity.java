@@ -1,7 +1,6 @@
-package com.tokelon.toktales.extens.def.android;
+package com.tokelon.toktales.extens.def.core;
 
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.test.android.AndroidTestDepsIntegrity;
 import com.tokelon.toktales.test.core.CoreTestDepsIntegrity;
 
 import org.junit.Test;
@@ -9,19 +8,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class AndroidDefaultExtensionsDepsIntegrity {
+public class CoreDefExtensDepsIntegrity {
 	
-	public static final String TAG = AndroidDefaultExtensionsDepsIntegrity.class.getSimpleName();
+	public static final String TAG = CoreDefExtensDepsIntegrity.class.getSimpleName();
 	
 	
 	@Test
-	public void testInherited_TestCore() {
+	public void testImplementation_TestCore() {
 		String tag = CoreTestDepsIntegrity.TAG;
-	}
-	
-	@Test
-	public void testImplementation_TestAndroid() {
-		String tag = AndroidTestDepsIntegrity.TAG;
 	}
 	
 	

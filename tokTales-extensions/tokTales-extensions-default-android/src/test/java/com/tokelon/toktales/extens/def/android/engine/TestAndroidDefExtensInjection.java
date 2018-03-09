@@ -15,7 +15,7 @@ import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
 import android.content.Context;
 
-public class TestAndroidDefaultExtensionsInjection {
+public class TestAndroidDefExtensInjection {
 	
 	private static final Context mockedContext = mock(Context.class);
 
