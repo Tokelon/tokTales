@@ -60,9 +60,9 @@ public class STBTextureFont implements ITextureFont {
 		
 		fontInfo = STBTTFontinfo.create();
 		
-		int result = STBTruetype.stbtt_InitFont(fontInfo, fontData);
+		boolean result = STBTruetype.stbtt_InitFont(fontInfo, fontData);
 		
-		if(result == 0) {	// error
+		if(!result) { // error
 			throw new IllegalArgumentException("Failed to initialize font");
 		}
 		
@@ -259,7 +259,7 @@ public class STBTextureFont implements ITextureFont {
 	
 	public void clearCodepointCache() {
 		for(CodepointInfo cp: codepointCache.values()) {
-			STBTruetype.stbtt_FreeBitmap(cp.texture.getData(), BufferUtils.createByteBuffer(0));
+			STBTruetype.stbtt_FreeBitmap(cp.texture.getData()); // Needs user data?
 		}
 		
 		codepointCache.clear();
@@ -281,8 +281,6 @@ public class STBTextureFont implements ITextureFont {
 		private int advanceWidth = -1;
 		private int leftSideBearing = -1;
 		
-		
 	}
-	
 	
 }

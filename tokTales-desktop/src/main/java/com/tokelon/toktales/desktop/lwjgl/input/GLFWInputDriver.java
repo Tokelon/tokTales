@@ -97,10 +97,10 @@ public class GLFWInputDriver implements IDesktopInputDriver {
 	private class DriverCursorEnterCallback extends GLFWCursorEnterCallback {
 
 		@Override
-		public void invoke(long window, int entered) {
-			//TokTales.getLog().d(TAG, String.format("Cursor: %s", entered == GLFW.GLFW_TRUE ? "entered" : "left"));
+		public void invoke(long window, boolean entered) {
+			//TokTales.getLog().d(TAG, String.format("Cursor: %s", entered ? "entered" : "left"));
 			
-			cursorInWindow = entered == GLFW.GLFW_TRUE;
+			cursorInWindow = entered;
 		}
 	}
 	

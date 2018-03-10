@@ -22,8 +22,8 @@ public class LWJGLProgram {
 		GLFWErrorCallback errorCallback;
 		GLFW.glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
-		if (GLFW.glfwInit() != GLFW.GLFW_TRUE) {
-			throw new LWJGLException("Unable to initialize GLFW");
+		if (!GLFW.glfwInit()) {
+			throw new LWJGLException("Failed to initialize GLFW");
 		}
 	}
 	
@@ -33,7 +33,6 @@ public class LWJGLProgram {
 		GLFW.glfwTerminate();
 		GLFW.glfwSetErrorCallback(null);//.free();
 	}
-
 	
 	
 }

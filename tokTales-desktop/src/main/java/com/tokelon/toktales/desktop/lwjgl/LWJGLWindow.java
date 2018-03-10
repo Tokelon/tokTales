@@ -44,7 +44,6 @@ public class LWJGLWindow {
 		GL.createCapabilities();
 		
 		
-		
 		/* Where to put this ? */
 		//glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -74,7 +73,7 @@ public class LWJGLWindow {
 	
 	
 	public boolean shouldClose() {
-		return GLFW.glfwWindowShouldClose(id) == GLFW.GLFW_TRUE;
+		return GLFW.glfwWindowShouldClose(id);
 	}
 
 	public void swapBuffers() {
@@ -127,6 +126,5 @@ public class LWJGLWindow {
 		}
 		
 	}
-	
 	
 }
