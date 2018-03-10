@@ -14,8 +14,6 @@ sourceSets {
 			srcDir 'src/main/java'
 			srcDir 'tools/main/java'
 
-			srcDir 'libs/JOML/src'
-
 			srcDir 'exp/main/java'
 		}
 		resources {
@@ -25,9 +23,7 @@ sourceSets {
 	test {
 		java {
 			srcDir 'src/test/java'
-			srcDir 'tools/test/java'
-			
-			//srcDir 'libs/JOML/test' // Not needed
+			srcDir 'tools/test/java'			
 		}
 	}
 }
@@ -61,6 +57,10 @@ dependencies {
 	api ('com.google.inject.extensions:guice-multibindings:4.1.0') {
     	transitive = false
     }
+    
+    // JOML
+    api "org.joml:joml:1.8.0"
+    
 }
 
 
