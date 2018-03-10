@@ -8,6 +8,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
+	
     defaultConfig {
         applicationId "com.tokelon.toktales.demos"
         minSdkVersion 15
@@ -42,6 +43,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+	
+	// Uses project(':tokTales-extensions-default-android') if defined, otherwise uses repos
     implementation elastic(':tokTales-extensions-default-android')
 }
 
