@@ -278,6 +278,7 @@ public class ParameterInjector implements IParameterInjector {
 	private Class<? extends Annotation> getPossibleContainerAnnotationClass() {
 		Class<? extends Annotation> result = null;
 		
+		boolean repeatableSupported;
 		try {
 			// Try to find Repeatable
 			Class.forName("java.lang.annotation.Repeatable");
@@ -287,26 +288,32 @@ public class ParameterInjector implements IParameterInjector {
 			if(possibleRepeatableAnnotation != null) {
 				result = possibleRepeatableAnnotation.value();
 			}
+			
+			repeatableSupported = true;
 		} catch (ClassNotFoundException e) {
 			/* Repeatable is not supported on this platform.
 			 * 
 			 * Again this is mostly an Android issue (before API level 24),
 			 * and the only way to work around this is by using our custom CompatRepeatable to define the container annotation. 
 			 */
+			repeatableSupported = false;
 		}
 		
 		if(result == null) {
 			// If lookup with Repeatable failed, try with CompatRepeatable as well
-			CompatRepeatable possibleRepeatableAnnotation = targetAnnotationType.getAnnotation(CompatRepeatable.class);
-			if(possibleRepeatableAnnotation == null) {
-				System.out.println(String.format(
-						"Warning: This platform does not support java.lang.annotation.Repeatable. "
-						+ "Make sure to use CompatRepeatable on repeatable annotations. If you already do, you can ignore this message."
-				));	
+			CompatRepeatable possibleCompatAnnotation = targetAnnotationType.getAnnotation(CompatRepeatable.class);
+			if(possibleCompatAnnotation != null) {
+				result = possibleCompatAnnotation.value();
 			}
-			else {
-				result = possibleRepeatableAnnotation.value();
-			}
+		}
+	
+		
+		if(result == null && !repeatableSupported) {
+			// If lookup with Repeatable failed and there was no result for CompatRepeatable, output warning
+			System.out.println(String.format(
+					"(ParameterInjector) Warning: This platform does not support java.lang.annotation.Repeatable. "
+					+ "Make sure to use CompatRepeatable on repeatable annotations. If you already do, you can ignore this message."
+			));	
 		}
 		
 		return result;
