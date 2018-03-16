@@ -1,6 +1,8 @@
 package com.tokelon.toktales.tools.inject;
 
 import com.tokelon.toktales.tools.inject.InjectedObjects.InjectedObject;
+import com.tokelon.toktales.tools.inject.InjectedObjects.InjectedObjectA;
+import com.tokelon.toktales.tools.inject.InjectedObjects.InjectedObjectB;
 
 class SingleParameterInjectionTarget {
 
@@ -12,6 +14,9 @@ class SingleParameterInjectionTarget {
 	
 	protected InjectedObject injectedObjectKeyed;
 	protected InjectedObject injectedObjectKeyedDuplicate;
+	
+	protected InjectedObjectA injectedObjectMethodOverloadA;
+	protected InjectedObjectB injectedObjectMethodOverloadB;
 	
 	protected InjectedObject injectedObjectDefaultKey;
 	protected InjectedObject injectedObjectAdditionalParameters;
@@ -55,6 +60,19 @@ class SingleParameterInjectionTarget {
 		this.injectedObjectMultipleKeys = obj;
 	}
 	
+	
+	
+	class KeyMethodOverload { }
+	
+	@InjectParameters(KeyMethodOverload.class)
+	public void injectOverloadMethod(InjectedObjectA a) {
+		injectedObjectMethodOverloadA = a;
+	}
+	
+	@InjectParameters(KeyMethodOverload.class)
+	public void injectOverloadMethod(InjectedObjectB b) {
+		injectedObjectMethodOverloadB = b;
+	}
 	
 
 	@InjectParameters

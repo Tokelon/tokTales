@@ -10,9 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tokelon.toktales.tools.inject.InjectedObjects.InjectedObject;
+import com.tokelon.toktales.tools.inject.InjectedObjects.InjectedObjectA;
+import com.tokelon.toktales.tools.inject.InjectedObjects.InjectedObjectB;
 import com.tokelon.toktales.tools.inject.SingleParameterInjectionTarget.KeyCaseA;
 import com.tokelon.toktales.tools.inject.SingleParameterInjectionTarget.KeyCaseB;
 import com.tokelon.toktales.tools.inject.SingleParameterInjectionTarget.KeyException;
+import com.tokelon.toktales.tools.inject.SingleParameterInjectionTarget.KeyMethodOverload;
 import com.tokelon.toktales.tools.inject.SingleParameterInjectionTarget.KeyNoParameters;
 
 public class ParameterInjectorSingleParameterTest {
@@ -68,6 +71,18 @@ public class ParameterInjectorSingleParameterTest {
 		injector.injectInto(injectionTarget);
 	}
 	
+	
+	@Test
+	public void injectInto_OverloadMethod_ShouldInvokeAllOverloads() {
+		InjectedObjectA a = new InjectedObjectA();
+		InjectedObjectB b = new InjectedObjectB();
+		
+		ParameterInjector injector = new ParameterInjector(InjectParams.forKey(KeyMethodOverload.class), a, b);
+		injector.injectInto(injectionTarget);
+		
+		assertSame(a, injectionTarget.injectedObjectMethodOverloadA);
+		assertSame(b, injectionTarget.injectedObjectMethodOverloadB);
+	}
 	
 	
 	@Test

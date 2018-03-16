@@ -4,10 +4,12 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ParameterInjector implements IParameterInjector {
 
@@ -67,18 +69,14 @@ public class ParameterInjector implements IParameterInjector {
 	
 	@Override
 	public void injectInto(Object object) {
-		injectIntoClass(object, object.getClass(), new HashSet<>());
+		injectIntoClassRecursive(object, object.getClass(), new HashSet<>(), new ArrayList<>());
 	}
 
 	
-	private void injectIntoClass(Object object, Class<?> clazz, HashSet<Method> invokedMethods) throws ParameterInjectException {
-		// Iterate through all superclasses and invoke their methods first, using recursion
-		Class<?> superclass = clazz.getSuperclass();
-		if(superclass != null && superclass != Object.class) {
-			injectIntoClass(object, superclass, invokedMethods);
-		}
-		
-		
+	private void injectIntoClassRecursive(Object object, Class<?> clazz, HashSet<Method> checkedMethods, ArrayList<Method> collectedMethods) throws ParameterInjectException {
+		/* Iterate through methods of this class, collect the ones that should be invoked,
+		 * then do the same for the superclass using recursion
+		 */
 		Method[] classMethods;
 		try {
 			classMethods = clazz.getDeclaredMethods();
@@ -96,11 +94,11 @@ public class ParameterInjector implements IParameterInjector {
 		for(Method method: classMethods) {
 			// Check if method static? Do not inject into static methods?
 			
-			if(invokedMethods.contains(method)) {
-				// Skip already invoked methods
+			if(containsInheritedMethod(checkedMethods, method)) {
+				// Skip already checked methods
 				continue;
 			}
-			
+						
 			
 			List<Annotation> methodAnnotations = getInjectMethodAnnotations(method);
 			
@@ -113,75 +111,93 @@ public class ParameterInjector implements IParameterInjector {
 			}
 			
 			if(shouldInjectIntoMethod) {
-				ArrayList<Object> args = new ArrayList<>();
-				
-				Class<?>[] parameterTypes = method.getParameterTypes(); // In declaration order
-				if(parameterTypes.length > parameters.length) {
-					// More parameters requested than supplied
-					throw new ParameterInjectException(String.format(
-							"Not enough parameters (%d) to inject into method %s (%d) of object %s",
-							parameters.length,
-							method.getName(),
-							parameterTypes.length,
-							object.getClass()
-							));
-				}
-				
-				
-				// We will use this as our working copy, and remove (null) parameters when they are used
-				Object[] availableParameters = Arrays.copyOf(parameters, parameters.length);
-				
-				for(Class<?> parameterType: parameterTypes) {
-					// Find one distinct parameter for each type
-					
-					Object targetParameter = null;
-					for(int i = 0; i < availableParameters.length; i++) {
-						
-						Object parameter = availableParameters[i];
-						if(parameter != null && parameterType.isInstance(parameter)) { // parameter can be null if used already
-							targetParameter = parameter;
-							availableParameters[i] = null; // remove parameter from available
-							break;
-						}
-					}
-					
-					if(targetParameter == null) { // No compatible parameter was found
-						throw new ParameterInjectException(String.format(
-								"No matching parameter found for type %s while injecting into method %s of object %s",
-								parameterType,
-								method.getName(),
-								object.getClass()
-								));
-					}
-					else {
-						args.add(targetParameter);
-					}
-				}
-				
-				
-				try {
-					// We need to inject into inaccessible methods as well
-					method.setAccessible(true);
-					
-					// This will still call an overriding method even if it's discovered in the superclass first
-					method.invoke(object, args.toArray());
-				} catch (IllegalAccessException e) {
-					// Should not happen, we set accessible to true
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// Should not happen, we match the types
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// forward any exceptions thrown by the method
-					throw new ParameterInjectException(e.getTargetException());
-				}
-				
-				
-				// Lastly add the method, so it does not get invoked again
-				invokedMethods.add(method);
+				collectedMethods.add(method);
 			}
 		}
 		
+		/* Add that classMethods have been checked, so they're no considered in superclass
+		 * Add them at the end to avoid checking same class methods against each other
+		 */
+		checkedMethods.addAll(Arrays.asList(classMethods));
+		
+		
+		Class<?> superclass = clazz.getSuperclass();
+		if(superclass == null || superclass == Object.class) {
+			/* Top of the class hierarchy,
+			 * invoke collected methods in the order they were collected
+			 */
+			for(Method method: collectedMethods) {
+				injectIntoMethod(method, object);
+			}
+		}
+		else {
+			injectIntoClassRecursive(object, superclass, checkedMethods, collectedMethods);
+		}
+	}
+	
+	private void injectIntoMethod(Method method, Object object) {
+		ArrayList<Object> args = new ArrayList<>();
+		
+		Class<?>[] parameterTypes = method.getParameterTypes(); // In declaration order
+		if(parameterTypes.length > parameters.length) {
+			// More parameters requested than supplied
+			throw new ParameterInjectException(String.format(
+					"Not enough parameters (%d) to inject into method %s (%d) of object %s",
+					parameters.length,
+					method.getName(),
+					parameterTypes.length,
+					object.getClass()
+					));
+		}
+		
+		
+		// We will use this as our working copy, and remove (null) parameters when they are used
+		Object[] availableParameters = Arrays.copyOf(parameters, parameters.length);
+		
+		for(Class<?> parameterType: parameterTypes) {
+			// Find one distinct parameter for each type
+			
+			Object targetParameter = null;
+			for(int i = 0; i < availableParameters.length; i++) {
+				
+				Object parameter = availableParameters[i];
+				if(parameter != null && parameterType.isInstance(parameter)) { // parameter can be null if used already
+					targetParameter = parameter;
+					availableParameters[i] = null; // remove parameter from available
+					break;
+				}
+			}
+			
+			if(targetParameter == null) { // No compatible parameter was found
+				throw new ParameterInjectException(String.format(
+						"No matching parameter found for type %s while injecting into method %s of object %s",
+						parameterType,
+						method.getName(),
+						object.getClass()
+						));
+			}
+			else {
+				args.add(targetParameter);
+			}
+		}
+		
+		
+		try {
+			// We need to inject into inaccessible methods as well
+			method.setAccessible(true);
+			
+			// This will still call an overriding method even if it's discovered in the superclass first
+			method.invoke(object, args.toArray());
+		} catch (IllegalAccessException e) {
+			// Should not happen, we set accessible to true
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// Should not happen, we match the types
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// forward any exceptions thrown by the method
+			throw new ParameterInjectException(e.getTargetException());
+		}
 	}
 	
 	
@@ -333,6 +349,34 @@ public class ParameterInjector implements IParameterInjector {
 		}
 		
 		return result;
+	}
+	
+
+	private static boolean containsInheritedMethod(Set<Method> methodSet, Method baseMethod) {
+		for(Method methodInSet: methodSet) {
+			if(isBaseMethodOfOtherMethod(baseMethod, methodInSet)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private static boolean isBaseMethodOfOtherMethod(Method baseMethod, Method otherMethod) {
+		if(!otherMethod.getName().equals(baseMethod.getName())) {
+			return false;
+		}
+		if(!Arrays.equals(otherMethod.getParameterTypes(), baseMethod.getParameterTypes())) {
+			return false;
+		}
+		if(!baseMethod.getDeclaringClass().isAssignableFrom(otherMethod.getDeclaringClass())) {
+			return false;
+		}
+		if(Modifier.isPrivate(baseMethod.getModifiers()) || Modifier.isPrivate(otherMethod.getModifiers())) {
+			return false;
+		}
+		
+		return true;
 	}
 
 }
