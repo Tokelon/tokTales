@@ -24,6 +24,8 @@ public class ParameterInjector implements IParameterInjector {
 		if(annotationClass == null) {
 			throw new NullPointerException();
 		}
+
+		checkParameters(parameters);
 		
 		this.targetAnnotationClass = annotationClass;
 		this.parameters = parameters;
@@ -39,6 +41,8 @@ public class ParameterInjector implements IParameterInjector {
 			throw new NullPointerException();
 		}
 		
+		checkParameters(parameters);
+		
 		this.targetAnnotation = annotation;
 		this.parameters = parameters;
 		this.targetAnnotationClass = null;
@@ -48,7 +52,19 @@ public class ParameterInjector implements IParameterInjector {
 		this.targetAnnotationContainerClass = getPossibleContainerAnnotationClass();
 	}
 	
+	private void checkParameters(Object[] parameters) {
+		if(parameters == null) {
+			throw new NullPointerException();
+		}
+		
+		for(int i = 0; i < parameters.length; i++) {
+			if(parameters[i] == null) {
+				throw new NullPointerException(String.format("Injection parameter at index %d is null", i));
+			}
+		}
+	}
 
+	
 	@Override
 	public void injectInto(Object object) {
 		injectIntoClass(object, object.getClass(), new HashSet<>());

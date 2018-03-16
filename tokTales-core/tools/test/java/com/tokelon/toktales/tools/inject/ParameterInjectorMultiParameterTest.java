@@ -71,7 +71,7 @@ public class ParameterInjectorMultiParameterTest {
 	public void injectInto_AdditionalParameters_ShouldSucceed() {
 		ParameterInjector injector = new ParameterInjector(InjectParams.forKey(KeyAdditionalParameters.class),
 				new Object(), "str1", 12,
-				injectedObjectB, "str2", injectedObjectC, null,
+				injectedObjectB, "str2", injectedObjectC, 3.14,
 				new Object(), injectedObjectA, "str3", "str4");
 		
 		injector.injectInto(injectionTarget);

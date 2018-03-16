@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
  * @see InjectParams
  */
 public interface IParameterInjector {
-
+	
 	
 	/** Injects any matching parameters into the given object.
 	 * <p>
@@ -44,10 +44,10 @@ public interface IParameterInjector {
 		 * 
 		 * 
 		 * @param annotationClass The annotation class which marks the methods that should be invoked.
-		 * @param parameters The parameters that should be injected, in the order they should be injected. Null values are allowed.
+		 * @param parameters The parameters that should be injected, in the order they should be injected.
 		 * 
 		 * @return A new parameter injector.
-		 * @throws NullPointerException If annotationClass is null.
+		 * @throws NullPointerException If any parameters are null or annotationClass is null.
 		 */
 		public IParameterInjector create(Class<? extends Annotation> annotationClass, Object... parameters);
 		
@@ -58,10 +58,10 @@ public interface IParameterInjector {
 		 * 
 		 * 
 		 * @param annotation The annotation instance being equal to the annotations which mark the methods that should be invoked.
-		 * @param parameters The parameters that should be injected, in the order they should be injected. Null values are allowed.
+		 * @param parameters The parameters that should be injected, in the order they should be injected.
 		 * 
 		 * @return A new parameter injector.
-		 * @throws NullPointerException If annotation is null.
+		 * @throws NullPointerException If any parameters are null or annotation is null.
 		 * @see InjectParams InjectParams for creating annotation instances.
 		 */
 		public IParameterInjector create(Annotation annotation, Object... parameters);
