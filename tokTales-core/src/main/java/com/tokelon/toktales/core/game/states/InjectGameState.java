@@ -34,4 +34,5 @@ import com.tokelon.toktales.tools.inject.InjectParameters;
 @Target({METHOD, TYPE})
 public @interface InjectGameState {
 
+	//Class<? extends IGameState> value(); // TODO: Add class key and make repeatable?
 }

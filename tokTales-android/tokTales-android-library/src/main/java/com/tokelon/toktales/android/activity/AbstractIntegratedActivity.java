@@ -15,8 +15,8 @@ import android.os.Handler;
 
 public abstract class AbstractIntegratedActivity extends Activity implements IIntegratedActivity {
 	
-	public static final String ACTIVITY_INTEGRATION_UI_SERVICE = "AbstractBaseActivity_Integration_UIService";
-	public static final String ACTIVITY_INTEGRATION_KEYBOARD = "AbstractBaseActivity_Integration_Keyboard";
+	public static final String ACTIVITY_INTEGRATION_UI_SERVICE = "AbstractIntegratedActivity_Integration_UIService";
+	public static final String ACTIVITY_INTEGRATION_KEYBOARD = "AbstractIntegratedActivity_Integration_Keyboard";
 
 	
 	private final Map<String, IActivityIntegration> integrationsMap;

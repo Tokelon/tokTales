@@ -7,7 +7,7 @@ public class TokelonStates {
 	}
 	
 	
-	public static final String STATE_INITIAL = "tokelon_states_state_initial";
+	public static final String STATE_INITIAL = "tokTales_states_initial_state";
 	
 	
 }

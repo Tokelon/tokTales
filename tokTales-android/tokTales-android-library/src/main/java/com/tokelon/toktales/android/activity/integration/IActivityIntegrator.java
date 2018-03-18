@@ -1,7 +1,8 @@
 package com.tokelon.toktales.android.activity.integration;
 
 public interface IActivityIntegrator {
-
+	// Implement add, remove, to use after creation?
+	
 	
 	public interface IActivityIntegratorFactory {
 		
