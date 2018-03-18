@@ -238,7 +238,7 @@ public class BaseGamestate implements IGameState {
 		// Register input handler
 		IGameStateInput stateInput = getStateInput();
 		IGameStateInputHandler stateInputHandler = getStateInputHandler();
-		getLog().d(getTag(), String.format("Registering state input handler [%s] to state input [%s]", stateInputHandler, stateInput));
+		getLog().d(getTag(), String.format("Registering state input handler [%s] to state input [%s]", stateInputHandler.getClass(), stateInput.getClass()));
 		stateInputHandler.register(stateInput);
 	}
 	

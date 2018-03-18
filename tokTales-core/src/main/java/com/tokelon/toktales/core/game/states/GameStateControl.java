@@ -60,17 +60,19 @@ public class GameStateControl implements IGameStateControl {
 			throw new IllegalArgumentException("No state for this name: " +stateName);
 		}
 		
-		
 		if(currentState != null) {
 			currentState.onExit();
 		}
 		
-		currentState = states.get(stateName);
+		IGameState newState = states.get(stateName);
+
+		//logger.d(TAG, String.format("State change in [%s]", this));
+		logger.i(TAG, String.format("State was changed: from %s [%s] to %s [%s]", currentStateName, currentState, stateName, newState));
+		
+		currentState = newState;
 		currentStateName = stateName;
 		
 		currentState.onEnter();
-		
-		logger.d(TAG, "State changed to: " +stateName);
 	}
 	
 	
@@ -83,7 +85,8 @@ public class GameStateControl implements IGameStateControl {
 		states.put(name, state);
 		state.onEngage();
 		
-		logger.d(TAG, "State added: " +name);
+		//logger.d(TAG, String.format("State addition in [%s]", this));
+		logger.i(TAG, String.format("State was added: %s [%s]", name, state));
 	}
 	
 	

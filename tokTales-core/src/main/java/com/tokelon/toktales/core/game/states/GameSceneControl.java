@@ -48,11 +48,13 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 			activeScene.onStop();
 		}
 		
+
+		//TokTales.getLog().d(TAG, String.format("Scene change in [%s]", this));
+		TokTales.getLog().i(TAG, String.format("Scene was changed: from %s [%s] to %s [%s]", activeSceneName, activeScene, name, newScene));
+
 		activeScene = newScene;
 		activeSceneName = name;
 		
-		TokTales.getLog().d(TAG, "Scene changed to: " + name);
-
 		// Call onStart for new scene
 		activeScene.onStart();
 		activeScene.onResume();
@@ -67,7 +69,8 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		scenes.put(name, scene);
 		scene.onAssign();
 		
-		TokTales.getLog().d(TAG, "Scene added: " + name);
+		//TokTales.getLog().d(TAG, String.format("Scene addition in [%s]", this));
+		TokTales.getLog().i(TAG, String.format("Scene was added: %s [%s]", name, scene));
 	}
 
 	@Override
