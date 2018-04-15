@@ -1,0 +1,89 @@
+package com.tokelon.toktales.android.render.opengl.gl20;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tokelon.toktales.core.render.opengl.IGLFlags;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
+
+import android.opengl.GLES20;
+
+abstract class AndroidGL13Flags implements IGLFlags {
+
+	
+	protected static final Map<Integer, Integer> GL13_FLAG_MAP = new HashMap<>();
+	
+	static {
+	    /** Accepted by the {@code value} parameter of GetIntegerv, GetBooleanv, GetFloatv, and GetDoublev. */
+		GL13_FLAG_MAP.put(IGL13.GL_NUM_COMPRESSED_TEXTURE_FORMATS, GLES20.GL_NUM_COMPRESSED_TEXTURE_FORMATS);
+		GL13_FLAG_MAP.put(IGL13.GL_COMPRESSED_TEXTURE_FORMATS, GLES20.GL_COMPRESSED_TEXTURE_FORMATS);
+	    /**
+	     * When the {@code pname} parameter of TexGendv, TexGenfv, and TexGeniv is TEXTURE_GEN_MODE, then the array {@code params} may also contain NORMAL_MAP
+	     * or REFLECTION_MAP. Accepted by the {@code cap} parameter of Enable, Disable, IsEnabled, and by the {@code pname} parameter of GetBooleanv,
+	     * GetIntegerv, GetFloatv, and GetDoublev, and by the {@code target} parameter of BindTexture, GetTexParameterfv, GetTexParameteriv, TexParameterf,
+	     * TexParameteri, TexParameterfv, and TexParameteriv.
+	     */
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP, GLES20.GL_TEXTURE_CUBE_MAP);
+	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev. */
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_BINDING_CUBE_MAP, GLES20.GL_TEXTURE_BINDING_CUBE_MAP);
+	    /**
+	     * Accepted by the {@code target} parameter of GetTexImage, GetTexLevelParameteriv, GetTexLevelParameterfv, TexImage2D, CopyTexImage2D, TexSubImage2D, and
+	     * CopySubTexImage2D.
+	     */
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
+		GL13_FLAG_MAP.put(IGL13.GL_MAX_CUBE_MAP_TEXTURE_SIZE, GLES20.GL_MAX_CUBE_MAP_TEXTURE_SIZE);
+	    /**
+	     * Accepted by the {@code cap} parameter of Enable, Disable, and IsEnabled, and by the {@code pname} parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+	     * GetDoublev.
+	     */
+		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_ALPHA_TO_COVERAGE, GLES20.GL_SAMPLE_ALPHA_TO_COVERAGE);
+		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_COVERAGE, GLES20.GL_SAMPLE_COVERAGE);
+	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
+		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_BUFFERS, GLES20.GL_SAMPLE_BUFFERS);
+		GL13_FLAG_MAP.put(IGL13.GL_SAMPLES, GLES20.GL_SAMPLES);
+		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_COVERAGE_VALUE, GLES20.GL_SAMPLE_COVERAGE_VALUE);
+		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_COVERAGE_INVERT, GLES20.GL_SAMPLE_COVERAGE_INVERT);
+	    /** Accepted by the {@code texture} parameter of ActiveTexture and MultiTexCoord. */
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE0, GLES20.GL_TEXTURE0);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE1, GLES20.GL_TEXTURE1);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE2, GLES20.GL_TEXTURE2);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE3, GLES20.GL_TEXTURE3);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE4, GLES20.GL_TEXTURE4);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE5, GLES20.GL_TEXTURE5);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE6, GLES20.GL_TEXTURE6);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE7, GLES20.GL_TEXTURE7);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE8, GLES20.GL_TEXTURE8);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE9, GLES20.GL_TEXTURE9);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE10, GLES20.GL_TEXTURE10);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE11, GLES20.GL_TEXTURE11);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE12, GLES20.GL_TEXTURE12);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE13, GLES20.GL_TEXTURE13);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE14, GLES20.GL_TEXTURE14);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE15, GLES20.GL_TEXTURE15);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE16, GLES20.GL_TEXTURE16);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE17, GLES20.GL_TEXTURE17);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE18, GLES20.GL_TEXTURE18);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE19, GLES20.GL_TEXTURE19);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE20, GLES20.GL_TEXTURE20);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE21, GLES20.GL_TEXTURE21);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE22, GLES20.GL_TEXTURE22);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE23, GLES20.GL_TEXTURE23);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE24, GLES20.GL_TEXTURE24);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE25, GLES20.GL_TEXTURE25);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE26, GLES20.GL_TEXTURE26);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE27, GLES20.GL_TEXTURE27);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE28, GLES20.GL_TEXTURE28);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE29, GLES20.GL_TEXTURE29);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE30, GLES20.GL_TEXTURE30);
+		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE31, GLES20.GL_TEXTURE31);
+	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
+		GL13_FLAG_MAP.put(IGL13.GL_ACTIVE_TEXTURE, GLES20.GL_ACTIVE_TEXTURE);
+	}
+	
+}
