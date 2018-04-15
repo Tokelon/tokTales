@@ -58,27 +58,27 @@ public class AndroidGL15 implements IGL15 {
 
 	@Override
 	public void glBufferData(int target, ShortBuffer data, int usage) {
-		GLES20.glBufferData(target, data.remaining() / 2, data, usage);
+		GLES20.glBufferData(target, data.remaining() * 2, data, usage);
 	}
 
 	@Override
 	public void glBufferData(int target, IntBuffer data, int usage) {
-		GLES20.glBufferData(target, data.remaining() / 4, data, usage);
+		GLES20.glBufferData(target, data.remaining() * 4, data, usage);
 	}
 
 	@Override
 	public void glBufferData(int target, LongBuffer data, int usage) {
-		GLES20.glBufferData(target, data.remaining() / 8, data, usage);
+		GLES20.glBufferData(target, data.remaining() * 8, data, usage);
 	}
 
 	@Override
 	public void glBufferData(int target, FloatBuffer data, int usage) {
-		GLES20.glBufferData(target, data.remaining() / 4, data, usage);
+		GLES20.glBufferData(target, data.remaining() * 4, data, usage);
 	}
 
 	@Override
 	public void glBufferData(int target, DoubleBuffer data, int usage) {
-		GLES20.glBufferData(target, data.remaining() / 8, data, usage);
+		GLES20.glBufferData(target, data.remaining() * 8, data, usage);
 	}
 
 	@Override
@@ -88,28 +88,27 @@ public class AndroidGL15 implements IGL15 {
 
 	@Override
 	public void glBufferSubData(int target, long offset, ShortBuffer data) {
-		GLES20.glBufferSubData(target, (int)offset, data.remaining() / 2, data);
+		GLES20.glBufferSubData(target, (int)offset, data.remaining() * 2, data);
 	}
 
 	@Override
 	public void glBufferSubData(int target, long offset, IntBuffer data) {
-		GLES20.glBufferSubData(target, (int)offset, data.remaining() / 4, data);
-
+		GLES20.glBufferSubData(target, (int)offset, data.remaining() * 4, data);
 	}
 
 	@Override
 	public void glBufferSubData(int target, long offset, LongBuffer data) {
-		GLES20.glBufferSubData(target, (int)offset, data.remaining() / 8, data);
+		GLES20.glBufferSubData(target, (int)offset, data.remaining() * 8, data);
 	}
 
 	@Override
 	public void glBufferSubData(int target, long offset, FloatBuffer data) {
-		GLES20.glBufferSubData(target, (int)offset, data.remaining() / 4, data);
+		GLES20.glBufferSubData(target, (int)offset, data.remaining() * 4, data);
 	}
 
 	@Override
 	public void glBufferSubData(int target, long offset, DoubleBuffer data) {
-		GLES20.glBufferSubData(target, (int)offset, data.remaining() / 8, data);
+		GLES20.glBufferSubData(target, (int)offset, data.remaining() * 8, data);
 	}
 
 	@Override
