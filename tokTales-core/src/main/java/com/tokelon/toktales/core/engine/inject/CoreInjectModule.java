@@ -52,6 +52,14 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.World;
+import com.tokelon.toktales.core.render.opengl.GLBufferUtils;
+import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.GLFactory;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.GLProgram;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.GLShader;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFactory;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLProgram;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLShader;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 
@@ -135,6 +143,12 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
+		
+		// GL Stuff
+		bind(IGLBufferUtils.class).to(GLBufferUtils.class).in(Scopes.SINGLETON);
+		bind(IGLFactory.class).to(GLFactory.class);
+		bind(IGLProgram.class).to(GLProgram.class);
+		bind(IGLShader.class).to(GLShader.class);
 		
 		
 		// Tools
