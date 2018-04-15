@@ -2,6 +2,7 @@ package com.tokelon.toktales.android.engine.inject;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
@@ -26,6 +27,11 @@ import com.tokelon.toktales.android.render.opengl.GLKeyedTextureManager;
 import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
+import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
+import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL13;
+import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL14;
+import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL15;
+import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL20;
 import com.tokelon.toktales.android.states.AndroidGameStateInput;
 import com.tokelon.toktales.android.states.AndroidInitialGamestateInputHandler;
 import com.tokelon.toktales.android.states.IAndroidGameStateInput;
@@ -51,6 +57,11 @@ import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
 import android.os.Environment;
 
@@ -90,6 +101,12 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IAndroidGameStateInput.class).to(AndroidGameStateInput.class);
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
+		
+		bind(IGL11.class).to(AndroidGL11.class).in(Scopes.SINGLETON);
+		bind(IGL13.class).to(AndroidGL13.class).in(Scopes.SINGLETON);
+		bind(IGL14.class).to(AndroidGL14.class).in(Scopes.SINGLETON);
+		bind(IGL15.class).to(AndroidGL15.class).in(Scopes.SINGLETON);
+		bind(IGL20.class).to(AndroidGL20.class).in(Scopes.SINGLETON);
 		
 		
 		/* Unused so far - everything under here */
