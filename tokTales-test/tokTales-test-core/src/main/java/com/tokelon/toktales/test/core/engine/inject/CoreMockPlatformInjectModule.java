@@ -17,6 +17,11 @@ import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
 /** Core inject module used for testing.
  * <p>
@@ -34,6 +39,11 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 	private static final IInputService inputServiceMock = mock(IInputService.class);
 	private static final IGameAdapter gameAdapterMock = mock(IGameAdapter.class);
 	private static final IGameStateInput gameStateInputMock = mock(IGameStateInput.class);
+	private static final IGL11 gl11Mock = mock(IGL11.class);
+	private static final IGL13 gl13Mock = mock(IGL13.class);
+	private static final IGL14 gl14Mock = mock(IGL14.class);
+	private static final IGL15 gl15Mock = mock(IGL15.class);
+	private static final IGL20 gl20Mock = mock(IGL20.class);
 	
 	private static final IGameStateInputHandler gamestateInputHandlerMock = mock(IGameStateInputHandler.class);
 
@@ -57,6 +67,11 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 		bind(IInputService.class).toInstance(inputServiceMock);
 		bind(IGameAdapter.class).toInstance(gameAdapterMock);
 		bind(IGameStateInput.class).toInstance(gameStateInputMock);
+		bind(IGL11.class).toInstance(gl11Mock);
+		bind(IGL13.class).toInstance(gl13Mock);
+		bind(IGL14.class).toInstance(gl14Mock);
+		bind(IGL15.class).toInstance(gl15Mock);
+		bind(IGL20.class).toInstance(gl20Mock);
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).toInstance(gamestateInputHandlerMock);
 	}

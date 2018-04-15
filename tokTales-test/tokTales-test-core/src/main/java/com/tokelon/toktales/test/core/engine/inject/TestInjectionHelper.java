@@ -22,6 +22,7 @@ public final class TestInjectionHelper {
 				"ILogService", "IRenderService", "IStorageService",	"IUIService",
 				"IGameAdapter",
 				"IGameStateInput",
+				"IGL11", "IGL13", "IGL14", "IGL15", "IGL20"
 		};
 	
 	public static final String[][] CORE_EXPECTED_BINDING_ANNOTATIONS =
