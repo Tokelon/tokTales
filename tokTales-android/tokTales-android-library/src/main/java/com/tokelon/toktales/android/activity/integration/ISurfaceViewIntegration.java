@@ -1,6 +1,6 @@
 package com.tokelon.toktales.android.activity.integration;
 
-import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
+import com.tokelon.toktales.android.render.opengl.IGLRenderView;
 
 /** An activity integration that will create the main renderer for the engine,
  * by using a given surface view.
@@ -14,6 +14,6 @@ public interface ISurfaceViewIntegration extends IActivityIntegration {
 	 * 
 	 * @param renderView
 	 */
-	public void integrateRenderView(RenderGLSurfaceView renderView); // Change to interface for RenderGLSurfaceView?
+	public void integrateRenderView(IGLRenderView renderView);
 
 }
