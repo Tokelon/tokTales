@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.game.states;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +14,14 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	
 	// synchronize?
 	private final Map<String, T> scenes;
+	private final Map<String, T> unmodifiableScenes;
 	
 	private T activeScene;
 	private String activeSceneName;
 	
 	public GameSceneControl() {
 		this.scenes = new HashMap<String, T>();
+		this.unmodifiableScenes = Collections.unmodifiableMap(scenes);
 	}
 	
 	
@@ -93,5 +96,9 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		return scenes.get(name);
 	}
 
+	@Override
+	public Map<String, T> getSceneMap() {
+		return unmodifiableScenes;
+	}
 	
 }
