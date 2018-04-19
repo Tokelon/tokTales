@@ -7,18 +7,17 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-/* Remember to call onPause() and onResume() in the enclosing activity.
+/** Note: You have to call {@link #onPause()} and {@link #onResume()} in the enclosing activity.
  * 
  */
-public class RenderGLSurfaceView extends GLSurfaceView {
+public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView {
 
 	
 	private final Object mInputLock = new Object();
 	
-	private WrapperGLRenderer mWrapperRenderer;
-	
 	private IOpenGLRenderer mainRenderer;
-	
+
+	private WrapperGLRenderer mWrapperRenderer;
 	
 	public RenderGLSurfaceView(Context context) {
 		super(context);
@@ -48,18 +47,16 @@ public class RenderGLSurfaceView extends GLSurfaceView {
 		
 		// Call after renderer is set
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-		
 	}
 	
 	
+	@Override
 	public void setMainRenderer(final IOpenGLRenderer mainRenderer) {
 		synchronized (mInputLock) {
-
 			this.mainRenderer = mainRenderer;
 			
 
 			/* To guarantee thread safety this method must be called inside the renderer thread.
-			 * 
 			 */
 			queueEvent(new Runnable() {
 
@@ -69,7 +66,6 @@ public class RenderGLSurfaceView extends GLSurfaceView {
 				}
 			});
 		}
-		
 	}
 	
 	
@@ -85,7 +81,6 @@ public class RenderGLSurfaceView extends GLSurfaceView {
 		}
 	}
 	
-	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -99,10 +94,9 @@ public class RenderGLSurfaceView extends GLSurfaceView {
 	}
 	
 	
-	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		synchronized (mInputLock) {						// Possible perfomance decrease ?
+		synchronized (mInputLock) {	// Possible perfomance decrease ?
 
 			if(mainRenderer != null) {
 				return mainRenderer.onTouch(event);
@@ -113,6 +107,5 @@ public class RenderGLSurfaceView extends GLSurfaceView {
 			}
 		}
 	}
-
 	
 }
