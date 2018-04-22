@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 
-import android.graphics.Bitmap;
-import android.opengl.GLES20;
-
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.engine.TokTales;
@@ -21,6 +18,8 @@ import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
+
+import android.opengl.GLES20;
 
 public class GLBitmapFontDriver implements IRenderDriver {
 	
@@ -147,24 +146,14 @@ public class GLBitmapFontDriver implements IRenderDriver {
 		if(!(renderModel instanceof ITextureFontModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
-		
 		ITextureFontModel fontModel = (ITextureFontModel) renderModel;
 
-		IRenderTexture renderTexture = fontModel.getTargetTexture();
-		if(!(renderTexture instanceof IAndroidBitmapTexture)) {
-			throw new RenderException("texture type is not supported: use IAndroidBitmapTexture");
-		}
 		
-		IAndroidBitmapTexture fontTexture = (IAndroidBitmapTexture) renderTexture;
-		
-		
+		IRenderTexture fontTexture = fontModel.getTargetTexture();
 		ITextureManager textureManager = fontModel.getTextureManager();
 		
 		if(!(fontModel.getTextureManager().hasTexture(fontTexture))) {
-			
-			Bitmap bitmap = fontTexture.getBitmap();
-			
-			rectSpriteSourceCoordsStatic.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+			rectSpriteSourceCoordsStatic.set(0, 0, fontTexture.getBitmap().getWidth(), fontTexture.getBitmap().getHeight());
 
 			rectSpriteSourceCoordsStatic.moveBy(0, 0);	// needed?
 			

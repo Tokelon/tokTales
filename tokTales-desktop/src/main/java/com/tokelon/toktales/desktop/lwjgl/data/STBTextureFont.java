@@ -9,11 +9,12 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
+import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.game.model.IRectangle2i.IMutableRectangle2i;
-import com.tokelon.toktales.desktop.content.IBitmapTexture;
+import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.render.IRenderTexture;
 
 public class STBTextureFont implements ITextureFont {
 
@@ -108,7 +109,7 @@ public class STBTextureFont implements ITextureFont {
 	
 	
 	@Override
-	public IBitmapTexture getTextureForCodepoint(int codepoint) {
+	public IRenderTexture getTextureForCodepoint(int codepoint) {
 		return codepointTexture(codepoint);
 	}
 	
@@ -134,8 +135,8 @@ public class STBTextureFont implements ITextureFont {
 
 		ByteBuffer bitmap = STBTruetype.stbtt_GetCodepointBitmap(fontInfo, fontScale, fontScale, codepoint, width, height, xoffset, yoffset);
 
-		CodepointTexture texture = new CodepointTexture(bitmap, width.get(0), height.get(0), xoffset.get(0), yoffset.get(0));
-
+		CodepointTexture texture = CodepointTexture.create(bitmap, width.get(0), height.get(0), xoffset.get(0), yoffset.get(0));
+		
 		return texture;
 	}
 	
@@ -259,7 +260,7 @@ public class STBTextureFont implements ITextureFont {
 	
 	public void clearCodepointCache() {
 		for(CodepointInfo cp: codepointCache.values()) {
-			STBTruetype.stbtt_FreeBitmap(cp.texture.getData()); // Needs user data?
+			STBTruetype.stbtt_FreeBitmap(cp.texture.getBitmap().getData()); // Needs user data?
 		}
 		
 		codepointCache.clear();

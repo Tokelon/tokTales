@@ -22,11 +22,11 @@ import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
 import com.tokelon.toktales.android.render.opengl.GLBitmapDriver;
 import com.tokelon.toktales.android.render.opengl.GLBitmapFontDriver;
-import com.tokelon.toktales.android.render.opengl.GLBitmapTextureManager;
 import com.tokelon.toktales.android.render.opengl.GLKeyedTextureManager;
 import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
+import com.tokelon.toktales.android.render.opengl.GLTextureManager;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL13;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL14;
@@ -118,8 +118,8 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
 		
-		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLTextureManagerFactory.class);
-		bind(ITextureManagerFactory.class).to(GLBitmapTextureManager.GLBitmapTextureManagerFactory.class);
+		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
+		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
 	}
 
 
@@ -138,8 +138,8 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			this.renderService = androidRenderService;
 			
 			IRenderAccess renderAccess = androidRenderService.getRenderAccess();
-			renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLTextureManagerFactory());
-			renderAccess.registerTextureManager(new GLBitmapTextureManager.GLBitmapTextureManagerFactory());
+			renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLKeyedTextureManagerFactory());
+			renderAccess.registerTextureManager(new GLTextureManager.GLTextureManagerFactory());
 			renderAccess.registerToolkit(new AndroidRenderToolkit.AndroidRenderToolkitFactory());
 			renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory());
 			renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory());

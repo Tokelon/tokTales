@@ -6,12 +6,11 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.opengl.GLES20;
-
+import com.tokelon.toktales.android.data.AndroidBitmap;
+import com.tokelon.toktales.android.data.IAndroidBitmap;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
+import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
@@ -20,11 +19,16 @@ import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
+
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.opengl.GLES20;
 
 public class GLSpriteDriver implements IRenderDriver {
 	
@@ -279,12 +283,14 @@ public class GLSpriteDriver implements IRenderDriver {
 
 
 
+				// TODO: Fix! Move resize logic into ContentService
 				IRenderTexture texture = spriteModel.getTexture();
-				if(!(texture instanceof IAndroidBitmapTexture)) {
+				IBitmap bitmap = texture.getBitmap();
+				if(!(bitmap instanceof IAndroidBitmap)) {
 					throw new IllegalArgumentException("texture type is not supported: use IBitmapTexture");
 				}
-				IAndroidBitmapTexture bitmapTexture = (IAndroidBitmapTexture) texture;
-				Bitmap spriteBitmap = bitmapTexture.getBitmap();
+				IAndroidBitmap androidBitmap = (IAndroidBitmap) bitmap;
+				Bitmap spriteBitmap = androidBitmap.getBitmap();
 
 
 				/* Copies the single Sprite we want to draw from the Spriteset
@@ -304,8 +310,15 @@ public class GLSpriteDriver implements IRenderDriver {
 						rectSpriteSourceCoordsStatic.height());
 
 
-				AndroidBitmapTexture textureRegion = new AndroidBitmapTexture(bitmapTextureBuffer);
-
+				AndroidBitmap regionBitmap = new AndroidBitmap(bitmapTextureBuffer);
+				IRenderTexture textureRegion = new Texture(regionBitmap)
+						.setTextureFormat(texture.getTextureFormat())
+						.setInternalFormat(texture.getInternalFormat())
+						.setDataType(texture.getDataType())
+						.setUnpackAlignment(texture.getUnpackAlignment())
+						.setFilter(texture.getFilterMin(), texture.getFilterMag())
+						.setWrap(texture.getWrapS(), texture.getWrapT());
+				
 				// Add the new texture (also binds it)
 				textureManager.addTexture(sprite, textureRegion);
 			}

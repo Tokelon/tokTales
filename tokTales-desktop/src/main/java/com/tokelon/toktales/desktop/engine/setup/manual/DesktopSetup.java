@@ -26,11 +26,11 @@ import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapFontDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapTextureManager;
 import com.tokelon.toktales.desktop.lwjgl.render.GLKeyedTextureManager;
 import com.tokelon.toktales.desktop.lwjgl.render.GLShapeDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteFontDriver;
+import com.tokelon.toktales.desktop.lwjgl.render.GLTextureManager;
 import com.tokelon.toktales.desktop.main.DesktopEnvironment;
 import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
@@ -83,8 +83,8 @@ public class DesktopSetup extends BaseSetup {
 		defaultEngineFactory.setRenderService(desktopRenderService);
 		
 		IRenderAccess renderAccess = desktopRenderService.getRenderAccess();
-		renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLTextureManagerFactory());
-		renderAccess.registerTextureManager(new GLBitmapTextureManager.GLBitmapTextureManagerFactory());
+		renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLKeyedTextureManagerFactory());
+		renderAccess.registerTextureManager(new GLTextureManager.GLTextureManagerFactory());
 		renderAccess.registerToolkit(new DesktopRenderToolkit.DesktopRenderToolkitFactory());
 		renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory());
 		renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory());

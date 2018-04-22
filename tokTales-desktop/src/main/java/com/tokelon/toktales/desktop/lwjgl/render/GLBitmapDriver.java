@@ -70,7 +70,7 @@ public class GLBitmapDriver implements IRenderDriver {
 	public GLBitmapDriver() {
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 		
-		textureManager = new GLKeyedTextureManager.GLTextureManagerFactory().newKeyedTextureManager(IRenderTexture.class, null);
+		textureManager = new GLKeyedTextureManager.GLKeyedTextureManagerFactory().newKeyedTextureManager(IRenderTexture.class, null);
 	}
 	
 	

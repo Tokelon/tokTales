@@ -13,29 +13,32 @@ import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
 
 import com.tokelon.toktales.core.content.IAssetContainer;
+import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
+import com.tokelon.toktales.core.content.TextureContainer;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
-import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.values.TokelonEmbeddedGraphics;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
+import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
 import com.tokelon.toktales.desktop.lwjgl.data.STBStandardImage;
 import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFont;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 
-public class DesktopContentService extends AbstractEngineService implements IContentService {
+public class DesktopContentService extends AbstractEngineService implements IDesktopContentService {
 	
 	public static final String TAG = "DesktopContentService";
 	
@@ -156,7 +159,7 @@ public class DesktopContentService extends AbstractEngineService implements ICon
 			}
 			
 			
-			return new STBImageContainer(texImage);
+			return createGraphicAssetContainer(texImage, null);
 		}
 		catch(IllegalArgumentException iae) {
 			return null;
@@ -249,10 +252,17 @@ public class DesktopContentService extends AbstractEngineService implements ICon
 		// TODO: Important - Fixed size buffer
 		ByteBuffer buffer = LWJGLBufferUtils.getWrapper().createByteBuffer(4 * 1 * 512 * 512);
 
-		
 		STBStandardImage image = decodeImageStream(buffer, source, options);
+
+		return createGraphicAssetContainer(image, options);
+	}
+	
+	
+	private IAssetContainer<?> createGraphicAssetContainer(STBStandardImage image, IGraphicLoadingOptions options) {
+		// TODO: Use the options to pass settings for the texture - Mainly the texture filter (nearest or linear)
+		Texture texture = new Texture(image);
 		
-		return new STBImageContainer(image);
+		return new TextureContainer(texture); 
 	}
 
 	
@@ -300,60 +310,106 @@ public class DesktopContentService extends AbstractEngineService implements ICon
 	
 	@Override
 	public IRenderTexture extractAssetTexture(IAssetContainer<?> container) {
-		STBStandardImage image = extractTextureImage(container);
-
-		// TODO: This should be wrapped, but we cannot create a new object every time !!
-		//return image == null ? null : new STBImageTexture(image);	// old
-		return image;
+		return extractTexture(container);
 	}
 	
-	
-	public static STBStandardImage extractAssetSprite(ISpriteAsset spriteAsset) {
-		return extractTextureImage(spriteAsset.getContent());
+	public static IRenderTexture extractAssetSprite(ISpriteAsset spriteAsset) {
+		return extractTexture(spriteAsset.getContent());
 	}
 	
-	
-	private static STBStandardImage extractTextureImage(IAssetContainer<?> container) {
+	@SuppressWarnings("unchecked")
+	private static IRenderTexture extractTexture(IAssetContainer<?> container) {
 		// Do type check ?
 
 		if(container == null) {
 			return null;	// TODO: Remove and fix special assets
 		}
+		
 
-		STBImageContainer imgCont = (STBImageContainer) container;
-
-		return imgCont.getAsset();
+		IAssetContainer<IRenderTexture> textureContainer = (IAssetContainer<IRenderTexture>) container;
+		return textureContainer.getAsset();
 	}
 
 	
+	@Override
+	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds) {
+		return cropTextureStatic(texture, bounds);
+	}
 	
-	public static STBStandardImage cropTexture(STBStandardImage source, Rectangle2iImpl bounds) {
+	public static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) {
+		IBitmap bitmap = cropBitmapStatic(texture.getBitmap(), bounds);
 		
-		// TODO: Important - Fix that componements are always assumed 4
+		Texture result = new Texture(bitmap);
+		result
+			.setTextureFormat(texture.getTextureFormat())
+			.setInternalFormat(texture.getInternalFormat())
+			.setDataType(texture.getDataType())
+			.setUnpackAlignment(texture.getUnpackAlignment())
+			.setFilter(texture.getFilterMin(), texture.getFilterMag())
+			.setWrap(texture.getWrapS(), texture.getWrapT());
 		
-		ByteBuffer cropBuffer = LWJGLBufferUtils.getWrapper().createByteBuffer(4 * bounds.width() * bounds.height());
+		return result;
+	}
+
+	
+	@Override
+	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
+		return cropBitmap(bitmap, bounds);
+	}
+
+	public static IBitmap cropBitmapStatic(IBitmap bitmap, IRectangle2i bounds) {
+
+		int channels;
+		if(bitmap instanceof ISTBBitmap) {
+			ISTBBitmap stbImage =(ISTBBitmap) bitmap;
+			channels = stbImage.getChannels();
+		}
+		else {
+			channels = getChannels(bitmap.getFormat());
+			if(channels == -1) {
+				// TODO: What?
+				channels = 0;
+			}
+		}
+
 		
-		byte[] arrayBuffer = new byte[4 * bounds.width()];
+		ByteBuffer cropBuffer = LWJGLBufferUtils.getWrapper().createByteBuffer(channels * bounds.width() * bounds.height());
+		
+		byte[] arrayBuffer = new byte[channels * bounds.width()];
 
 		
 		for(int i = 0; i < bounds.height(); i++) {
 			
-			int srcPos = (4 * (i + bounds.top()) * source.getWidth()) + 4 * bounds.left();
-			source.getData().position(srcPos);
-			source.getData().get(arrayBuffer);
+			int srcPos = (channels * (i + bounds.top()) * bitmap.getWidth()) + 4 * bounds.left();
+			bitmap.getData().position(srcPos);
+			bitmap.getData().get(arrayBuffer);
 			
 			//int dstPos = (4 * i * source.getWidth());
 			//cropBuffer.position()
 			cropBuffer.put(arrayBuffer);
 		}
 		cropBuffer.position(0);
-		source.getData().position(0);
+		bitmap.getData().position(0);
 		
 
-		STBStandardImage texImage = STBStandardImage.create(cropBuffer, bounds.width(), bounds.height(), 4);
+		STBStandardImage texImage = STBStandardImage.create(cropBuffer, bounds.width(), bounds.height(), channels);
 		return texImage;
 	}
-
+	
+	private static int getChannels(int format) {
+		switch (format) {
+		case IBitmap.FORMAT_ALPHA_8:
+			return 1;
+		case IBitmap.FORMAT_GREY_ALPHA_88:
+			return 2;
+		case IBitmap.FORMAT_RGB_888:
+			return 3;
+		case IBitmap.FORMAT_RGBA_8888:
+			return 4;
+		default:
+			return -1;
+		}
+	}
 	
 	/*
 	public static TextureImage cropTexture(TextureImage source, TRectangle bounds) {
@@ -380,6 +436,5 @@ public class DesktopContentService extends AbstractEngineService implements ICon
 		return cropImage;
 	}
 	*/
-	
 	
 }

@@ -1,47 +1,28 @@
 package com.tokelon.toktales.desktop.lwjgl.render;
 
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_RGBA2;
-import static org.lwjgl.opengl.GL11.GL_RGBA4;
-import static org.lwjgl.opengl.GL11.GL_RGBA8;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameterf;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.util.IParams;
-import com.tokelon.toktales.desktop.lwjgl.data.STBStandardImage;
 
 public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
-	public static final String TAG = "GLTextureManager";
+	public static final String TAG = "GLKeyedTextureManager";
 	
 	
-	private final Map<K, Integer> mTextureCacheMap = new HashMap<K, Integer>();
+	private final Map<K, Integer> textureMap = new HashMap<K, Integer>();
+	
 	
 	private final int glTextureIndex;
 	
-	
 	/**
-	 * 
-	 * @param glTextureIndex Must be one of i of GLES20.GL_TEXTUREi
+	 * @param glTextureIndex Must be one of i of IGL20.GL_TEXTUREi
 	 */
 	public GLKeyedTextureManager(int glTextureIndex) {
 		this.glTextureIndex = glTextureIndex;
@@ -51,101 +32,65 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	/** Also binds the texture.
 	 * 
-	 * @param sprite
+	 * @param key
 	 * @param texture
 	 */
 	@Override
 	public void addTexture(K key, IRenderTexture texture) {
-		
-		
-		if(!(texture instanceof IImageTexture)) {
-			throw new IllegalArgumentException("Texture type is not supported: use IImageTexture");
+		if(key == null || texture == null) {
+			throw new NullPointerException();
 		}
-		IImageTexture imageTexture = (IImageTexture) texture;
-		STBStandardImage textureImage = imageTexture.getImage();
-
+		
 		// Generate a new texture
-		int textureId = glGenTextures();
+		int textureId = GL11.glGenTextures();
 		
 
-		glActiveTexture(GL_TEXTURE0 + glTextureIndex);
-		glBindTexture(GL_TEXTURE_2D, textureId);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0 + glTextureIndex);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
 		
+		
+		int unpackAlignment = texture.getUnpackAlignment();
+		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, unpackAlignment);
 
+		int textureFormat = texture.getTextureFormat();   // GL_RGBA
+		int internalFormat = texture.getInternalFormat(); // GL_RGBA
+		int dataType = texture.getDataType();             // GL_UNSIGNED_BYTE
+		int width = texture.getBitmap().getWidth();
+		int height = texture.getBitmap().getHeight();
 		
-		// What does this do?
-		//glPixelStorei(GL_UNPACK_ALIGNMENT, textureImage.getNumComponents());
-
-		
-		int internalFormat = getTextureFormat(textureImage.getNumComponents());
-		int format = GL_RGBA;
-		
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, textureImage.getWidth(), textureImage.getHeight(), 0, format, GL_UNSIGNED_BYTE, textureImage.getData());
-		//glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 54, 54, 0, format, GL_UNSIGNED_BYTE, textureImage.getData());
+		GL11.glTexImage2D(
+				GL11.GL_TEXTURE_2D,
+				0, // level
+				internalFormat,
+				width,
+				height,
+				0, // border
+				textureFormat,
+				dataType,
+				texture.getBitmap().getData());
 
 		//OpenGLUtils.checkGLErrors(TAG);
 
-		
 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, texture.getFilterMin()); //GL_NEAREST
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, texture.getFilterMag()); //GL_NEAREST
 		
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, texture.getWrapS()); //GL_CLAMP_TO_EDGE
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, texture.getWrapT()); //GL_CLAMP_TO_EDGE
 		
 		
-		mTextureCacheMap.put(key, textureId);
-		
+		textureMap.put(key, textureId);
 	}
 	
-	/* TODO: Delete
-	private void addFontTexture(K key, CodepointTexture texture) {
-		
-		// Generate a new texture
-		int textureId = glGenTextures();
-		
-
-		glActiveTexture(GL_TEXTURE0 + glTextureIndex);
-		glBindTexture(GL_TEXTURE_2D, textureId);
-		
-
-		
-		// What does this do?
-		//glPixelStorei(GL_UNPACK_ALIGNMENT, textureImage.getNumComponents());
-
-		// Shoud store here in GL_RED and then in the shader use the red value
-		int internalFormat = GL11.GL_ALPHA;
-		int format = GL11.GL_ALPHA;
-		
-		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.getWidth(), texture.getHeight(), 0, format, GL_UNSIGNED_BYTE, texture.getData());
-		//glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 54, 54, 0, format, GL_UNSIGNED_BYTE, textureImage.getData());
-
-		OpenGLUtils.checkGLErrors(TAG);
-
-		
-
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		
-		
-		mTextureCacheMap.put(key, textureId);
-		
-	}
-	*/
 	
 	public int getNameForTexture(K key) {
-		return mTextureCacheMap.get(key);
+		return textureMap.get(key);
 	}
-	
 	
 	
 	@Override
 	public boolean hasTextureFor(K key) {
-		return mTextureCacheMap.containsKey(key);
+		return textureMap.containsKey(key);
 	}
 	
 	
@@ -153,7 +98,7 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	public void removeTextureFor(K key) {
 		// TODO: Test this
 
-		Integer texName = mTextureCacheMap.remove(key);
+		Integer texName = textureMap.remove(key);
 		if(texName == null) {
 			throw new IllegalArgumentException("Cannot bind texture: Key does not have texture cached");
 		}
@@ -162,13 +107,13 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	}
 	
 	private void deleteTexture(int texture) {
-		glDeleteTextures(texture);
+		GL11.glDeleteTextures(texture);
 	}
 	
 	
 	@Override
 	public void bindTextureFor(K key) {
-		Integer texName = mTextureCacheMap.get(key);
+		Integer texName = textureMap.get(key);
 		if(texName == null) {
 			throw new IllegalArgumentException("Cannot bind texture: Key does not have texture cached");
 		}
@@ -179,18 +124,18 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	public void bindTexture(int textureId) {
 		
-		glActiveTexture(GL_TEXTURE0 + glTextureIndex);
-		glBindTexture(GL_TEXTURE_2D, textureId);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0 + glTextureIndex);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
 	}
 	
 	
 	@Override
 	public void clear() {
-		for(Integer texture: mTextureCacheMap.values()) {
+		for(Integer texture: textureMap.values()) {
 			deleteTexture(texture);
 		}
 		
-		mTextureCacheMap.clear();
+		textureMap.clear();
 	}
 	
 	@Override
@@ -198,41 +143,15 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 		return glTextureIndex;
 	}
 	
+
 	
-	
-	private static int getTextureFormat(int components) {
-		int format;
-		switch (components) {
-		case 1:
-			format = GL_RGBA;
-			break;
-		case 2:
-			format = GL_RGBA2;
-			break;
-		case 4:
-			format = GL_RGBA4;
-			break;
-		case 8:
-			format = GL_RGBA8;
-			break;
-		default:
-			// What to do?
-			format = GL_RGBA;
-			break;
-		}
-		
-		return format;
-	}
-	
-	
-	
-	public static class GLTextureManagerFactory implements IKeyedTextureManagerFactory {
+	public static class GLKeyedTextureManagerFactory implements IKeyedTextureManagerFactory {
+		// TODO: Inject OpenGLUtils and do not use statically, also replace in all other texture managers
 
 		@Override
 		public <T> IKeyedTextureManager<T> newKeyedTextureManager(Class<T> keyClass, IParams params) {
 			return new GLKeyedTextureManager<T>(OpenGLUtils.aquireGLTextureIndex()); 
 		}
 	}
-
 	
 }

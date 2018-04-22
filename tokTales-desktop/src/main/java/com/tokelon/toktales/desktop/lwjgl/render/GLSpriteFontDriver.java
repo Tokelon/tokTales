@@ -27,13 +27,11 @@ import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
-import com.tokelon.toktales.desktop.lwjgl.data.STBStandardImage;
 
 public class GLSpriteFontDriver implements IRenderDriver {
 
 	public static final String TAG = "GLSpriteFontDriver";
 
-	
 	
 	private static final String VS_Sprite = 
 			"#version 330\n" +
@@ -164,7 +162,6 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		
 		
 		if(!fontModel.getTextureManager().hasTextureFor(fontSprite)) {
-		
 
 			spriteSourceCoords.set(0, 0, fontSprite.getSpriteset().getSpriteWidth(), fontSprite.getSpriteset().getSpriteHeight());
 			
@@ -174,19 +171,10 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
 
 			
-			IRenderTexture texture = fontModel.getTexture();
-			if(!(texture instanceof IImageTexture)) {
-				throw new IllegalArgumentException("texture type is not supported: use IImageTexture");
-			}
-			IImageTexture imageTexture = (IImageTexture) texture;
-			STBStandardImage textureImage = imageTexture.getImage();
-			
-			
-			STBStandardImage textureRegion = DesktopContentService.cropTexture(textureImage, spriteSourceCoords);
-			
-			fontModel.getTextureManager().addTexture(fontSprite, new STBImageTexture(textureRegion));
+			// TODO: Replace with instance method
+			IRenderTexture textureRegion = DesktopContentService.cropTextureStatic(fontModel.getTexture(), spriteSourceCoords);
+			fontModel.getTextureManager().addTexture(fontSprite, textureRegion);
 		}
-		
 		
 		
 		
@@ -233,12 +221,10 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	}
 	
 	
-	
 	@Override
 	public boolean supports(String target) {
 		return supportedTarget().equals(target);
 	}
-	
 	
 	private static String supportedTarget() {
 		return ISpriteFontModel.class.getName();
@@ -258,6 +244,5 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			return new GLSpriteFontDriver();
 		}
 	}
-	
 	
 }

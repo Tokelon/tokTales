@@ -3,18 +3,18 @@ package com.tokelon.toktales.android.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tokelon.toktales.core.content.text.CodepointTexture;
+import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.game.model.IRectangle2i;
+import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.render.IRenderTexture;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-
-import com.tokelon.toktales.android.render.opengl.AndroidBitmapTexture;
-import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.IRenderTexture;
 
 public class AndroidTextureFont implements ITextureFont {
 
@@ -109,7 +109,7 @@ public class AndroidTextureFont implements ITextureFont {
 	}
 	
 	
-	private AndroidBitmapTexture codepointTexture(int codepoint) {
+	private CodepointTexture codepointTexture(int codepoint) {
 		CodepointInfo cpInfo = codepointInfo(codepoint);
 		if(cpInfo.texture == null) {
 			cpInfo.texture = makeCodepointTexture(codepoint);
@@ -119,7 +119,7 @@ public class AndroidTextureFont implements ITextureFont {
 	}
 	
 	
-	private AndroidBitmapTexture makeCodepointTexture(int codepoint) {
+	private CodepointTexture makeCodepointTexture(int codepoint) {
 
 		int cWidth = getCodepointPixelWidth(codepoint);
 		int cHeight = getCodepointPixelHeight(codepoint);
@@ -137,8 +137,8 @@ public class AndroidTextureFont implements ITextureFont {
 		String cs = new String(new int[] { codepoint }, 0, 1);
 		canvas.drawText(cs, 0, topOffset, paint);
 		
-		AndroidBitmapTexture result = new AndroidBitmapTexture(bitmap);
-		result.setUnpackAlignment(1);
+		AndroidCodepointBitmap codepointBitmap = new AndroidCodepointBitmap(bitmap);
+		CodepointTexture result = new CodepointTexture(codepointBitmap, 0, 0);
 		
 		return result;
 	}
@@ -225,7 +225,7 @@ public class AndroidTextureFont implements ITextureFont {
 	
 	private class CodepointInfo {
 		
-		private AndroidBitmapTexture texture;
+		private CodepointTexture texture;
 		private Rectangle2iImpl bounds;
 	}
 

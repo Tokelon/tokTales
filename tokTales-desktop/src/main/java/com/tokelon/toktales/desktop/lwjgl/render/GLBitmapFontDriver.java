@@ -23,7 +23,6 @@ import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
-import com.tokelon.toktales.desktop.content.IBitmapTexture;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
@@ -152,21 +151,14 @@ public class GLBitmapFontDriver implements IRenderDriver {
 		}
 		ITextureFontModel fontModel = (ITextureFontModel) renderModel;
 		
-		IRenderTexture renderTexture = fontModel.getTargetTexture();
-		if(!(renderTexture instanceof IBitmapTexture)) {
-			throw new RenderException("Unsupported texture type: " +renderTexture.getClass());
-		}
-		IBitmapTexture fontTexture = (IBitmapTexture) fontModel.getTargetTexture();
-		
-		
+
+		IRenderTexture fontTexture = fontModel.getTargetTexture();
 		if(!fontModel.getTextureManager().hasTexture(fontTexture)) {
 			
-			spriteSourceCoords.set(0, 0, fontTexture.getWidth(), fontTexture.getHeight());
-			
+			spriteSourceCoords.set(0, 0, fontTexture.getBitmap().getWidth(), fontTexture.getBitmap().getHeight());
 			
 			fontModel.getTextureManager().addTexture(fontTexture);
 		}
-		
 		
 		
 		

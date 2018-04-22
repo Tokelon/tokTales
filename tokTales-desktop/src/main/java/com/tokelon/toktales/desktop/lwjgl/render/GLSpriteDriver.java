@@ -28,13 +28,11 @@ import com.tokelon.toktales.core.values.RenderDriverOptions;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
-import com.tokelon.toktales.desktop.lwjgl.data.STBStandardImage;
 
 public class GLSpriteDriver implements IRenderDriver {
 
 	public static final String TAG = "GLSpriteDriver";
 
-	
 	
 	private static final String VS_Sprite = 
 			"#version 330\n" +
@@ -72,7 +70,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	private ShaderProgram mShader;
 	
 	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
-	
 	
 	
 	public GLSpriteDriver() {
@@ -180,7 +177,6 @@ public class GLSpriteDriver implements IRenderDriver {
 		
 		ISprite sprite = spriteModel.getSprite();
 		
-		
 		if(sprite.isEnclosed() && !ignoreSpriteset) {
 			
 			if(!spriteModel.getTextureManager().hasTextureFor(sprite)) {
@@ -192,20 +188,12 @@ public class GLSpriteDriver implements IRenderDriver {
 				
 				spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
 				
-				
 				//if(spriteSourceCoords.width() > )
+
 				
-				// How to do this with the texture interface?
-				IRenderTexture texture = spriteModel.getTexture();
-				if(!(texture instanceof IImageTexture)) {
-					throw new IllegalArgumentException("texture type is not supported: use IImageTexture");
-				}
-				IImageTexture imageTexture = (IImageTexture) texture;
-				STBStandardImage textureImage = imageTexture.getImage();
-				
-				
-				STBStandardImage textureRegion = DesktopContentService.cropTexture(textureImage, spriteSourceCoords);
-				spriteModel.getTextureManager().addTexture(sprite, new STBImageTexture(textureRegion));
+				// TODO: Replace with instance method
+				IRenderTexture textureRegion = DesktopContentService.cropTextureStatic(spriteModel.getTexture(), spriteSourceCoords);
+				spriteModel.getTextureManager().addTexture(sprite, textureRegion);
 			}
 			
 			
@@ -213,7 +201,6 @@ public class GLSpriteDriver implements IRenderDriver {
 			// NOTTODO: This only works for full tile rendering (not for the sides)
 			// NOTTODO: Fix / Might be causing flickes on the sides / not rendering of sides
 			//spriteModel.getTextureScaling().set(1.0f, 1.0f);
-
 		}
 		else {
 			
@@ -267,12 +254,10 @@ public class GLSpriteDriver implements IRenderDriver {
 	}
 	
 	
-	
 	@Override
 	public boolean supports(String target) {
 		return supportedTarget().equals(target);
 	}
-	
 	
 	private static String supportedTarget() {
 		return ISpriteModel.class.getName();
@@ -292,6 +277,5 @@ public class GLSpriteDriver implements IRenderDriver {
 			return new GLSpriteDriver();
 		}
 	}
-	
 	
 }

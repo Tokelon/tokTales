@@ -61,7 +61,7 @@ public class GLBitmapDriver implements IRenderDriver {
 
 	public GLBitmapDriver() {
 		
-		textureManager = new GLKeyedTextureManager.GLTextureManagerFactory().newKeyedTextureManager(IRenderTexture.class, null);
+		textureManager = new GLKeyedTextureManager.GLKeyedTextureManagerFactory().newKeyedTextureManager(IRenderTexture.class, null);
 		
 		
 		float[] vertices = new float[]

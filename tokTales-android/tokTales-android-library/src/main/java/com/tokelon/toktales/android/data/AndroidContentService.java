@@ -8,11 +8,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.render.opengl.AndroidBitmapTexture;
 import com.tokelon.toktales.core.content.IAssetContainer;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
-import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
+import com.tokelon.toktales.core.content.TextureContainer;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -21,6 +20,7 @@ import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -114,7 +114,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 				return null;
 			}
 			else {
-				return new BitmapContainer(sb);
+				return createGraphicAssetContainer(sb, options);
 			}
 		}
 		catch(IOException ioe) {
@@ -155,7 +155,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 				throw new ContentLoadException("Failed to decode bitmap");
 			}
 			else {
-				return new BitmapContainer(sb);
+				return createGraphicAssetContainer(sb, options);
 			}
 		}
 		catch(IOException e) {
@@ -176,7 +176,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 	
 	@Override
 	public IAssetContainer<?> loadSpecialContent(ISpecialContent specialContent) throws ContentException {
-		BitmapContainer container = null;
+		IAssetContainer<?> container = null;
 		
 		if(specialContent == IContentManager.SpecialContent.SPRITE_EMPTY) {
 			Bitmap b1 = decodeBitmapResource(globalContext.getResources(), R.drawable.sp_special_empty);
@@ -184,7 +184,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 			if(b1 == null) {
 				throw new ContentLoadException("Failed to decode bitmap");
 			} else {
-				container = new BitmapContainer(b1);
+				container = createGraphicAssetContainer(b1, null);
 			}
 		}
 		else if(specialContent == IContentManager.SpecialContent.SPRITE_NOT_FOUND) {
@@ -193,7 +193,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 			if(b2 == null) {
 				throw new ContentLoadException("Failed to decode bitmap");
 			} else {
-				container = new BitmapContainer(b2);
+				container = createGraphicAssetContainer(b2, null);
 			}
 		}
 		else if(specialContent == IContentManager.SpecialContent.SPRITE_LOAD_ERROR) {
@@ -202,7 +202,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 			if(b3 == null) {
 				throw new ContentLoadException("Failed to decode bitmap");
 			} else {
-				container = new BitmapContainer(b3);
+				container = createGraphicAssetContainer(b3, null);
 			}
 		}
 		
@@ -224,7 +224,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 			throw new ContentLoadException("Failed to decode bitmap");
 		}
 		else {
-			return new BitmapContainer(sb);
+			return createGraphicAssetContainer(sb, null);
 		}
 	}
 	
@@ -324,7 +324,17 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 	}
 	
 	
+	private IAssetContainer<?> createGraphicAssetContainer(Bitmap bitmap, IGraphicLoadingOptions options) {
+		AndroidBitmap androidBitmap = new AndroidBitmap(bitmap);
+		
+		// TODO: Use the options to pass settings for the texture - Mainly the texture filter (nearest or linear)
+		Texture texture = new Texture(androidBitmap);
+		
+		return new TextureContainer(texture);
+	}
 	
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public IRenderTexture extractAssetTexture(IAssetContainer<?> container) {
 		// Do type check ?
@@ -332,10 +342,10 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		if(container == null) {
 			return null;	// TODO: Remove and fix special assets
 		}
+
 		
-		BitmapContainer bitmapContainer = (BitmapContainer) container;
-		
-		return new AndroidBitmapTexture(bitmapContainer.getAsset());
+		IAssetContainer<IRenderTexture> textureContainer = (IAssetContainer<IRenderTexture>) container;
+		return textureContainer.getAsset();
 	}
 	
 	
@@ -385,27 +395,6 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		font.initialize(typeface);
 		
 		return font;
-	}
-	
-
-	
-	/**
-	 * 
-	 * @param spriteAsset
-	 * @return
-	 * @throws NullPointerException If spriteAsset is null.
-	 */
-	@SuppressWarnings("unchecked")
-	public static Bitmap extractAssetSprite(ISpriteAsset spriteAsset) {		// TODO: Delete or make private
-		IAssetContainer<?> ac = spriteAsset.getContent();
-		
-		// TODO: Possibly remove this (the check) for performance reasons
-		if(!(ac.getAsset() instanceof Bitmap)) {
-			throw new RuntimeException("Sprite Asset is not a Bitmap container!");
-		}
-		
-		BitmapContainer acb = (BitmapContainer) spriteAsset.getContent();
-		return acb.getAsset();
 	}
 	
 }
