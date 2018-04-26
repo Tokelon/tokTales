@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.content;
 
-public class AssetContainer<T> implements IAssetContainer<T> {
+public class AssetContainer<T extends IDisposable> implements IAssetContainer<T> {
 
 	private final T asset;
 	
@@ -14,7 +14,7 @@ public class AssetContainer<T> implements IAssetContainer<T> {
 	
 	@Override
 	public void freeAsset() {
-		// Do what here?
+		asset.dispose();
 	}
 	
 }

@@ -67,6 +67,4 @@ public interface IContentService extends IEngineService {
 	
 	public ITextureFont loadFontFromFile(File file) throws ContentException;
 	
-
-	
 }

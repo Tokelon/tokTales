@@ -9,10 +9,11 @@ public interface ITextureManager {
 
 	public void removeTexture(IRenderTexture texture);
 	
-	public void bindTexture(IRenderTexture texture);
-
-	
 	public void clear();
+	
+	
+	// TODO: Pass the texture index that should be used, instead of having a static one?
+	public void bindTexture(IRenderTexture texture);
 	
 	public int getTextureIndex();
 	
