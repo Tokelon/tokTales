@@ -6,11 +6,9 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.tokelon.toktales.android.data.AndroidBitmap;
-import com.tokelon.toktales.android.data.IAndroidBitmap;
+import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
-import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
@@ -19,15 +17,12 @@ import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.opengl.GLES20;
 
 public class GLSpriteDriver implements IRenderDriver {
@@ -57,25 +52,17 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 
 	
+	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
+	
+	private ISprite lastTileSprite;
+	
 
 	private ShaderProgram mShader;
 	
 	private GLSpriteMesh spriteMesh;
-
-	
-	
-	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
-	
-	private Bitmap bitmapTextureBuffer;
-	private int[] intArrayTextureBufferPixels;
-	
-	private ISprite lastTileSprite;
-	
 	
 
 	public GLSpriteDriver() {
-		
-		
 		// TRIANGLE_FAN
 		/*
 		mFloatArrayVertices = new float[]
@@ -117,15 +104,12 @@ public class GLSpriteDriver implements IRenderDriver {
 				};
 		*/
 		
-		
 		spriteMesh = new GLSpriteMesh(vertices);
-		
 	}
 	
 	
 	@Override
 	public void create() {
-		
 		
 		try {
 			mShader = new ShaderProgram();
@@ -147,21 +131,6 @@ public class GLSpriteDriver implements IRenderDriver {
 			TokTales.getLog().e(TAG, "Failed to create shader program: " + oglex.getMessage());
 			return;
 		}
-		
-
-		
-		
-		/* Fixed partly (adjustable max): Fix that only 32x32 textures can be used by
-		 * 
-		 * 1. Using a larger bitmap (buffer)
-		 * 2. Adjusting the texture coordinates to the sprite size | DONE!
-		 * 
-		 */
-		
-		int blockSize = 64;		// TODO: Pass max texture size dynamically
-		
-		bitmapTextureBuffer = Bitmap.createBitmap(blockSize, blockSize, Config.ARGB_8888);
-		intArrayTextureBufferPixels = new int[blockSize * blockSize];
 	}
 
 	
@@ -169,9 +138,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	public void destroy() {
 		mShader.cleanup();
 		mShader = null;
-		
-		bitmapTextureBuffer.recycle();
-		bitmapTextureBuffer = null;
 	}
 	
 
@@ -208,14 +174,11 @@ public class GLSpriteDriver implements IRenderDriver {
 		
 		GLES20.glEnableVertexAttribArray(mShader.getAttributeLocation("vPosition"));
 		GLES20.glEnableVertexAttribArray(mShader.getAttributeLocation("a_vTexCoord"));
-
 	}
 
 
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
-		// Add logic for whether sprite is enclosed, etc.
-
 		/* Phases:
 		 * 1. Assume destination bounds being setup already
 		 * 2. Setup source (texture) bounds
@@ -243,14 +206,13 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		if(sprite.isEnclosed() && !ignoreSpriteset) {
 
-
-			if(!(textureManager.hasTextureFor(sprite))) {
+			IRenderTexture finalTexture = textureManager.getTextureFor(sprite);
+			if(finalTexture == null) {
 				/* 1. Calculate Sprite coordinates in the Spriteset
 				 * 2. Copy only the Sprite into a buffer bitmap
 				 * 3. Load the buffer bitmap as a new texture
 				 * 
 				 */
-
 
 
 				/* This contains complete source block without any "cutting" applied to it
@@ -271,60 +233,17 @@ public class GLSpriteDriver implements IRenderDriver {
 				rectSpriteSourceCoordsStatic.moveBy(offHor, offVer);
 
 
-
-				if(rectSpriteSourceCoordsStatic.width() > bitmapTextureBuffer.getWidth()
-						|| rectSpriteSourceCoordsStatic.height() > bitmapTextureBuffer.getHeight()) {
-
-					// Our sprite bitmap is too big for our buffer!
-					TokTales.getLog().e(TAG, "Cannot draw: Texture buffer (bitmap) does not fit loaded Bitmap!");
-					throw new IllegalStateException(TAG +" | Texture buffer (bitmap) does not fit loaded Bitmap");
-				}
-
-
-
-
-				// TODO: Fix! Move resize logic into ContentService
-				IRenderTexture texture = spriteModel.getTexture();
-				IBitmap bitmap = texture.getBitmap();
-				if(!(bitmap instanceof IAndroidBitmap)) {
-					throw new IllegalArgumentException("texture type is not supported: use IBitmapTexture");
-				}
-				IAndroidBitmap androidBitmap = (IAndroidBitmap) bitmap;
-				Bitmap spriteBitmap = androidBitmap.getBitmap();
-
-
 				/* Copies the single Sprite we want to draw from the Spriteset
 				 * This is done so that only the Sprite has to be loaded into the texture instead of the complete Spriteset
-				 * 
+				 *
+				 * TODO: Important - Instead of cropping the texture, use subTex
 				 */
-				spriteBitmap.getPixels(intArrayTextureBufferPixels, 0, rectSpriteSourceCoordsStatic.width(),
-						rectSpriteSourceCoordsStatic.left(),
-						rectSpriteSourceCoordsStatic.top(),
-						rectSpriteSourceCoordsStatic.width(),
-						rectSpriteSourceCoordsStatic.height());
-
-				bitmapTextureBuffer.setPixels(intArrayTextureBufferPixels, 0, rectSpriteSourceCoordsStatic.width(),
-						0,
-						0,
-						rectSpriteSourceCoordsStatic.width(),
-						rectSpriteSourceCoordsStatic.height());
-
-
-				AndroidBitmap regionBitmap = new AndroidBitmap(bitmapTextureBuffer);
-				IRenderTexture textureRegion = new Texture(regionBitmap)
-						.setTextureFormat(texture.getTextureFormat())
-						.setInternalFormat(texture.getInternalFormat())
-						.setDataType(texture.getDataType())
-						.setUnpackAlignment(texture.getUnpackAlignment())
-						.setFilter(texture.getFilterMin(), texture.getFilterMag())
-						.setWrap(texture.getWrapS(), texture.getWrapT());
+				IRenderTexture textureRegion = AndroidContentService.cropTextureStatic(spriteModel.getTexture(), rectSpriteSourceCoordsStatic);
 				
 				// Add the new texture (also binds it)
 				textureManager.addTexture(sprite, textureRegion);
+				finalTexture = textureRegion;
 			}
-
-
-
 
 			/* If we are going to support different texture sizes with different sized bitmaps
 			 * then we would need a way of knowing with which size the texture was loaded here
@@ -333,7 +252,7 @@ public class GLSpriteDriver implements IRenderDriver {
 			//textureManager.getSavedSizeForTexture
 
 
-
+			// TODO: This is not needed anymore - test first then remove
 			// We assume we only have one size (max) for our buffer
 
 			/* Because our buffer can be bigger than our sprite,
@@ -342,8 +261,8 @@ public class GLSpriteDriver implements IRenderDriver {
 			 * (We wouldn't have this problem if our buffer was always the size of the sprite (not the spriteset size))
 			 * 
 			 */
-			float scalingHor = sprite.getSpriteset().getSpriteWidth() / (float) bitmapTextureBuffer.getWidth();
-			float scalingVer = sprite.getSpriteset().getSpriteHeight() / (float) bitmapTextureBuffer.getHeight();
+			float scalingHor = sprite.getSpriteset().getSpriteWidth() / (float) finalTexture.getBitmap().getWidth();
+			float scalingVer = sprite.getSpriteset().getSpriteHeight() / (float) finalTexture.getBitmap().getHeight();
 
 			// We apply the scaling on top of the scaling we can have because of rendering only part of a sprite
 			spriteModel.scaleTexture(scalingHor, scalingVer);
@@ -370,9 +289,6 @@ public class GLSpriteDriver implements IRenderDriver {
 		}
 
 
-
-
-
 		// 1. Apply translation, rotation and scaling to the model matrix
 		Matrix4f modelMatrix = spriteModel.applyModelMatrix();
 
@@ -388,8 +304,6 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
-
-
 
 
 		if(sprite.equals(lastTileSprite)) {
@@ -430,7 +344,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	@Override
 	public void release() {
-
 		// After draw
 
 		GLES20.glDisableVertexAttribArray(mShader.getAttributeLocation("vPosition"));
@@ -463,6 +376,5 @@ public class GLSpriteDriver implements IRenderDriver {
 			return new GLSpriteDriver();
 		}
 	}
-	
 	
 }

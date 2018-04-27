@@ -6,11 +6,9 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.tokelon.toktales.android.data.AndroidBitmap;
-import com.tokelon.toktales.android.data.IAndroidBitmap;
+import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
-import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
@@ -19,14 +17,11 @@ import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteFontModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.opengl.GLES20;
 
 public class GLSpriteFontDriver implements IRenderDriver {
@@ -66,9 +61,6 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	
 	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
-	
-	private Bitmap bitmapTextureBuffer;
-	private int[] intArrayTextureBufferPixels;
 	
 	private ISprite lastTileSprite;
 	
@@ -114,22 +106,12 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			TokTales.getLog().e(TAG, "Failed to create shader program: " + oglex.getMessage());
 			return;
 		}
-		
-
-		
-		int blockSize = 64;		// TODO: Pass max texture size dynamically
-		
-		bitmapTextureBuffer = Bitmap.createBitmap(blockSize, blockSize, Config.ARGB_8888);
-		intArrayTextureBufferPixels = new int[blockSize * blockSize];
 	}
 	
 	@Override
 	public void destroy() {
 		mShader.cleanup();
 		mShader = null;
-		
-		bitmapTextureBuffer.recycle();
-		bitmapTextureBuffer = null;
 	}
 
 
@@ -168,18 +150,20 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		if(!(renderModel instanceof ISpriteFontModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
-		
 		ISpriteFontModel fontModel = (ISpriteFontModel) renderModel;
 		
 		ISprite fontSprite = fontModel.getSprite();
-		
 		IKeyedTextureManager<ISprite> textureManager = fontModel.getTextureManager();
 		
 		
-		if(!(textureManager.hasTextureFor(fontSprite))) {
-			
-			
-			rectSpriteSourceCoordsStatic.set(0, 0, fontSprite.getSpriteset().getSpriteWidth(), fontSprite.getSpriteset().getSpriteHeight());
+		IRenderTexture finalTexture = textureManager.getTextureFor(fontSprite);
+		if(finalTexture == null) {
+			rectSpriteSourceCoordsStatic.set(
+					0,
+					0,
+					fontSprite.getSpriteset().getSpriteWidth(),
+					fontSprite.getSpriteset().getSpriteHeight()
+			);
 
 			
 			int offHor = fontSprite.getSpriteset().getHorizontalOffsetFor(fontSprite.getSpritesetIndex());
@@ -188,59 +172,20 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 			rectSpriteSourceCoordsStatic.moveBy(offHor, offVer);
 
-
-			if(rectSpriteSourceCoordsStatic.width() > bitmapTextureBuffer.getWidth()
-					|| rectSpriteSourceCoordsStatic.height() > bitmapTextureBuffer.getHeight()) {
-
-				// Our sprite bitmap is too big for our buffer!
-				TokTales.getLog().e(TAG, "Cannot draw: Texture buffer (bitmap) does not fit loaded Bitmap!");
-				throw new IllegalStateException(TAG +" | Texture buffer (bitmap) does not fit loaded Bitmap");
-			}
 			
+			// TODO: Important - Instead of cropping the texture, use subTex
+			IRenderTexture textureRegion = AndroidContentService.cropTextureStatic(fontModel.getTexture(), rectSpriteSourceCoordsStatic);
 			
-			// TODO: Fix! Move resize logic into ContentService
-			IRenderTexture texture = fontModel.getTexture();
-			IBitmap bitmap = texture.getBitmap();
-			if(!(bitmap instanceof IAndroidBitmap)) {
-				throw new IllegalArgumentException("Bitmap type is not supported: use IAndroidBitmap");
-			}
-			IAndroidBitmap androidBitmap = (IAndroidBitmap) bitmap;
-			Bitmap spriteBitmap = androidBitmap.getBitmap();
-
-
-			spriteBitmap.getPixels(intArrayTextureBufferPixels, 0, rectSpriteSourceCoordsStatic.width(),
-					rectSpriteSourceCoordsStatic.left(),
-					rectSpriteSourceCoordsStatic.top(),
-					rectSpriteSourceCoordsStatic.width(),
-					rectSpriteSourceCoordsStatic.height());
-
-			bitmapTextureBuffer.setPixels(intArrayTextureBufferPixels, 0, rectSpriteSourceCoordsStatic.width(),
-					0,
-					0,
-					rectSpriteSourceCoordsStatic.width(),
-					rectSpriteSourceCoordsStatic.height());
-
-
-			AndroidBitmap regionBitmap = new AndroidBitmap(bitmapTextureBuffer);
-			IRenderTexture textureRegion = new Texture(regionBitmap)
-					.setTextureFormat(texture.getTextureFormat())
-					.setInternalFormat(texture.getInternalFormat())
-					.setDataType(texture.getDataType())
-					.setUnpackAlignment(texture.getUnpackAlignment())
-					.setFilter(texture.getFilterMin(), texture.getFilterMag())
-					.setWrap(texture.getWrapS(), texture.getWrapT());
-			
-
 			// Add the new texture (also binds it)
 			textureManager.addTexture(fontSprite, textureRegion);
+			finalTexture = textureRegion;
 		}
-
 		
 		
-		
+		// TODO: This is not needed anymore - test first then remove
 		// We assume we only have one size (max) for our buffer
-		float scalingHor = fontSprite.getSpriteset().getSpriteWidth() / (float) bitmapTextureBuffer.getWidth();
-		float scalingVer = fontSprite.getSpriteset().getSpriteHeight() / (float) bitmapTextureBuffer.getHeight();
+		float scalingHor = fontSprite.getSpriteset().getSpriteWidth() / (float) finalTexture.getBitmap().getWidth();
+		float scalingVer = fontSprite.getSpriteset().getSpriteHeight() / (float) finalTexture.getBitmap().getHeight();
 
 		// TODO: Reset the scaling to the previous after drawing?
 		// We apply the scaling on top of the scaling we can have because of rendering only part of a sprite
@@ -325,6 +270,5 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			return new GLSpriteFontDriver();
 		}
 	}
-	
 	
 }
