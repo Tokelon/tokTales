@@ -19,9 +19,10 @@ import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.TextureContainer;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.AbstractEngineService;
+import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
+import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.StorageException;
@@ -38,7 +39,7 @@ import com.tokelon.toktales.desktop.lwjgl.data.STBStandardImage;
 import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFont;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 
-public class DesktopContentService extends AbstractEngineService implements IDesktopContentService {
+public class DesktopContentService extends AbstractContentService implements IContentService {
 	
 	public static final String TAG = "DesktopContentService";
 	
@@ -331,47 +332,27 @@ public class DesktopContentService extends AbstractEngineService implements IDes
 	}
 
 	
-	@Override
-	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds) {
-		return cropTextureStatic(texture, bounds);
-	}
-	
+	// TODO: Remove and implement driver injection
 	public static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) {
-		IBitmap bitmap = cropBitmapStatic(texture.getBitmap(), bounds);
-		
-		Texture result = new Texture(bitmap);
-		result
-			.setTextureFormat(texture.getTextureFormat())
-			.setInternalFormat(texture.getInternalFormat())
-			.setDataType(texture.getDataType())
-			.setUnpackAlignment(texture.getUnpackAlignment())
-			.setFilter(texture.getFilterMin(), texture.getFilterMag())
-			.setWrap(texture.getWrapS(), texture.getWrapT());
-		
-		return result;
+		return AbstractContentService.cropTextureStatic(texture, bounds);
 	}
-
 	
 	@Override
 	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
-		return cropBitmap(bitmap, bounds);
-	}
-
-	public static IBitmap cropBitmapStatic(IBitmap bitmap, IRectangle2i bounds) {
-
-		int channels;
+		IBitmap result;
 		if(bitmap instanceof ISTBBitmap) {
-			ISTBBitmap stbImage =(ISTBBitmap) bitmap;
-			channels = stbImage.getChannels();
+			ISTBBitmap stbBitmap = (ISTBBitmap) bitmap;
+			result = cropBitmapStatic(stbBitmap, bounds);
 		}
 		else {
-			channels = getChannels(bitmap.getFormat());
-			if(channels == -1) {
-				// TODO: What?
-				channels = 0;
-			}
+			result = super.cropBitmap(bitmap, bounds);
 		}
-
+		
+		return result;
+	}
+	
+	public static IBitmap cropBitmapStatic(ISTBBitmap bitmap, IRectangle2i bounds) {
+		int channels = bitmap.getChannels();
 		
 		ByteBuffer cropBuffer = LWJGLBufferUtils.getWrapper().createByteBuffer(channels * bounds.width() * bounds.height());
 		
@@ -395,22 +376,7 @@ public class DesktopContentService extends AbstractEngineService implements IDes
 		STBStandardImage texImage = STBStandardImage.create(cropBuffer, bounds.width(), bounds.height(), channels);
 		return texImage;
 	}
-	
-	private static int getChannels(int format) {
-		switch (format) {
-		case IBitmap.FORMAT_ALPHA_8:
-			return 1;
-		case IBitmap.FORMAT_GREY_ALPHA_88:
-			return 2;
-		case IBitmap.FORMAT_RGB_888:
-			return 3;
-		case IBitmap.FORMAT_RGBA_8888:
-			return 4;
-		default:
-			return -1;
-		}
-	}
-	
+
 	/*
 	public static TextureImage cropTexture(TextureImage source, TRectangle bounds) {
 		ByteBuffer cropBuffer = BufferUtils.createByteBuffer(4 * bounds.width() * bounds.height());

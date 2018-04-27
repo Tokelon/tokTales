@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.InputStream;
 
 import com.tokelon.toktales.core.content.IAssetContainer;
+import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngineService;
+import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -66,5 +68,10 @@ public interface IContentService extends IEngineService {
 	public ITextureFont loadFont(IApplicationLocation location, String filename) throws ContentException;
 	
 	public ITextureFont loadFontFromFile(File file) throws ContentException;
+	
+	
+	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds);
+	
+	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds);
 	
 }

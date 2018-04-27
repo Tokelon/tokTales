@@ -9,16 +9,18 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.core.content.IAssetContainer;
+import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.TextureContainer;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.AbstractEngineService;
+import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
@@ -30,11 +32,12 @@ import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 
-public class AndroidContentService extends AbstractEngineService implements IContentService {
+public class AndroidContentService extends AbstractContentService implements IContentService {
 	
 	public static final String TAG = "AndroidContentService";
 
@@ -395,6 +398,58 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		font.initialize(typeface);
 		
 		return font;
+	}
+	
+	
+	// TODO: Remove and implement driver injection
+	public static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) {
+		return AbstractContentService.cropTextureStatic(texture, bounds);
+	}
+	
+	@Override
+	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
+		IBitmap result;
+		if(bitmap instanceof IAndroidBitmap) {
+			IAndroidBitmap androidWrapper = ((IAndroidBitmap) bitmap);
+			result = cropBitmapStatic(androidWrapper, bounds);
+		}
+		else {
+			result = super.cropBitmap(bitmap, bounds);
+		}
+		
+		return result;
+	}
+	
+	public static IAndroidBitmap cropBitmapStatic(IAndroidBitmap bitmap, IRectangle2i bounds) {
+		Bitmap androidBitmap = bitmap.getBitmap();
+		
+		Bitmap croppedBitmap = cropBitmapNative(androidBitmap, bounds);
+		return new AndroidBitmap(croppedBitmap);
+	}
+	
+	
+	private static Bitmap cropBitmapNative(Bitmap bitmap, IRectangle2i bounds) {
+		Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bounds.getWidth(), bounds.getHeight());
+		return croppedBitmap;
+	}
+	
+	private static Bitmap cropBitmapManual(Bitmap bitmap, IRectangle2i bounds) {
+		int[] pixels = new int[bounds.getWidth() * bounds.getHeight()];
+		Bitmap croppedBitmap = Bitmap.createBitmap(bounds.getWidth(), bounds.getHeight(), Config.ARGB_8888);
+		
+		bitmap.getPixels(pixels, 0, bounds.width(),
+				bounds.left(),
+				bounds.top(),
+				bounds.width(),
+				bounds.height());
+
+		croppedBitmap.setPixels(pixels, 0, bounds.width(),
+				0,
+				0,
+				bounds.width(),
+				bounds.height());
+		
+		return croppedBitmap;
 	}
 	
 }

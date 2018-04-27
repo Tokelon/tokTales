@@ -1,0 +1,88 @@
+package com.tokelon.toktales.core.engine.content;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import com.tokelon.toktales.core.content.BitmapImpl;
+import com.tokelon.toktales.core.content.IBitmap;
+import com.tokelon.toktales.core.engine.AbstractEngineService;
+import com.tokelon.toktales.core.game.model.IRectangle2i;
+import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.Texture;
+
+public abstract class AbstractContentService extends AbstractEngineService implements IContentService {
+
+	
+	@Override
+	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds) {
+		return cropTextureStatic(texture, bounds);
+	}
+
+	protected static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) { // TODO: Refactor not static
+		IBitmap bitmap = cropBitmapStatic(texture.getBitmap(), bounds);
+		
+		Texture result = new Texture(bitmap);
+		result
+			.setTextureFormat(texture.getTextureFormat())
+			.setInternalFormat(texture.getInternalFormat())
+			.setDataType(texture.getDataType())
+			.setUnpackAlignment(texture.getUnpackAlignment())
+			.setFilter(texture.getFilterMin(), texture.getFilterMag())
+			.setWrap(texture.getWrapS(), texture.getWrapT());
+		
+		return result;
+	}
+
+
+	@Override
+	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
+		return cropBitmap(bitmap, bounds);
+	}
+
+	private static IBitmap cropBitmapStatic(IBitmap bitmap, IRectangle2i bounds) { // TODO: Refactor not static
+		int channels = getChannels(bitmap.getFormat());
+		if(channels == -1) {
+			// TODO: What?
+			channels = 0;
+		}
+		
+		int capacity = channels * bounds.width() * bounds.height();
+		ByteBuffer cropBuffer = ByteBuffer.allocateDirect(capacity).order(ByteOrder.nativeOrder()); // TODO: Replace with IBufferUtils?
+
+		
+		byte[] arrayBuffer = new byte[channels * bounds.width()];
+		
+		for(int i = 0; i < bounds.height(); i++) {
+			
+			int srcPos = (channels * (i + bounds.top()) * bitmap.getWidth()) + 4 * bounds.left();
+			bitmap.getData().position(srcPos);
+			bitmap.getData().get(arrayBuffer);
+			
+			//int dstPos = (4 * i * source.getWidth());
+			//cropBuffer.position()
+			cropBuffer.put(arrayBuffer);
+		}
+		cropBuffer.position(0);
+		bitmap.getData().position(0);
+		
+
+		BitmapImpl result = new BitmapImpl(cropBuffer, bounds.width(), bounds.height(), bitmap.getFormat());
+		return result;
+	}
+	
+	private static int getChannels(int format) {
+		switch (format) {
+		case IBitmap.FORMAT_ALPHA_8:
+			return 1;
+		case IBitmap.FORMAT_GREY_ALPHA_88:
+			return 2;
+		case IBitmap.FORMAT_RGB_888:
+			return 3;
+		case IBitmap.FORMAT_RGBA_8888:
+			return 4;
+		default:
+			return -1;
+		}
+	}
+
+}
