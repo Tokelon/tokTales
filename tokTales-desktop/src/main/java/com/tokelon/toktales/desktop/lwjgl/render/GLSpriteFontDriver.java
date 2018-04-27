@@ -10,11 +10,15 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
@@ -24,7 +28,6 @@ import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteFontModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
-import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
@@ -67,8 +70,12 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
 	
 	
+	private final IContentService contentService;
 	
-	public GLSpriteFontDriver() {
+	@Inject
+	public GLSpriteFontDriver(IContentService contentService) {
+		this.contentService = contentService;
+		
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
 	
@@ -171,8 +178,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
 
 			
-			// TODO: Replace with instance method
-			IRenderTexture textureRegion = DesktopContentService.cropTextureStatic(fontModel.getTexture(), spriteSourceCoords);
+			IRenderTexture textureRegion = contentService.cropTexture(fontModel.getTexture(), spriteSourceCoords);
 			fontModel.getTextureManager().addTexture(fontSprite, textureRegion);
 		}
 		
@@ -232,7 +238,13 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	
 	public static class GLSpriteFontDriverFactory implements IRenderDriverFactory {
-
+		private final Provider<GLSpriteFontDriver> driverProvider;
+		
+		@Inject
+		public GLSpriteFontDriverFactory(Provider<GLSpriteFontDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
@@ -240,8 +252,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			// TODO: Use params ?
-			return new GLSpriteFontDriver();
+			return driverProvider.get();
 		}
 	}
 	

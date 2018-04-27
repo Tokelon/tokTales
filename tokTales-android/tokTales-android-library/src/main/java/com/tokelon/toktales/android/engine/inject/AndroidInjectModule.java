@@ -20,6 +20,7 @@ import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
+import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit.AndroidRenderToolkitFactory;
 import com.tokelon.toktales.android.render.opengl.GLBitmapDriver;
 import com.tokelon.toktales.android.render.opengl.GLBitmapFontDriver;
 import com.tokelon.toktales.android.render.opengl.GLKeyedTextureManager;
@@ -56,6 +57,8 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
+import com.tokelon.toktales.core.render.IRenderToolkit;
+import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
@@ -102,11 +105,23 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
 		
+		
 		bind(IGL11.class).to(AndroidGL11.class).in(Scopes.SINGLETON);
 		bind(IGL13.class).to(AndroidGL13.class).in(Scopes.SINGLETON);
 		bind(IGL14.class).to(AndroidGL14.class).in(Scopes.SINGLETON);
 		bind(IGL15.class).to(AndroidGL15.class).in(Scopes.SINGLETON);
 		bind(IGL20.class).to(AndroidGL20.class).in(Scopes.SINGLETON);
+		
+		bind(GLSpriteDriver.class);
+		bind(GLSpriteFontDriver.class);
+		bind(GLBitmapFontDriver.class);
+		bind(GLShapeDriver.class);
+		bind(GLBitmapDriver.class);
+		
+		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
+		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
+		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
+		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
 		
 		
 		/* Unused so far - everything under here */
@@ -118,8 +133,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
 		
-		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
-		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
 	}
 
 
@@ -134,18 +147,29 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		private final IRenderService renderService;
 		
 		@Inject
-		public ProviderIRenderService(AndroidRenderService androidRenderService) {
+		public ProviderIRenderService(
+				AndroidRenderService androidRenderService,
+				IKeyedTextureManagerFactory keyedTextureManagerFactory,
+				ITextureManagerFactory textureManagerFactory,
+				IRenderToolkitFactory renderToolkitFactory,
+				GLSpriteDriver.GLSpriteDriverFactory glSpriteDriverFactory,
+				GLSpriteFontDriver.GLSpriteFontDriverFactory glSpriteFontDriverFactory,
+				GLBitmapFontDriver.GLBitmapFontDriverFactory glBitmapFontDriverFactory,
+				GLShapeDriver.GLShapeDriverFactory glShapeDriverFactory,
+				GLBitmapDriver.GLBitmapDriverFactory glBitmapDriverFactory
+		) {
+			
 			this.renderService = androidRenderService;
 			
 			IRenderAccess renderAccess = androidRenderService.getRenderAccess();
-			renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLKeyedTextureManagerFactory());
-			renderAccess.registerTextureManager(new GLTextureManager.GLTextureManagerFactory());
-			renderAccess.registerToolkit(new AndroidRenderToolkit.AndroidRenderToolkitFactory());
-			renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory());
-			renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory());
-			renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory());
-			renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory());
-			renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory());
+			renderAccess.registerKeyedTextureManager(keyedTextureManagerFactory);
+			renderAccess.registerTextureManager(textureManagerFactory);
+			renderAccess.registerToolkit(renderToolkitFactory);
+			renderAccess.registerDriver(glSpriteDriverFactory);
+			renderAccess.registerDriver(glSpriteFontDriverFactory);
+			renderAccess.registerDriver(glBitmapFontDriverFactory);
+			renderAccess.registerDriver(glShapeDriverFactory);
+			renderAccess.registerDriver(glBitmapDriverFactory);
 		}
 		
 		@Override
@@ -185,6 +209,5 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			return storageService;
 		}
 	}
-
 
 }

@@ -22,6 +22,8 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
+import com.tokelon.toktales.core.render.IRenderToolkit;
+import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
@@ -34,6 +36,7 @@ import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
+import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapFontDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLKeyedTextureManager;
@@ -94,6 +97,17 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(IGL15.class).to(DesktopGL15.class).in(Scopes.SINGLETON);
 		bind(IGL20.class).to(DesktopGL20.class).in(Scopes.SINGLETON);
 		
+		bind(GLSpriteDriver.class);
+		bind(GLSpriteFontDriver.class);
+		bind(GLBitmapFontDriver.class);
+		bind(GLShapeDriver.class);
+		bind(GLBitmapDriver.class);
+		
+		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
+		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
+		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
+		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
+		
 		
 		/* Unused so far - everything under here */
 
@@ -105,9 +119,7 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
-		
-		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
-		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
+
 	}
 
 	
@@ -122,18 +134,29 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	public static class ProviderIRenderService implements Provider<IRenderService> {
 		private final IRenderService renderService;
 		@Inject
-		public ProviderIRenderService(DesktopRenderService desktopRenderService) {
+		public ProviderIRenderService(
+				DesktopRenderService desktopRenderService,
+				IKeyedTextureManagerFactory keyedTextureManagerFactory,
+				ITextureManagerFactory textureManagerFactory,
+				IRenderToolkitFactory renderToolkitFactory,
+				GLSpriteDriver.GLSpriteDriverFactory glSpriteDriverFactory,
+				GLSpriteFontDriver.GLSpriteFontDriverFactory glSpriteFontDriverFactory,
+				GLBitmapFontDriver.GLBitmapFontDriverFactory glBitmapFontDriverFactory,
+				GLShapeDriver.GLShapeDriverFactory glShapeDriverFactory,
+				GLBitmapDriver.GLBitmapDriverFactory glBitmapDriverFactory
+		) {
+
 			this.renderService = desktopRenderService;
 
 			IRenderAccess renderAccess = desktopRenderService.getRenderAccess();
-			renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLKeyedTextureManagerFactory());
-			renderAccess.registerTextureManager(new GLTextureManager.GLTextureManagerFactory());
-			renderAccess.registerToolkit(new DesktopRenderToolkit.DesktopRenderToolkitFactory());
-			renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory());
-			renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory());
-			renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory());
-			renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory());
-			renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory());
+			renderAccess.registerKeyedTextureManager(keyedTextureManagerFactory);
+			renderAccess.registerTextureManager(textureManagerFactory);
+			renderAccess.registerToolkit(renderToolkitFactory);
+			renderAccess.registerDriver(glSpriteDriverFactory);
+			renderAccess.registerDriver(glSpriteFontDriverFactory);
+			renderAccess.registerDriver(glBitmapFontDriverFactory);
+			renderAccess.registerDriver(glShapeDriverFactory);
+			renderAccess.registerDriver(glBitmapDriverFactory);
 		}
 		
 		@Override

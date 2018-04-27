@@ -90,11 +90,11 @@ public class AndroidSetup extends BaseSetup {
 		renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLKeyedTextureManagerFactory());
 		renderAccess.registerTextureManager(new GLTextureManager.GLTextureManagerFactory());
 		renderAccess.registerToolkit(new AndroidRenderToolkit.AndroidRenderToolkitFactory());
-		renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory());
-		renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory());
-		renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory());
-		renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory());
-		renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory());
+		renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory(() -> new GLSpriteDriver(androidContentService)));
+		renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory(() -> new GLSpriteFontDriver(androidContentService)));
+		renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory(() -> new GLBitmapFontDriver()));
+		renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory(() -> new GLShapeDriver()));
+		renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory(() -> new GLBitmapDriver()));
 		
 		
 		AndroidInputService androidInputService = new AndroidInputService();

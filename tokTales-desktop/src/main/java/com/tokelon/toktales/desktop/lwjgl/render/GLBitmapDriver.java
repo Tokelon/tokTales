@@ -10,6 +10,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
@@ -67,6 +70,7 @@ public class GLBitmapDriver implements IRenderDriver {
 	private ShaderProgram mShader;
 	
 	
+	@Inject
 	public GLBitmapDriver() {
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 		
@@ -202,7 +206,13 @@ public class GLBitmapDriver implements IRenderDriver {
 	
 	
 	public static class GLBitmapDriverFactory implements IRenderDriverFactory {
-
+		private final Provider<GLBitmapDriver> driverProvider;
+		
+		@Inject
+		public GLBitmapDriverFactory(Provider<GLBitmapDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
@@ -210,9 +220,8 @@ public class GLBitmapDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			return new GLBitmapDriver();
+			return driverProvider.get();
 		}
 	}
-	
 
 }

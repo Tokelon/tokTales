@@ -3,6 +3,9 @@ package com.tokelon.toktales.android.render.opengl;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
@@ -50,16 +53,14 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	
 
 	
+	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
+
 
 	private ShaderProgram mShader;
 	
 	private GLSpriteMesh spriteMesh;
 
-	
-	
-	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
-	
-
+	@Inject
 	public GLBitmapFontDriver() {
 
 		float[] vertices = new float[]
@@ -215,7 +216,13 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	
 	
 	public static class GLBitmapFontDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLBitmapFontDriver> driverProvider;
 
+		@Inject
+		public GLBitmapFontDriverFactory(Provider<GLBitmapFontDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
@@ -223,9 +230,8 @@ public class GLBitmapFontDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			return new GLBitmapFontDriver();
+			return driverProvider.get();
 		}
 	}
-	
 	
 }

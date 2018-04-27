@@ -3,14 +3,17 @@ package com.tokelon.toktales.android.render.opengl;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
@@ -60,9 +63,14 @@ public class GLSpriteDriver implements IRenderDriver {
 	private ShaderProgram mShader;
 	
 	private GLSpriteMesh spriteMesh;
-	
 
-	public GLSpriteDriver() {
+
+	private final IContentService contentService;
+	
+	@Inject
+	public GLSpriteDriver(IContentService contentService) {
+		this.contentService = contentService;
+		
 		// TRIANGLE_FAN
 		/*
 		mFloatArrayVertices = new float[]
@@ -73,7 +81,6 @@ public class GLSpriteDriver implements IRenderDriver {
 					1.0f, 0.0f, 0.0f
 				};
 		*/
-
 		float[] vertices = new float[]	// THIS is the correct one
 				{
 					0.0f,  1.0f, 0.0f,
@@ -238,7 +245,7 @@ public class GLSpriteDriver implements IRenderDriver {
 				 *
 				 * TODO: Important - Instead of cropping the texture, use subTex
 				 */
-				IRenderTexture textureRegion = AndroidContentService.cropTextureStatic(spriteModel.getTexture(), rectSpriteSourceCoordsStatic);
+				IRenderTexture textureRegion = contentService.cropTexture(spriteModel.getTexture(), rectSpriteSourceCoordsStatic);
 				
 				// Add the new texture (also binds it)
 				textureManager.addTexture(sprite, textureRegion);
@@ -365,7 +372,13 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	
 	public static class GLSpriteDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLSpriteDriver> driverProvider;
 
+		@Inject
+		public GLSpriteDriverFactory(Provider<GLSpriteDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
@@ -373,7 +386,7 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			return new GLSpriteDriver();
+			return driverProvider.get();
 		}
 	}
 	

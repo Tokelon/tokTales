@@ -10,6 +10,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
@@ -66,7 +69,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
 	
 	
-	
+	@Inject
 	public GLBitmapFontDriver() {
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
@@ -218,6 +221,12 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	
 	
 	public static class GLBitmapFontDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLBitmapFontDriver> driverProvider;
+		
+		@Inject
+		public GLBitmapFontDriverFactory(Provider<GLBitmapFontDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
 
 		@Override
 		public boolean supports(String target) {
@@ -226,10 +235,8 @@ public class GLBitmapFontDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			// TODO: Use params ?
-			return new GLBitmapFontDriver();
+			return driverProvider.get();
 		}
 	}
-	
 	
 }

@@ -3,11 +3,12 @@ package com.tokelon.toktales.android.render.opengl;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
-import android.opengl.GLES20;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
@@ -23,6 +24,8 @@ import com.tokelon.toktales.core.render.model.ITriangleModel;
 import com.tokelon.toktales.core.render.model.LineModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
+
+import android.opengl.GLES20;
 
 public class GLShapeDriver implements IRenderDriver {
 
@@ -68,6 +71,7 @@ public class GLShapeDriver implements IRenderDriver {
 	private ShaderProgram mShader;
 	
 	
+	@Inject
 	public GLShapeDriver() {
 		//lineNativeCoordinateBuffer = BufferUtils.createFloatBuffer(6);
 		//lineCoordinateBuffer = BufferUtils.createFloatBuffer(12);
@@ -531,7 +535,13 @@ public class GLShapeDriver implements IRenderDriver {
 	
 	
 	public static class GLShapeDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLShapeDriver> driverProvider;
 
+		@Inject
+		public GLShapeDriverFactory(Provider<GLShapeDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().contains(target);
@@ -539,10 +549,11 @@ public class GLShapeDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			return new GLShapeDriver();
+			return driverProvider.get();
 		}
 	}
 
+	
 	private class DrawLineStruct {
 		
 		public Vector2f a = new Vector2f();

@@ -10,11 +10,15 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
@@ -25,7 +29,6 @@ import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
-import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
@@ -63,16 +66,20 @@ public class GLSpriteDriver implements IRenderDriver {
 	*/
 	
 	
-	private final FloatBuffer textureCoordinateBuffer;
-	
+	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
+
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
-	
-	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
-	
-	
-	public GLSpriteDriver() {
+
+	private final FloatBuffer textureCoordinateBuffer;
+
+	private final IContentService contentService;
+
+	@Inject
+	public GLSpriteDriver(IContentService contentService) {
+		this.contentService = contentService;
+		
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
 	
@@ -188,11 +195,8 @@ public class GLSpriteDriver implements IRenderDriver {
 				
 				spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
 				
-				//if(spriteSourceCoords.width() > )
-
 				
-				// TODO: Replace with instance method
-				IRenderTexture textureRegion = DesktopContentService.cropTextureStatic(spriteModel.getTexture(), spriteSourceCoords);
+				IRenderTexture textureRegion = contentService.cropTexture(spriteModel.getTexture(), spriteSourceCoords);
 				spriteModel.getTextureManager().addTexture(sprite, textureRegion);
 			}
 			
@@ -265,7 +269,13 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	
 	public static class GLSpriteDriverFactory implements IRenderDriverFactory {
-
+		private final Provider<GLSpriteDriver> driverProvider;
+		
+		@Inject
+		public GLSpriteDriverFactory(Provider<GLSpriteDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
@@ -273,8 +283,7 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			// TODO: Use params ?
-			return new GLSpriteDriver();
+			return driverProvider.get();
 		}
 	}
 	

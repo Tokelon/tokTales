@@ -86,11 +86,11 @@ public class DesktopSetup extends BaseSetup {
 		renderAccess.registerKeyedTextureManager(new GLKeyedTextureManager.GLKeyedTextureManagerFactory());
 		renderAccess.registerTextureManager(new GLTextureManager.GLTextureManagerFactory());
 		renderAccess.registerToolkit(new DesktopRenderToolkit.DesktopRenderToolkitFactory());
-		renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory());
-		renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory());
-		renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory());
-		renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory());
-		renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory());
+		renderAccess.registerDriver(new GLSpriteDriver.GLSpriteDriverFactory(() -> new GLSpriteDriver(desktopContentService)));
+		renderAccess.registerDriver(new GLSpriteFontDriver.GLSpriteFontDriverFactory(() -> new GLSpriteFontDriver(desktopContentService)));
+		renderAccess.registerDriver(new GLBitmapFontDriver.GLBitmapFontDriverFactory(() -> new GLBitmapFontDriver()));
+		renderAccess.registerDriver(new GLShapeDriver.GLShapeDriverFactory(() -> new GLShapeDriver()));
+		renderAccess.registerDriver(new GLBitmapDriver.GLBitmapDriverFactory(() -> new GLBitmapDriver()));
 		
 		
 		DesktopInputService desktopInputService = new DesktopInputService();

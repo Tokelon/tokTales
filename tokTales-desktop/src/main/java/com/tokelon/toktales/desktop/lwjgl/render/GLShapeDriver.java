@@ -14,6 +14,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -86,6 +89,7 @@ public class GLShapeDriver implements IRenderDriver {
 	private ShaderProgram mShader;
 	
 	
+	@Inject
 	public GLShapeDriver() {
 		lineNativeCoordinateBuffer = BufferUtils.createFloatBuffer(6);
 		lineCoordinateBuffer = BufferUtils.createFloatBuffer(12);
@@ -755,7 +759,13 @@ public class GLShapeDriver implements IRenderDriver {
 	
 	
 	public static class GLShapeDriverFactory implements IRenderDriverFactory {
-
+		private final Provider<GLShapeDriver> driverProvider;
+		
+		@Inject
+		public GLShapeDriverFactory(Provider<GLShapeDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().contains(target);
@@ -763,11 +773,12 @@ public class GLShapeDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			return new GLShapeDriver();
+			return driverProvider.get();
 		}
 	}
 
-	private class DrawLineStruct {
+	
+	private static class DrawLineStruct {
 		
 		public Vector2f a = new Vector2f();
 		public Vector2f b = new Vector2f();

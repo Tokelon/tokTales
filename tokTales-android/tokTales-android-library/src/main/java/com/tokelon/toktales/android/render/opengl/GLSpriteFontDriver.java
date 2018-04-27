@@ -3,14 +3,17 @@ package com.tokelon.toktales.android.render.opengl;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
@@ -63,11 +66,14 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
 	
 	private ISprite lastTileSprite;
-	
-	
 
-	public GLSpriteFontDriver() {
 
+	private final IContentService contentService;
+	
+	@Inject
+	public GLSpriteFontDriver(IContentService contentService) {
+		this.contentService = contentService;
+		
 		float[] vertices = new float[]
 				{
 					0.0f,  1.0f, 0.0f,
@@ -174,7 +180,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 			
 			// TODO: Important - Instead of cropping the texture, use subTex
-			IRenderTexture textureRegion = AndroidContentService.cropTextureStatic(fontModel.getTexture(), rectSpriteSourceCoordsStatic);
+			IRenderTexture textureRegion = contentService.cropTexture(fontModel.getTexture(), rectSpriteSourceCoordsStatic);
 			
 			// Add the new texture (also binds it)
 			textureManager.addTexture(fontSprite, textureRegion);
@@ -259,7 +265,13 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	
 	public static class GLSpriteFontDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLSpriteFontDriver> driverProvider;
 
+		@Inject
+		public GLSpriteFontDriverFactory(Provider<GLSpriteFontDriver> driverProvider) {
+			this.driverProvider = driverProvider;
+		}
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
@@ -267,7 +279,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 		@Override
 		public IRenderDriver newDriver(IParams params) {
-			return new GLSpriteFontDriver();
+			return driverProvider.get();
 		}
 	}
 	
