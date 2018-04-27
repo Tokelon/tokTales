@@ -7,7 +7,7 @@ public interface IKeyedTextureManager<K> {
 	
 	public boolean hasTextureFor(K key);
 	
-	//public IRenderTexture getTextureFor(K key); // TODO: Implement
+	public IRenderTexture getTextureFor(K key);
 	
 	public void removeTextureFor(K key);
 	

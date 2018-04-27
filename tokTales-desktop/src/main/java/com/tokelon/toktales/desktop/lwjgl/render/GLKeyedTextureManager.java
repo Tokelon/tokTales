@@ -16,7 +16,7 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	public static final String TAG = "GLKeyedTextureManager";
 	
 	
-	private final Map<K, Integer> textureMap = new HashMap<K, Integer>();
+	private final Map<K, TextureEntry> textureMap = new HashMap<>();
 	
 	
 	private final int glTextureIndex;
@@ -42,11 +42,11 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 		}
 		
 		// Generate a new texture
-		int textureId = GL11.glGenTextures();
+		int textureLocation = GL11.glGenTextures();
 		
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0 + glTextureIndex);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureLocation);
 		
 		
 		int unpackAlignment = texture.getUnpackAlignment();
@@ -79,12 +79,8 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, texture.getWrapT()); //GL_CLAMP_TO_EDGE
 		
 		
-		textureMap.put(key, textureId);
-	}
-	
-	
-	public int getNameForTexture(K key) {
-		return textureMap.get(key);
+		TextureEntry entry = new TextureEntry(texture, textureLocation);
+		textureMap.put(key, entry);
 	}
 	
 	
@@ -95,15 +91,20 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	
 	@Override
+	public IRenderTexture getTextureFor(K key) {
+		TextureEntry entry = textureMap.get(key);
+		return entry == null ? null : entry.texture;
+	}
+	
+	
+	@Override
 	public void removeTextureFor(K key) {
-		// TODO: Test this
-
-		Integer texName = textureMap.remove(key);
-		if(texName == null) {
-			throw new IllegalArgumentException("Cannot bind texture: Key does not have texture cached");
+		TextureEntry textureEntry = textureMap.remove(key);
+		if(textureEntry == null) {
+			throw new IllegalArgumentException("Cannot delete texture: texture not in cache");
 		}
 		
-		deleteTexture(texName);
+		deleteTexture(textureEntry.location);
 	}
 	
 	private void deleteTexture(int texture) {
@@ -113,17 +114,16 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	@Override
 	public void bindTextureFor(K key) {
-		Integer texName = textureMap.get(key);
-		if(texName == null) {
-			throw new IllegalArgumentException("Cannot bind texture: Key does not have texture cached");
+		TextureEntry textureEntry = textureMap.get(key);
+		if(textureEntry == null) {
+			throw new IllegalArgumentException("Cannot bind texture: texture not in cache");
 		}
 		
-		bindTexture(texName);
+		bindTexture(textureEntry.location);
 	}
 	
 	
 	public void bindTexture(int textureId) {
-		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0 + glTextureIndex);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
 	}
@@ -131,8 +131,8 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	@Override
 	public void clear() {
-		for(Integer texture: textureMap.values()) {
-			deleteTexture(texture);
+		for(TextureEntry entry: textureMap.values()) {
+			deleteTexture(entry.location);
 		}
 		
 		textureMap.clear();
@@ -142,7 +142,17 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	public int getTextureIndex() {
 		return glTextureIndex;
 	}
+
 	
+	protected static class TextureEntry {
+		protected final IRenderTexture texture;
+		protected final int location;
+		
+		public TextureEntry(IRenderTexture texture, int location) {
+			this.texture = texture;
+			this.location = location;
+		}
+	}
 
 	
 	public static class GLKeyedTextureManagerFactory implements IKeyedTextureManagerFactory {
