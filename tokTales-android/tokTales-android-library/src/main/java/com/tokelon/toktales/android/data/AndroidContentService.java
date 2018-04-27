@@ -401,17 +401,12 @@ public class AndroidContentService extends AbstractContentService implements ICo
 	}
 	
 	
-	// TODO: Remove and implement driver injection
-	public static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) {
-		return AbstractContentService.cropTextureStatic(texture, bounds);
-	}
-	
 	@Override
 	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
 		IBitmap result;
 		if(bitmap instanceof IAndroidBitmap) {
-			IAndroidBitmap androidWrapper = ((IAndroidBitmap) bitmap);
-			result = cropBitmapStatic(androidWrapper, bounds);
+			IAndroidBitmap androidWrapper = (IAndroidBitmap) bitmap;
+			result = cropAndroidBitmap(androidWrapper, bounds);
 		}
 		else {
 			result = super.cropBitmap(bitmap, bounds);
@@ -420,7 +415,7 @@ public class AndroidContentService extends AbstractContentService implements ICo
 		return result;
 	}
 	
-	public static IAndroidBitmap cropBitmapStatic(IAndroidBitmap bitmap, IRectangle2i bounds) {
+	private static IAndroidBitmap cropAndroidBitmap(IAndroidBitmap bitmap, IRectangle2i bounds) {
 		Bitmap androidBitmap = bitmap.getBitmap();
 		
 		Bitmap croppedBitmap = cropBitmapNative(androidBitmap, bounds);

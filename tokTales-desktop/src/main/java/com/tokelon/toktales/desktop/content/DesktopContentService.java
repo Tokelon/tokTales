@@ -332,17 +332,12 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	}
 
 	
-	// TODO: Remove and implement driver injection
-	public static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) {
-		return AbstractContentService.cropTextureStatic(texture, bounds);
-	}
-	
 	@Override
 	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
 		IBitmap result;
 		if(bitmap instanceof ISTBBitmap) {
 			ISTBBitmap stbBitmap = (ISTBBitmap) bitmap;
-			result = cropBitmapStatic(stbBitmap, bounds);
+			result = cropSTBBitmap(stbBitmap, bounds);
 		}
 		else {
 			result = super.cropBitmap(bitmap, bounds);
@@ -351,7 +346,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		return result;
 	}
 	
-	public static IBitmap cropBitmapStatic(ISTBBitmap bitmap, IRectangle2i bounds) {
+	private static IBitmap cropSTBBitmap(ISTBBitmap bitmap, IRectangle2i bounds) {
 		int channels = bitmap.getChannels();
 		
 		ByteBuffer cropBuffer = LWJGLBufferUtils.getWrapper().createByteBuffer(channels * bounds.width() * bounds.height());

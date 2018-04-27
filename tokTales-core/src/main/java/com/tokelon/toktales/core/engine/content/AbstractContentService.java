@@ -15,12 +15,8 @@ public abstract class AbstractContentService extends AbstractEngineService imple
 	
 	@Override
 	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds) {
-		return cropTextureStatic(texture, bounds);
-	}
+		IBitmap bitmap = cropBitmap(texture.getBitmap(), bounds);
 
-	protected static IRenderTexture cropTextureStatic(IRenderTexture texture, IRectangle2i bounds) { // TODO: Refactor not static
-		IBitmap bitmap = cropBitmapStatic(texture.getBitmap(), bounds);
-		
 		Texture result = new Texture(bitmap);
 		result
 			.setTextureFormat(texture.getTextureFormat())
@@ -36,10 +32,6 @@ public abstract class AbstractContentService extends AbstractEngineService imple
 
 	@Override
 	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
-		return cropBitmap(bitmap, bounds);
-	}
-
-	private static IBitmap cropBitmapStatic(IBitmap bitmap, IRectangle2i bounds) { // TODO: Refactor not static
 		int channels = getChannels(bitmap.getFormat());
 		if(channels == -1) {
 			// TODO: What?
