@@ -63,7 +63,7 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 		// Set the texture
 		IBitmap textureImage = texture.getBitmap();
         if((textureImage instanceof IAndroidBitmap)) {
-        	IAndroidBitmap bitmapImage = (IAndroidBitmap) texture;
+        	IAndroidBitmap bitmapImage = (IAndroidBitmap) textureImage;
     		Bitmap bitmap = bitmapImage.getBitmap();
     		
     		GLUtils.texImage2D(
