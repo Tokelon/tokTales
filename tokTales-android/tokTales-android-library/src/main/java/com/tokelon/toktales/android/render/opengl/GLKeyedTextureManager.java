@@ -6,7 +6,6 @@ import java.util.Map;
 import com.tokelon.toktales.android.data.IAndroidBitmap;
 import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.render.IKeyedTextureManager;
-import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.util.IParams;
 
@@ -19,20 +18,12 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	public static final String TAG = "GLKeyedTextureManager";
 	
 	
+	private final int managingTextureIndex = 1;
+	
 	private final Map<K, TextureEntry> textureMap = new HashMap<>();
 	
 	private final int[] texNameArrayCreate = new int[1];
 	private final int[] texNameArrayDelete = new int[1];
-	
-
-	private final int glTextureIndex;
-
-	/**
-	 * @param glTextureIndex Must be one of i of GLES20.GL_TEXTUREi
-	 */
-	public GLKeyedTextureManager(int glTextureIndex) {
-		this.glTextureIndex = glTextureIndex;
-	}
 	
 	
 	/** Also binds the texture.
@@ -43,7 +34,7 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	@Override
 	public void addTexture(K key, IRenderTexture texture) {
 		if(key == null || texture == null) {
-			
+			throw new NullPointerException();
 		}
 		
 		// Generate a new texture
@@ -52,7 +43,7 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 		
         
         // Bind texture
-		GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + glTextureIndex);
+		GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + managingTextureIndex);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureLocation);
 
 
@@ -137,17 +128,17 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	
 	@Override
-	public void bindTextureFor(K key) {
+	public void bindTextureFor(K key, int textureIndex) {
 		TextureEntry textureEntry = textureMap.get(key);
 		if(textureEntry == null) {
 			throw new IllegalArgumentException("Cannot bind texture: texture not in cache");
 		}
 		
-		bindTexture(textureEntry.location);
+		bindTexture(textureEntry.location, textureIndex);
 	}
 	
-	public void bindTexture(int textureName) {
-		GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + glTextureIndex);
+	public void bindTexture(int textureName, int textureIndex) {
+		GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + textureIndex);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureName);
 	}
 	
@@ -159,12 +150,6 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 		}
 		
 		textureMap.clear();
-	}
-	
-	
-	@Override
-	public int getTextureIndex() {
-		return glTextureIndex;
 	}
 	
 	
@@ -180,11 +165,10 @@ public class GLKeyedTextureManager<K> implements IKeyedTextureManager<K> {
 	
 	
 	public static class GLKeyedTextureManagerFactory implements IKeyedTextureManagerFactory {
-		// TODO: Inject OpenGLUtils and do not use statically, also replace in all other texture managers
 
 		@Override
 		public <T> IKeyedTextureManager<T> newKeyedTextureManager(Class<T> keyClass, IParams params) {
-			return new GLKeyedTextureManager<T>(OpenGLUtils.aquireGLTextureIndex());
+			return new GLKeyedTextureManager<T>();
 		}
 	}
 	

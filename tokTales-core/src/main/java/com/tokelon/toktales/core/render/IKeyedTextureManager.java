@@ -1,8 +1,13 @@
 package com.tokelon.toktales.core.render;
 
+import com.tokelon.toktales.core.util.IParams;
+
 public interface IKeyedTextureManager<K> {
+	
+	
+	public void bindTextureFor(K key, int textureIndex);
 
-
+	
 	public void addTexture(K key, IRenderTexture texture);
 	
 	public boolean hasTextureFor(K key);
@@ -12,11 +17,12 @@ public interface IKeyedTextureManager<K> {
 	public void removeTextureFor(K key);
 	
 	public void clear();
+
 	
 	
-	// TODO: Pass the texture index that should be used, instead of having a static one?
-	public void bindTextureFor(K key);
-	
-	public int getTextureIndex();
+	public interface IKeyedTextureManagerFactory {
+		
+		public <T> IKeyedTextureManager<T> newKeyedTextureManager(Class<T> keyClass, IParams params);
+	}
 	
 }

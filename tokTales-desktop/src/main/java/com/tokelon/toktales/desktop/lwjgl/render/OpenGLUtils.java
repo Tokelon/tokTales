@@ -6,16 +6,7 @@ import com.tokelon.toktales.core.engine.TokTales;
 
 public final class OpenGLUtils {
 	
-	
 	private OpenGLUtils() {}
-
-	
-	private static int textureCounter = 0;
-	
-
-	public synchronized static int aquireGLTextureIndex() {
-		return textureCounter++;
-	}
 
 	
 	
@@ -31,7 +22,6 @@ public final class OpenGLUtils {
 		if(lastError != GL11.GL_NO_ERROR) {
 			throw new RuntimeException(tag + " | glError: " +lastError);
 		}
-		
 	}
 	
 }

@@ -12,8 +12,6 @@ public final class OpenGLUtils {
 	
 	private OpenGLUtils() {}
 
-	private static int textureCounter = 0;
-	
 	
 	
 	public static FloatBuffer floatValuesAsBuffer(float[] values) {
@@ -42,12 +40,5 @@ public final class OpenGLUtils {
 			throw new RuntimeException(tag + " | glError: " +lastError);
 		}
 	}
-	
-	
-	public synchronized static int aquireGLTextureIndex() {
-		return textureCounter++;
-		
-	}
-		
 	
 }
