@@ -52,8 +52,10 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.World;
+import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.GLBufferUtils;
 import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
+import com.tokelon.toktales.core.render.opengl.gl20.GLTextureDriver;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.GLFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.GLProgram;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.GLShader;
@@ -149,6 +151,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGLFactory.class).to(GLFactory.class);
 		bind(IGLProgram.class).to(GLProgram.class);
 		bind(IGLShader.class).to(GLShader.class);
+		bind(ITextureDriver.class).to(GLTextureDriver.class);
 		
 		
 		// Tools
