@@ -1,11 +1,11 @@
 package com.tokelon.toktales.test.core.game.states.userstate;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 
 public class UserGamestate extends BaseGamestate {
 
@@ -23,8 +23,7 @@ public class UserGamestate extends BaseGamestate {
 		
 		UserGamestateControlHandler controlHandler = new UserGamestateControlHandler(this);
 		
-		ISurfaceHandler surfaceHandler = getEngineContext().getEngine().getRenderService().getSurfaceHandler();
-		UserGamestateRender render = new UserGamestateRender(surfaceHandler, this);
+		UserGamestateRender render = new UserGamestateRender(new DefaultTextureCoordinator(getGame().getContentManager().getTextureManager()), this);
 		
 		
 		super.initStateDependencies(render, defaultInputHandler, defaultControlScheme, controlHandler);

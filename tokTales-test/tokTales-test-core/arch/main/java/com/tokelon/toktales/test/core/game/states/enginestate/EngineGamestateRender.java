@@ -3,28 +3,21 @@ package com.tokelon.toktales.test.core.game.states.enginestate;
 import javax.inject.Inject;
 
 import com.google.inject.assistedinject.Assisted;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.screen.AbstractStateRender;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public class EngineGamestateRender extends AbstractStateRender implements IEngineGamestateRender {
 
 	
-	private final ISurfaceHandler surfaceHandler;
 	private final IEngineGamestate gamestate;
 
 	@Inject
-	public EngineGamestateRender(@Assisted ISurfaceHandler surfaceHandler, @Assisted IEngineGamestate gamestate) {
-		super(surfaceHandler);
+	public EngineGamestateRender(ITextureCoordinator textureCoordinator, @Assisted IEngineGamestate gamestate) {
+		super(textureCoordinator);
 		
-		this.surfaceHandler = surfaceHandler;
 		this.gamestate = gamestate;
 	}
 	
-	
-	public ISurfaceHandler getSurfaceHandler() {
-		return surfaceHandler;
-	}
-
 	public IEngineGamestate getGamestate() {
 		return gamestate;
 	}
@@ -53,6 +46,5 @@ public class EngineGamestateRender extends AbstractStateRender implements IEngin
 		// TODO Auto-generated method stub
 
 	}
-	
 
 }

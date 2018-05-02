@@ -1,13 +1,13 @@
 package com.tokelon.toktales.test.core.game.states.userstate;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.screen.AbstractStateRender;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public class UserGamestateRender extends AbstractStateRender {
 
-	public UserGamestateRender(ISurfaceHandler surfaceHandler, IGameState gamestate) {
-		super(surfaceHandler);
+	public UserGamestateRender(ITextureCoordinator textureCoordinator, IGameState gamestate) {
+		super(textureCoordinator);
 	}
 
 	

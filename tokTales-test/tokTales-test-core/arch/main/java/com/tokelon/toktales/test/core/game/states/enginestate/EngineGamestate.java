@@ -2,7 +2,6 @@ package com.tokelon.toktales.test.core.game.states.enginestate;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IControlHandler;
@@ -44,8 +43,7 @@ public class EngineGamestate extends BaseGamestate implements IEngineGamestate {
 			IControlHandler defaultControlHandler
 	) {
 		
-		ISurfaceHandler surfaceHandler = getEngineContext().getEngine().getRenderService().getSurfaceHandler();
-		IEngineGamestateRender stateRender = stateRenderFactory.create(surfaceHandler, this);
+		IEngineGamestateRender stateRender = stateRenderFactory.create(this);
 		
 		IControlHandler stateControlHandler = stateControlHandlerFactory.create(this);
 		

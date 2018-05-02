@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.google.inject.Injector;
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestateControlHandler;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestateRender;
@@ -46,12 +45,9 @@ public class TestCoreStateInjection {
 	public void EngineGamestateInjection_ShouldRespectScope() {
 		Injector injector = CoreTestStatesInjectModule.createCoreStatesInjector();
 		
-		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 		EngineGamestate gamestate = injector.getInstance(EngineGamestate.class);
 		
-		assertSame(gamestate, ((EngineGamestateRender)gamestate.getStateRender()).getGamestate());
-		assertSame(engineContext.getEngine().getRenderService().getSurfaceHandler(), ((EngineGamestateRender)gamestate.getStateRender()).getSurfaceHandler());
-		
+		assertSame(gamestate, ((EngineGamestateRender)gamestate.getStateRender()).getGamestate());		
 		assertSame(gamestate, ((EngineGamestateControlHandler)gamestate.getStateControlHandler()).getGamestate());
 	}
 	
