@@ -8,8 +8,8 @@ import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
-import com.tokelon.toktales.core.game.graphic.ISpriteGraphic;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic.IGraphicType;
+import com.tokelon.toktales.core.game.graphic.ISpriteGraphic;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
@@ -18,14 +18,13 @@ import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.model.map.MapPositionImpl;
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
-import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement.IElementType;
+import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
 import com.tokelon.toktales.core.game.model.map.predef.IGroundElement;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
@@ -55,8 +54,6 @@ public class MapRenderer implements IMapRenderer {
 	
 	private final DrawingMeta dmeta = new DrawingMeta();
 
-	
-	private IKeyedTextureManager<ISprite> mTextureManager;
 	
 	private IRenderDriver spriteDriver;
 	private final SpriteModel spriteModel = new SpriteModel();
@@ -88,16 +85,8 @@ public class MapRenderer implements IMapRenderer {
 		
 		spriteDriver.create();
 		
-		
-		
-		mTextureManager = mGamestate.getEngine().getRenderService().getRenderAccess().requestKeyedTextureManager(ISprite.class);
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
 
-		
-		spriteModel.setTextureManager(mTextureManager);
-		
+		spriteModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
 	}
 
 	@Override
@@ -122,12 +111,7 @@ public class MapRenderer implements IMapRenderer {
 			spriteDriver = null;
 		}
 		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
-		}
-		
-		spriteModel.setTextureManager(null);
+		spriteModel.setTextureCoordinator(null);
 		
 		mGridTransformer = null;
 		mViewTransformer = null;
@@ -353,7 +337,8 @@ public class MapRenderer implements IMapRenderer {
 		}
 
 		
-		spriteModel.setTarget(sprite, spriteTexture);
+		spriteModel.setTargetSprite(sprite);
+		spriteModel.setTargetTexture(spriteTexture);
 		
 		
 		drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);	// make a variable for the name ?

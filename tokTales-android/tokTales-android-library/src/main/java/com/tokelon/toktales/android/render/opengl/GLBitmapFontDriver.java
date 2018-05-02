@@ -12,10 +12,11 @@ import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
@@ -151,15 +152,15 @@ public class GLBitmapFontDriver implements IRenderDriver {
 
 		
 		IRenderTexture fontTexture = fontModel.getTargetTexture();
-		ITextureManager textureManager = fontModel.getTextureManager();
+		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
+		ITextureManager textureManager = textureCoordinator.getTextureManager();
 		
-		if(!(fontModel.getTextureManager().hasTexture(fontTexture))) {
+		if(!textureManager.hasTextureLoaded(fontTexture)) {
 			rectSpriteSourceCoordsStatic.set(0, 0, fontTexture.getBitmap().getWidth(), fontTexture.getBitmap().getHeight());
 
 			rectSpriteSourceCoordsStatic.moveBy(0, 0);	// needed?
 			
-			// Add the new texture (also binds it)
-			textureManager.addTexture(fontTexture);
+			textureManager.loadTexture(fontTexture);
 		}
 
 		
@@ -171,15 +172,14 @@ public class GLBitmapFontDriver implements IRenderDriver {
 
 
 
+		int textureIndex = textureCoordinator.bindTexture(fontTexture);
+		
 		mShader.setUniform("uModelMatrix", modelMatrix);
-		mShader.setUniform("samplerTexture", fontModel.getTextureManager().getTextureIndex());
+		mShader.setUniform("samplerTexture", textureIndex);
 		mShader.setUniform("colorOver", fontModel.getColor());
 		
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
 
-		
-		textureManager.bindTexture(fontTexture);
-		
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, spriteMesh.getVertexCount());
 		

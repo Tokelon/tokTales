@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
+import com.tokelon.toktales.core.render.ITextureManager;
 
 public class ContentManager implements IContentManager {
 
@@ -12,17 +13,14 @@ public class ContentManager implements IContentManager {
 	
 	private IResourceManager managerResource;
 	private ISpriteManager managerSprite;
+	private ITextureManager textureManager;
 	
 	@Inject
-	public ContentManager(IResourceManager resourceManager, ISpriteManagerFactory spriteManagerFactory) {
-		if(resourceManager == null || spriteManagerFactory == null) {
-			throw new NullPointerException();
-		}
-		
+	public ContentManager(IResourceManager resourceManager, ISpriteManagerFactory spriteManagerFactory, ITextureManager textureManager) {
 		this.managerResource = resourceManager;
 		this.managerSprite = spriteManagerFactory.create(resourceManager);
+		this.textureManager = textureManager;
 		
-
 		managerSprite.startLoading();
 		
 		//managerSprite.stopLoading();	// TODO: Important - Stop this when terminating!
@@ -40,6 +38,10 @@ public class ContentManager implements IContentManager {
 		return managerSprite;
 	}
 
+	@Override
+	public ITextureManager getTextureManager() {
+		return textureManager;
+	}
 	
 
 	@Override

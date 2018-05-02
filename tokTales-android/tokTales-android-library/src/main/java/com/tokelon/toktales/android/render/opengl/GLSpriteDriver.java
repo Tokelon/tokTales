@@ -1,7 +1,9 @@
 package com.tokelon.toktales.android.render.opengl;
 
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -15,10 +17,11 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
@@ -57,8 +60,7 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
 	
-	private ISprite lastTileSprite;
-	
+	private final Map<ISprite, IRenderTexture> textureMap;
 
 	private ShaderProgram mShader;
 	
@@ -70,6 +72,9 @@ public class GLSpriteDriver implements IRenderDriver {
 	@Inject
 	public GLSpriteDriver(IContentService contentService) {
 		this.contentService = contentService;
+		
+		textureMap = new HashMap<>(); // TODO: Adjust load factor etc?
+		
 		
 		// TRIANGLE_FAN
 		/*
@@ -204,16 +209,21 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		boolean ignoreSpriteset = (Boolean) options.getOrError(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET);
 
+		
 
-		ISprite sprite = spriteModel.getSprite();
-		IKeyedTextureManager<ISprite> textureManager = spriteModel.getTextureManager();
-
+		// TODO: Handle the case where the texture is a specialAsset - they have to be invalidated
+		ISprite sprite = spriteModel.getTargetSprite();
+		IRenderTexture texture = spriteModel.getTargetTexture();
+		
+		ITextureCoordinator textureCoordinator = spriteModel.getTextureCoordinator();
+		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
+		
 
 		// Before draw
-
+		
+		IRenderTexture finalTexture = textureMap.get(sprite);
 		if(sprite.isEnclosed() && !ignoreSpriteset) {
-
-			IRenderTexture finalTexture = textureManager.getTextureFor(sprite);
+			
 			if(finalTexture == null) {
 				/* 1. Calculate Sprite coordinates in the Spriteset
 				 * 2. Copy only the Sprite into a buffer bitmap
@@ -226,7 +236,6 @@ public class GLSpriteDriver implements IRenderDriver {
 				 * Scaling is not needed since we take the values directly from the sprite dimensions
 				 */
 				rectSpriteSourceCoordsStatic.set(0, 0, sprite.getSpriteset().getSpriteWidth(), sprite.getSpriteset().getSpriteHeight());
-
 
 
 				/* This applies the offsets that are needed to get the actual indexed sprite from spriteset.
@@ -245,10 +254,10 @@ public class GLSpriteDriver implements IRenderDriver {
 				 *
 				 * TODO: Important - Instead of cropping the texture, use subTex
 				 */
-				IRenderTexture textureRegion = contentService.cropTexture(spriteModel.getTexture(), rectSpriteSourceCoordsStatic);
+				IRenderTexture textureRegion = contentService.cropTexture(texture, rectSpriteSourceCoordsStatic);
 				
-				// Add the new texture (also binds it)
-				textureManager.addTexture(sprite, textureRegion);
+				
+				textureMap.put(sprite, textureRegion);
 				finalTexture = textureRegion;
 			}
 
@@ -283,18 +292,18 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		}
 		else {
-			// In case the Sprite is not enclosed
-
-
-			if(!(textureManager.hasTextureFor(sprite))) {
-
-				// TODO: This will bind special assets the the given sprites. Fix that
-
-
-				textureManager.addTexture(sprite, spriteModel.getTexture());
+			// In case the sprite is not enclosed
+			
+			if(finalTexture == null) {
+				textureMap.put(sprite, texture);
+				finalTexture = texture;
 			}
 		}
+		
 
+		// Make sure the texture is actually loaded
+		globalTextureManager.loadTexture(finalTexture);
+		
 
 		// 1. Apply translation, rotation and scaling to the model matrix
 		Matrix4f modelMatrix = spriteModel.applyModelMatrix();
@@ -305,29 +314,14 @@ public class GLSpriteDriver implements IRenderDriver {
 		FloatBuffer textureCoordinateBuffer = spriteMesh.setTextureCoords(textureCoords);
 
 
+		
+		int textureIndex = textureCoordinator.bindTexture(finalTexture);
+		
 
 		mShader.setUniform("uModelMatrix", modelMatrix);
-		mShader.setUniform("samplerTexture", spriteModel.getTextureManager().getTextureIndex());	//GL_TEXTUREi
+		mShader.setUniform("samplerTexture", textureIndex);
 
-		
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
-
-
-		if(sprite.equals(lastTileSprite)) {
-			// Do not change texture
-		}
-		else if(sprite.isEnclosed() && !ignoreSpriteset) {
-
-			// Bind the texture for this sprite
-			textureManager.bindTextureFor(sprite);
-		}
-		else {
-			// Sprite is not enclosed or special asset
-			// Use spriteBitmap instead of textureBufferBitmap
-
-
-			textureManager.bindTextureFor(sprite);
-		}
 
 
 		// Draw
@@ -336,8 +330,6 @@ public class GLSpriteDriver implements IRenderDriver {
 		// 3 points define the first which is then connected to the 4th point forming another triangle
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, spriteMesh.getVertexCount());
 
-
-		lastTileSprite = sprite;
 	}
 
 

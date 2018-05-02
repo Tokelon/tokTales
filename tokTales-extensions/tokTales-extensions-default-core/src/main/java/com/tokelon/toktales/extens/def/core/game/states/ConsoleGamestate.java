@@ -115,8 +115,7 @@ public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate
 		
 
 		// State renderer
-		DefaultModularStateRender baseStateRenderer = new DefaultModularStateRender(
-				mRenderingStrategy, getEngine().getRenderService().getSurfaceHandler(), this);
+		DefaultModularStateRender baseStateRenderer = new DefaultModularStateRender(mRenderingStrategy, this);
 		
 		baseStateRenderer.addSegmentRenderer(RENDERER_CONSOLE_NAME, consoleSegmentRenderer);
 		baseStateRenderer.addSegmentRenderer(RENDERER_DIALOG_NAME, dialogSegmentRenderer);

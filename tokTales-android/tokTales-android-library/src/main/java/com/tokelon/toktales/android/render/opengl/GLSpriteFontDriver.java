@@ -1,7 +1,9 @@
 package com.tokelon.toktales.android.render.opengl;
 
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -15,10 +17,11 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteFontModel;
@@ -56,17 +59,17 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 
 	
+	
 
+	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
+
+	private final Map<ISprite, IRenderTexture> textureMap;
+	
+	
 	private ShaderProgram mShader;
 	
 	private GLSpriteMesh spriteMesh;
-
 	
-	
-	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
-	
-	private ISprite lastTileSprite;
-
 
 	private final IContentService contentService;
 	
@@ -74,6 +77,9 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	public GLSpriteFontDriver(IContentService contentService) {
 		this.contentService = contentService;
 		
+		textureMap = new HashMap<>();
+		
+
 		float[] vertices = new float[]
 				{
 					0.0f,  1.0f, 0.0f,
@@ -158,11 +164,15 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		}
 		ISpriteFontModel fontModel = (ISpriteFontModel) renderModel;
 		
-		ISprite fontSprite = fontModel.getSprite();
-		IKeyedTextureManager<ISprite> textureManager = fontModel.getTextureManager();
+		
+		ISprite fontSprite = fontModel.getTargetSprite();
+		IRenderTexture fontTexture = fontModel.getTargetTexture();
+		
+		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
+		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
 		
 		
-		IRenderTexture finalTexture = textureManager.getTextureFor(fontSprite);
+		IRenderTexture finalTexture = textureMap.get(fontSprite);
 		if(finalTexture == null) {
 			rectSpriteSourceCoordsStatic.set(
 					0,
@@ -179,13 +189,15 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			rectSpriteSourceCoordsStatic.moveBy(offHor, offVer);
 
 			
-			// TODO: Important - Instead of cropping the texture, use subTex
-			IRenderTexture textureRegion = contentService.cropTexture(fontModel.getTexture(), rectSpriteSourceCoordsStatic);
+			IRenderTexture textureRegion = contentService.cropTexture(fontTexture, rectSpriteSourceCoordsStatic);
 			
-			// Add the new texture (also binds it)
-			textureManager.addTexture(fontSprite, textureRegion);
+			
+			textureMap.put(fontSprite, textureRegion);
 			finalTexture = textureRegion;
 		}
+		
+		globalTextureManager.loadTexture(finalTexture);
+		
 		
 		
 		// TODO: This is not needed anymore - test first then remove
@@ -214,24 +226,17 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 
 
+		int textureIndex = textureCoordinator.bindTexture(finalTexture);
+
 		mShader.setUniform("uModelMatrix", modelMatrix);
-		mShader.setUniform("samplerTexture", fontModel.getTextureManager().getTextureIndex());
+		mShader.setUniform("samplerTexture", textureIndex);
 		mShader.setUniform("colorOver", fontModel.getColor());
 		
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
 
 		
-		if(fontSprite.equals(lastTileSprite)) {
-			// Do not change texture
-		}
-		else {
-			textureManager.bindTextureFor(fontSprite);	
-		}
-		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, spriteMesh.getVertexCount());
 
-
-		lastTileSprite = fontSprite;
 	}
 
 

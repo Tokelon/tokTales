@@ -1,8 +1,8 @@
 package com.tokelon.toktales.core.render;
 
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.render.model.IRenderTextureModel;
-import com.tokelon.toktales.core.render.model.RenderTextureModel;
+import com.tokelon.toktales.core.render.model.IManagedTextureModel;
+import com.tokelon.toktales.core.render.model.ManagedTextureModel;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
 
 public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
@@ -10,7 +10,7 @@ public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 	public static final String TAG = "ImageRenderer";
 	
 
-	private final RenderTextureModel model = new RenderTextureModel();
+	private final ManagedTextureModel model = new ManagedTextureModel();
 	
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
 
@@ -21,18 +21,20 @@ public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 	
 	private final IRenderAccess renderAccess;
 	
-	public ImageRenderer(IRenderAccess renderAccess) {
+	public ImageRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator) {
 		this.renderAccess = renderAccess;
 		
+		model.setTextureCoordinator(textureCoordinator);
+
 		model.setInvertYAxis(true);
 	}
 	
 
 	@Override
 	protected void onContextCreated() {
-		imageDriver = renderAccess.requestDriver(IRenderTextureModel.class.getName());
+		imageDriver = renderAccess.requestDriver(IManagedTextureModel.class.getName());
 		if(imageDriver == null) {
-			throw new RenderException("No render driver found for: " + IRenderTextureModel.class.getName());
+			throw new RenderException("No render driver found for: " + IManagedTextureModel.class.getName());
 		}
 		
 		imageDriver.create();
@@ -95,6 +97,5 @@ public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 			imageDriver.drawQuick(getMatrixProjectionAndView(), model, drawingOptions);	
 		}
 	}
-
 	
 }

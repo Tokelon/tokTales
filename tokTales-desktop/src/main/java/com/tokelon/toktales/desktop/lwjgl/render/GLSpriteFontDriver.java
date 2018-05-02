@@ -8,7 +8,9 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -20,9 +22,11 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteFontModel;
@@ -63,11 +67,14 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	private final FloatBuffer textureCoordinateBuffer;
 	
+	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
+	
+	
+	private final Map<ISprite, IRenderTexture> textureMap;
+
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
-	
-	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
 	
 	
 	private final IContentService contentService;
@@ -76,6 +83,8 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	public GLSpriteFontDriver(IContentService contentService) {
 		this.contentService = contentService;
 		
+		textureMap = new HashMap<>();
+
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
 	
@@ -160,7 +169,12 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		ISpriteFontModel fontModel = (ISpriteFontModel) renderModel;
 		
 		
-		ISprite fontSprite = fontModel.getSprite();
+		ISprite fontSprite = fontModel.getTargetSprite();
+		IRenderTexture fontTexture = fontModel.getTargetTexture();
+		
+		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
+		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
+		
 		
 		if(!fontSprite.isEnclosed()) {
 			// What about special sprites? (error etc)
@@ -168,8 +182,9 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		}
 		
 		
-		if(!fontModel.getTextureManager().hasTextureFor(fontSprite)) {
-
+		IRenderTexture finalTexture = textureMap.get(fontSprite);
+		if(finalTexture == null) {
+			
 			spriteSourceCoords.set(0, 0, fontSprite.getSpriteset().getSpriteWidth(), fontSprite.getSpriteset().getSpriteHeight());
 			
 			int spriteOffHor = fontSprite.getSpriteset().getHorizontalOffsetFor(fontSprite.getSpritesetIndex());
@@ -178,10 +193,13 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
 
 			
-			IRenderTexture textureRegion = contentService.cropTexture(fontModel.getTexture(), spriteSourceCoords);
-			fontModel.getTextureManager().addTexture(fontSprite, textureRegion);
+			IRenderTexture textureRegion = contentService.cropTexture(fontTexture, spriteSourceCoords);
+			
+			textureMap.put(fontSprite, textureRegion);
+			finalTexture = textureRegion;
 		}
 		
+		globalTextureManager.loadTexture(finalTexture);
 		
 		
 		Matrix4f modelMatrix = fontModel.applyModelMatrix();
@@ -190,16 +208,14 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		textureCoordinateBuffer.position(0);
 		textureCoordinateBuffer.put(textureCoordinates).position(0);
 		
-
-		mShader.setUniform("uModelMatrix", modelMatrix);
-		mShader.setUniform("samplerTexture", fontModel.getTextureManager().getTextureIndex());
-		mShader.setUniform("colorOver", fontModel.getColor());
-		
-		fontModel.getTextureManager().bindTextureFor(fontSprite);
-
-		
 		spriteMesh.setTextureCoords(textureCoordinateBuffer);
 
+		
+		int textureIndex = textureCoordinator.bindTexture(finalTexture);
+
+		mShader.setUniform("uModelMatrix", modelMatrix);
+		mShader.setUniform("samplerTexture", textureIndex);
+		mShader.setUniform("colorOver", fontModel.getColor());
 		
 
 		glDrawElements(GL_TRIANGLES, spriteMesh.getVertexCount(), GL_UNSIGNED_INT, 0);

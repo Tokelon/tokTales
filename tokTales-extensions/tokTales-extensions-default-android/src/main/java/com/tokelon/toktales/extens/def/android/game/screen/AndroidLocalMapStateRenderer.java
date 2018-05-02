@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.world.IWorldGrid;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.extens.def.core.game.screen.LocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 
@@ -21,8 +22,8 @@ public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 	private final ILocalMapGamestate gamestate;
 	
 	@Inject
-	public AndroidLocalMapStateRenderer(@Assisted ILocalMapGamestate gamestate) {
-		super(gamestate);
+	public AndroidLocalMapStateRenderer(ITextureCoordinator textureCoordinator, @Assisted ILocalMapGamestate gamestate) {
+		super(textureCoordinator, gamestate);
 		
 		this.gamestate = gamestate;
 		
@@ -164,6 +165,5 @@ public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 		return null;
 	}
 	*/
-	
 	
 }

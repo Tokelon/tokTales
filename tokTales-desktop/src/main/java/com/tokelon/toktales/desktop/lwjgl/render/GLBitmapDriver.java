@@ -17,13 +17,14 @@ import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 import com.tokelon.toktales.core.render.model.IRenderModel;
-import com.tokelon.toktales.core.render.model.IRenderTextureModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
@@ -63,8 +64,6 @@ public class GLBitmapDriver implements IRenderDriver {
 
 	private final FloatBuffer textureCoordinateBuffer;
 
-	private final IKeyedTextureManager<IRenderTexture> textureManager;
-	
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
@@ -73,8 +72,6 @@ public class GLBitmapDriver implements IRenderDriver {
 	@Inject
 	public GLBitmapDriver() {
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
-		
-		textureManager = new GLKeyedTextureManager.GLKeyedTextureManagerFactory().newKeyedTextureManager(IRenderTexture.class, null);
 	}
 	
 	
@@ -144,36 +141,36 @@ public class GLBitmapDriver implements IRenderDriver {
 
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
-		if(!(renderModel instanceof IRenderTextureModel)) {
+		if(!(renderModel instanceof IManagedTextureModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
-		IRenderTextureModel texturedModel = (IRenderTextureModel) renderModel;
+		IManagedTextureModel texturedModel = (IManagedTextureModel) renderModel;
 		
-
-		textureManager.addTexture(texturedModel.getTargetTexture(), texturedModel.getTargetTexture());
+		
+		IRenderTexture texture = texturedModel.getTargetTexture();
+		ITextureCoordinator textureCoordinator = texturedModel.getTextureCoordinator();
+		ITextureManager textureManager = textureCoordinator.getTextureManager();
+		
+		textureManager.loadTexture(texture);
 
 		
 		Matrix4f modelMatrix = texturedModel.applyModelMatrix();
-		
 
 		float[] textureCoordinates = texturedModel.applyTextureCoordinates();
 		textureCoordinateBuffer.position(0);
 		textureCoordinateBuffer.put(textureCoordinates).position(0);
+		
+		spriteMesh.setTextureCoords(textureCoordinateBuffer);
 
+		
+		int textureIndex = textureCoordinator.bindTexture(texture);
 
 		mShader.setUniform(MATRIX_MODEL_NAME, modelMatrix);
-		mShader.setUniform(SAMPLER_TEXTURE_NAME, textureManager.getTextureIndex());
+		mShader.setUniform(SAMPLER_TEXTURE_NAME, textureIndex);
 
-		
-		textureManager.bindTextureFor(texturedModel.getTargetTexture());
-
-		spriteMesh.setTextureCoords(textureCoordinateBuffer);
-		
 		
 		glDrawElements(GL_TRIANGLES, spriteMesh.getVertexCount(), GL_UNSIGNED_INT, 0);
-		
 
-		textureManager.removeTextureFor(texturedModel.getTargetTexture());
 	}
 
 	
@@ -201,7 +198,7 @@ public class GLBitmapDriver implements IRenderDriver {
 	}
 	
 	private static String supportedTarget() {
-		return IRenderTextureModel.class.getName();
+		return IManagedTextureModel.class.getName();
 	}
 	
 	

@@ -1,24 +1,18 @@
 package com.tokelon.toktales.core.render.model;
 
 import com.tokelon.toktales.core.render.IRenderTexture;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public interface IManagedTextureModel extends ITexturedModel {
+
 	
-	// TODO: Extend from IRenderTextureModel ?
-	
-	
-	public void setTextureManager(ITextureManager textureManager);
-	
-	// method for all targets | probably better individual methods
-	//public void setBitmapModelTarget(targets...);
+	public void setTextureCoordinator(ITextureCoordinator textureCoordinator);
 	
 	public void setTargetTexture(IRenderTexture texture);
 
 	
-	public ITextureManager getTextureManager();
+	public ITextureCoordinator getTextureCoordinator();
 	
 	public IRenderTexture getTargetTexture();
-
 	
 }

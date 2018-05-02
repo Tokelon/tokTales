@@ -6,12 +6,14 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.EmptyStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 import com.tokelon.toktales.tools.inject.IParameterInjector;
 import com.tokelon.toktales.tools.inject.ParameterInjector;
 
@@ -147,7 +149,7 @@ public class BaseGamestate implements IGameState {
 		// Create defaults if not already set
 		IStateRender defaultStateRender;
 		if(stateRender == null) {
-			defaultStateRender = new EmptyStateRender(context.getEngine().getRenderService().getSurfaceHandler()); 
+			defaultStateRender = new EmptyStateRender(new DefaultTextureCoordinator(context.getGame().getContentManager().getTextureManager())); 
 		}
 		else {
 			defaultStateRender = stateRender;
@@ -235,6 +237,8 @@ public class BaseGamestate implements IGameState {
 	 * by calling {@link IGameStateInputHandler#register(IGameStateInput)}.
 	 */
 	protected void afterInitStateDependencies() {
+		// TODO: Handle one of these changing later?
+		
 		// Register input handler
 		IGameStateInput stateInput = getStateInput();
 		IGameStateInputHandler stateInputHandler = getStateInputHandler();
@@ -253,6 +257,9 @@ public class BaseGamestate implements IGameState {
 
 		stateSceneControl.addScene(INITIAL_SCENE_NAME, initialScene);
 		stateSceneControl.changeScene(INITIAL_SCENE_NAME);
+		
+		
+		getEngine().getRenderService().getSurfaceHandler().addCallback(getStateRender());
 	}
 
 	
@@ -271,9 +278,12 @@ public class BaseGamestate implements IGameState {
 	@Override
 	public void onDisengage() {
 		// TODO: Implement
-
-		// Iterate over all scenes and remove them
+		
+		// Remove all scenes?
 		//getSceneControl().clear();
+		
+		
+		getEngine().getRenderService().getSurfaceHandler().removeCallback(getStateRender());
 	}
 
 
@@ -314,7 +324,7 @@ public class BaseGamestate implements IGameState {
 	 * @param scene
 	 * @return True if the given scene was assigned successful, false if not.
 	 */
-	protected <T extends IGameScene> boolean assignSceneGeneric(Class<T> sceneClass, IModifiableGameSceneControl<T> sceneControl, String sceneName, IGameScene scene) {
+	protected <T extends IGameScene> boolean assignSceneGeneric(Class<T> sceneClass, IModifiableGameSceneControl<T> sceneControl, String sceneName, IGameScene scene) { // Why is sceneClass needed?
 		if(sceneClass == null || sceneControl == null) {
 			throw new NullPointerException();
 		}
@@ -444,6 +454,8 @@ public class BaseGamestate implements IGameState {
 	/** Sets the state render.
 	 * <p>
 	 * If supported this gamestate will be injected via {@link InjectGameState}.
+	 * <p>
+	 * The given render will be registered as a {@link ISurfaceCallback} and the previous render will be unregistered.
 	 * 
 	 * @param render
 	 * @throws NullPointerException If stateRender is null.
@@ -453,8 +465,12 @@ public class BaseGamestate implements IGameState {
 			throw new NullPointerException();
 		}
 		
+		getEngine().getRenderService().getSurfaceHandler().removeCallback(this.stateRender);
+		
 		gamestateInjector.injectInto(render);
 		this.stateRender = render;
+		
+		getEngine().getRenderService().getSurfaceHandler().addCallback(render);
 	}
 
 	/** Sets the state input handler.

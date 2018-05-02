@@ -20,15 +20,13 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 	
 	private IRGBAColor color = RGBAColorImpl.createFromCode("FFF");
 	
-	private final TextRenderer textRenderer;
+	private TextRenderer textRenderer;
 	
 	
 	private final IGameState gamestate;
 
 	public TextBoxRenderer(IGameState gamestate) {
 		this.gamestate = gamestate;
-		
-		textRenderer = new TextRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
 	}
 
 	
@@ -79,6 +77,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 	
 	@Override
 	protected void onContextCreated() {
+		textRenderer = new TextRenderer(gamestate.getEngine().getRenderService().getRenderAccess(), gamestate.getStateRender().getTextureCoordinator());
 		textRenderer.contextCreated();		
 	}
 
@@ -91,6 +90,5 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 	protected void onContextDestroyed() {
 		textRenderer.contextDestroyed();		
 	}
-
 	
 }

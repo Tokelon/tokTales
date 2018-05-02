@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.content;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.prog.IProgramInterface;
+import com.tokelon.toktales.core.render.ITextureManager;
 
 public interface IContentManager extends IProgramInterface {
 
@@ -10,6 +11,8 @@ public interface IContentManager extends IProgramInterface {
 	
 	public ISpriteManager getSpriteManager();
 	
+	public ITextureManager getTextureManager();
+
 
 	
 	public void notifyResourcesChanged();

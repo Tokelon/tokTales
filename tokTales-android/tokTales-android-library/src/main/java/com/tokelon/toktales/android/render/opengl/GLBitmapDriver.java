@@ -8,20 +8,21 @@ import javax.inject.Provider;
 
 import org.joml.Matrix4f;
 
-import android.opengl.GLES20;
-
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 import com.tokelon.toktales.core.render.model.IRenderModel;
-import com.tokelon.toktales.core.render.model.IRenderTextureModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
+
+import android.opengl.GLES20;
 
 public class GLBitmapDriver implements IRenderDriver {
 	
@@ -55,8 +56,6 @@ public class GLBitmapDriver implements IRenderDriver {
 	private static final String TEXTURE_COORDINATE_NAME = "a_vTexCoord";
 
 	
-	private final IKeyedTextureManager<IRenderTexture> textureManager;
-	
 	private ShaderProgram mShader;
 	
 	private GLSpriteMesh bitmapMesh;
@@ -64,9 +63,6 @@ public class GLBitmapDriver implements IRenderDriver {
 	
 	@Inject
 	public GLBitmapDriver() {
-		
-		textureManager = new GLKeyedTextureManager.GLKeyedTextureManagerFactory().newKeyedTextureManager(IRenderTexture.class, null);
-		
 		
 		float[] vertices = new float[]
 				{
@@ -133,16 +129,20 @@ public class GLBitmapDriver implements IRenderDriver {
 
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
-		if(!(renderModel instanceof IRenderTextureModel)) {
+		if(!(renderModel instanceof IManagedTextureModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
-		IRenderTextureModel texturedModel = (IRenderTextureModel) renderModel;
+		IManagedTextureModel texturedModel = (IManagedTextureModel) renderModel;
 		
 		
-		textureManager.addTexture(texturedModel.getTargetTexture(), texturedModel.getTargetTexture());
+		IRenderTexture texture = texturedModel.getTargetTexture();
+		ITextureCoordinator textureCoordinator = texturedModel.getTextureCoordinator();
+		ITextureManager textureManager = textureCoordinator.getTextureManager();
+		
+		textureManager.loadTexture(texture);
+
 		
 		Matrix4f modelMatrix = texturedModel.applyModelMatrix();
-		
 		
 		float[] textureCoordinates = texturedModel.applyTextureCoordinates();
 		FloatBuffer textureCoordinateBuffer = bitmapMesh.setTextureCoords(textureCoordinates);
@@ -150,16 +150,14 @@ public class GLBitmapDriver implements IRenderDriver {
 		mShader.setAttribute(TEXTURE_COORDINATE_NAME, 2, textureCoordinateBuffer);
 
 		
-		mShader.setUniform(MATRIX_MODEL_NAME, modelMatrix);
-		mShader.setUniform(SAMPLER_TEXTURE_NAME, textureManager.getTextureIndex());
+		int textureIndex = textureCoordinator.bindTexture(texture);
 		
-		textureManager.bindTextureFor(texturedModel.getTargetTexture());
+		mShader.setUniform(MATRIX_MODEL_NAME, modelMatrix);
+		mShader.setUniform(SAMPLER_TEXTURE_NAME, textureIndex);
 		
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, bitmapMesh.getVertexCount());
-
 		
-		textureManager.removeTextureFor(texturedModel.getTargetTexture());
 	}
 	
 
@@ -186,7 +184,7 @@ public class GLBitmapDriver implements IRenderDriver {
 	}
 
 	private static String supportedTarget() {
-		return IRenderTextureModel.class.getName();
+		return IManagedTextureModel.class.getName();
 	}
 	
 	

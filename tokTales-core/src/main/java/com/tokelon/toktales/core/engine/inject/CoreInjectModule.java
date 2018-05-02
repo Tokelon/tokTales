@@ -52,6 +52,11 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.World;
+import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
+import com.tokelon.toktales.core.render.DefaultTextureManager;
+import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.GLBufferUtils;
 import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
@@ -133,6 +138,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		   install(new FactoryModuleBuilder()
 				   .implement(ISpriteManager.class, SpriteManager.class)
 				   .build(ISpriteManagerFactory.class));
+		   bindInGameScopeAndForNotScoped(ITextureManager.class, DefaultTextureManager.class);
 		  bindToProviderInGameScopeAndForNotScoped(IWorld.class, () -> new World(32.0f));  // Maybe do param with @Named
 		
 		
@@ -142,6 +148,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		bind(IRenderOrder.class).to(RenderOrder.class);
 		bind(IStateRender.class).to(EmptyStateRender.class);
+		 bind(ITextureCoordinator.class).to(DefaultTextureCoordinator.class);
+		 bind(ITextureCoordinatorFactory.class).to(DefaultTextureCoordinator.TextureCoordinatorFactory.class);
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);

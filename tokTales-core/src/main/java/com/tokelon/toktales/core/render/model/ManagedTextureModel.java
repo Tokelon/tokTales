@@ -1,18 +1,18 @@
 package com.tokelon.toktales.core.render.model;
 
 import com.tokelon.toktales.core.render.IRenderTexture;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public class ManagedTextureModel extends TexturedModel implements IManagedTextureModel {
 
-	private ITextureManager textureManager;
-	
+
+	private ITextureCoordinator textureCoordinator;
 	private IRenderTexture texture;
 	
-	
+
 	@Override
-	public void setTextureManager(ITextureManager textureManager) {
-		this.textureManager = textureManager;
+	public void setTextureCoordinator(ITextureCoordinator textureCoordinator) {
+		this.textureCoordinator = textureCoordinator;
 	}
 
 	@Override
@@ -20,10 +20,10 @@ public class ManagedTextureModel extends TexturedModel implements IManagedTextur
 		this.texture = texture;
 	}
 
-	
+
 	@Override
-	public ITextureManager getTextureManager() {
-		return textureManager;
+	public ITextureCoordinator getTextureCoordinator() {
+		return textureCoordinator;
 	}
 
 	@Override

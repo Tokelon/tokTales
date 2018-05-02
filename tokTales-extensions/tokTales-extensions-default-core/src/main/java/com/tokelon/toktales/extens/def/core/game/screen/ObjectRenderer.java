@@ -12,9 +12,9 @@ import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
+import com.tokelon.toktales.core.game.model.IPolyline2f.IExtendablePolyline2f;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
-import com.tokelon.toktales.core.game.model.IPolyline2f.IExtendablePolyline2f;
 import com.tokelon.toktales.core.game.model.map.IMapObject;
 import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
@@ -25,7 +25,6 @@ import com.tokelon.toktales.core.game.world.IPolylineGeometry;
 import com.tokelon.toktales.core.game.world.IRectangleGeometry;
 import com.tokelon.toktales.core.game.world.IWorldGeometry;
 import com.tokelon.toktales.core.render.AbstractRenderer;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
@@ -50,14 +49,6 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	
 	private String mapControllerName = DEFAULT_MAP_CONTROLLER_NAME;
 	
-	private final IGameState gamestate;
-	private final ISpriteManager spriteManager;
-	
-	private IRenderDriver shapeDriver;
-	private IRenderDriver spriteDriver;
-	private IKeyedTextureManager<ISprite> mTextureManager;
-	
-	private final SpriteModel spriteModel = new SpriteModel();
 
 	private final Rectangle2fImpl spriteCoordinates = new Rectangle2fImpl();
 	
@@ -84,11 +75,19 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	private final IRGBAColor colorPolygon = RGBAColorImpl.createFromCodeWithAlpha("#5F0", 0.5f);
 	private final Vector4f colorVectorPolygon = new Vector4f(colorPolygon.getRed(), colorPolygon.getGreen(), colorPolygon.getBlue(), colorPolygon.getAlpha());
 	
-	
+	private final SpriteModel spriteModel = new SpriteModel();
+
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
 
 	private boolean logStop = false;
 	private IRenderDriver lastUsedDriver = null;
+	
+
+	private final IGameState gamestate;
+	private final ISpriteManager spriteManager;
+	
+	private IRenderDriver shapeDriver;
+	private IRenderDriver spriteDriver;
 	
 	
 	public ObjectRenderer(IGameState gamestate) {
@@ -129,14 +128,8 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		
 		spriteDriver.create();
 		
-		
-		mTextureManager = gamestate.getEngine().getRenderService().getRenderAccess().requestKeyedTextureManager(ISprite.class);
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
 
-		spriteModel.setTextureManager(mTextureManager);
-		
+		spriteModel.setTextureCoordinator(gamestate.getStateRender().getTextureCoordinator());
 	}
 
 	@Override
@@ -156,12 +149,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 			spriteDriver = null;
 		}
 		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
-		}
-		
-		spriteModel.setTextureManager(null);
+		spriteModel.setTextureCoordinator(null);
 		lastUsedDriver = null;
 	}
 
@@ -250,7 +238,8 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 					spriteModel.setScaling2D(spriteCoordinates.getWidth(), spriteCoordinates.getHeight());
 					spriteModel.setTranslation2D(spriteCoordinates.left(), spriteCoordinates.top());
 					
-					spriteModel.setTarget(sprite, spriteTexture);
+					spriteModel.setTargetSprite(sprite);
+					spriteModel.setTargetTexture(spriteTexture);
 					
 					drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, false);	//assetIsSpecial
 					

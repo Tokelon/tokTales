@@ -1,24 +1,25 @@
 package com.tokelon.toktales.core.game.screen;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
+import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.IRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 /** Manages the rendering context for a state.
  * Can be used as the main renderer.
- *
  */
-public interface IStateRender extends IRenderCallback {
+public interface IStateRender extends ISurfaceCallback, IRenderCallback {
 
 	// Maybe add prepare() and call in gamestate before calling render order
 	// Move the render order into here too?
 
 	// Maybe add current* prefix to indicate that surface camera etc can change?
 	
+	
 	/**
-	 * 
 	 * @return True if there is a surface, false if not.
 	 */
 	public boolean hasSurface();
@@ -46,6 +47,8 @@ public interface IStateRender extends IRenderCallback {
 	public IViewTransformer getViewTransformer();
 	
 	
+	public ITextureCoordinator getTextureCoordinator();
+	
 	
 	// TODO: Implement with abstract class
 	public void addManagedRenderer(String name, IRenderer renderer);
@@ -60,12 +63,11 @@ public interface IStateRender extends IRenderCallback {
 	
 	
 	
-	
 	/*
-	public interface IStateRendererFactory {
+	public interface IStateRenderFactory {
 		
-		//public IStateRenderer buildRenderer(IGameState gameState);
-		public IStateRenderer buildRenderer(IProgramContext programContext, IGame game);
+		public IStateRender create(IGameState gamestate);
 	}
 	*/
+	
 }

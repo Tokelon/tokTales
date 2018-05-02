@@ -15,7 +15,6 @@ import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
@@ -42,28 +41,22 @@ public class PlayerRenderer implements IPlayerRenderer {
 	private final Point2fImpl playerScreenCoordinates = new Point2fImpl();
 
 
-	private final IGameState mGamestate;
-	
-	private IViewTransformer mViewTransformer;
-	
-	
-	
-	
 	private final Matrix4f matrixProjection = new Matrix4f();
 	private final Matrix4f matrixView = new Matrix4f();
 	private final Matrix4f matrixProjectionAndView = new Matrix4f();
 	
 	
-	private IKeyedTextureManager<ISprite> mTextureManager;
-	
-	private IRenderDriver spriteDriver;
-	
 	private final SpriteModel spriteModel = new SpriteModel();
 	
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
+
 	
+	private IViewTransformer mViewTransformer;
+
+	private IRenderDriver spriteDriver;
 	
-	
+	private final IGameState mGamestate;
+
 	public PlayerRenderer(IGameState gamestate) {
 		this.mGamestate = gamestate;
 
@@ -84,15 +77,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		spriteDriver.create();
 		
 		
-		
-		mTextureManager = mGamestate.getEngine().getRenderService().getRenderAccess().requestKeyedTextureManager(ISprite.class);
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
-		
-		
-		spriteModel.setTextureManager(mTextureManager);
-
+		spriteModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
 	}
 	
 
@@ -120,12 +105,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 			spriteDriver = null;
 		}
 		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
-		}
-		
-		spriteModel.setTextureManager(null);
+		spriteModel.setTextureCoordinator(null);
 		
 		mViewTransformer = null;
 	}
@@ -240,8 +220,8 @@ public class PlayerRenderer implements IPlayerRenderer {
 			spriteModel.getTextureScaling().set(1.0f, 1.0f);
 			
 			
-			
-			spriteModel.setTarget(playerSprite, playerTexture);
+			spriteModel.setTargetSprite(playerSprite);
+			spriteModel.setTargetTexture(playerTexture);
 			
 
 			drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);
@@ -270,6 +250,5 @@ public class PlayerRenderer implements IPlayerRenderer {
 	public void drawFull(INamedOptions options) {
 		drawPlayer(mGamestate.getActiveScene().getPlayerController());
 	}
-	
 	
 }

@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.ILevelReference;
@@ -21,6 +20,7 @@ import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
@@ -66,11 +66,13 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private Matrix4f currentProjectionMatrix;
 	private ISurface currentSurface;
 	
+	private final ITextureCoordinator textureCoordinator;
 	private final ILocalMapGamestate gamestate;
 	
 	
 	@Inject
-	public LocalMapStateRenderer(@Assisted ILocalMapGamestate gamestate) {
+	public LocalMapStateRenderer(ITextureCoordinator textureCoordinator, @Assisted ILocalMapGamestate gamestate) {
+		this.textureCoordinator = textureCoordinator;
 		this.gamestate = gamestate;
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());
@@ -89,8 +91,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(CALLBACK_POSITION_PREPARE, this);
 		renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DEBUG, this);
 		renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_CONSOLE, this);
-		
-		gamestate.getEngine().getRenderService().getSurfaceHandler().addCallback(new SurfaceCallback());
 	}
 	
 	
@@ -294,6 +294,10 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		return currentViewTransformer;
 	}
 	
+	@Override
+	public ITextureCoordinator getTextureCoordinator() {
+		return textureCoordinator;
+	}
 	
 	
 	/* Assumes that there is one view transformer for all renderers.
@@ -308,80 +312,75 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		return defaultViewTransformer;
 	}
 	
-	
-	protected class SurfaceCallback implements ISurfaceCallback {
 
-		@Override
-		public void surfaceCreated(ISurface surface) {
-			hasView = false;
+	@Override
+	public void surfaceCreated(ISurface surface) {
+		hasView = false;
 
-			mapRenderer.contextCreated();
-			playerRenderer.contextCreated();
-			entityRenderer.contextCreated();
-			debugRenderer.contextCreated();
-			objectRenderer.contextCreated();
-			consoleOverlayRenderer.contextCreated();
-			
-			renderToolkit = gamestate.getEngine().getRenderService().getRenderAccess().requestToolkit();
-			if(renderToolkit == null) {
-				throw new RenderException("No render toolkit found");
-			}
-
-			synchronized (managedRendererMap) {
-				for(IRenderer renderer: managedRendererMap.values()) {
-					renderer.contextCreated();
-				}
-			}
-
-			currentSurface = surface;
-			hasSurface = true;
-		}
-
-		@Override
-		public void surfaceChanged(ISurface surface) {
-			currentViewTransformer = onSurfaceChangeRefreshContextViewport(surface);
-			currentProjectionMatrix = surface.getProjectionMatrix();
-			hasView = true;
-			
-			mapRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-			playerRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-			entityRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-			debugRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-			objectRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-			consoleOverlayRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-
-			// Iterate over the managed renderers
-			synchronized (managedRendererMap) {
-				for(IRenderer renderer: managedRendererMap.values()) {
-					renderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-				}
-			}
-		}
-
-		@Override
-		public void surfaceDestroyed(ISurface surface) {
-			hasView = false;
-			hasSurface = false;
-			currentSurface = null;
-			
-			mapRenderer.contextDestroyed();
-			playerRenderer.contextDestroyed();
-			entityRenderer.contextDestroyed();
-			debugRenderer.contextDestroyed();
-			objectRenderer.contextDestroyed();
-			consoleOverlayRenderer.contextDestroyed();
-			
-			synchronized (managedRendererMap) {
-				for(IRenderer renderer: managedRendererMap.values()) {
-					renderer.contextDestroyed();
-				}
-			}
-
-			currentViewTransformer = defaultViewTransformer;
-			currentProjectionMatrix = null;
-		}
+		mapRenderer.contextCreated();
+		playerRenderer.contextCreated();
+		entityRenderer.contextCreated();
+		debugRenderer.contextCreated();
+		objectRenderer.contextCreated();
+		consoleOverlayRenderer.contextCreated();
 		
+		renderToolkit = gamestate.getEngine().getRenderService().getRenderAccess().requestToolkit();
+		if(renderToolkit == null) {
+			throw new RenderException("No render toolkit found");
+		}
+
+		synchronized (managedRendererMap) {
+			for(IRenderer renderer: managedRendererMap.values()) {
+				renderer.contextCreated();
+			}
+		}
+
+		currentSurface = surface;
+		hasSurface = true;
 	}
 
+	@Override
+	public void surfaceChanged(ISurface surface) {
+		currentViewTransformer = onSurfaceChangeRefreshContextViewport(surface);
+		currentProjectionMatrix = surface.getProjectionMatrix();
+		hasView = true;
+		
+		mapRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+		playerRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+		entityRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+		debugRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+		objectRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+		consoleOverlayRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+
+		// Iterate over the managed renderers
+		synchronized (managedRendererMap) {
+			for(IRenderer renderer: managedRendererMap.values()) {
+				renderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
+			}
+		}
+	}
+
+	@Override
+	public void surfaceDestroyed(ISurface surface) {
+		hasView = false;
+		hasSurface = false;
+		currentSurface = null;
+		
+		mapRenderer.contextDestroyed();
+		playerRenderer.contextDestroyed();
+		entityRenderer.contextDestroyed();
+		debugRenderer.contextDestroyed();
+		objectRenderer.contextDestroyed();
+		consoleOverlayRenderer.contextDestroyed();
+		
+		synchronized (managedRendererMap) {
+			for(IRenderer renderer: managedRendererMap.values()) {
+				renderer.contextDestroyed();
+			}
+		}
+
+		currentViewTransformer = defaultViewTransformer;
+		currentProjectionMatrix = null;
+	}
 	
 }

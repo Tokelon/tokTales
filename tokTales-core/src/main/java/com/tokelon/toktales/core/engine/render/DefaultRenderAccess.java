@@ -4,69 +4,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
-import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
-import com.tokelon.toktales.core.render.ITextureManager;
-import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.core.util.ParamsImpl;
 
 public class DefaultRenderAccess implements IRenderAccess {
 
+
+	private final ParamsImpl emptyParams = new ParamsImpl();
+
+
+	private IRenderToolkitFactory toolkitFactory;
 	
 	private List<IRenderDriverFactory> drivers;
 	
-	private IKeyedTextureManagerFactory keyedTextureManagerFactory;
-	
-	private ITextureManagerFactory textureManagerFactory;
-	
-	private IRenderToolkitFactory toolkitFactory;
-	
-	private final ParamsImpl emptyParams = new ParamsImpl();
-	
-	
 	public DefaultRenderAccess() {
-		
 		drivers = Collections.synchronizedList(new ArrayList<IRenderDriverFactory>());
 	}
 	
-	
-	
-		
-	@Override
-	public <T> IKeyedTextureManager<T> requestKeyedTextureManager(Class<T> keyClass) {
-		return requestKeyedTextureManager(keyClass, emptyParams);
-	}
-	
-	@Override
-	public <T> IKeyedTextureManager<T> requestKeyedTextureManager(Class<T> keyClass, IParams params) {
-		return keyedTextureManagerFactory == null ? null : keyedTextureManagerFactory.newKeyedTextureManager(keyClass, params);
-	}
-	
-	@Override
-	public void registerKeyedTextureManager(IKeyedTextureManagerFactory keyedTextureManagerFactory) {
-		this.keyedTextureManagerFactory = keyedTextureManagerFactory;
-	}
-	
-	
-	@Override
-	public ITextureManager requestTextureManager() {
-		return requestTextureManager(emptyParams);
-	}
-	
-	@Override
-	public ITextureManager requestTextureManager(IParams params) {
-		return textureManagerFactory == null ? null : textureManagerFactory.newTextureManager(params);
-	}
-	
-	@Override
-	public void registerTextureManager(ITextureManagerFactory textureManagerFactory) {
-		this.textureManagerFactory = textureManagerFactory;
-	}
 	
 	
 	@Override
@@ -136,6 +94,5 @@ public class DefaultRenderAccess implements IRenderAccess {
 	public boolean isRegisteredDriver(IRenderDriverFactory driverFactory) {
 		return drivers.contains(driverFactory);
 	}
-	
 
 }

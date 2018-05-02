@@ -18,7 +18,6 @@ import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.IWorldspace;
-import com.tokelon.toktales.core.render.IKeyedTextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.RenderException;
@@ -57,7 +56,6 @@ public class EntityRenderer implements IEntityRenderer {
 	
 	private final IGameState mGamestate;
 	
-	private IKeyedTextureManager<ISprite> mTextureManager;
 	private IRenderDriver spriteDriver;
 	
 	private IViewTransformer mViewTransformer;
@@ -81,13 +79,7 @@ public class EntityRenderer implements IEntityRenderer {
 		spriteDriver.create();
 		
 		
-		mTextureManager = mGamestate.getEngine().getRenderService().getRenderAccess().requestKeyedTextureManager(ISprite.class);
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
-		
-		spriteModel.setTextureManager(mTextureManager);
-		
+		spriteModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
 	}
 
 	
@@ -115,12 +107,7 @@ public class EntityRenderer implements IEntityRenderer {
 			spriteDriver = null;
 		}
 		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
-		}
-		
-		spriteModel.setTextureManager(null);
+		spriteModel.setTextureCoordinator(null);
 		
 		mViewTransformer = null;
 	}
@@ -249,7 +236,8 @@ public class EntityRenderer implements IEntityRenderer {
 
 				spriteModel.getTextureScaling().set(1.0f, 1.0f);
 				
-				spriteModel.setTarget(entitySprite, entityTexture);
+				spriteModel.setTargetSprite(entitySprite);
+				spriteModel.setTargetTexture(entityTexture);
 				
 				
 				drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);
@@ -272,6 +260,5 @@ public class EntityRenderer implements IEntityRenderer {
 		} //end for loop
 		
 	}
-	
 	
 }

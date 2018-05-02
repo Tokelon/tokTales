@@ -32,14 +32,12 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 
 	private IViewTransformer customViewTransformer;
 	
-	private final CharRenderer charRenderer;
+	private CharRenderer charRenderer;
 	
 	private final IGameState gamestate;
 	
 	public ConsoleOverlayRenderer(IGameState gamestate) {
 		this.gamestate = gamestate;
-		
-		charRenderer = new CharRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
 	}
 
 	
@@ -182,6 +180,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 
 	@Override
 	protected void onContextCreated() {
+		charRenderer = new CharRenderer(gamestate.getEngine().getRenderService().getRenderAccess(), gamestate.getStateRender().getTextureCoordinator());
 		charRenderer.contextCreated();
 	}
 
@@ -200,7 +199,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	@Override
 	protected void onContextDestroyed() {
 		charRenderer.contextDestroyed();
+		charRenderer = null;
 	}
-
 	
 }

@@ -7,41 +7,38 @@ import java.util.Map;
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.IRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public abstract class AbstractStateRender implements IStateRender {
 
 
-	private final Map<String, IRenderer> managedRendererMap;
-
-	private boolean hasSurface = false;
-	
-	
 	private final AccurateViewport contextViewport = new AccurateViewport();
 	private final Matrix4f projectionMatrix = new Matrix4f();
 	private final IViewTransformer viewTransformer;
 
+	private final Map<String, IRenderer> managedRendererMap;
+
+	private boolean hasSurface = false;
 	private boolean hasView = false;
 	
 	
 	private ISurface currentSurface;
-	
 	private ICamera currentCamera;
 
+	private final ITextureCoordinator textureCoordinator;
 	
-	public AbstractStateRender(ISurfaceHandler surfaceHandler) {
+	public AbstractStateRender(ITextureCoordinator textureCoordinator) {
+		this.textureCoordinator = textureCoordinator;
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());
 		
 		this.viewTransformer = new DefaultViewTransformer();
-		
-		surfaceHandler.addCallback(new SurfaceCallback());
 	}
 	
 	
@@ -115,7 +112,11 @@ public abstract class AbstractStateRender implements IStateRender {
 	public IViewTransformer getViewTransformer() {
 		return viewTransformer;
 	}
-		
+	
+	@Override
+	public ITextureCoordinator getTextureCoordinator() {
+		return textureCoordinator;
+	}
 	
 	
 	@Override
@@ -129,62 +130,59 @@ public abstract class AbstractStateRender implements IStateRender {
 	}
 	
 	
-	private class SurfaceCallback implements ISurfaceHandler.ISurfaceCallback {
 
-		@Override
-		public void surfaceCreated(ISurface surface) {
-			hasView = false;	// Do this?
-			currentSurface = surface;
-			
-			onSurfaceCreated();
-			
-			synchronized (managedRendererMap) {
-				for(IRenderer renderer: managedRendererMap.values()) {
-					renderer.contextCreated();
-				}
+	@Override
+	public void surfaceCreated(ISurface surface) {
+		hasView = false;	// Do this?
+		currentSurface = surface;
+		
+		onSurfaceCreated();
+		
+		synchronized (managedRendererMap) {
+			for(IRenderer renderer: managedRendererMap.values()) {
+				renderer.contextCreated();
 			}
-			
-			hasSurface = true;
 		}
+		
+		hasSurface = true;
+	}
 
-		@Override
-		public void surfaceChanged(ISurface surface) {
-			IScreenViewport masterViewport = surface.getViewport();
-			
-			contextViewport.setSize(masterViewport.getWidth(), masterViewport.getHeight());
-			contextViewport.setOffset(masterViewport.getHorizontalOffset(), masterViewport.getVerticalOffset());
-			
-			projectionMatrix.set(surface.getProjectionMatrix());
-			
-			viewTransformer.setViewport(contextViewport);
-			
-			
-			hasView = true;
-			onSurfaceChanged();	// Call the state renderer first
-			
-			// Iterate over the managed renderers
-			synchronized (managedRendererMap) {
-				for(IRenderer renderer: managedRendererMap.values()) {
-					renderer.contextChanged(getViewTransformer(), getProjectionMatrix());
-				}
+	@Override
+	public void surfaceChanged(ISurface surface) {
+		IScreenViewport masterViewport = surface.getViewport();
+		
+		contextViewport.setSize(masterViewport.getWidth(), masterViewport.getHeight());
+		contextViewport.setOffset(masterViewport.getHorizontalOffset(), masterViewport.getVerticalOffset());
+		
+		projectionMatrix.set(surface.getProjectionMatrix());
+		
+		viewTransformer.setViewport(contextViewport);
+		
+		
+		hasView = true;
+		onSurfaceChanged();	// Call the state renderer first
+		
+		// Iterate over the managed renderers
+		synchronized (managedRendererMap) {
+			for(IRenderer renderer: managedRendererMap.values()) {
+				renderer.contextChanged(getViewTransformer(), getProjectionMatrix());
 			}
-			
 		}
+		
+	}
 
-		@Override
-		public void surfaceDestroyed(ISurface surface) {
-			currentSurface = null;
-			hasSurface = false;
-			hasView = false;
-			onSurfaceDestroyed();
-			
-			synchronized (managedRendererMap) {
-				for(IRenderer renderer: managedRendererMap.values()) {
-					renderer.contextDestroyed();
-				}
+	@Override
+	public void surfaceDestroyed(ISurface surface) {
+		currentSurface = null;
+		hasSurface = false;
+		hasView = false;
+		onSurfaceDestroyed();
+		
+		synchronized (managedRendererMap) {
+			for(IRenderer renderer: managedRendererMap.values()) {
+				renderer.contextDestroyed();
 			}
 		}
 	}
 	
-
 }

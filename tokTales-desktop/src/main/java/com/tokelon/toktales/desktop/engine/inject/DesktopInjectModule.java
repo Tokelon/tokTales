@@ -24,7 +24,6 @@ import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
-import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
@@ -43,7 +42,6 @@ import com.tokelon.toktales.desktop.lwjgl.render.GLKeyedTextureManager;
 import com.tokelon.toktales.desktop.lwjgl.render.GLShapeDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteFontDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLTextureManager;
 import com.tokelon.toktales.desktop.main.DesktopEnvironment;
 import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
@@ -104,7 +102,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(GLBitmapDriver.class);
 		
 		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
-		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
 		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
 		
@@ -136,8 +133,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		@Inject
 		public ProviderIRenderService(
 				DesktopRenderService desktopRenderService,
-				IKeyedTextureManagerFactory keyedTextureManagerFactory,
-				ITextureManagerFactory textureManagerFactory,
 				IRenderToolkitFactory renderToolkitFactory,
 				GLSpriteDriver.GLSpriteDriverFactory glSpriteDriverFactory,
 				GLSpriteFontDriver.GLSpriteFontDriverFactory glSpriteFontDriverFactory,
@@ -149,8 +144,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 			this.renderService = desktopRenderService;
 
 			IRenderAccess renderAccess = desktopRenderService.getRenderAccess();
-			renderAccess.registerKeyedTextureManager(keyedTextureManagerFactory);
-			renderAccess.registerTextureManager(textureManagerFactory);
 			renderAccess.registerToolkit(renderToolkitFactory);
 			renderAccess.registerDriver(glSpriteDriverFactory);
 			renderAccess.registerDriver(glSpriteFontDriverFactory);

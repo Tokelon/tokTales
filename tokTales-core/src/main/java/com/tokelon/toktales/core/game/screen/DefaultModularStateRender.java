@@ -8,8 +8,6 @@ import java.util.Map;
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
@@ -17,20 +15,23 @@ import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.IRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public class DefaultModularStateRender implements IModularStateRender {
 
+	
 	private static final double CALLBACK_RENDER = 0d;
-	
-	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<String, ISegmentRenderer>();
-	
-	private final List<IViewTransformer> viewTransformerList = new ArrayList<IViewTransformer>();
-	
+
 	private final AccurateViewport contextViewport = new AccurateViewport();
 	private final Matrix4f contextProjectionMatrix = new Matrix4f();
 	private final IViewTransformer contextViewTransformer;
 
+	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<String, ISegmentRenderer>();
+	
+	private final List<IViewTransformer> viewTransformerList = new ArrayList<IViewTransformer>();
+	
 	
 	private boolean mIsReady = false;
 	
@@ -41,20 +42,20 @@ public class DefaultModularStateRender implements IModularStateRender {
 	
 	private ICamera camera;
 	
+	private final ITextureCoordinator textureCoordinator;
 	private final IRenderingStrategy mStrategy;
 	private final IGameState mGamestate;
 	
-	public DefaultModularStateRender(IRenderingStrategy strategy, ISurfaceHandler surfaceHandler, IGameState gamestate) {
+	public DefaultModularStateRender(IRenderingStrategy strategy, IGameState gamestate) {
 		this.mStrategy = strategy;
 		this.mGamestate = gamestate;
 		this.camera = gamestate.getActiveScene().getCameraController().getCamera();
 
 		this.contextViewTransformer = new DefaultViewTransformer();
+		this.textureCoordinator = new DefaultTextureCoordinator(gamestate.getGame().getContentManager().getTextureManager());
 
 		IRenderOrder renderOrder = gamestate.getRenderOrder();
 		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(CALLBACK_RENDER, this);
-		
-		surfaceHandler.addCallback(new SurfaceCallback());
 	}
 	
 	
@@ -147,6 +148,11 @@ public class DefaultModularStateRender implements IModularStateRender {
 	public IViewTransformer getViewTransformer() {
 		return contextViewTransformer;
 	}
+	
+	@Override
+	public ITextureCoordinator getTextureCoordinator() {
+		return textureCoordinator;
+	}
 
 
 	// TODO: How to handle these? Replace the other methods?
@@ -176,80 +182,74 @@ public class DefaultModularStateRender implements IModularStateRender {
 	}
 	
 	
+
+	// synchronize when iterating over renderers?
 	
+	@Override
+	public void surfaceCreated(ISurface surface) {
+		currentSurface = surface;
+		hasSurface = true;
+		
+		for(ISegmentRenderer renderer: segmentRendererMap.values()) {
+			renderer.contextCreated();
+		}
 	
-	private class SurfaceCallback implements ISurfaceCallback {
-
-		// synchronize when iterating over renderers?
 		
-		@Override
-		public void surfaceCreated(ISurface surface) {
-			currentSurface = surface;
-			hasSurface = true;
-			
-			for(ISegmentRenderer renderer: segmentRendererMap.values()) {
-				renderer.contextCreated();
-			}
-		
-			
-			mIsReady = true;
-		}
-
-		@Override
-		public void surfaceChanged(ISurface surface) {
-			hasSurfaceValues = true;
-
-			IScreenViewport masterViewport = surface.getViewport();
-
-			contextViewport.setSize(masterViewport.getWidth(), masterViewport.getHeight());
-			contextViewport.setOffset(masterViewport.getHorizontalOffset(), masterViewport.getVerticalOffset());
-			
-			contextViewTransformer.setViewport(contextViewport);
-
-			contextProjectionMatrix.set(surface.getProjectionMatrix());
-
-			
-			viewTransformerList.clear();
-			
-			for(String rendererName: segmentRendererMap.keySet()) {
-				
-				ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
-				
-				
-				IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(DefaultModularStateRender.this, masterViewport, camera, rendererName);
-				viewTransformerList.add(rendererViewTransformer);
-				
-				renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);
-			}
-			
-
-			/* Implement camera adjust ?
-			 * 
-			ICamera gamestateCamera = mGamestate.getCamera();
-			
-			int orientation = masterViewport.getOrientation();
-			if(orientation == IViewport.ORIENTATION_LANDSCAPE) {
-				gamestateCamera.setPortraitOrientation(false);
-			}
-			else if(orientation == IViewport.ORIENTATION_PORTRAIT) {
-				gamestateCamera.setPortraitOrientation(true);
-			}
-			*/
-		}
-
-		@Override
-		public void surfaceDestroyed(ISurface surface) {
-			currentSurface = null;
-			hasSurface = false;
-			hasSurfaceValues = false;
-			mIsReady = false;
-			
-			for(ISegmentRenderer renderer: segmentRendererMap.values()) {
-				renderer.contextDestroyed();
-			}
-		}
-		
+		mIsReady = true;
 	}
 
+	@Override
+	public void surfaceChanged(ISurface surface) {
+		hasSurfaceValues = true;
+
+		IScreenViewport masterViewport = surface.getViewport();
+
+		contextViewport.setSize(masterViewport.getWidth(), masterViewport.getHeight());
+		contextViewport.setOffset(masterViewport.getHorizontalOffset(), masterViewport.getVerticalOffset());
+		
+		contextViewTransformer.setViewport(contextViewport);
+
+		contextProjectionMatrix.set(surface.getProjectionMatrix());
+
+		
+		viewTransformerList.clear();
+		
+		for(String rendererName: segmentRendererMap.keySet()) {
+			
+			ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
+			
+			
+			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(DefaultModularStateRender.this, masterViewport, camera, rendererName);
+			viewTransformerList.add(rendererViewTransformer);
+			
+			renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);
+		}
+		
+
+		/* Implement camera adjust ?
+		 * 
+		ICamera gamestateCamera = mGamestate.getCamera();
+		
+		int orientation = masterViewport.getOrientation();
+		if(orientation == IViewport.ORIENTATION_LANDSCAPE) {
+			gamestateCamera.setPortraitOrientation(false);
+		}
+		else if(orientation == IViewport.ORIENTATION_PORTRAIT) {
+			gamestateCamera.setPortraitOrientation(true);
+		}
+		*/
+	}
+
+	@Override
+	public void surfaceDestroyed(ISurface surface) {
+		currentSurface = null;
+		hasSurface = false;
+		hasSurfaceValues = false;
+		mIsReady = false;
+		
+		for(ISegmentRenderer renderer: segmentRendererMap.values()) {
+			renderer.contextDestroyed();
+		}
+	}
 	
 }

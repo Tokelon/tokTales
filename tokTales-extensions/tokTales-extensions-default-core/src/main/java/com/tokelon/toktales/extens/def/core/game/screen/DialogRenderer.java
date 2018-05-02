@@ -17,21 +17,18 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	public static final String DEFAULT_DIALOG_CONTROLLER_NAME = "controller_dialog";
 	
 	private String dialogControllerName = DEFAULT_DIALOG_CONTROLLER_NAME;
+
 	
-	private final TextRenderer textRenderer;
-	private final ShapeRenderer shapeRenderer;
-	
-	private final IGameState gamestate;
+	private TextRenderer textRenderer;
+	private ShapeRenderer shapeRenderer;
 	
 	private final RectangleShape border;
 	private final RectangleShape background;
 	
+	private final IGameState gamestate;
 	
 	public DialogRenderer(IGameState gamestate) {
 		this.gamestate = gamestate;
-		
-		this.textRenderer = new TextRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
-		this.shapeRenderer = new ShapeRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
 		
 		this.border = new RectangleShape();
 		this.background = new RectangleShape();
@@ -49,6 +46,9 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	
 	@Override
 	protected void onContextCreated() {
+		textRenderer = new TextRenderer(gamestate.getEngine().getRenderService().getRenderAccess(), gamestate.getStateRender().getTextureCoordinator());
+		shapeRenderer = new ShapeRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
+		
 		textRenderer.contextCreated();
 		shapeRenderer.contextCreated();
 	}
@@ -144,6 +144,5 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 		
 		textRenderer.drawTextBox(dialog, dialog.getTextColor());
 	}
-	
 	
 }

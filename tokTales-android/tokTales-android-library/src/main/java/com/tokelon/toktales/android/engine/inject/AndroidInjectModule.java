@@ -27,7 +27,6 @@ import com.tokelon.toktales.android.render.opengl.GLKeyedTextureManager;
 import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
-import com.tokelon.toktales.android.render.opengl.GLTextureManager;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL13;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL14;
@@ -59,7 +58,6 @@ import com.tokelon.toktales.core.render.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
-import com.tokelon.toktales.core.render.ITextureManagerFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
@@ -119,7 +117,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(GLBitmapDriver.class);
 		
 		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
-		bind(ITextureManagerFactory.class).to(GLTextureManager.GLTextureManagerFactory.class);
 		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
 		
@@ -149,8 +146,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		@Inject
 		public ProviderIRenderService(
 				AndroidRenderService androidRenderService,
-				IKeyedTextureManagerFactory keyedTextureManagerFactory,
-				ITextureManagerFactory textureManagerFactory,
 				IRenderToolkitFactory renderToolkitFactory,
 				GLSpriteDriver.GLSpriteDriverFactory glSpriteDriverFactory,
 				GLSpriteFontDriver.GLSpriteFontDriverFactory glSpriteFontDriverFactory,
@@ -162,8 +157,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			this.renderService = androidRenderService;
 			
 			IRenderAccess renderAccess = androidRenderService.getRenderAccess();
-			renderAccess.registerKeyedTextureManager(keyedTextureManagerFactory);
-			renderAccess.registerTextureManager(textureManagerFactory);
 			renderAccess.registerToolkit(renderToolkitFactory);
 			renderAccess.registerDriver(glSpriteDriverFactory);
 			renderAccess.registerDriver(glSpriteFontDriverFactory);

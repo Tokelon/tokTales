@@ -2,14 +2,14 @@ package com.tokelon.toktales.core.game.screen;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 
 public class EmptyStateRender extends AbstractStateRender {
 
 	
 	@Inject
-	public EmptyStateRender(ISurfaceHandler surfaceHandler) {
-		super(surfaceHandler);
+	public EmptyStateRender(ITextureCoordinator textureCoordinator) {
+		super(textureCoordinator);
 	}
 
 	

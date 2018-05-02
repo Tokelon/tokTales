@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderTexture;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
@@ -26,15 +26,15 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 
 	private boolean isInBatchDraw = false;
 
-	private ITextureManager mTextureManager;
 	private IRenderDriver fontDriver;
 	
 	private final IRenderAccess renderAccess;
 	
 	
-	public TextRenderer(IRenderAccess renderAccess) {
+	public TextRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator) {
 		this.renderAccess = renderAccess;
 		
+		fontModel.setTextureCoordinator(textureCoordinator);
 		fontModel.setInvertYAxis(true);
 		fontModel.setTargetColor(colorVector);
 	}
@@ -43,21 +43,12 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 	
 	@Override
 	protected void onContextCreated() {
-
 		fontDriver = renderAccess.requestDriver(ITextureFontModel.class.getName());
 		if(fontDriver == null) {
 			throw new RenderException("No render driver found for: " +ITextureFontModel.class.getName());
 		}
 		
 		fontDriver.create();
-		
-		
-		mTextureManager = renderAccess.requestTextureManager();
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
-		
-		fontModel.setTextureManager(mTextureManager);
 	}
 
 	@Override
@@ -71,13 +62,6 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 			fontDriver.destroy();
 			fontDriver = null;
 		}
-		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
-		}
-		
-		fontModel.setTextureManager(null);
 	}
 	
 	
@@ -228,6 +212,5 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 			fontDriver.release();
 		}
 	}
-	
 
 }

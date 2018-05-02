@@ -33,14 +33,14 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	
 	private boolean isInBatchDraw = false;
 	
-	private ITextureManager mTextureManager;
 	private IRenderDriver fontDriver;
 	
 	private final IRenderAccess renderAccess;
 	
-	public CharRenderer(IRenderAccess renderAccess) {
+	public CharRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator) {
 		this.renderAccess = renderAccess;
 		
+		fontModel.setTextureCoordinator(textureCoordinator);
 		fontModel.setInvertYAxis(true);
 	}
 	
@@ -54,14 +54,6 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		}
 		
 		fontDriver.create();
-		
-		
-		mTextureManager = renderAccess.requestTextureManager();
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
-		
-		fontModel.setTextureManager(mTextureManager);
 	}
 	
 	@Override
@@ -74,11 +66,6 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		if(fontDriver != null) {
 			fontDriver.destroy();
 			fontDriver = null;
-		}
-		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
 		}
 	}
 

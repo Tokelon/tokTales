@@ -17,7 +17,6 @@ import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderTexture;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
@@ -27,7 +26,7 @@ import com.tokelon.toktales.core.util.NamedOptionsImpl;
 public class ConsoleRenderer implements ISegmentRenderer {
 
 	
-	public static final float CHAR_HOR_DISTANCE_MODIFIER_BASED_ON_TILESIZE = 0;//- 0.25f; 
+	public static final float CHAR_HOR_DISTANCE_MODIFIER_BASED_ON_TILESIZE = 0;//- 0.25f;
 	
 	private final Matrix4f matrixProjection = new Matrix4f();
 	private final Matrix4f matrixView = new Matrix4f();
@@ -39,9 +38,6 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	private final DrawingMeta dmeta = new DrawingMeta();
 
 
-	private ITextureManager mTextureManager;
-	
-	private IRenderDriver fontDriver;
 	private final TextureFontModel fontModel = new TextureFontModel();
 	
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
@@ -50,6 +46,8 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	private IViewTransformer viewTransformer;
 	private IViewGridTransformer gridTransformer;
 	
+	private IRenderDriver fontDriver;
+
 	private final IGameState mGamestate;
 	private final IConsoleController mConsoleController;
 	
@@ -58,7 +56,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		this.mConsoleController = consoleController;
 		
 		fontModel.setInvertYAxis(true);
-		fontModel.setTargetColor(new Vector4f(1.0f, 0.5f, 0.2f, 0.0f));
+		fontModel.setTargetColor(new Vector4f(0.0f, 1.0f, 0.0f, 0.0f));
 	}
 	
 	
@@ -73,14 +71,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		fontDriver.create();
 		
 		
-		mTextureManager = mGamestate.getEngine().getRenderService().getRenderAccess().requestTextureManager();
-		if(mTextureManager == null) {
-			throw new RenderException("No texture manager found");
-		}
-
-		
-		fontModel.setTextureManager(mTextureManager);
-		
+		fontModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
 	}
 
 	
@@ -107,12 +98,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 			fontDriver = null;
 		}
 		
-		if(mTextureManager != null) {
-			mTextureManager.clear();
-			mTextureManager = null;
-		}
-		
-		fontModel.setTextureManager(null);
+		fontModel.setTextureCoordinator(null);
 		
 		gridTransformer = null;
 		viewTransformer = null;
@@ -338,6 +324,5 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		private final Rectangle2fImpl tileSourceBounds = new Rectangle2fImpl();
 		private final Point2fImpl tileTranslation = new Point2fImpl();
 	}
-
 	
 }
