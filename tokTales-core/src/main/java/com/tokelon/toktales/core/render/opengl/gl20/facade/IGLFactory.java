@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLUtils.ShaderType;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFacade.ShaderType;
 
 public interface IGLFactory {
 

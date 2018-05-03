@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.render.opengl.gl20.facade;
 
 import com.tokelon.toktales.core.render.opengl.OpenGLException;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLUtils.ShaderType;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFacade.ShaderType;
 
 public interface IGLShader {
 

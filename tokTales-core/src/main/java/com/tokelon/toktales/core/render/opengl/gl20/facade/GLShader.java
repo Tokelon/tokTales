@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.tokelon.toktales.core.render.opengl.OpenGLException;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLUtils.ShaderType;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFacade.ShaderType;
 
 public class GLShader implements IGLShader {
 
@@ -26,7 +26,7 @@ public class GLShader implements IGLShader {
 	public void create(ShaderType type) throws OpenGLException {
 		shaderType = type;
 		
-		shaderId = gl20.glCreateShader(IGLUtils.mapShaderType(type));
+		shaderId = gl20.glCreateShader(IGLFacade.mapShaderType(type));
 		
 		if(shaderId == 0) {
 			throw new OpenGLException("Error creating shader"); // TODO: Add error if possible

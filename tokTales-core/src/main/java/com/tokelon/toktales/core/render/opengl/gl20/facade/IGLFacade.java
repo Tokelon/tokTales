@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.render.opengl.gl20.facade;
 
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
-public interface IGLUtils {
+public interface IGLFacade {
 	
 
 	public enum ShaderType {

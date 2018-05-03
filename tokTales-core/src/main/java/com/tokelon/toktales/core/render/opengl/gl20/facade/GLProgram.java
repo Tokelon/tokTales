@@ -10,7 +10,7 @@ import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
 import com.tokelon.toktales.core.render.opengl.OpenGLException;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLUtils.ShaderType;
+import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFacade.ShaderType;
 
 public class GLProgram implements IGLProgram {
 
