@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.ITextureDriver;
 
+/** Default texture driver, cross-platform using OpenGL CompatWrapper. 
+ */
 public class GLTextureDriver implements ITextureDriver {
 	// Cache info values?
 	// Add checks for texture index values?
