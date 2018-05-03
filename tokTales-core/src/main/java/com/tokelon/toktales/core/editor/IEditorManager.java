@@ -1,8 +1,6 @@
 package com.tokelon.toktales.core.editor;
 
-import com.tokelon.toktales.core.prog.IProgramInterface;
-
-public interface IEditorManager extends IProgramInterface {
+public interface IEditorManager {
 
 	// TODO: Reevaluate and remove
 	

@@ -1,8 +1,7 @@
 package com.tokelon.toktales.core.engine.log;
 
-import com.tokelon.toktales.core.prog.IProgramInterface;
-
-public interface ILogger extends IProgramInterface {
+public interface ILogger {
+	// TODO: Implement SLF4J compatibility
 
 	//public void log(level)
 	
