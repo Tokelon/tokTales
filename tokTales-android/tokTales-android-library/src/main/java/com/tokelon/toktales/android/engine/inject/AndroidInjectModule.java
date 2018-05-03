@@ -23,7 +23,6 @@ import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit.AndroidRenderToolkitFactory;
 import com.tokelon.toktales.android.render.opengl.GLBitmapDriver;
 import com.tokelon.toktales.android.render.opengl.GLBitmapFontDriver;
-import com.tokelon.toktales.android.render.opengl.GLKeyedTextureManager;
 import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
 import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
@@ -54,7 +53,6 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.IKeyedTextureManager.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
@@ -116,7 +114,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(GLShapeDriver.class);
 		bind(GLBitmapDriver.class);
 		
-		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
 		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
 		

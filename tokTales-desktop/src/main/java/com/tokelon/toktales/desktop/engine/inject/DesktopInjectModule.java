@@ -20,7 +20,6 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.IKeyedTextureManager.IKeyedTextureManagerFactory;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
@@ -38,7 +37,6 @@ import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapFontDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLKeyedTextureManager;
 import com.tokelon.toktales.desktop.lwjgl.render.GLShapeDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteFontDriver;
@@ -101,7 +99,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(GLShapeDriver.class);
 		bind(GLBitmapDriver.class);
 		
-		bind(IKeyedTextureManagerFactory.class).to(GLKeyedTextureManager.GLKeyedTextureManagerFactory.class);
 		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
 		
