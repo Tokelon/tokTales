@@ -80,7 +80,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 		mTextView.addTextChangedListener(textViewProxyTextWatcher = new ProxyTextWatcher());
 		mTextView.setOnKeyListener(new TextViewOnKeyListener());
 		
-		renderingProcess = new GLRenderingProcess(TokTales.getGame(), TokTales.getEngine());
+		renderingProcess = new GLRenderingProcess(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
 
 		// Use with OpenGL renderer
 		renderingProcess.setObjRenderView(mRenderView);
@@ -297,5 +297,4 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 		
 	}
 
-	
 }

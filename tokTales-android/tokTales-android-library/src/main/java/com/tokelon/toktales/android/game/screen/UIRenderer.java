@@ -1,14 +1,11 @@
 package com.tokelon.toktales.android.game.screen;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
 
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.opengl.GLES20;
-
-import com.tokelon.toktales.android.render.opengl.OpenGLUtils;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.android.render.tools.IButtonOverlayView;
@@ -20,6 +17,10 @@ import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.INamedOptions;
+
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.opengl.GLES20;
 
 public class UIRenderer implements ISegmentRenderer {
 
@@ -205,7 +206,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectControlLeft.right, rectControlLeft.top, 0.0f,
 				};
 		
-		verticesBufferControlLeft = OpenGLUtils.floatValuesAsBuffer(faControlLeft);
+		verticesBufferControlLeft = floatValuesAsBuffer(faControlLeft);
 
 		
 		float[] faControlUp = new float[]
@@ -216,7 +217,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectControlUp.right, rectControlUp.top, 0.0f,
 				};
 		
-		verticesBufferControlUp = OpenGLUtils.floatValuesAsBuffer(faControlUp);
+		verticesBufferControlUp = floatValuesAsBuffer(faControlUp);
 		
 		
 		float[] faControlRight = new float[]
@@ -227,7 +228,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectControlRight.right, rectControlRight.top, 0.0f,
 				};
 		
-		verticesBufferControlRight = OpenGLUtils.floatValuesAsBuffer(faControlRight);
+		verticesBufferControlRight = floatValuesAsBuffer(faControlRight);
 		
 		
 		float[] faControlDown = new float[]
@@ -238,7 +239,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectControlDown.right, rectControlDown.top, 0.0f,
 				};
 		
-		verticesBufferControlDown = OpenGLUtils.floatValuesAsBuffer(faControlDown);
+		verticesBufferControlDown = floatValuesAsBuffer(faControlDown);
 		
 		
 		
@@ -251,7 +252,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectButtonA.right, rectButtonA.bottom, 0.0f,
 					rectButtonA.right, rectButtonA.top, 0.0f,
 				};
-		verticesBufferButtonA = OpenGLUtils.floatValuesAsBuffer(faButtonA);
+		verticesBufferButtonA = floatValuesAsBuffer(faButtonA);
 		
 		
 		float[] faButtonB = new float[]
@@ -261,7 +262,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectButtonB.right, rectButtonB.bottom, 0.0f,
 					rectButtonB.right, rectButtonB.top, 0.0f,
 				};
-		verticesBufferButtonB = OpenGLUtils.floatValuesAsBuffer(faButtonB);
+		verticesBufferButtonB = floatValuesAsBuffer(faButtonB);
 		
 		
 		float[] faButtonSP1 = new float[]
@@ -271,7 +272,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectButtonSP1.right, rectButtonSP1.bottom, 0.0f,
 					rectButtonSP1.right, rectButtonSP1.top, 0.0f,
 				};
-		verticesBufferButtonSP1 = OpenGLUtils.floatValuesAsBuffer(faButtonSP1);
+		verticesBufferButtonSP1 = floatValuesAsBuffer(faButtonSP1);
 		
 		
 		float[] faButtonSET = new float[]
@@ -281,7 +282,7 @@ public class UIRenderer implements ISegmentRenderer {
 					rectButtonSET.right, rectButtonSET.bottom, 0.0f,
 					rectButtonSET.right, rectButtonSET.top, 0.0f,
 				};
-		verticesBufferButtonSET = OpenGLUtils.floatValuesAsBuffer(faButtonSET);
+		verticesBufferButtonSET = floatValuesAsBuffer(faButtonSET);
 		
 		
 		
@@ -295,6 +296,20 @@ public class UIRenderer implements ISegmentRenderer {
 		matrixProjection.mul(matrixView, matrixProjectionAndView);
 		
 	}
+	
+
+	private static FloatBuffer floatValuesAsBuffer(float[] values) {
+		
+		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(values.length * 4);
+		byteBuffer.order(ByteOrder.nativeOrder());
+		
+		FloatBuffer floatBuffer = byteBuffer.asFloatBuffer();
+		floatBuffer.put(values);
+		floatBuffer.position(0);
+		
+		return floatBuffer;
+	}
+	
 	
 	@Override
 	public void contextDestroyed() {
@@ -428,6 +443,5 @@ public class UIRenderer implements ISegmentRenderer {
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 4);
 		
 	}
-	
 
 }

@@ -71,7 +71,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		renderingProcess = new GLRenderingProcess(TokTales.getGame(), TokTales.getEngine());
+		renderingProcess = new GLRenderingProcess(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
 		
 		// Set activity to fullscreen
 		setFullscreen();
@@ -375,7 +375,5 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 			}
 		}
 	}
-
-
 	
 }

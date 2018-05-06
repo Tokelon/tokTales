@@ -16,9 +16,9 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	private final ILogger logger;
 	private final OpenGLRenderer renderer;
 	
-	public SurfaceViewIntegration(IGame game, IEngine engine, ILogger logger) {
+	public SurfaceViewIntegration(ILogger logger, IEngine engine, IGame game) {
 		this.logger = logger;
-		renderer = new OpenGLRenderer(game, engine);
+		renderer = new OpenGLRenderer(logger, engine, game);
 	}
 	
 	

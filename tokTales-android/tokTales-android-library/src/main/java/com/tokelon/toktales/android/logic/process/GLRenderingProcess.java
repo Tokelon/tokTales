@@ -3,7 +3,7 @@ package com.tokelon.toktales.android.logic.process;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLRenderer;
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.logic.process.IPauseableProcess;
 
@@ -12,25 +12,26 @@ public class GLRenderingProcess implements IPauseableProcess {
 	public static final String TAG = "GLRenderingProcess";
 	
 	
-	private final IGame game;
-	private final IEngine engine;
-	
 	private RenderGLSurfaceView objRenderView;
 
 	private OpenGLRenderer objMainRenderer;
 	
+	private final ILogger logger;
+	private final IEngine engine;
+	private final IGame game;
 	
-	public GLRenderingProcess(IGame game, IEngine engine) {
-		this.game = game;
+	public GLRenderingProcess(ILogger logger, IEngine engine, IGame game) {
+		this.logger = logger;
 		this.engine = engine;
+		this.game = game;
 	}
 	
 	
 	@Override
 	public void startProcess() {
-		TokTales.getLog().d(TAG, "GLRenderingProcess started");
+		logger.d(TAG, "GLRenderingProcess started");
 
-		objMainRenderer = new OpenGLRenderer(game, engine);
+		objMainRenderer = new OpenGLRenderer(logger, engine, game);
 		
 		
 		objRenderView.setMainRenderer(objMainRenderer);
@@ -48,7 +49,7 @@ public class GLRenderingProcess implements IPauseableProcess {
 	
 	@Override
 	public void endProcess() {
-		TokTales.getLog().d(TAG, "GLRenderingProcess ended");
+		logger.d(TAG, "GLRenderingProcess ended");
 
 		clearObjects();
 	}
@@ -56,7 +57,7 @@ public class GLRenderingProcess implements IPauseableProcess {
 	
 	@Override
 	public void pause() {
-		TokTales.getLog().d(TAG, "GLRenderingProcess paused");
+		logger.d(TAG, "GLRenderingProcess paused");
 
 		objRenderView.onPause();
 	}
@@ -64,7 +65,7 @@ public class GLRenderingProcess implements IPauseableProcess {
 	
 	@Override
 	public void unpause() {
-		TokTales.getLog().d(TAG, "GLRenderingProcess unpaused");
+		logger.d(TAG, "GLRenderingProcess unpaused");
 		
 		objRenderView.onResume();
 	}
