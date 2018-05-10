@@ -18,7 +18,7 @@ public class Texture implements IRenderTexture {
 	private int wrapS = IGL12.GL_CLAMP_TO_EDGE;
 	private int wrapT = IGL12.GL_CLAMP_TO_EDGE;
 	
-	private IBitmap bitmap;
+	private final IBitmap bitmap;
 	
 	public Texture(IBitmap bitmap) {
 		this.bitmap = bitmap;
@@ -129,16 +129,6 @@ public class Texture implements IRenderTexture {
 		return wrapT;
 	}
 	
-	
-	@Override
-	public IRenderTexture setBitmap(IBitmap bitmap) {
-		if(bitmap == null) {
-			throw new NullPointerException();
-		}
-		
-		this.bitmap = bitmap;
-		return this;
-	}
 
 	@Override
 	public IRenderTexture setTextureFormat(int textureFormat) {

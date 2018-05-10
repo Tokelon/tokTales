@@ -90,10 +90,6 @@ public interface IRenderTexture { // TODO: Rename to ITexture
 	public int getWrapT();
 
 	
-
-	// Move these into IMutableRenderTexture interface?
-	public IRenderTexture setBitmap(IBitmap bitmap);
-	
 	public IRenderTexture setTextureFormat(int textureFormat);
 	public IRenderTexture setInternalFormat(int internalFormat);
 	public IRenderTexture setUnpackAlignment(int unpackAlignment);
