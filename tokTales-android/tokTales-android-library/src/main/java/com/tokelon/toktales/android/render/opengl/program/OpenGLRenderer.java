@@ -77,8 +77,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 		mUIGLRenderer = new UIRenderer(this);
 		mUIControl = new UIControl(this);
 
-		glErrorUtils = new GLErrorUtils(logger, new AndroidGL11());
-		glErrorUtils.enableErrorChecking(checkGL);
+		glErrorUtils = new GLErrorUtils(logger, new AndroidGL11(), checkGL);
 		
 		
 		inputDriver = new AndroidInputDriver(mUIControl);

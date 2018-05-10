@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 import com.tokelon.toktales.core.render.opengl.OpenGLErrorException;
 
@@ -19,15 +20,17 @@ public class GLErrorUtils implements IGLErrorUtils {
 	
 	private static final List<IGLError> emptyErrorList = Collections.unmodifiableList(new ArrayList<>());
 	
-	private boolean enableErrorChecking = false;
+	private boolean enableErrorChecking = false; // Implementation default must be false
 	
 	private final ILogger logger;
 	private final IGL11 gl11;
 
 	@Inject
-	public GLErrorUtils(ILogger logger, IGL11 gl11) {
+	public GLErrorUtils(ILogger logger, IGL11 gl11, @GLErrorCheckingEnabled boolean enabled) {
 		this.logger = logger;
 		this.gl11 = gl11;
+		
+		this.enableErrorChecking = enabled;
 	}
 	
 	
@@ -95,16 +98,19 @@ public class GLErrorUtils implements IGLErrorUtils {
 			return emptyErrorList;
 		}
 		
-		ArrayList<IGLError> result = new ArrayList<>();
+		ArrayList<IGLError> result = null;
 		
 		int lastError;
 		while((lastError = gl11.glGetError()) != IGL11.GL_NO_ERROR) {
 			String errorMessage = createGLErrorMessage(lastError);
 			
+			if(result == null) {
+				result = new ArrayList<>();
+			}
 			result.add(new GLError(lastError, errorMessage));
 		}
 		
-		return result;
+		return result == null ? emptyErrorList : result;
 	}
 	
 	

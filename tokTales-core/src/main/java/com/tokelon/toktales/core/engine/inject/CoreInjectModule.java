@@ -59,6 +59,7 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.GLBufferUtils;
+import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
@@ -157,6 +158,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
 		
 		// GL Stuff
+		bind(Boolean.class).annotatedWith(GLErrorCheckingEnabled.class).toInstance(false);
 		bind(IGLErrorUtils.class).to(GLErrorUtils.class); // Could bind this to no-op implementation
 		bind(IGLBufferUtils.class).to(GLBufferUtils.class).in(Scopes.SINGLETON);
 		bind(IGLFactory.class).to(GLFactory.class);

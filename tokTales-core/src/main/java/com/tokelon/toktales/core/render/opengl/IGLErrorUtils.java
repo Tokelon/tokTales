@@ -5,7 +5,7 @@ import java.util.List;
 /** Provides utilities for handling of GL errors.
  */
 public interface IGLErrorUtils {
-	// Make empty implementation that does nothing
+	// Maybe add support for glDebugMessageCallback()
 	
 	
 	/** Enables or disables error checking according to the given value.
