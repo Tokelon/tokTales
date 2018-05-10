@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
+import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 import com.tokelon.toktales.core.render.opengl.OpenGLException;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
@@ -21,11 +22,13 @@ public class GLProgram implements IGLProgram {
 	private IGLShader programVertexShader;
 	private IGLShader programFragmentShader;
 	
-	private final IGL20 gl20;
+	private final IGLErrorUtils glErrorUtils;
 	private final IGLBufferUtils glBufferUtils;
+	private final IGL20 gl20;
 	
 	@Inject
-	public GLProgram(IGL20 gl20, IGLBufferUtils glBufferUtils) {
+	public GLProgram(IGLErrorUtils glErrorUtils, IGLBufferUtils glBufferUtils, IGL20 gl20) {
+		this.glErrorUtils = glErrorUtils;
 		this.gl20 = gl20;
 		this.glBufferUtils = glBufferUtils;
 		
@@ -35,16 +38,23 @@ public class GLProgram implements IGLProgram {
 	
 	@Override
 	public void create() throws OpenGLException {
-		programId = gl20.glCreateProgram();
+		glErrorUtils.logGLErrors("before GLProgram create"); // Clear previous errors
 		
+		
+		programId = gl20.glCreateProgram();
+
+		glErrorUtils.assertNoGLErrors(); // Will throw exception if there are errors
 		if(programId == 0) {
-			throw new OpenGLException("Error creating program"); // TODO: Output error or log or something
+			throw new OpenGLException("Error creating program");
 		}
 	}
 
 	@Override
 	public void attachShader(IGLShader shader) {
-		gl20.glAttachShader(programId, shader.getId()); // TODO: Validate status?
+		glErrorUtils.logGLErrors("before GLProgram attachShader"); // Clear previous errors
+		gl20.glAttachShader(programId, shader.getId());
+		glErrorUtils.logGLErrors("after GLProgram attachShader");
+		
 		
 		ShaderType shaderType = shader.getShaderType();
 		if(shaderType == ShaderType.VERTEX_SHADER) {
@@ -57,18 +67,22 @@ public class GLProgram implements IGLProgram {
 
 	@Override
 	public void link() throws OpenGLException {
+		glErrorUtils.logGLErrors("before GLProgram link");
 		gl20.glLinkProgram(programId);
 		
 		if(gl20.glGetProgrami(programId, IGL20.GL_LINK_STATUS) == IGL11.GL_FALSE) {
+			glErrorUtils.logGLErrors("after GLProgram link");
 			throw new OpenGLException("Error linking program: " + gl20.glGetProgramInfoLog(programId));
 		}
 	}
 
 	@Override
 	public void validate() throws OpenGLException {
+		glErrorUtils.logGLErrors("before GLProgram validate");
 		gl20.glValidateProgram(programId);
 		
 		if(gl20.glGetProgrami(programId, IGL20.GL_VALIDATE_STATUS) == IGL11.GL_FALSE) {
+			glErrorUtils.logGLErrors("after GLProgram validate");
 			throw new OpenGLException("Error validating program: " + gl20.glGetProgramInfoLog(programId));
 		}
 	}
@@ -76,16 +90,20 @@ public class GLProgram implements IGLProgram {
 	@Override
 	public void bind() {
 		gl20.glUseProgram(programId);
+		glErrorUtils.logGLErrors("GLProgram bind");
 	}
 
 	@Override
 	public void unbind() {
 		gl20.glUseProgram(0);
+		glErrorUtils.logGLErrors("GLProgram unbind");
 	}
 
 	@Override
 	public void detachShader(IGLShader shader) {
-		gl20.glDetachShader(programId, shader.getId());	// TODO: Validate something?
+		glErrorUtils.logGLErrors("before GLProgram detachShader");
+		gl20.glDetachShader(programId, shader.getId());
+		glErrorUtils.logGLErrors("after GLProgram detachShader");
 	}
 
 	@Override
@@ -102,6 +120,8 @@ public class GLProgram implements IGLProgram {
 			
 			gl20.glDeleteProgram(programId);
 			programId = 0;
+			
+			glErrorUtils.logGLErrors("GLProgram destroy");
 		}
 	}
 	
@@ -116,7 +136,8 @@ public class GLProgram implements IGLProgram {
 	public IGLUniform createUniform(String uniformName) throws OpenGLException {
 		int uniformLocation = gl20.glGetUniformLocation(programId, uniformName);
 		if(uniformLocation < 0) {
-			throw new OpenGLException("Error locating uniform: " + uniformName); // TODO: Get error message
+			glErrorUtils.logGLErrors("GLProgram createUniform");
+			throw new OpenGLException("Error locating uniform: " + uniformName);
 		}
 		
 		return new GLUniform(uniformName, uniformLocation);
@@ -127,7 +148,8 @@ public class GLProgram implements IGLProgram {
 	public IGLAttribute createAttribute(String attributeName) throws OpenGLException {
 		int attributeLocation = gl20.glGetAttribLocation(programId, attributeName);
 		if(attributeLocation < 0) {
-			throw new OpenGLException("Error locating attribute: " + attributeName); // TODO: Get error message
+			glErrorUtils.logGLErrors("GLProgram createAttribute");
+			throw new OpenGLException("Error locating attribute: " + attributeName);
 		}
 		
 		return new GLAttribute(attributeName, attributeLocation);
@@ -138,6 +160,7 @@ public class GLProgram implements IGLProgram {
 	public void setUniformMatrix4fv(IGLUniform glUniform, boolean transpose, Matrix4f value) {
 		value.get(uniformMatrix4Buffer);
 		gl20.glUniformMatrix4fv(glUniform.getLocation(), transpose, uniformMatrix4Buffer);
+		glErrorUtils.logGLErrors("GLProgram setUniformMatrix4fv");
 	}
 
 }

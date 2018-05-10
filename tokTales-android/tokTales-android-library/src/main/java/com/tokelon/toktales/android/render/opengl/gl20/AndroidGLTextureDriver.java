@@ -1,9 +1,12 @@
 package com.tokelon.toktales.android.render.opengl.gl20;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.android.data.IAndroidBitmap;
 import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.ITextureDriver;
+import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
@@ -21,7 +24,14 @@ public class AndroidGLTextureDriver implements ITextureDriver {
 	private final int[] glArrayTextureSize = new int[1];
 	private final int[] glArrayTextureUnits = new int[1];
 	private final int[] glArrayTextureCombinedUnits = new int[1];
-
+	
+	private final IGLErrorUtils glErrorUtils;
+	
+	@Inject
+	public AndroidGLTextureDriver(IGLErrorUtils glErrorUtils) {
+		this.glErrorUtils = glErrorUtils;
+	}
+	
 	
 	@Override
 	public int loadTexture(IRenderTexture texture, int textureIndex) {
@@ -31,6 +41,8 @@ public class AndroidGLTextureDriver implements ITextureDriver {
 		if(textureIndex < 0) {
 			throw new IllegalArgumentException("textureIndex must be >= 0");
 		}
+		
+		glErrorUtils.logGLErrors("before loadTexture");
 		
 
 		// Generate a new texture
@@ -88,6 +100,8 @@ public class AndroidGLTextureDriver implements ITextureDriver {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, texture.getWrapT()); //GL_CLAMP_TO_EDGE
 		
         
+		glErrorUtils.assertNoGLErrors();
+
 		return textureLocation;
 	}
 

@@ -4,19 +4,22 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.ITextureDriver;
+import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 
-/** Default texture driver, cross-platform using OpenGL CompatWrapper. 
+/** Default texture driver, cross-platform using OpenGL CompatWrapper.
  */
 public class GLTextureDriver implements ITextureDriver {
 	// Cache info values?
 	// Add checks for texture index values?
 	
 	
+	private final IGLErrorUtils glErrorUtils;
 	private final IGL11 gl11;
 	private final IGL13 gl13;
 
 	@Inject
-	public GLTextureDriver(IGL11 gl11, IGL13 gl13) {
+	public GLTextureDriver(IGLErrorUtils glErrorUtils, IGL11 gl11, IGL13 gl13) {
+		this.glErrorUtils = glErrorUtils;
 		this.gl11 = gl11;
 		this.gl13 = gl13;
 	}
@@ -27,6 +30,9 @@ public class GLTextureDriver implements ITextureDriver {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
+		
+		glErrorUtils.logGLErrors("before loadTexture");
+		
 		
 		int textureLocation = gl11.glGenTextures();
 		
@@ -55,16 +61,15 @@ public class GLTextureDriver implements ITextureDriver {
 				dataType,
 				texture.getBitmap().getData());
 		
-		//OpenGLUtils.checkGLErrors(TAG); // TODO: Use!
-
 		
-		// TODO: Does this need to be done when binding?
 		gl11.glTexParameterf(IGL11.GL_TEXTURE_2D, IGL11.GL_TEXTURE_MIN_FILTER, texture.getFilterMin());
 		gl11.glTexParameterf(IGL11.GL_TEXTURE_2D, IGL11.GL_TEXTURE_MAG_FILTER, texture.getFilterMag());
 		
 		gl11.glTexParameterf(IGL11.GL_TEXTURE_2D, IGL11.GL_TEXTURE_WRAP_S, texture.getWrapS());
 		gl11.glTexParameterf(IGL11.GL_TEXTURE_2D, IGL11.GL_TEXTURE_WRAP_T, texture.getWrapT());
 		
+		
+		glErrorUtils.assertNoGLErrors();
 		
 		return textureLocation;
 	}
