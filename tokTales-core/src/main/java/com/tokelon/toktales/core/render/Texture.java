@@ -8,9 +8,10 @@ public class Texture implements IRenderTexture {
 	// TODO: Document default values and implementation logic
 	
 	
-	private int textureFormat = -1;
-	private int internalFormat = -1;
-	private int unpackAlignment = -1;
+	private int textureFormat;
+	private int internalFormat;
+	private int unpackAlignment;
+	
 	private int dataType = IGL11.GL_UNSIGNED_BYTE;
 	
 	private int filterMin = IGL11.GL_NEAREST;
@@ -22,6 +23,10 @@ public class Texture implements IRenderTexture {
 	
 	public Texture(IBitmap bitmap) {
 		this.bitmap = bitmap;
+		
+		this.textureFormat = imageFormatToTextureFormat(bitmap.getFormat());
+		this.internalFormat = textureFormat;
+		this.unpackAlignment = unpackAlignmentFromTextureFormat(textureFormat);
 	}
 	
 	
@@ -32,13 +37,19 @@ public class Texture implements IRenderTexture {
 
 	@Override
 	public int getTextureFormat() {
-		if(textureFormat == -1) {
-			return imageFormatToTextureFormat(getBitmap().getFormat());
-		}
-		else {
-			return textureFormat;
-		}
+		return textureFormat;
 	}
+	
+	@Override
+	public int getInternalFormat() {
+		return internalFormat;
+	}
+
+	@Override
+	public int getUnpackAlignment() {
+		return unpackAlignment;
+	}
+	
 	
 	private int imageFormatToTextureFormat(int imageFormat) {
 		switch (imageFormat) {
@@ -52,26 +63,6 @@ public class Texture implements IRenderTexture {
 			return IGL11.GL_LUMINANCE_ALPHA;
 		default:
 			return -1;
-		}
-	}
-	
-	@Override
-	public int getInternalFormat() {
-		if(internalFormat == -1) {
-			return getTextureFormat();
-		}
-		else {
-			return internalFormat;
-		}
-	}
-
-	@Override
-	public int getUnpackAlignment() {
-		if(unpackAlignment == -1) {
-			return unpackAlignmentFromTextureFormat(getTextureFormat());
-		}
-		else {
-			return unpackAlignment;
 		}
 	}
 	
@@ -103,6 +94,7 @@ public class Texture implements IRenderTexture {
 			return -1;
 		}
 	}
+	
 
 	@Override
 	public int getDataType() {
