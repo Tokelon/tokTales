@@ -3,7 +3,9 @@ package com.tokelon.toktales.core.content.text;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteset;
 import com.tokelon.toktales.core.content.sprite.SpritesetSprite;
+import com.tokelon.toktales.core.prog.annotation.Experimental;
 
+@Experimental
 public class SpriteFontImpl implements ISpriteFont {
 
 	
@@ -50,6 +52,5 @@ public class SpriteFontImpl implements ISpriteFont {
 		SpritesetSprite sprite = spriteArray[codepoint];
 		return sprite;
 	}
-	
 
 }

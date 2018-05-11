@@ -22,6 +22,8 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.prog.annotation.Experimental;
+import com.tokelon.toktales.core.prog.annotation.Unmaintained;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
@@ -35,6 +37,8 @@ import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
+@Unmaintained
+@Experimental
 public class GLSpriteFontDriver implements IRenderDriver {
 
 	public static final String TAG = "GLSpriteFontDriver";
@@ -215,7 +219,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 		mShader.setUniform("uModelMatrix", modelMatrix);
 		mShader.setUniform("samplerTexture", textureIndex);
-		mShader.setUniform("colorOver", fontModel.getColor());
+		mShader.setUniform("colorOver", fontModel.getTargetColor());
 		
 
 		glDrawElements(GL_TRIANGLES, spriteMesh.getVertexCount(), GL_UNSIGNED_INT, 0);

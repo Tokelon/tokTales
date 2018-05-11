@@ -1,7 +1,9 @@
 package com.tokelon.toktales.core.content.text;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
+import com.tokelon.toktales.core.prog.annotation.Experimental;
 
+@Experimental
 public interface ISpriteFont extends IFont {
 	
 	
@@ -15,5 +17,4 @@ public interface ISpriteFont extends IFont {
 
 	public int getCharacterCount();
 
-	
 }

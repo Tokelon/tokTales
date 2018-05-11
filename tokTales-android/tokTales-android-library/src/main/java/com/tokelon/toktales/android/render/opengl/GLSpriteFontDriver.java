@@ -17,6 +17,8 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.core.prog.annotation.Experimental;
+import com.tokelon.toktales.core.prog.annotation.Unmaintained;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
@@ -30,10 +32,11 @@ import com.tokelon.toktales.core.util.IParams;
 
 import android.opengl.GLES20;
 
+@Unmaintained
+@Experimental
 public class GLSpriteFontDriver implements IRenderDriver {
 	
 	public static final String TAG = "GLSpriteFontDriver";
-	
 	
 	
 	private static final String VS_Sprite = 
@@ -230,7 +233,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 		mShader.setUniform("uModelMatrix", modelMatrix);
 		mShader.setUniform("samplerTexture", textureIndex);
-		mShader.setUniform("colorOver", fontModel.getColor());
+		mShader.setUniform("colorOver", fontModel.getTargetColor());
 		
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
 
