@@ -231,10 +231,10 @@ public class EntityRenderer implements IEntityRenderer {
 				
 				
 				spriteModel.setScaling2D(entityDestinationBounds.width(), entityDestinationBounds.height());
-
 				spriteModel.setTranslation2D(entityDestinationBounds.left(), entityDestinationBounds.top()); // (float)drawDepth
 
-				spriteModel.getTextureScaling().set(1.0f, 1.0f);
+				spriteModel.setTextureScaling(1.0f, 1.0f);
+				spriteModel.setTextureTranslation(0.0f, 0.0f);
 				
 				spriteModel.setTargetSprite(entitySprite);
 				spriteModel.setTargetTexture(entityTexture);

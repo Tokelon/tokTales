@@ -319,11 +319,11 @@ public class MapRenderer implements IMapRenderer {
 					//(float)dmeta.layerDepth); // TODO: What to do about this?
 			
 			// Normalize by dividing
-			spriteModel.getTextureScaling().set(
+			spriteModel.setTextureScaling(
 					dmeta.tileSourceBounds.width() / dmeta.tilePixeSize,
 					dmeta.tileSourceBounds.height() / dmeta.tilePixeSize);
 			
-			spriteModel.getTextureTranslation().set(
+			spriteModel.setTextureTranslation(
 					dmeta.tileSourceBounds.left() / dmeta.tilePixeSize,	//dmeta.tileTranslation.x / dmeta.tilePixeSize, WRONG
 					dmeta.tileSourceBounds.top() / dmeta.tilePixeSize);	//dmeta.tileTranslation.y / dmeta.tilePixeSize);
 
@@ -344,7 +344,6 @@ public class MapRenderer implements IMapRenderer {
 		drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);	// make a variable for the name ?
 		
 		spriteDriver.draw(spriteModel, drawingOptions);
-		
 	}
 	
 	
@@ -361,6 +360,5 @@ public class MapRenderer implements IMapRenderer {
 		private final Point2fImpl tileTranslation = new Point2fImpl();
 		
 	}
-	
 	
 }

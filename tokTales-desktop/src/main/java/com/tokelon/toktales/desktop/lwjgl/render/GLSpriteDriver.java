@@ -20,14 +20,14 @@ import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.content.IContentService;
-import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureRegion;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.TextureRegion;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
@@ -70,23 +70,19 @@ public class GLSpriteDriver implements IRenderDriver {
 	*/
 	
 	
-	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
-
-	private final Map<ISprite, IRenderTexture> textureMap;
 	
+	private final FloatBuffer textureCoordinateBuffer;
+
+	private final Map<ISprite, ITextureRegion> textureMap;
+
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
-
-	private final FloatBuffer textureCoordinateBuffer;
-
-	private final IContentService contentService;
-
+	
+	
 	@Inject
-	public GLSpriteDriver(IContentService contentService) {
-		this.contentService = contentService;
-		
-		textureMap = new HashMap<>(); // TODO: Adjust load factor etc?
+	public GLSpriteDriver() {
+		textureMap = new HashMap<>(); // Custom load factor etc?
 
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
@@ -114,7 +110,6 @@ public class GLSpriteDriver implements IRenderDriver {
 		}
 		
 		
-		
 
 		float[] positions = new float[]{
 				0.0f,  1.0f, -1.05f,
@@ -122,15 +117,6 @@ public class GLSpriteDriver implements IRenderDriver {
 				1.0f, 0.0f, -1.05f,
 				1.0f,  1.0f, -1.05f,
 		};
-		/*
-		float[] positions = new float[]{	// THESE WERE WRONG!!
-				-0.5f,  0.5f, -1.05f,
-				-0.5f, -0.5f, -1.05f,
-				0.5f, -0.5f, -1.05f,
-				0.5f,  0.5f, -1.05f,
-		};
-		*/
-		
 
 		int[] indices = new int[]{
 				0, 1, 3, 3, 1, 2,
@@ -138,7 +124,6 @@ public class GLSpriteDriver implements IRenderDriver {
 		
 		
 		spriteMesh = new GLSpriteMesh(positions, indices);
-		
 	}
 	
 	
@@ -162,7 +147,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	@Override
 	public void use(Matrix4f matrixProjectionView) {
-		
 		/* TODO: Check if we can optimize by only passing one single Matrix (modelViewProjection)
 		 * instead of both model and projection view
 		 * 
@@ -199,53 +183,64 @@ public class GLSpriteDriver implements IRenderDriver {
 		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
 		
 		
-		IRenderTexture finalTexture = textureMap.get(sprite);
-		if(sprite.isEnclosed() && !ignoreSpriteset) {
+		ITextureRegion textureRegion = textureMap.get(sprite);
+		if(textureRegion == null) {
 			
-			if(finalTexture == null) {
-				
-				spriteSourceCoords.set(0, 0, sprite.getSpriteset().getSpriteWidth(), sprite.getSpriteset().getSpriteHeight());
-				
+			if(sprite.isEnclosed() && !ignoreSpriteset) {
+				int spriteWidth = sprite.getSpriteset().getSpriteWidth();
+				int spriteHeight = sprite.getSpriteset().getSpriteHeight();
 				int spriteOffHor = sprite.getSpriteset().getHorizontalOffsetFor(sprite.getSpritesetIndex());
 				int spriteOffVer = sprite.getSpriteset().getVerticalOffsetFor(sprite.getSpritesetIndex());
-				
-				spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
-				
-				
-				// TODO: Important - Instead of cropping the texture, use subTex
-				IRenderTexture textureRegion = contentService.cropTexture(texture, spriteSourceCoords);
-				
-				
-				textureMap.put(sprite, textureRegion);
-				finalTexture = textureRegion;
+
+				textureRegion = new TextureRegion(
+						texture,
+						spriteWidth,
+						spriteHeight,
+						spriteOffHor,
+						spriteOffVer);
 			}
-			
-			
-			// THIS SHOULD BE FINE. IM SETTING IT IN THE RENDERER
-			// NOTTODO: This only works for full tile rendering (not for the sides)
-			// NOTTODO: Fix / Might be causing flickes on the sides / not rendering of sides
-			//spriteModel.getTextureScaling().set(1.0f, 1.0f);
-		}
-		else {
-			// If the sprite is not enclosed
-			
-			if(finalTexture == null) {
-				textureMap.put(sprite, texture);
-				finalTexture = texture;
+			else {
+				textureRegion = new TextureRegion(texture);
 			}
+
+			textureMap.put(sprite, textureRegion);
 		}
-		
+
+		IRenderTexture finalTexture = textureRegion.getTexture();
 		
 		// Make sure the texture is actually loaded
 		globalTextureManager.loadTexture(finalTexture);
 		
 		
+		// Model matrix
 		Matrix4f modelMatrix = spriteModel.applyModelMatrix();
+		
+		
+		// Texture coordinate setup
+		float regionScaleX = textureRegion.getTextureWidthScaleFactor();
+		float regionScaleY = textureRegion.getTextureHeightScaleFactor();
+		
+		// Scale (size) to the target texture region
+		spriteModel.scaleTexture(regionScaleX, regionScaleY);
+		
+		// Because we scale, we have to adjust the previous translation
+		spriteModel.setTextureTranslation(
+				spriteModel.getTextureTranslation().x * regionScaleX,
+				spriteModel.getTextureTranslation().y * regionScaleY
+		);
+		
+		// And then do the new translation on top
+		spriteModel.translateTexture(
+				textureRegion.getTextureXScaleFactor(),
+				textureRegion.getTextureYScaleFactor()
+		);
+		
 		
 		float[] textureCoordinates = spriteModel.applyTextureCoordinates();
 		textureCoordinateBuffer.position(0);
 		textureCoordinateBuffer.put(textureCoordinates).position(0);
 		
+		// Pass the texture coordinates to the GPU
 		spriteMesh.setTextureCoords(textureCoordinateBuffer);
 
 
@@ -262,7 +257,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	@Override
 	public void drawBatch(List<IRenderModel> modelList, INamedOptions options) {
-
 		for(IRenderModel model: modelList) {
 			draw(model, options);
 		}
@@ -271,7 +265,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	@Override
 	public void release() {
-		
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);

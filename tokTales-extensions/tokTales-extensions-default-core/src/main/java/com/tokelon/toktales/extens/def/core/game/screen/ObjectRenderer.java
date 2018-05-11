@@ -238,6 +238,9 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 					spriteModel.setScaling2D(spriteCoordinates.getWidth(), spriteCoordinates.getHeight());
 					spriteModel.setTranslation2D(spriteCoordinates.left(), spriteCoordinates.top());
 					
+					spriteModel.setTextureScaling(1.0f, 1.0f);
+					spriteModel.setTextureTranslation(0.0f, 0.0f);
+					
 					spriteModel.setTargetSprite(sprite);
 					spriteModel.setTargetTexture(spriteTexture);
 					

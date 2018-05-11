@@ -9,20 +9,19 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.content.IContentService;
-import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderTexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.ITextureRegion;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.TextureRegion;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
@@ -58,34 +57,19 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 
 	
-	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
-	
-	private final Map<ISprite, IRenderTexture> textureMap;
+	private final Map<ISprite, ITextureRegion> textureMap;
 
 	private ShaderProgram mShader;
 	
 	private GLSpriteMesh spriteMesh;
 
 
-	private final IContentService contentService;
-	
 	@Inject
-	public GLSpriteDriver(IContentService contentService) {
-		this.contentService = contentService;
-		
-		textureMap = new HashMap<>(); // TODO: Adjust load factor etc?
+	public GLSpriteDriver() {
+		textureMap = new HashMap<>(); // Custom load factor etc?
 		
 		
 		// TRIANGLE_FAN
-		/*
-		mFloatArrayVertices = new float[]
-				{
-					0.0f, 0.0f, 0.0f,
-					0.0f, 1.0f, 0.0f,
-					1.0f, 1.0f, 0.0f,
-					1.0f, 0.0f, 0.0f
-				};
-		*/
 		float[] vertices = new float[]	// THIS is the correct one
 				{
 					0.0f,  1.0f, 0.0f,
@@ -166,7 +150,6 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	@Override
 	public void use(Matrix4f matrixProjectionView) {
-		
 		/* TODO: Check if we can optimize by only passing one single Matrix (modelViewProjection)
 		 * instead of both model and projection view
 		 * 
@@ -191,17 +174,6 @@ public class GLSpriteDriver implements IRenderDriver {
 
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
-		/* Phases:
-		 * 1. Assume destination bounds being setup already
-		 * 2. Setup source (texture) bounds
-		 * 2.1 If sprite is not a texture yet, load into a new texture
-		 * 3. Set handle values
-		 * 4. Draw
-		 * 5. Unset some handle values
-		 * 
-		 */
-
-
 		if(!(renderModel instanceof ISpriteModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
@@ -221,85 +193,29 @@ public class GLSpriteDriver implements IRenderDriver {
 
 		// Before draw
 		
-		IRenderTexture finalTexture = textureMap.get(sprite);
-		if(sprite.isEnclosed() && !ignoreSpriteset) {
-			
-			if(finalTexture == null) {
-				/* 1. Calculate Sprite coordinates in the Spriteset
-				 * 2. Copy only the Sprite into a buffer bitmap
-				 * 3. Load the buffer bitmap as a new texture
-				 * 
-				 */
+		ITextureRegion textureRegion = textureMap.get(sprite);
+		if(textureRegion == null) {
+			if(sprite.isEnclosed() && !ignoreSpriteset) {
+				int spriteWidth = sprite.getSpriteset().getSpriteWidth();
+				int spriteHeight = sprite.getSpriteset().getSpriteHeight();
+				int spriteOffHor = sprite.getSpriteset().getHorizontalOffsetFor(sprite.getSpritesetIndex());
+				int spriteOffVer = sprite.getSpriteset().getVerticalOffsetFor(sprite.getSpritesetIndex());
 
-
-				/* This contains complete source block without any "cutting" applied to it
-				 * Scaling is not needed since we take the values directly from the sprite dimensions
-				 */
-				rectSpriteSourceCoordsStatic.set(0, 0, sprite.getSpriteset().getSpriteWidth(), sprite.getSpriteset().getSpriteHeight());
-
-
-				/* This applies the offsets that are needed to get the actual indexed sprite from spriteset.
-				 * 
-				 */
-				int offHor = sprite.getSpriteset().getHorizontalOffsetFor(sprite.getSpritesetIndex());
-				int offVer = sprite.getSpriteset().getVerticalOffsetFor(sprite.getSpritesetIndex());
-
-
-				// The always uncut block coords
-				rectSpriteSourceCoordsStatic.moveBy(offHor, offVer);
-
-
-				/* Copies the single Sprite we want to draw from the Spriteset
-				 * This is done so that only the Sprite has to be loaded into the texture instead of the complete Spriteset
-				 *
-				 * TODO: Important - Instead of cropping the texture, use subTex
-				 */
-				IRenderTexture textureRegion = contentService.cropTexture(texture, rectSpriteSourceCoordsStatic);
-				
-				
-				textureMap.put(sprite, textureRegion);
-				finalTexture = textureRegion;
+				textureRegion = new TextureRegion(
+						texture,
+						spriteWidth,
+						spriteHeight,
+						spriteOffHor,
+						spriteOffVer);
 			}
-
-			/* If we are going to support different texture sizes with different sized bitmaps
-			 * then we would need a way of knowing with which size the texture was loaded here
-			 * 
-			 */
-			//textureManager.getSavedSizeForTexture
-
-
-			// TODO: This is not needed anymore - test first then remove
-			// We assume we only have one size (max) for our buffer
-
-			/* Because our buffer can be bigger than our sprite,
-			 * we need to adjust the texture scaling to limit it to the actual sprite.
-			 * 
-			 * (We wouldn't have this problem if our buffer was always the size of the sprite (not the spriteset size))
-			 * 
-			 */
-			float scalingHor = sprite.getSpriteset().getSpriteWidth() / (float) finalTexture.getBitmap().getWidth();
-			float scalingVer = sprite.getSpriteset().getSpriteHeight() / (float) finalTexture.getBitmap().getHeight();
-
-			// We apply the scaling on top of the scaling we can have because of rendering only part of a sprite
-			spriteModel.scaleTexture(scalingHor, scalingVer);
-
-
-			// And now we adjust the texture translation to the new scaling
-			Vector2f texTranslation = spriteModel.getTextureTranslation();
-			float scaledTranslationX = scalingHor * texTranslation.x;
-			float scaledTranslationY = scalingVer * texTranslation.y;
-			spriteModel.setTextureTranslation(scaledTranslationX, scaledTranslationY);
-
-		}
-		else {
-			// In case the sprite is not enclosed
-			
-			if(finalTexture == null) {
-				textureMap.put(sprite, texture);
-				finalTexture = texture;
+			else {
+				textureRegion = new TextureRegion(texture);
 			}
+			
+			textureMap.put(sprite, textureRegion);
 		}
 		
+		IRenderTexture finalTexture = textureRegion.getTexture();
 
 		// Make sure the texture is actually loaded
 		globalTextureManager.loadTexture(finalTexture);
@@ -310,13 +226,30 @@ public class GLSpriteDriver implements IRenderDriver {
 
 
 		// 2. Apply texture coordinates to the float buffer
+		float regionScaleX = textureRegion.getTextureWidthScaleFactor();
+		float regionScaleY = textureRegion.getTextureHeightScaleFactor();
+
+		// Scale (size) to the target texture region
+		spriteModel.scaleTexture(regionScaleX, regionScaleY);
+
+		// Because we scale, we have to adjust the previous translation
+		spriteModel.setTextureTranslation(
+				spriteModel.getTextureTranslation().x * regionScaleX,
+				spriteModel.getTextureTranslation().y * regionScaleY
+				);
+
+		// And then do the new translation on top
+		spriteModel.translateTexture(
+				textureRegion.getTextureXScaleFactor(),
+				textureRegion.getTextureYScaleFactor()
+				);
+
+		
 		float[] textureCoords = spriteModel.applyTextureCoordinates();
 		FloatBuffer textureCoordinateBuffer = spriteMesh.setTextureCoords(textureCoords);
 
-
 		
 		int textureIndex = textureCoordinator.bindTexture(finalTexture);
-		
 
 		mShader.setUniform("uModelMatrix", modelMatrix);
 		mShader.setUniform("samplerTexture", textureIndex);
@@ -324,12 +257,10 @@ public class GLSpriteDriver implements IRenderDriver {
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
 
 
-		// Draw
 
 		// Draw 2 triangles with 4 points
 		// 3 points define the first which is then connected to the 4th point forming another triangle
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, spriteMesh.getVertexCount());
-
 	}
 
 

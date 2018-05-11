@@ -65,7 +65,6 @@ public class PlayerRenderer implements IPlayerRenderer {
 	
 	
 	
-	
 	@Override
 	public void contextCreated() {
 		
@@ -212,12 +211,12 @@ public class PlayerRenderer implements IPlayerRenderer {
 			
 			
 			spriteModel.setScaling2D(playerDestinationBounds.width(), playerDestinationBounds.height());
-			
 			spriteModel.setTranslation2D(playerDestinationBounds.left(), playerDestinationBounds.top());	//(float)drawDepth
 			
 			// TODO: Textures
 			//textureModel.setTextureRectangleToFull();
-			spriteModel.getTextureScaling().set(1.0f, 1.0f);
+			spriteModel.setTextureScaling(1.0f, 1.0f);
+			spriteModel.setTextureTranslation(0.0f, 0.0f);
 			
 			
 			spriteModel.setTargetSprite(playerSprite);
