@@ -22,7 +22,7 @@ import com.tokelon.toktales.core.prog.annotation.Unmaintained;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
@@ -66,7 +66,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 
 	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
 
-	private final Map<ISprite, IRenderTexture> textureMap;
+	private final Map<ISprite, ITexture> textureMap;
 	
 	
 	private ShaderProgram mShader;
@@ -169,13 +169,13 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		
 		
 		ISprite fontSprite = fontModel.getTargetSprite();
-		IRenderTexture fontTexture = fontModel.getTargetTexture();
+		ITexture fontTexture = fontModel.getTargetTexture();
 		
 		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
 		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
 		
 		
-		IRenderTexture finalTexture = textureMap.get(fontSprite);
+		ITexture finalTexture = textureMap.get(fontSprite);
 		if(finalTexture == null) {
 			rectSpriteSourceCoordsStatic.set(
 					0,
@@ -192,7 +192,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			rectSpriteSourceCoordsStatic.moveBy(offHor, offVer);
 
 			
-			IRenderTexture textureRegion = contentService.cropTexture(fontTexture, rectSpriteSourceCoordsStatic);
+			ITexture textureRegion = contentService.cropTexture(fontTexture, rectSpriteSourceCoordsStatic);
 			
 			
 			textureMap.put(fontSprite, textureRegion);

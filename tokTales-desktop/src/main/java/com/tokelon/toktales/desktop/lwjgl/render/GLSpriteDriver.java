@@ -22,7 +22,7 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.ITextureRegion;
@@ -177,7 +177,7 @@ public class GLSpriteDriver implements IRenderDriver {
 		
 		// TODO: Handle the case where the texture is a specialAsset - they have to be invalidated
 		ISprite sprite = spriteModel.getTargetSprite();
-		IRenderTexture texture = spriteModel.getTargetTexture();
+		ITexture texture = spriteModel.getTargetTexture();
 		
 		ITextureCoordinator textureCoordinator = spriteModel.getTextureCoordinator();
 		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
@@ -206,7 +206,7 @@ public class GLSpriteDriver implements IRenderDriver {
 			textureMap.put(sprite, textureRegion);
 		}
 
-		IRenderTexture finalTexture = textureRegion.getTexture();
+		ITexture finalTexture = textureRegion.getTexture();
 		
 		// Make sure the texture is actually loaded
 		globalTextureManager.loadTexture(finalTexture);

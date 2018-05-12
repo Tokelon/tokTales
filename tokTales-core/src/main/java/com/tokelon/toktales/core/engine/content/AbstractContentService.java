@@ -7,14 +7,14 @@ import com.tokelon.toktales.core.content.BitmapImpl;
 import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.Texture;
 
 public abstract class AbstractContentService extends AbstractEngineService implements IContentService {
 
 	
 	@Override
-	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds) {
+	public ITexture cropTexture(ITexture texture, IRectangle2i bounds) {
 		IBitmap bitmap = cropBitmap(texture.getBitmap(), bounds);
 
 		Texture result = new Texture(bitmap);

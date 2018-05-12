@@ -19,7 +19,7 @@ import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
@@ -224,7 +224,7 @@ public class EntityRenderer implements IEntityRenderer {
 				}
 				
 				
-				IRenderTexture entityTexture = mGamestate.getEngine().getContentService().extractAssetTexture(entitySpriteAsset.getContent());
+				ITexture entityTexture = mGamestate.getEngine().getContentService().extractAssetTexture(entitySpriteAsset.getContent());
 				if(entityTexture == null) {
 					return;	// TODO: Workaround for special assets
 				}

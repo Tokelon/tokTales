@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.render.opengl.gl20;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 
@@ -26,7 +26,7 @@ public class GLTextureDriver implements ITextureDriver {
 	
 	
 	@Override
-	public int loadTexture(IRenderTexture texture, int textureIndex) {
+	public int loadTexture(ITexture texture, int textureIndex) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}

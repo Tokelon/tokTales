@@ -106,7 +106,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		float textSize = height > width ? height : width;
 		
 		
-		IRenderTexture texture = font.getTextureForCodepoint(codepoint);
+		ITexture texture = font.getTextureForCodepoint(codepoint);
 		// Has texture for codepoint?
 		
 		int textureOffsetX = font.getCodepointBitmapOffsetX(codepoint);

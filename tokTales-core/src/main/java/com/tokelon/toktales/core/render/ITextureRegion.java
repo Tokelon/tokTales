@@ -5,7 +5,7 @@ package com.tokelon.toktales.core.render;
 public interface ITextureRegion {
 
 	
-	public IRenderTexture getTexture();
+	public ITexture getTexture();
 
 	public int getRegionWidth();
 	public int getRegionHeight();

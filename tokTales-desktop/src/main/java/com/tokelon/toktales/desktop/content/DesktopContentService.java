@@ -27,7 +27,7 @@ import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -310,16 +310,16 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	
 	
 	@Override
-	public IRenderTexture extractAssetTexture(IAssetContainer<?> container) {
+	public ITexture extractAssetTexture(IAssetContainer<?> container) {
 		return extractTexture(container);
 	}
 	
-	public static IRenderTexture extractAssetSprite(ISpriteAsset spriteAsset) {
+	public static ITexture extractAssetSprite(ISpriteAsset spriteAsset) {
 		return extractTexture(spriteAsset.getContent());
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static IRenderTexture extractTexture(IAssetContainer<?> container) {
+	private static ITexture extractTexture(IAssetContainer<?> container) {
 		// Do type check ?
 
 		if(container == null) {
@@ -327,7 +327,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		}
 		
 
-		IAssetContainer<IRenderTexture> textureContainer = (IAssetContainer<IRenderTexture>) container;
+		IAssetContainer<ITexture> textureContainer = (IAssetContainer<ITexture>) container;
 		return textureContainer.getAsset();
 	}
 

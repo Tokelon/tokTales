@@ -26,7 +26,7 @@ import com.tokelon.toktales.core.game.screen.view.IViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
@@ -300,7 +300,7 @@ public class MapRenderer implements IMapRenderer {
 			// Do not draw special sprites like error sprites?
 		}
 		
-		IRenderTexture spriteTexture = mGamestate.getEngine().getContentService().extractAssetTexture(spriteAsset.getContent());
+		ITexture spriteTexture = mGamestate.getEngine().getContentService().extractAssetTexture(spriteAsset.getContent());
 		if(spriteTexture == null) {
 			// TODO: Implement special asset
 			return;

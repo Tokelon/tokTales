@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.data.IAndroidBitmap;
 import com.tokelon.toktales.core.content.IBitmap;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 
@@ -34,7 +34,7 @@ public class AndroidGLTextureDriver implements ITextureDriver {
 	
 	
 	@Override
-	public int loadTexture(IRenderTexture texture, int textureIndex) {
+	public int loadTexture(ITexture texture, int textureIndex) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}

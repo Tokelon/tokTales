@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
@@ -204,7 +204,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 				// Do what?
 			}
 
-			IRenderTexture playerTexture = mGamestate.getEngine().getContentService().extractAssetTexture(playerSpriteAsset.getContent());
+			ITexture playerTexture = mGamestate.getEngine().getContentService().extractAssetTexture(playerSpriteAsset.getContent());
 			if(playerTexture == null) {
 				return;	// TODO: Workaround for special assets
 			}

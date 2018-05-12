@@ -18,7 +18,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	private boolean enableSafeMode = true;
 
 	
-	private final Map<IRenderTexture, BindingInfo> textureBindingsMap;
+	private final Map<ITexture, BindingInfo> textureBindingsMap;
 	private BindingInfo[] textureIndexBindings;
 
 	private int currentBindingCapacity = 0;
@@ -40,8 +40,8 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 	
 	
-	private Map<IRenderTexture, BindingInfo> initBindingsMap(int initialCapacity) {
-		HashMap<IRenderTexture, BindingInfo> map = new HashMap<>(16); 
+	private Map<ITexture, BindingInfo> initBindingsMap(int initialCapacity) {
+		HashMap<ITexture, BindingInfo> map = new HashMap<>(16); 
 		return map;
 	}
 	
@@ -73,7 +73,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 		return textureIndexBindings[textureIndex];
 	}
 	
-	private void setTextureBindingFor(IRenderTexture texture, int textureIndex) {
+	private void setTextureBindingFor(ITexture texture, int textureIndex) {
 		BindingInfo currentBinding = getBindingInfoForIndex(textureIndex);
 		if(currentBinding.getTexture() != null) {
 			BindingInfo previousBinding = textureBindingsMap.remove(currentBinding.getTexture()); // Remove current direct binding, if existing
@@ -88,7 +88,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 		currentBindingCount++;
 	}
 
-	private void checkIfTextureLoaded(IRenderTexture texture) {
+	private void checkIfTextureLoaded(ITexture texture) {
 		// Check if texture is loaded in texture manager
 		if(!textureManager.hasTextureLoaded(texture)) {
 			if(textureManager.hasTexture(texture)) {
@@ -101,7 +101,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 	
 
-	private int determineOptimalIndexForTexture(IRenderTexture texture, boolean checkIfBound) {
+	private int determineOptimalIndexForTexture(ITexture texture, boolean checkIfBound) {
 		int textureIndexBound = getTextureIndexIfBound(texture);
 		if(checkIfBound && textureIndexBound >= 0) {
 			return textureIndexBound;
@@ -147,7 +147,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 		return optimalIndex;
 	}
 	
-	private int getTextureIndexIfBound(IRenderTexture texture) {
+	private int getTextureIndexIfBound(ITexture texture) {
 		BindingInfo directBinding = textureBindingsMap.get(texture);
 		if(directBinding == null) {
 			return -1;
@@ -178,7 +178,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 			int counter = - difference;
 			
 			// Resize binding map
-			Iterator<IRenderTexture> mapIterator = textureBindingsMap.keySet().iterator();
+			Iterator<ITexture> mapIterator = textureBindingsMap.keySet().iterator();
 			while(mapIterator.hasNext() && counter-- > 0) {
 				mapIterator.next();
 				mapIterator.remove();
@@ -204,7 +204,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 	
 
-	private int makeTextureIndex(IRenderTexture texture) {
+	private int makeTextureIndex(ITexture texture) {
 		checkIfTextureLoaded(texture);
 
 		
@@ -224,7 +224,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 	
 	@Override
-	public int bindTexture(IRenderTexture texture) {
+	public int bindTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -255,7 +255,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 
 	@Override
-	public int requestIndexFor(IRenderTexture texture) {
+	public int requestIndexFor(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -278,7 +278,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 
 	@Override
-	public int peekIndexFor(IRenderTexture texture) {
+	public int peekIndexFor(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -289,7 +289,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 
 	@Override
-	public int getTextureIndexFor(IRenderTexture texture) {
+	public int getTextureIndexFor(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -299,7 +299,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 
 	@Override
-	public void unbindTexture(IRenderTexture texture) {
+	public void unbindTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -312,7 +312,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 	
 	@Override
-	public IRenderTexture getBoundTextureForIndex(int textureIndex) {
+	public ITexture getBoundTextureForIndex(int textureIndex) {
 		if(textureIndex < 0) {
 			throw new IllegalArgumentException("textureIndex must be >= 0");
 		}
@@ -322,7 +322,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	}
 
 	@Override
-	public boolean isTextureBoundForIndex(IRenderTexture texture, int textureIndex) {
+	public boolean isTextureBoundForIndex(ITexture texture, int textureIndex) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -346,7 +346,7 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 	
 	
 	public static class BindingInfo {
-		private IRenderTexture texture;
+		private ITexture texture;
 		
 		private final int textureIndex;
 		
@@ -358,11 +358,11 @@ public class DefaultTextureCoordinator implements ITextureCoordinator {
 			return textureIndex;
 		}
 		
-		public IRenderTexture getTexture() {
+		public ITexture getTexture() {
 			return texture;
 		}
 
-		public void setTexture(IRenderTexture texture) {
+		public void setTexture(ITexture texture) {
 			this.texture = texture;
 		}
 	}

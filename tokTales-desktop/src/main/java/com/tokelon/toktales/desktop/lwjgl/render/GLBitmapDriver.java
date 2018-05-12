@@ -20,7 +20,7 @@ import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IManagedTextureModel;
@@ -147,7 +147,7 @@ public class GLBitmapDriver implements IRenderDriver {
 		IManagedTextureModel texturedModel = (IManagedTextureModel) renderModel;
 		
 		
-		IRenderTexture texture = texturedModel.getTargetTexture();
+		ITexture texture = texturedModel.getTargetTexture();
 		ITextureCoordinator textureCoordinator = texturedModel.getTextureCoordinator();
 		ITextureManager textureManager = textureCoordinator.getTextureManager();
 		

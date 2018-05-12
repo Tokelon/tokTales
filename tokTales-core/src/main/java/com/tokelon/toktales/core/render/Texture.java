@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL12;
 
-public class Texture implements IRenderTexture {
+public class Texture implements ITexture {
 	// TODO: Document default values and implementation logic
 	
 	
@@ -123,38 +123,38 @@ public class Texture implements IRenderTexture {
 	
 
 	@Override
-	public IRenderTexture setTextureFormat(int textureFormat) {
+	public ITexture setTextureFormat(int textureFormat) {
 		this.textureFormat = textureFormat;
 		return this;
 	}
 
 	@Override
-	public IRenderTexture setInternalFormat(int internalFormat) {
+	public ITexture setInternalFormat(int internalFormat) {
 		this.internalFormat = internalFormat;
 		return this;
 	}
 
 	@Override
-	public IRenderTexture setUnpackAlignment(int unpackAlignment) {
+	public ITexture setUnpackAlignment(int unpackAlignment) {
 		this.unpackAlignment = unpackAlignment;
 		return this;
 	}
 
 	@Override
-	public IRenderTexture setDataType(int dataType) {
+	public ITexture setDataType(int dataType) {
 		this.dataType = dataType;
 		return this;
 	}
 
 	@Override
-	public IRenderTexture setFilter(int filterMin, int filterMag) {
+	public ITexture setFilter(int filterMin, int filterMag) {
 		this.filterMin = filterMin;
 		this.filterMag = filterMag;
 		return this;
 	}
 
 	@Override
-	public IRenderTexture setWrap(int wrapS, int wrapT) {
+	public ITexture setWrap(int wrapS, int wrapT) {
 		this.wrapS = wrapS;
 		this.wrapT = wrapT;
 		return this;

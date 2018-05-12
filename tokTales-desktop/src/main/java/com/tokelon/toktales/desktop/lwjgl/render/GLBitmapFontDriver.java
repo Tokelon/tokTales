@@ -21,7 +21,7 @@ import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
@@ -157,7 +157,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 		ITextureFontModel fontModel = (ITextureFontModel) renderModel;
 		
 
-		IRenderTexture fontTexture = fontModel.getTargetTexture();
+		ITexture fontTexture = fontModel.getTargetTexture();
 		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
 		ITextureManager textureManager = textureCoordinator.getTextureManager();
 		

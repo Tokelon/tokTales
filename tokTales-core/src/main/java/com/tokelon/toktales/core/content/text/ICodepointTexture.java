@@ -1,8 +1,8 @@
 package com.tokelon.toktales.core.content.text;
 
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 
-public interface ICodepointTexture extends IRenderTexture {
+public interface ICodepointTexture extends ITexture {
 	// TODO: Is this needed? Try using where applicable.
 	
 	

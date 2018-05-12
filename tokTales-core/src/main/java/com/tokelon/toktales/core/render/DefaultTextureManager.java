@@ -16,7 +16,7 @@ public class DefaultTextureManager implements ITextureManager {
 
 	private int loadedTexturesCount = 0;
 	
-	private final Map<IRenderTexture, TextureInfo> textureMap = new HashMap<>();
+	private final Map<ITexture, TextureInfo> textureMap = new HashMap<>();
 
 	private final ITextureDriver textureDriver;
 	
@@ -42,7 +42,7 @@ public class DefaultTextureManager implements ITextureManager {
 	}
 	
 	@Override
-	public boolean addTexture(IRenderTexture texture) {
+	public boolean addTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -57,7 +57,7 @@ public class DefaultTextureManager implements ITextureManager {
 	}
 
 	@Override
-	public boolean addLoadedTexture(IRenderTexture texture, int location) {
+	public boolean addLoadedTexture(ITexture texture, int location) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -82,7 +82,7 @@ public class DefaultTextureManager implements ITextureManager {
 	}
 
 	@Override
-	public boolean loadTexture(IRenderTexture texture) {
+	public boolean loadTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -106,18 +106,18 @@ public class DefaultTextureManager implements ITextureManager {
 
 	
 	@Override
-	public boolean hasTexture(IRenderTexture texture) {
+	public boolean hasTexture(ITexture texture) {
 		return textureMap.containsKey(texture);
 	}
 
 	@Override
-	public boolean hasTextureLoaded(IRenderTexture texture) {
+	public boolean hasTextureLoaded(ITexture texture) {
 		TextureInfo info = textureMap.get(texture);
 		return info == null ? false : info.isLoaded();
 	}
 
 	@Override
-	public int getTextureLocation(IRenderTexture texture) {
+	public int getTextureLocation(ITexture texture) {
 		TextureInfo info = textureMap.get(texture);
 		return info == null ? -1 : info.location;
 	}
@@ -133,7 +133,7 @@ public class DefaultTextureManager implements ITextureManager {
 	}
 
 	@Override
-	public boolean removeTexture(IRenderTexture texture) {
+	public boolean removeTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -155,7 +155,7 @@ public class DefaultTextureManager implements ITextureManager {
 	}
 	
 	@Override
-	public boolean removeLoadedTexture(IRenderTexture texture) {
+	public boolean removeLoadedTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -176,7 +176,7 @@ public class DefaultTextureManager implements ITextureManager {
 	}
 
 	@Override
-	public boolean unloadTexture(IRenderTexture texture) {
+	public boolean unloadTexture(ITexture texture) {
 		if(texture == null) {
 			throw new NullPointerException();
 		}
@@ -198,14 +198,14 @@ public class DefaultTextureManager implements ITextureManager {
 
 	@Override
 	public void removeAll() {
-		for(IRenderTexture texture: textureMap.keySet()) {
+		for(ITexture texture: textureMap.keySet()) {
 			removeTexture(texture);
 		}
 	}
 
 	@Override
 	public void unloadAll() {
-		for(IRenderTexture texture: textureMap.keySet()) {
+		for(ITexture texture: textureMap.keySet()) {
 			unloadTexture(texture);
 		}
 	}

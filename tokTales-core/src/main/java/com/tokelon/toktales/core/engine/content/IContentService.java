@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 
@@ -59,7 +59,7 @@ public interface IContentService extends IEngineService {
 	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException;
 
 	
-	public IRenderTexture extractAssetTexture(IAssetContainer<?> container);
+	public ITexture extractAssetTexture(IAssetContainer<?> container);
 
 
 	public ITextureFont lookForFontAndLoad(IApplicationLocation location, String filename);
@@ -70,7 +70,7 @@ public interface IContentService extends IEngineService {
 	public ITextureFont loadFontFromFile(File file) throws ContentException;
 	
 	
-	public IRenderTexture cropTexture(IRenderTexture texture, IRectangle2i bounds);
+	public ITexture cropTexture(ITexture texture, IRectangle2i bounds);
 	
 	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds);
 	

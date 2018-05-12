@@ -8,17 +8,17 @@ public class TextureRegion implements ITextureRegion {
 	private int regionX;
 	private int regionY;
 	
-	private final IRenderTexture texture;
+	private final ITexture texture;
 	
-	public TextureRegion(IRenderTexture texture) {
+	public TextureRegion(ITexture texture) {
 		this(texture, texture.getBitmap().getWidth(), texture.getBitmap().getHeight(), 0, 0);
 	}
 	
-	public TextureRegion(IRenderTexture texture, int width, int height) {
+	public TextureRegion(ITexture texture, int width, int height) {
 		this(texture, width, height, 0, 0);
 	}
 	
-	public TextureRegion(IRenderTexture texture, int width, int height, int x, int y) {
+	public TextureRegion(ITexture texture, int width, int height, int x, int y) {
 		this.texture = texture;
 		this.regionWidth = width;
 		this.regionHeight = height;
@@ -28,7 +28,7 @@ public class TextureRegion implements ITextureRegion {
 	
 	
 	@Override
-	public IRenderTexture getTexture() {
+	public ITexture getTexture() {
 		return texture;
 	}
 

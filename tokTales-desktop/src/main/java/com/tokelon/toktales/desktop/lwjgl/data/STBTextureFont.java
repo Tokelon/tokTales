@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.IRectangle2i.IMutableRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 
 public class STBTextureFont implements ITextureFont {
 
@@ -109,7 +109,7 @@ public class STBTextureFont implements ITextureFont {
 	
 	
 	@Override
-	public IRenderTexture getTextureForCodepoint(int codepoint) {
+	public ITexture getTextureForCodepoint(int codepoint) {
 		return codepointTexture(codepoint);
 	}
 	

@@ -23,13 +23,13 @@ public interface ITextureCoordinator {
 	 * @throws IllegalStateException If the texture is not loaded by this coordinator's texture manager.
 	 * @throws NullPointerException If texture is null.
 	 */
-	public int bindTexture(IRenderTexture texture);
+	public int bindTexture(ITexture texture);
 	//public void markTextureBound(IRenderTexture texture, int textureIndex);
 	
 	
 	/** Determines a binding index for the given texture and marks it as externally bound.
 	 * <p>
-	 * The binding index will be determined in the same way as {@link #bindTexture(IRenderTexture)},
+	 * The binding index will be determined in the same way as {@link #bindTexture(ITexture)},
 	 * only the texture will not be bound.<br>
 	 * If the texture is already bound by this coordinator, there will be no effect.
 	 * <p>
@@ -44,11 +44,11 @@ public interface ITextureCoordinator {
 	 * @throws IllegalStateException If the texture is not loaded by this coordinator's texture manager.
 	 * @throws NullPointerException If texture is null.
 	 */
-	public int requestIndexFor(IRenderTexture texture);
+	public int requestIndexFor(ITexture texture);
 	
 	/** Determines a binding index for the given texture.
 	 * <p>
-	 * The binding index will be determined in the same way as {@link #bindTexture(IRenderTexture)},
+	 * The binding index will be determined in the same way as {@link #bindTexture(ITexture)},
 	 * without having an effect.
 	 * <p>
 	 * <i>Note: The texture must be managed and loaded by this coordinator's texture manager.</i>
@@ -58,7 +58,7 @@ public interface ITextureCoordinator {
 	 * @throws IllegalStateException If the texture is not loaded by this coordinator's texture manager.
 	 * @throws NullPointerException If texture is null.
 	 */
-	public int peekIndexFor(IRenderTexture texture);
+	public int peekIndexFor(ITexture texture);
 
 	
 	/** Unbinds the given texture.
@@ -68,7 +68,7 @@ public interface ITextureCoordinator {
 	 * @param texture The texture that should be unbound.
 	 * @throws NullPointerException If texture is null.
 	 */
-	public void unbindTexture(IRenderTexture texture);
+	public void unbindTexture(ITexture texture);
 	
 	
 	/** Returns the index of the texture unit that the given texture is bound to.
@@ -77,7 +77,7 @@ public interface ITextureCoordinator {
 	 * @return A texture unit index, or -1 if the texture is not bound by this coordinator.
 	 * @throws NullPointerException If texture is null.
 	 */
-	public int getTextureIndexFor(IRenderTexture texture);
+	public int getTextureIndexFor(ITexture texture);
 	
 	/** Returns the texture which is bound for the given index.
 	 * 
@@ -85,7 +85,7 @@ public interface ITextureCoordinator {
 	 * @return A texture, or null if no texture is bound for the index by this coordinator.
 	 * @throws IllegalArgumentException If textureIndex < 0.
 	 */
-	public IRenderTexture getBoundTextureForIndex(int textureIndex);
+	public ITexture getBoundTextureForIndex(int textureIndex);
 	
 	/** Returns whether the given texture is bound on the given index.
 	 * 
@@ -95,7 +95,7 @@ public interface ITextureCoordinator {
 	 * @throws IllegalArgumentException If textureIndex < 0.
 	 * @throws NullPointerException If texture is null.
 	 */
-	public boolean isTextureBoundForIndex(IRenderTexture texture, int textureIndex);
+	public boolean isTextureBoundForIndex(ITexture texture, int textureIndex);
 
 	
 	/**

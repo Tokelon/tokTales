@@ -26,7 +26,7 @@ import com.tokelon.toktales.core.game.world.IRectangleGeometry;
 import com.tokelon.toktales.core.game.world.IWorldGeometry;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IPointModel;
@@ -220,7 +220,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 						continue;
 					}
 					
-					IRenderTexture spriteTexture = gamestate.getEngine().getContentService().extractAssetTexture(spriteAsset.getContent());
+					ITexture spriteTexture = gamestate.getEngine().getContentService().extractAssetTexture(spriteAsset.getContent());
 					if(spriteTexture == null) {
 						continue;
 					}

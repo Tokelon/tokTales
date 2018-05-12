@@ -1,19 +1,19 @@
 package com.tokelon.toktales.core.content;
 
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 
-public class TextureContainer implements IAssetContainer<IRenderTexture> {
+public class TextureContainer implements IAssetContainer<ITexture> {
 
 	
-	private final IRenderTexture texture;
+	private final ITexture texture;
 	
-	public TextureContainer(IRenderTexture texture) {
+	public TextureContainer(ITexture texture) {
 		this.texture = texture;
 	}
 	
 	
 	@Override
-	public IRenderTexture getAsset() {
+	public ITexture getAsset() {
 		return texture;
 	}
 

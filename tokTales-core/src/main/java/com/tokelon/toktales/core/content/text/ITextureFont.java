@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content.text;
 
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 
 public interface ITextureFont extends IFont {
 
@@ -18,7 +18,7 @@ public interface ITextureFont extends IFont {
 	public int getFontPixelLineGap();
 	
 	
-	public IRenderTexture getTextureForCodepoint(int codepoint);
+	public ITexture getTextureForCodepoint(int codepoint);
 
 	public IRectangle2i getCodepointBitmapBox(int codepoint);
 	

@@ -11,7 +11,7 @@ public interface ITextureDriver {
 	 * @param textureIndex The index of the texture unit that should be used for loading. Must be in range [0, {@link #getMaxTextureUnits()}).
 	 * @return The location (name) the texture was loaded to.
 	 */
-	public int loadTexture(IRenderTexture texture, int textureIndex);
+	public int loadTexture(ITexture texture, int textureIndex);
 	
 	/** Unloads the texture at the given location via the GL from the GPU.
 	 * 

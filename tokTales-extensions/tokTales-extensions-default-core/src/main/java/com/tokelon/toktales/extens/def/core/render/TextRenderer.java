@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.IRenderTexture;
+import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
@@ -162,7 +162,7 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 							}
 
 							
-							IRenderTexture texture = font.getTextureForCodepoint(codepoint);
+							ITexture texture = font.getTextureForCodepoint(codepoint);
 							// Has texture for codepoint?
 
 							

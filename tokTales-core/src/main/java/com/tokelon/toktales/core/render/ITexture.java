@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.content.IBitmap;
  * and the configuration values returned are not guaranteed to conform with OpenGL. 
  * 
  */
-public interface IRenderTexture { // TODO: Rename to ITexture
+public interface ITexture {
 	/* Add name member? | Or id member
 	 * Maybe define equals and hashCode and make it part of it? 
 	public String getName();
@@ -95,13 +95,13 @@ public interface IRenderTexture { // TODO: Rename to ITexture
 	public int getWrapT();
 
 
-	public IRenderTexture setTextureFormat(int textureFormat);
-	public IRenderTexture setInternalFormat(int internalFormat);
-	public IRenderTexture setUnpackAlignment(int unpackAlignment);
-	public IRenderTexture setDataType(int dataType);
+	public ITexture setTextureFormat(int textureFormat);
+	public ITexture setInternalFormat(int internalFormat);
+	public ITexture setUnpackAlignment(int unpackAlignment);
+	public ITexture setDataType(int dataType);
 	
-	public IRenderTexture setFilter(int filterMin, int filterMag);
-	public IRenderTexture setWrap(int wrapS, int wrapT);
+	public ITexture setFilter(int filterMin, int filterMag);
+	public ITexture setWrap(int wrapS, int wrapT);
 	
 
 	
