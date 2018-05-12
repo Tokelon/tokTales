@@ -1,12 +1,7 @@
 package com.tokelon.toktales.core.engine.inject;
 
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.matcher.Matchers;
-import com.google.inject.spi.InjectionListener;
-import com.google.inject.spi.TypeEncounter;
-import com.google.inject.spi.TypeListener;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.content.ContentManager;
@@ -54,12 +49,11 @@ import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.World;
 import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.DefaultTextureManager;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureDriver;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.opengl.GLBufferUtils;
-import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
@@ -86,21 +80,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 		// you can bind TypeListener, InjectListener and MembersInjector
 		// e.g. bindListener(new ClassMatcherAdapter(Matchers.subclassesOf(ILogger.class)), new LoggerTypeListener());
 		
+		// Important: Only if feature is not disabled -> binder().requireExactBindingAnnotations();
 		// you can make 'inexact' annotated bindings - fallback for missing annotated bindings with parameter
 		// e.g. bind(IControlScheme.class).annotatedWith(ForClass.class).to(IControlScheme.EmptyControlScheme.class);
 		// -> This causes a dependency to (@ForClass(Example.class) IControlScheme controScheme) to succeed even if no For.forClass(Example.class) bound
-		// you can also disable this feature
-		//binder().requireExactBindingAnnotations();
-		
-		// you can require explicit bindings
-		// so JIT bindings would be disabled
-		//binder().requireExplicitBindings();
-		
-		// disable circular proxies - disable until there is a really good reason to enable
-		// Cannot disable here - if users want to enable proxies there is no way!
-		//binder().disableCircularProxies();
-		// find circular proxies
-		//printOutCircularProxies();
 		
 		
 		// Engine Scope
@@ -158,7 +141,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
 		
 		// GL Stuff
-		bind(Boolean.class).annotatedWith(GLErrorCheckingEnabled.class).toInstance(false);
 		bind(IGLErrorUtils.class).to(GLErrorUtils.class); // Could bind this to no-op implementation
 		bind(IGLBufferUtils.class).to(GLBufferUtils.class).in(Scopes.SINGLETON);
 		bind(IGLFactory.class).to(GLFactory.class);
@@ -170,21 +152,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		// Tools
 		bind(IParameterInjectorFactory.class).to(ParameterInjectorFactory.class);
 		
+		
+		// Other inject modules
+		install(new CoreDebugInjectModule());
 	}
 
-
-	@SuppressWarnings("unused")
-	private void printOutCircularProxies() {
-		bindListener(Matchers.any(), new TypeListener() {
-			@Override
-			public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
-				typeEncounter.register((InjectionListener<I>) target -> {
-					if (Scopes.isCircularProxy(target)) {
-						System.out.println("CP: " + typeLiteral.getRawType().getName());
-					}
-				});
-			}
-		});
-	}
-	
 }

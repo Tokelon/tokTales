@@ -11,11 +11,13 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
+import com.tokelon.toktales.core.prog.annotation.Experimental;
 
 /** Alternative to {@link AbstractInjectModule} with builder syntax.
  * 
  */
-public abstract class ExtendedAbstractInjectModule extends AbstractModule {
+@Experimental
+abstract class ExtendedAbstractInjectModule extends AbstractModule {
 
 	// Ignore
 	@SuppressWarnings("unused")
@@ -360,6 +362,5 @@ public abstract class ExtendedAbstractInjectModule extends AbstractModule {
 			}
 		}
 	}
-
 	
 }
