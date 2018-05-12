@@ -9,6 +9,11 @@ import com.tokelon.toktales.core.content.IBitmap;
  * 
  */
 public interface IRenderTexture { // TODO: Rename to ITexture
+	/* Add name member? | Or id member
+	 * Maybe define equals and hashCode and make it part of it? 
+	public String getName();
+	public void setName(String name);
+	*/
 	
 	
 	/** Returns the bitmap for this texture.
@@ -89,7 +94,7 @@ public interface IRenderTexture { // TODO: Rename to ITexture
 	 */
 	public int getWrapT();
 
-	
+
 	public IRenderTexture setTextureFormat(int textureFormat);
 	public IRenderTexture setInternalFormat(int internalFormat);
 	public IRenderTexture setUnpackAlignment(int unpackAlignment);
@@ -98,15 +103,26 @@ public interface IRenderTexture { // TODO: Rename to ITexture
 	public IRenderTexture setFilter(int filterMin, int filterMag);
 	public IRenderTexture setWrap(int wrapS, int wrapT);
 	
+
 	
-	// Possible additions
-	/*
-	public int getTextureOffsetX();
-	public int getTextureOffsetY();
+	/* Subtextures
+	// If not set, these return valid values (0 for offsets and bitmap sizes for sizes) -> Document
+	public int getSubTextureOffsetX();
+	public int getSubTextureOffsetY();
+	
+	// Check values before return and add additional logic? ex. width <= bitmap.getWidth()
+	public int getSubTextureWidth();
+	public int getSubTextureHeight();
+	
+	//public boolean hasSubTextureProperties();
+	//public void removeSubTextureProperties();
+	
+	public IRenderTexture setSubTextureOffset(int subOffsetX, int subOffsetY);
+	public IRenderTexture setSubTextureSize(int subWidth, int subHeight);
 	*/
 	
 	// Implement copying?
+	//public default IRenderTexture subCopy(width, height, offsetx, offsety)
 	//public default IRenderTexture copy()
-	//public default IRenderTexture copyDeep()
 	
 }

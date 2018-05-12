@@ -8,7 +8,8 @@ import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 
 public class GameSceneControl<T extends IGameScene> implements IModifiableGameSceneControl<T> {
-
+	// TODO: Important - Inject log
+	
 	public static final String TAG = "GameSceneControl";
 	
 	

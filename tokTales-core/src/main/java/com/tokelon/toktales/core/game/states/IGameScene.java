@@ -79,6 +79,8 @@ public interface IGameScene {
 	// Add the moment we need it
 	//public IGameState getAssignedState();
 	
+	// TODO: Add surface change events?
+	
 	
 	/** The control handler for scene specific action handling.
 	 * 

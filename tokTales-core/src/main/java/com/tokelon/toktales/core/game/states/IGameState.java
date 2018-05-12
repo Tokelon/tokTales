@@ -10,7 +10,18 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 public interface IGameState {
 	
 	// TODO: Implement onPause() and onResume() and call the gamescene methods as well
+	
+	// TODO: Add those?
+	//public void onSurfaceCreated(ISurface surface);
+	//public void onSurfaceChanged(ISurface surface);
+	//public void onSurfaceDestroyed(ISurface surface);
 
+
+	/* The problem with these is that they would have to be called manually which is very error prone.
+	public void onCreate();
+	public void onDestroy();
+	*/
+	
 	
 	/** Called when the state is added to the state control.
 	 */
@@ -32,17 +43,12 @@ public interface IGameState {
 	 */
 	public void onDisengage();
 	
-	
-	
+
+
 	public void update(long timeMillis);
 	
 	public void render();
 	
-	
-	/* The problem with these is that they would have to be called manually which is very error prone.
-	public void onCreate();
-	public void onDestroy();
-	*/
 	
 	
 	/** Assigns a scene with the given name to this gamestate.<br><br>
@@ -145,12 +151,5 @@ public interface IGameState {
 	 * @return The state control handler.
 	 */
 	public IControlHandler getStateControlHandler();
-	
-	
-
-	//public void onSurfaceChange(ISurface surface); // Add this?
-	
-	// Have additional controller manager in the state as well?
-	
 	
 }

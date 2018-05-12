@@ -12,10 +12,13 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
  * Can be used as the main renderer.
  */
 public interface IStateRender extends ISurfaceCallback, IRenderCallback {
-
+	/* TODO:
+	 * 1. Rename to something more ?
+	 * 2. Move render order into here?
+	 * 
+	 */
+	
 	// Maybe add prepare() and call in gamestate before calling render order
-	// Move the render order into here too?
-
 	// Maybe add current* prefix to indicate that surface camera etc can change?
 	
 	
@@ -35,6 +38,7 @@ public interface IStateRender extends ISurfaceCallback, IRenderCallback {
 	public void updateCamera(ICamera camera);
 	public ICamera getCamera();
 
+	
 	// Not sure how this would work since the context viewport is provided by the surface
 	//public void updateViewport(IScreenViewport viewport);
 	
@@ -53,21 +57,11 @@ public interface IStateRender extends ISurfaceCallback, IRenderCallback {
 	// TODO: Implement with abstract class
 	public void addManagedRenderer(String name, IRenderer renderer);
 	public IRenderer getManagedRenderer(String name);
-	public IRenderer removeManagedRenderer(String name);
-	//public boolean removeManagedRenderer(IRenderer renderer); // better?
+	public IRenderer removeManagedRenderer(String name); // better pass IRenderer instead of name?
 	public boolean hasManagedRenderer(String name);
 	
 	// Do like above or like below?
 	//public void addManagedRenderer(IRenderer renderer);
 	//public boolean removeManagedRenderer(IRenderer renderer);
-	
-	
-	
-	/*
-	public interface IStateRenderFactory {
-		
-		public IStateRender create(IGameState gamestate);
-	}
-	*/
 	
 }
