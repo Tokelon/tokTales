@@ -176,7 +176,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 		
 		mShader.setUniform("uModelMatrix", modelMatrix);
 		mShader.setUniform("samplerTexture", textureIndex);
-		mShader.setUniform("colorOver", fontModel.getColor());
+		mShader.setUniform("colorOver", fontModel.getTargetColor());
 		
 		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
 
