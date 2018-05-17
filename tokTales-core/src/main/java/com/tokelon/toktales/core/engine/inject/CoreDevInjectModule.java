@@ -6,6 +6,7 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 
 public class CoreDevInjectModule extends AbstractInjectModule {
@@ -15,7 +16,7 @@ public class CoreDevInjectModule extends AbstractInjectModule {
 	protected void configure() {
 		bind(Boolean.class).annotatedWith(DebugInjectModuleIsDev.class).toInstance(true);
 		bind(Boolean.class).annotatedWith(GLErrorCheckingEnabled.class).toInstance(true);
-		
+		bind(Boolean.class).annotatedWith(DebugRenderingEnabled.class).toInstance(true);
 		
 		// find circular proxies
 		printOutCircularProxies();

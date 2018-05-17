@@ -18,6 +18,7 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
@@ -71,8 +72,9 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	
 	
 	@Inject
-	public LocalMapStateRenderer(ITextureCoordinator textureCoordinator, @Assisted ILocalMapGamestate gamestate) {
+	public LocalMapStateRenderer(ITextureCoordinator textureCoordinator, @DebugRenderingEnabled boolean debugRenderingEnabled, @Assisted ILocalMapGamestate gamestate) {
 		this.textureCoordinator = textureCoordinator;
+		this.debugRenderingEnabled = debugRenderingEnabled;
 		this.gamestate = gamestate;
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());
