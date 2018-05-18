@@ -12,10 +12,9 @@ public interface IGameSceneControl<T extends IGameScene> {
 
 	
 	public boolean hasScene(String name);
-	
-	public T removeScene(String name);
-	
+
 	public T getScene(String name);
+
 	
 	/**
 	 * @return An unmodifiable map containing all name to scene mappings.
@@ -28,11 +27,19 @@ public interface IGameSceneControl<T extends IGameScene> {
 	//public void resumeActiveScene();
 
 	
+	
 	public interface IModifiableGameSceneControl<T extends IGameScene> extends IGameSceneControl<T> {
 		
-		public void changeScene(String name);
 		public void addScene(String name, T scene);
-			
+		public void changeScene(String name);
+		public T removeScene(String name);
+	}
+
+	
+	public interface IGameSceneControlFactory {
+		
+		public <T extends IGameScene> IGameSceneControl<T> create();
+		public <T extends IGameScene> IModifiableGameSceneControl<T> createModifiable();
 	}
 	
 }

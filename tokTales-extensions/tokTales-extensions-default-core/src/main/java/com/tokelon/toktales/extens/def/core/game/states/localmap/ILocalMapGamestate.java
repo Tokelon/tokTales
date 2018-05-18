@@ -1,5 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
+import com.tokelon.toktales.core.game.states.IGameSceneControl;
 import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayGamestate;
 
 public interface ILocalMapGamestate extends IConsoleOverlayGamestate {
@@ -21,6 +22,9 @@ public interface ILocalMapGamestate extends IConsoleOverlayGamestate {
 	@Override
 	public ILocalMapControlHandler getStateControlHandler();
 	
+	@Override
+	public IGameSceneControl<ILocalMapGamescene> getSceneControl();
+
 	@Override
 	public ILocalMapGamescene getActiveScene();
 

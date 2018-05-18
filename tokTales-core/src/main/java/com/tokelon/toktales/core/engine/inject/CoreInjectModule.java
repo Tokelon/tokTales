@@ -1,7 +1,11 @@
 package com.tokelon.toktales.core.engine.inject;
 
+import java.lang.reflect.Type;
+
 import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.util.Types;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.content.ContentManager;
@@ -38,9 +42,15 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderOrder;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.GameSceneControl;
+import com.tokelon.toktales.core.game.states.GameSceneControl.GameSceneControlFactory;
 import com.tokelon.toktales.core.game.states.GameStateControl;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
+import com.tokelon.toktales.core.game.states.IGameScene;
+import com.tokelon.toktales.core.game.states.IGameSceneControl;
+import com.tokelon.toktales.core.game.states.IGameSceneControl.IGameSceneControlFactory;
+import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
@@ -132,6 +142,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameState.class).to(BaseGamestate.class);
 		bind(InitialGamestate.class);
 		
+		bindGameSceneControlTypes();
+		
 		bind(IRenderOrder.class).to(RenderOrder.class);
 		bind(IStateRender.class).to(EmptyStateRender.class);
 		 bind(ITextureCoordinator.class).to(DefaultTextureCoordinator.class);
@@ -139,6 +151,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
+		
 		
 		// GL Stuff
 		bind(IGLErrorUtils.class).to(GLErrorUtils.class); // Could bind this to no-op implementation
@@ -156,5 +169,56 @@ public class CoreInjectModule extends AbstractInjectModule {
 		// Other inject modules
 		install(new CoreDebugInjectModule());
 	}
+	
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void bindGameSceneControlTypes() {
+		/* So... Binding generic types.
+		 * 
+		 * Short version: Don't do it.
+		 * Instead bind and inject the type without parameter information and at the injection point cast it into the parameterized type you need.
+		 * Ex. instead of injecting IGameSceneControl<? extends IGameScene>, inject IGameSceneControl and then cast it to IGameSceneControl<? extends IGameScene>.
+		 * See (1).
+		 * 
+		 * Alternatively (and the better solution), use a factory with a typed create() method.
+		 * See (2).
+		 * 
+		 * Long version: You can bind generic types for specific parameter but you have to do it once for each parameter.
+		 * You can use a simple @Provides method in the module.
+		 * See (3).
+		 * Or you can create the types programmatically (fun).
+		 * See (4).
+		 * 
+		 */
+		
+		// (1) Injecting without parameter information
+		bind(IGameSceneControl.class).to(GameSceneControl.class);
+		// The compiler cannot understand this for some reason, therefore it needs a cast (which works just fine)
+		bind(IModifiableGameSceneControl.class).to((Class<? extends IModifiableGameSceneControl>) GameSceneControl.class);
+		
+		
+		// (2). Using a factory with a typed create method
+		bind(IGameSceneControlFactory.class).to(GameSceneControlFactory.class);
+		
+
+		// (4). Creating the types programmatically and using Type and TypeLiteral to bind them. Only works for parameter <? extends IGameScene>.
+		Type gamesceneSubtype = Types.subtypeOf(IGameScene.class);
+
+		// Here we bind the inner (notice WithOwner) type IModifiableGameSceneControl to GameSceneControl but only for parameter <? extends IGameScene>
+		Type modifiableGamesSceneControlOfGameSceneSubtype = Types.newParameterizedTypeWithOwner(IGameSceneControl.class, IModifiableGameSceneControl.class, gamesceneSubtype);
+		TypeLiteral<IModifiableGameSceneControl<? extends IGameScene>> typeLiteralModifiableGameSceneControl = (TypeLiteral) TypeLiteral.get(modifiableGamesSceneControlOfGameSceneSubtype);
+		bind(typeLiteralModifiableGameSceneControl).to(new TypeLiteral<GameSceneControl<? extends IGameScene>>() {});
+		
+		// Here we bind the supertype IGameSceneControl to it's subtype IModifiableGameSceneControl but only for parameter <? extends IGameScene>
+		Type gameSceneControlOfGamesceneSubtype = Types.newParameterizedType(IGameSceneControl.class, gamesceneSubtype);
+		TypeLiteral<IGameSceneControl<? extends IGameScene>> typeLiteralGameSceneControl = (TypeLiteral) TypeLiteral.get(gameSceneControlOfGamesceneSubtype);
+		bind(typeLiteralGameSceneControl).to(typeLiteralModifiableGameSceneControl);
+	}
+	
+	/* (3). Using a @Provides method in the module.
+	@Provides
+	protected IModifiableGameSceneControl<? extends IGameScene> provideModifiableGameSceneControl(ILogger logger) {
+		return new GameSceneControl<IGameScene>(logger);
+	}*/
 
 }

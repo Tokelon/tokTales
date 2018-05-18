@@ -24,10 +24,10 @@ import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
-import com.tokelon.toktales.core.game.states.GameSceneControl;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameScene;
+import com.tokelon.toktales.core.game.states.IGameSceneControl.IGameSceneControlFactory;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -63,8 +63,6 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	private boolean logRenderTime = false;
 
 	
-	private IModifiableGameSceneControl<ILocalMapGamescene> sceneControl;
-	
 	private ILocalMapStateRenderer customRenderer;
 
 	private ILocalMapControlHandler customControlHandler;
@@ -76,7 +74,8 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	
 	private ITextureFont font;
 	
-
+	
+	private final IGameSceneControlFactory sceneControlFactory;
 	private final ILocalMapStateRendererFactory stateRendererFactory;
 	private final ILocalMapInputHandlerFactory inputHandlerFactory;
 	private final IControlScheme controlScheme;
@@ -84,26 +83,28 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	
 	@Inject
 	public LocalMapGamestate(
+			IGameSceneControlFactory sceneControlFactory,
 			ILocalMapStateRendererFactory stateRendererFactory,
 			ILocalMapInputHandlerFactory inputHandlerFactory,
 			@ForClass(LocalMapGamestate.class) IControlScheme controlScheme,
 			ILocalMapControlHandlerFactory controlHandlerFactory
 	) {
+		this.sceneControlFactory = sceneControlFactory;
 		this.stateRendererFactory = stateRendererFactory;
 		this.inputHandlerFactory = inputHandlerFactory;
 		this.controlScheme = controlScheme;
 		this.controlHandlerFactory = controlHandlerFactory;
-		
-		this.sceneControl = new GameSceneControl<ILocalMapGamescene>();
 	}
 
 	@Override
 	protected void initStateDependencies(
+			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
+		IModifiableGameSceneControl<ILocalMapGamescene> stateSceneControl = sceneControlFactory.createModifiable();
 		ILocalMapStateRenderer stateRenderer = stateRendererFactory.create(this);
 		ILocalMapInputHandler stateInputHandler = inputHandlerFactory.create(this);
 		ILocalMapControlHandler stateControlHandler = controlHandlerFactory.create(this);
@@ -112,7 +113,7 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 		this.customRenderer = stateRenderer;
 		this.customControlHandler = stateControlHandler;
 		
-		super.initStateDependencies(stateRenderer, stateInputHandler, controlScheme, stateControlHandler);
+		super.initStateDependencies(stateSceneControl, stateRenderer, stateInputHandler, controlScheme, stateControlHandler);
 	}
 	
 	
@@ -147,11 +148,6 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	public void onEngage() {
 		super.onEngage();
 		
-		ILocalMapGamescene initialScene = createInitialScene();
-		assignScene(INITIAL_SCENE_NAME, initialScene);
-		changeScene(INITIAL_SCENE_NAME);
-
-		
 		/* Uncomment if needed
 		IConfigManager configManager = getGame().getConfigManager();
 		IMainConfig mainConfig = (IMainConfig) configManager.getConfig(IConfigManager.MAIN_CONFIG);
@@ -184,20 +180,20 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 		return consoleController;
 	}
 	
-
+	
 	@Override
-	public IModifiableGameSceneControl<? extends IGameScene> getSceneControl() {
-		return sceneControl;
+	protected Class<? extends IGameScene> getStateSceneType() {
+		return ILocalMapGamescene.class;
 	}
 	
 	@Override
-	public boolean assignScene(String name, IGameScene scene) {
-		return assignSceneGeneric(ILocalMapGamescene.class, sceneControl, name, scene);
+	public IModifiableGameSceneControl<ILocalMapGamescene> getSceneControl() {
+		return getSceneControlTyped(ILocalMapGamescene.class);
 	}
 	
 	@Override
 	public ILocalMapGamescene getActiveScene() {
-		return sceneControl.getActiveScene();
+		return getSceneControlTyped(ILocalMapGamescene.class).getActiveScene();
 	}
 	
 	
@@ -273,8 +269,12 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	protected String getTag() {
 		return TAG + "_" + BASE_TAG;
 	}
-	
-	
+
+	@Override
+	protected ILocalMapGamescene atCreateInitialScene() {
+		return new EmptyLocalMapGamescene();
+	}
+
 	
 	private class MainConfigChangeListener implements OnConfigChangeListener {
 
@@ -381,11 +381,7 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 			return true;
 		}
 	}
-	
-	
-	protected ILocalMapGamescene createInitialScene() {
-		return new EmptyLocalMapGamescene();
-	}
+
 	
 	protected class EmptyLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
 		private final EmptyLocalMapControlHandler emptyControlHandler = new EmptyLocalMapControlHandler();

@@ -4,11 +4,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 
 public class GameSceneControl<T extends IGameScene> implements IModifiableGameSceneControl<T> {
-	// TODO: Important - Inject log
 	
 	public static final String TAG = "GameSceneControl";
 	
@@ -20,7 +22,12 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	private T activeScene;
 	private String activeSceneName;
 	
-	public GameSceneControl() {
+	private final ILogger logger;
+	
+	@Inject
+	public GameSceneControl(ILogger logger) {
+		this.logger = logger;
+		
 		this.scenes = new HashMap<String, T>();
 		this.unmodifiableScenes = Collections.unmodifiableMap(scenes);
 	}
@@ -41,7 +48,7 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	public void changeScene(String name) {
 		T newScene = scenes.get(name);
 		if(newScene == null) {
-			TokTales.getLog().e(TAG, "Cannot change scene: no scene for name " + name);
+			logger.e(TAG, "Cannot change scene: no scene for name " + name);
 			assert false : "no scene for name " + name;
 			return;
 		}
@@ -53,8 +60,8 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		}
 		
 
-		//TokTales.getLog().d(TAG, String.format("Scene change in [%s]", this));
-		TokTales.getLog().i(TAG, String.format("Scene was changed: from %s [%s] to %s [%s]", activeSceneName, activeScene, name, newScene));
+		//logger.d(TAG, String.format("Scene change in [%s]", this));
+		logger.i(TAG, String.format("Scene was changed: from %s [%s] to %s [%s]", activeSceneName, activeScene, name, newScene));
 
 		activeScene = newScene;
 		activeSceneName = name;
@@ -73,8 +80,8 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		scenes.put(name, scene);
 		scene.onAssign();
 		
-		//TokTales.getLog().d(TAG, String.format("Scene addition in [%s]", this));
-		TokTales.getLog().i(TAG, String.format("Scene was added: %s [%s]", name, scene));
+		//logger.d(TAG, String.format("Scene addition in [%s]", this));
+		logger.i(TAG, String.format("Scene was added: %s [%s]", name, scene));
 	}
 
 	@Override
@@ -100,6 +107,26 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	@Override
 	public Map<String, T> getSceneMap() {
 		return unmodifiableScenes;
+	}
+	
+	
+	public static class GameSceneControlFactory implements IGameSceneControlFactory {
+		private final Provider<ILogger> loggerProvider;
+
+		@Inject
+		public GameSceneControlFactory(Provider<ILogger> loggerProvider) {
+			this.loggerProvider = loggerProvider;
+		}
+		
+		@Override
+		public <T extends IGameScene> IGameSceneControl<T> create() {
+			return new GameSceneControl<T>(loggerProvider.get());
+		}
+
+		@Override
+		public <T extends IGameScene> IModifiableGameSceneControl<T> createModifiable() {
+			return new GameSceneControl<T>(loggerProvider.get());
+		}
 	}
 	
 }
