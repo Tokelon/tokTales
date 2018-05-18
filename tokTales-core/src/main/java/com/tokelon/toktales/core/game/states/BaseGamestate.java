@@ -446,6 +446,16 @@ public class BaseGamestate implements IGameState {
 		return true;
 	}
 
+	@Override
+	public boolean removeScene(String name) {
+		IGameScene scene = getSceneControl().getScene(name);
+		if(scene == null || scene.equals(getActiveScene())) {
+			return false;
+		}
+		
+		getSceneControl().removeScene(name);
+		return true;
+	}
 
 	@Override
 	public IGameScene getActiveScene() {

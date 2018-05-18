@@ -51,33 +51,43 @@ public interface IGameState {
 	
 	
 	
-	/** Assigns a scene with the given name to this gamestate.<br><br>
+	/** Assigns a scene with the given name to this gamestate.
+	 * <p>
 	 * The scene must be compatible with this state, in that it must match the type this state expects.
 	 * 
 	 * @param name
 	 * @param scene
 	 * @return True if the given scene was assigned successfully, false if not.
-	 * @throws IllegalArgumentException If name or scene is null.
+	 * @throws NullPointerException If name or scene is null.
 	 */
 	public boolean assignScene(String name, IGameScene scene);
-	
 	
 	/** Changes to active scene to the on with the given name.
 	 * 
 	 * @param name
 	 * @return True if the scene was successfully changed, false if not.
-	 * @throws IllegalArgumentException If name is null.
+	 * @throws NullPointerException If name is null.
 	 */
 	public boolean changeScene(String name);
 	
+	/** Removes the scene for the given name if it exists.
+	 * <p>
+	 * If the scene is the currently active scene, it cannot be removed.
+	 * 
+	 * @param name
+	 * @return True if the scene was successfully removed, false if not.
+	 * @throws NullPointerException If name is null.
+	 */
+	public boolean removeScene(String name);
+
 	
-	/**
+	/** You can override this method to return a custom scene type.
 	 * 
 	 * @return The currently active scene.
 	 */
 	public IGameScene getActiveScene();
 	
-	/**
+	/** You can override this method to return a custom scene control type.
 	 * 
 	 * @return The scene control for this state.
 	 */
@@ -98,7 +108,6 @@ public interface IGameState {
 	 */
 	public IRenderOrder getRenderOrder();
 	
-	
 	/**
 	 * 
 	 * @return The state render.
@@ -114,7 +123,6 @@ public interface IGameState {
 	 * @return The state input.
 	 */
 	public IGameStateInput getStateInput();
-	
 	
 	
 	/** The state input handler is the default way of processing state related events,
