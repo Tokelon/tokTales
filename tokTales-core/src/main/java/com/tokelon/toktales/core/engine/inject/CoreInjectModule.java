@@ -21,6 +21,7 @@ import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.annotation.GridTileSize;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
@@ -79,6 +80,9 @@ import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 
 public class CoreInjectModule extends AbstractInjectModule {
 
+	public static final float DEFAULT_GRID_TILE_SIZE = 32.0f;
+	
+	
 	@Override
 	protected void configure() {
 		// you can use untargeted bindings so that the injector may prepare dependencies eagerly
@@ -135,7 +139,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 				   .implement(ISpriteManager.class, SpriteManager.class)
 				   .build(ISpriteManagerFactory.class));
 		   bindInGameScopeAndForNotScoped(ITextureManager.class, DefaultTextureManager.class);
-		  bindToProviderInGameScopeAndForNotScoped(IWorld.class, () -> new World(32.0f));  // Maybe do param with @Named
+		  bindInGameScopeAndForNotScoped(IWorld.class, World.class);
+		   bind(Float.class).annotatedWith(GridTileSize.class).toInstance(DEFAULT_GRID_TILE_SIZE);
 		
 		
 		// Other

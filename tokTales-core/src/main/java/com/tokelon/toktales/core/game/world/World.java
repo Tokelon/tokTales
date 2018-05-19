@@ -1,16 +1,22 @@
 package com.tokelon.toktales.core.game.world;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.engine.inject.annotation.GridTileSize;
+
 public class World implements IWorld {
 
 
-	private final float tileSize;
 	private final WorldGrid grid;
+
+	private final float tileSize;
 	
-	
-	public World(float gridTileSize) {
+	@Inject
+	public World(@GridTileSize float gridTileSize) {
 		this.tileSize = gridTileSize;
-		grid = new WorldGrid(gridTileSize);
+		this.grid = new WorldGrid(gridTileSize);
 	}
+	
 	
 	@Override
 	public float getGridTileSize() {
