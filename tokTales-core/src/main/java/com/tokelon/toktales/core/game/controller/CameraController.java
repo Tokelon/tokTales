@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game.controller;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.model.Camera;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.ICamera.CameraParticipant;
@@ -11,14 +13,13 @@ import com.tokelon.toktales.core.game.world.ICompassDirection;
 public class CameraController extends AbstractController implements ICameraController {
 
 	
-	private final Camera mCamera;
-
-	private final FollowEntityObserver followEntityObserver;
-
-	
 	private IGameEntity followEntity;
 
+	private final FollowEntityObserver followEntityObserver;
 	
+	private final Camera mCamera;
+
+	@Inject
 	public CameraController() {
 		mCamera = new Camera();
 		mCamera.getParticipation().addParticipant(new MyCameraParticipant());
@@ -26,14 +27,11 @@ public class CameraController extends AbstractController implements ICameraContr
 		followEntityObserver = new FollowEntityObserver();
 	}
 	
-
-	
 	
 	@Override
 	public ICamera getCamera() {
 		return mCamera;
 	}
-	
 	
 	
 	@Override
@@ -131,6 +129,5 @@ public class CameraController extends AbstractController implements ICameraContr
 			}
 		}
 	}
-
 	
 }

@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game.controller.map;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.controller.AbstractController;
 import com.tokelon.toktales.core.game.logic.ActionScheduler;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
@@ -23,12 +25,15 @@ public class MapController extends AbstractController implements IMapController 
 	
 	private final IBlockMap map;
 	
+	@Inject
+	public MapController() {
+		map = null; // TODO: Refactor this
+	}
 	
 	public MapController(IBlockMap blockMap) {
 		map = blockMap;
 	}
 
-	
 	
 	
 	@Override
@@ -84,9 +89,6 @@ public class MapController extends AbstractController implements IMapController 
 	
 	
 
-
-
-
 	@Override
 	public IMapElement elementGet(int px, int py, int lvl) {	// TODO: Add source empty exception?
 		return map.getBlockAt(px, py).getElementOnLevel(lvl);
@@ -96,7 +98,6 @@ public class MapController extends AbstractController implements IMapController 
 	public IMapElement elementGet(IMapPosition position, int level) {
 		return elementGet(position.x(), position.y(), level);
 	}
-
 
 	
 	@Override
@@ -122,7 +123,6 @@ public class MapController extends AbstractController implements IMapController 
 	}
 
 	
-
 	@Override
 	public IMapElement elementSyncRemove(int px, int py, int lvl) {		//TODO: Source check?
 		
@@ -140,7 +140,6 @@ public class MapController extends AbstractController implements IMapController 
 		return elementSyncRemove(position.x(), position.y(), level);
 	}
 
-	
 	
 	@Override
 	public void elementSyncMove(int fromx, int fromy, int fromlevel, int tox, int toy, int tolevel) {
@@ -168,8 +167,6 @@ public class MapController extends AbstractController implements IMapController 
 	public void elementSyncMove(IMapPosition fromPosition, int fromLevel, IMapPosition toPosition, int toLevel) {
 		elementSyncMove(fromPosition.x(), fromPosition.y(), fromLevel, toPosition.x(), toPosition.y(), toLevel);
 	}
-	
-	
 	
 	
 	@Override

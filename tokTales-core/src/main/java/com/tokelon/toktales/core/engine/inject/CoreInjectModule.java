@@ -38,6 +38,14 @@ import com.tokelon.toktales.core.game.control.GameControl;
 import com.tokelon.toktales.core.game.control.IGameControl;
 import com.tokelon.toktales.core.game.control.ITimeManager;
 import com.tokelon.toktales.core.game.control.TimeManager;
+import com.tokelon.toktales.core.game.controller.CameraController;
+import com.tokelon.toktales.core.game.controller.ControllerManager;
+import com.tokelon.toktales.core.game.controller.ICameraController;
+import com.tokelon.toktales.core.game.controller.IControllerManager;
+import com.tokelon.toktales.core.game.controller.IPlayerController;
+import com.tokelon.toktales.core.game.controller.PlayerController;
+import com.tokelon.toktales.core.game.controller.map.IMapController;
+import com.tokelon.toktales.core.game.controller.map.MapController;
 import com.tokelon.toktales.core.game.screen.EmptyStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
@@ -57,8 +65,12 @@ import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.game.world.DefaultCollisionStrategy;
+import com.tokelon.toktales.core.game.world.ICollisionStrategy;
 import com.tokelon.toktales.core.game.world.IWorld;
+import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.game.world.World;
+import com.tokelon.toktales.core.game.world.Worldspace;
 import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.DefaultTextureManager;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
@@ -158,6 +170,13 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
+		
+		bind(IControllerManager.class).to(ControllerManager.class);
+		bind(IPlayerController.class).to(PlayerController.class);
+		bind(ICameraController.class).to(CameraController.class);
+		bind(IMapController.class).to(MapController.class);
+		bind(IWorldspace.class).to(Worldspace.class);
+		bind(ICollisionStrategy.class).to(DefaultCollisionStrategy.class);
 		
 		
 		// GL Stuff

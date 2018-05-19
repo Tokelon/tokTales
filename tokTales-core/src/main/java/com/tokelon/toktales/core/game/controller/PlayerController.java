@@ -1,8 +1,9 @@
 package com.tokelon.toktales.core.game.controller;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.content.sprite.SpriteImpl;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.game.IGameScriptManager;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
 import com.tokelon.toktales.core.game.graphic.SpriteGraphicImpl;
 import com.tokelon.toktales.core.game.graphic.animation.GameAnimation;
@@ -20,6 +21,7 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.GameEntityParticipant;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.IGameEntityParticipant;
 import com.tokelon.toktales.core.game.states.IGameScene;
+import com.tokelon.toktales.core.game.states.InjectGameScene;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.values.PlayerValues;
@@ -27,18 +29,15 @@ import com.tokelon.toktales.core.values.PlayerValues;
 public class PlayerController extends AbstractController implements IPlayerController {
 
 	
+	private boolean mPlayerResponsive = true;
+	
+	private final AnimationCallback playerAnimationCallback = new AnimationCallback();
+
 	private final PlayerParticipant mPlayerParticipant;
 	
 	private final IPlayer mPlayer;
-
 	
-	private final AnimationCallback playerAnimationCallback = new AnimationCallback();
-	
-	
-	private boolean mPlayerResponsive = true;
-	
-	
-	
+	@Inject
 	public PlayerController() {
 		this(new Player());
 	}
@@ -134,10 +133,11 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	}
 	
 	
-	
-	
-	public void receiveScriptManager(IGameScriptManager scriptManager) {
+	@InjectGameScene
+	public void injectGamescene(IGameScene gamescene) {
+		// Since the script manager comes from the game, this would be done on injection
 		
+		//gamescene.getGamestate().getGame().getScriptManager();
 		//scriptManager.addLuaObject(player, IGameScriptManager.MODULE_PLAYER);
 	}
 	
@@ -500,6 +500,5 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		
 		return res;
 	}
-	
 	
 }

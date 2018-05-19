@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.IPoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f;
@@ -15,7 +17,9 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.map.IBlock;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.states.IGameScene;
+import com.tokelon.toktales.core.game.states.InjectGameScene;
 
+@InjectGameScene
 public class Worldspace implements IWorldspace {
 	
 	public static final String TAG = "Worldspace";
@@ -26,30 +30,32 @@ public class Worldspace implements IWorldspace {
 	// TODO: This needs to be done differently. Synchronization is broken right now because entityMap can be modified regardless of entityIDList
 	private final Set<String> entityIDList;
 	
+	
+	private IGameScene gamescene;
+	
+	private ICollisionStrategy mCollisionStrategy;
 	private final IWorld world;
 	
-	private final IGameScene gamescene;
-	private ICollisionStrategy mCollisionStrategy;
-	
-	
-	
-	
-	public Worldspace(IGameScene gamescene, IWorld world) {
-		this(gamescene, world, new DefaultCollisionStrategy());
+	public Worldspace(IWorld world) {
+		this(world, new DefaultCollisionStrategy());
 	}
 	
-	public Worldspace(IGameScene gamescene, IWorld world, ICollisionStrategy strategy) {
-		this.gamescene = gamescene;
+	@Inject
+	public Worldspace(IWorld world, ICollisionStrategy strategy) {
 		this.world = world;
 		
+		setStrategy(strategy);
+
 		entityMap = Collections.synchronizedMap(new HashMap<String, IGameEntity>());
 		
 		entityIDList = Collections.synchronizedSet(new HashSet<String>());
-		
-		setStrategy(strategy);
 	}
 
 	
+	@InjectGameScene
+	public void injectGamescene(IGameScene gamescene) {
+		this.gamescene = gamescene;
+	}
 	
 	
 	@Override
@@ -629,6 +635,5 @@ public class Worldspace implements IWorldspace {
 		}
 
 	}
-	
 	
 }
