@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IFileConfig;
@@ -75,7 +76,6 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	private ITextureFont font;
 	
 	
-	private final IGameSceneControlFactory sceneControlFactory;
 	private final ILocalMapStateRendererFactory stateRendererFactory;
 	private final ILocalMapInputHandlerFactory inputHandlerFactory;
 	private final IControlScheme controlScheme;
@@ -83,28 +83,34 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	
 	@Inject
 	public LocalMapGamestate(
+			Provider<ILocalMapGamescene> localMapSceneProvider,
 			IGameSceneControlFactory sceneControlFactory,
 			ILocalMapStateRendererFactory stateRendererFactory,
 			ILocalMapInputHandlerFactory inputHandlerFactory,
 			@ForClass(LocalMapGamestate.class) IControlScheme controlScheme,
 			ILocalMapControlHandlerFactory controlHandlerFactory
 	) {
-		this.sceneControlFactory = sceneControlFactory;
+		super(localMapSceneProvider, createSceneControl(sceneControlFactory));
+		
 		this.stateRendererFactory = stateRendererFactory;
 		this.inputHandlerFactory = inputHandlerFactory;
 		this.controlScheme = controlScheme;
 		this.controlHandlerFactory = controlHandlerFactory;
 	}
+	
+	private static IModifiableGameSceneControl<ILocalMapGamescene> createSceneControl(IGameSceneControlFactory sceneControlFactory) {
+		return sceneControlFactory.createModifiable();
+	}
 
+	
 	@Override
 	protected void initStateDependencies(
-			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		IModifiableGameSceneControl<ILocalMapGamescene> stateSceneControl = sceneControlFactory.createModifiable();
+
 		ILocalMapStateRenderer stateRenderer = stateRendererFactory.create(this);
 		ILocalMapInputHandler stateInputHandler = inputHandlerFactory.create(this);
 		ILocalMapControlHandler stateControlHandler = controlHandlerFactory.create(this);
@@ -113,7 +119,7 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 		this.customRenderer = stateRenderer;
 		this.customControlHandler = stateControlHandler;
 		
-		super.initStateDependencies(stateSceneControl, stateRenderer, stateInputHandler, controlScheme, stateControlHandler);
+		super.initStateDependencies(stateRenderer, stateInputHandler, controlScheme, stateControlHandler);
 	}
 	
 	
@@ -270,11 +276,6 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 		return TAG + "_" + BASE_TAG;
 	}
 
-	@Override
-	protected ILocalMapGamescene atCreateInitialScene() {
-		return new EmptyLocalMapGamescene();
-	}
-
 	
 	private class MainConfigChangeListener implements OnConfigChangeListener {
 
@@ -383,7 +384,7 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 	}
 
 	
-	protected class EmptyLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
+	public static class EmptyLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
 		private final EmptyLocalMapControlHandler emptyControlHandler = new EmptyLocalMapControlHandler();
 		
 		@Override
@@ -391,7 +392,7 @@ public class LocalMapGamestate extends BaseGamestate implements ILocalMapGamesta
 			super.onAssign();
 			
 			// This is old stuff, only used as fallback
-			IConfigManager configManager = getGame().getConfigManager();
+			IConfigManager configManager = getGamestate().getGame().getConfigManager();
 			IMainConfig mainConfig = (IMainConfig) configManager.getConfig(IConfigManager.MAIN_CONFIG);
 
 			ICamera camera = getCameraController().getCamera();

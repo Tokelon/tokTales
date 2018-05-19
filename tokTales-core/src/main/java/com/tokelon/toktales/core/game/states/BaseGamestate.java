@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.game.states;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -8,24 +9,22 @@ import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.screen.EmptyStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
-import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 import com.tokelon.toktales.tools.inject.IParameterInjector;
-import com.tokelon.toktales.tools.inject.ParameterInjector;
+import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 
-/** Use as a base for gamestates.
+/** Use as the base for game states.
  * <p>
  * Notes:<br>
- * <br>- Base dependencies will be injected, see {@link #injectBaseDependencies(IEngineContext, IRenderOrder, IGameStateInput)}.
- * <br>- State dependencies need to be set via setters or {@link #initStateDependencies(IStateRender, IGameStateInputHandler, IControlScheme, IControlHandler)}, or they will default to empty implementations.
+ * <br>- Base dependencies will be injected, see {@link #injectBaseDependencies}.
+ * <br>- State dependencies need to be set via setters or {@link #initStateDependencies}, or they will default to empty implementations.
  * <br>- State dependencies will also have the gamestate injected when set, if they use {@link InjectGameState}. To use this feature with other dependencies, see {@link #getGamestateInjector()}.
  * <br>- Inject your own dependencies by using {@link Inject}.
- * <br>- If needed there are hooks for {@link #afterInjectBaseDependencies()} and {@link #afterInitStateDependencies()}.
- * <br>- Override {@link #getSceneControl()} to return your custom scene control and use the helper {@link #assignSceneGeneric(Class, IModifiableGameSceneControl, String, IGameScene)}.
+ * <br>- If needed there are hooks for {@link #afterInitBaseDependencies()} and {@link #afterInitStateDependencies()}.
+ * <br>- Override {@link #getSceneControl()} to return your custom scene control and use the helper {@link #assignSceneGeneric}.
  * <br>- Override {@link #getTag()} and return your own tag to trace logs to the actual gamestate implementation.
  * <br>- The default {@link #render()} implementation will draw using {@link #getRenderOrder()}.
  * 
@@ -56,7 +55,7 @@ public class BaseGamestate implements IGameState {
 
 	
 	/* State objects */
-
+	private Provider<? extends IGameScene> stateSceneProvider;
 	private IModifiableGameSceneControl<? extends IGameScene> stateSceneControl;
 	private IStateRender stateRender;
 	
@@ -70,7 +69,18 @@ public class BaseGamestate implements IGameState {
 	 */
 	@Inject
 	public BaseGamestate() {
-		this.gamestateInjector = new ParameterInjector(InjectGameState.class, this);
+		// Used for injection
+	}
+	
+	
+	/** Constructor with custom scene type paramters.
+	 */
+	protected BaseGamestate(
+			Provider<? extends IGameScene> defaultSceneProvider,
+			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl
+	) {
+		this.stateSceneProvider = defaultSceneProvider;
+		this.stateSceneControl = defaultSceneControl;
 	}
 
 	
@@ -80,16 +90,12 @@ public class BaseGamestate implements IGameState {
 	 * <p>
 	 * <b>Note: Injected base objects like the context will not be available here.</b>
 	 * <p>
-	 * Useful with custom ctor injection, for manual creation see {@link #initStateDependencies(IStateRender, IGameStateInputHandler, IControlScheme, IControlHandler)}.<br>
+	 * Useful for custom constructor injection, for manual creation see {@link #initStateDependencies}.<br>
 	 * Alternatively you can use method injection, which will be called after base injection has happened.
 	 * 
-	 * @param defaultSceneControl
-	 * @param defaultRender
-	 * @param defaultInputHandler
-	 * @param defaultControlScheme
-	 * @param defaultControlHandler
 	 */
-	public BaseGamestate(
+	protected BaseGamestate(
+			Provider<? extends IGameScene> defaultSceneProvider,
 			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
@@ -99,33 +105,88 @@ public class BaseGamestate implements IGameState {
 		this();
 		
 		// Any of these can be null
+		this.stateSceneProvider = defaultSceneProvider;
 		this.stateSceneControl = defaultSceneControl;
 		this.stateRender = defaultRender;
 		this.stateInputHandler = defaultInputHandler;
 		this.stateControlScheme = defaultControlScheme;
 		this.stateControlHandler = defaultControlHandler;
 	}
+	
 
+	/** Injects all dependencies for a state and object initialization.
+	 * <p>
+	 * Note that this method will be called before any <i>method</i> injections of subtypes.
+	 * 
+	 * @see #initBaseDependencies
+	 * @see #initStateDependencies
+	 */
+	@Inject
+	protected void injectDependencies(
+			IParameterInjectorFactory parameterInjectorFactory,
+			Provider<IGameScene> sceneProvider, // Cannot use extends because of injection, use the ctor instead
+			IModifiableGameSceneControl<? extends IGameScene> sceneControl,
+			IEngineContext context,
+			IRenderOrder renderOrder,
+			IGameStateInput input,
+			IStateRender render,
+			IGameStateInputHandler inputHandler,
+			IControlScheme controlScheme,
+			IControlHandler controlHandler
+	) {
+		// Initialize internal dependencies
+		this.gamestateInjector = parameterInjectorFactory.create(InjectGameState.class, this);
+
+		
+		Provider<? extends IGameScene> defaultSceneProvider = stateSceneProvider == null ? sceneProvider : stateSceneProvider;
+		setSceneProvider(defaultSceneProvider);
+
+		IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl = stateSceneControl == null ? sceneControl : stateSceneControl;
+		setSceneControl(defaultSceneControl);
+		
+		
+		// Dependencies have been injected
+		afterInjectDependencies();
+		
+		
+		// Initialize base dependencies
+		initBaseDependencies(context, renderOrder, input);
+		afterInitBaseDependencies();
+		
+		
+		// Determine the defaults state dependencies
+		IStateRender defaultStateRender = stateRender == null ? render : stateRender;
+		IGameStateInputHandler defaultStateInputHandler = stateInputHandler == null ? inputHandler : stateInputHandler;
+		IControlScheme defaultStateControlScheme = stateControlScheme == null ? controlScheme : stateControlScheme;
+		IControlHandler defaultStateControlHandler = stateControlHandler == null ? controlHandler : stateControlHandler;
+		
+		// Initialize state dependencies by passing the defaults
+		initStateDependencies(defaultStateRender, defaultStateInputHandler, defaultStateControlScheme, defaultStateControlHandler);
+		afterInitStateDependencies();
+		
+	}
+
+	/** Called after dependencies have been injected, during {@link #injectDependencies}.
+	 * 
+	 * @see #injectDependencies
+	 */
+	protected void afterInjectDependencies() { }
+	
 	
 	/* Add dependencies here that are the same for all gamestate classes.
 	 * 
 	 * Only base dependencies are injected here,
 	 * anything that is a state dependency must be set separately.
 	 */
-	/** Injects the base objects and starts state object creation.
+	/** Initializes the base dependencies.
 	 * <p>
-	 * Overriding this method will usually not be necessary, however if you do you must call super().
+	 * Overriding this method is usually not necessary, however if you do you must call super().
 	 * <p>
-	 * Note that this method will be called before any method injections of subtypes.
+	 * This method will be called after {@link #injectDependencies}} and {@link #afterInjectDependencies()}.
 	 * 
-	 * @param context
-	 * @param renderOrder
-	 * @param input
-	 * 
-	 * @see #afterInjectBaseDependencies()
+	 * @see #afterInitBaseDependencies()
 	 */
-	@Inject
-	protected void injectBaseDependencies(
+	protected void initBaseDependencies(
 			IEngineContext context,
 			IRenderOrder renderOrder,
 			IGameStateInput input
@@ -138,61 +199,15 @@ public class BaseGamestate implements IGameState {
 		this.stateRenderOrder = renderOrder;
 		this.stateInput = input;
 
-
+		
 		this.renderRunner = new RenderRunner(stateRenderOrder);
-
-		// After inject callback
-		afterInjectBaseDependencies();
-
-		
-		// Create defaults if not already set
-		IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl;
-		if(stateSceneControl == null) {
-			defaultSceneControl = new GameSceneControl<IGameScene>(log);
-		}
-		else {
-			defaultSceneControl = stateSceneControl;
-		}
-		
-		IStateRender defaultStateRender;
-		if(stateRender == null) {
-			defaultStateRender = new EmptyStateRender(new DefaultTextureCoordinator(context.getGame().getContentManager().getTextureManager())); 
-		}
-		else {
-			defaultStateRender = stateRender;
-		}
-		
-		IGameStateInputHandler defaultStateInputHandler;
-		if(stateInputHandler == null) {
-			defaultStateInputHandler = new IGameStateInputHandler.EmptyGameStateInputHandler();
-		}
-		else {
-			defaultStateInputHandler = stateInputHandler;
-		}
-		
-		IControlScheme defaultStateControlScheme;
-		if(stateControlScheme == null) {
-			defaultStateControlScheme = new IControlScheme.EmptyControlScheme();
-		}
-		else {
-			defaultStateControlScheme = stateControlScheme;
-		}
-		
-		IControlHandler defaultStateControlHandler;
-		if(stateControlHandler == null) {
-			defaultStateControlHandler = new IControlHandler.EmptyControlHandler();
-		}
-		else {
-			defaultStateControlHandler = stateControlHandler;
-		}
-		
-		initStateDependencies(defaultSceneControl, defaultStateRender, defaultStateInputHandler, defaultStateControlScheme, defaultStateControlHandler);
 	}
 
-	/** Callback for after base injection has happened.
+	/** Called after base dependencies have been initialized.
 	 * 
+	 * @see #initBaseDependencies
 	 */
-	protected void afterInjectBaseDependencies() { }
+	protected void afterInitBaseDependencies() { }
 
 
 	
@@ -206,44 +221,36 @@ public class BaseGamestate implements IGameState {
 	 * 
 	 * Therefore in the base, these fields will be set manually, either in this init or with the setters.
 	 */
-	/** Sets the state objects to the defaults.
-	 * Can be overridden to pass custom state objects.
+	/** Initializes the state dependencies.
+	 * Override this method to pass custom state objects.
 	 * <p>
 	 * If any state objects have been set before this call (ex. in the constructor),
 	 * those will be passed here as parameters.
 	 * <p>
-	 * This method will be called after {@link #injectBaseDependencies(IEngineContext, IRenderOrder, IGameStateInput)} and {@link #afterInjectBaseDependencies()},
+	 * This method will be called after {@link #initBaseDependencies} and {@link #afterInitBaseDependencies()},
 	 * so the context and any other injected objects will have their injected values.
 	 * 
-	 * @param defaultRender
-	 * @param defaultInputHandler
-	 * @param defaultControlScheme
-	 * @param defaultControlHandler
-	 * 
-	 * @see #afterInitStateDependencies()
+	 * @see #afterInitStateDependencies
 	 */
 	protected void initStateDependencies(
-			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		setSceneControl(defaultSceneControl);
 		setStateRender(defaultRender);
 		setStateInputHandler(defaultInputHandler);
 		setStateControlScheme(defaultControlScheme);
 		setStateControlHandler(defaultControlHandler);
-		
-		
-		afterInitStateDependencies();
 	}
 	
-	/** Callback for after state dependencies have been initialized.
+	/** Called after state dependencies have been initialized.
 	 * <p>
 	 * The default implementation for this will:<br>
 	 * - Register the state input handler given by {@link #getStateInputHandler()}, to the state input given by {@link #getStateInput()}
 	 * by calling {@link IGameStateInputHandler#register(IGameStateInput)}.
+	 * 
+	 * @see #initStateDependencies
 	 */
 	protected void afterInitStateDependencies() {
 		// TODO: Handle one of these changing later?
@@ -296,8 +303,8 @@ public class BaseGamestate implements IGameState {
 	 * 
 	 * @return An instance of the initial gamescene.
 	 */
-	protected IGameScene atCreateInitialScene() {
-		return new BaseGamescene();
+	protected IGameScene atCreateInitialScene() { // TODO: Keep this?
+		return stateSceneProvider.get();
 	}
 
 	
@@ -350,7 +357,21 @@ public class BaseGamestate implements IGameState {
 		return IGameScene.class;
 	}
 	
-	/** Returns the state scene control but in compatibility to this state's scene type.
+	
+	/** Returns the state scene provider with compatibility to this state's scene type.
+	 * 
+	 * @param sceneType
+	 * @return This state's scene provider, in compatibility with this state's scene type.
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T extends IGameScene> Provider<T> getSceneProviderTyped(Class<T> sceneType) {
+		checkIfSceneTypeCompatible(sceneType);
+		
+		Provider<T> typedSceneProvider = (Provider<T>) stateSceneProvider;
+		return typedSceneProvider;
+	}
+	
+	/** Returns the state scene control with compatibility to this state's scene type.
 	 * <p>
 	 * <b>Important:</b> The given type must be equal or a supertype of this state's scene type (returned by {@link #getStateSceneType()}).
 	 * This means that to use this method with a custom type, you first need to override {@link #getStateSceneType()} to return your custom type.
@@ -362,14 +383,17 @@ public class BaseGamestate implements IGameState {
 	@SuppressWarnings("unchecked")
 	protected <T extends IGameScene> IModifiableGameSceneControl<T> getSceneControlTyped(Class<T> sceneType) {
 		// Do a type check first
+		checkIfSceneTypeCompatible(sceneType);
+		
+		IModifiableGameSceneControl<T> typedSceneControl = (IModifiableGameSceneControl<T>) stateSceneControl;
+		return typedSceneControl;
+	}
+	
+	private void checkIfSceneTypeCompatible(Class<? extends IGameScene> sceneType) {
 		Class<? extends IGameScene> stateSceneType = getStateSceneType();
 		if(!sceneType.isAssignableFrom(stateSceneType)) { // stateSceneType must be same or a superclass of sceneType
 			throw new RuntimeException(String.format("Invalid scene type! This state's scene type [%s] is not assignable from the given type [%s]. Make sure you override getStateSceneType()", stateSceneType, sceneType));
 		}
-		
-		
-		IModifiableGameSceneControl<T> typeSceneControl = (IModifiableGameSceneControl<T>) stateSceneControl;
-		return typeSceneControl;
 	}
 	
 	
@@ -533,7 +557,7 @@ public class BaseGamestate implements IGameState {
 	}
 	
 	
-	/** The injector can be used to inject this gamestate into dependencies via {@link InjectGameState}.
+	/** Returns an injector that can be used to inject this gamestate into dependencies via {@link InjectGameState}.
 	 * 
 	 * @return An injector for this gamestate.
 	 */
@@ -545,6 +569,22 @@ public class BaseGamestate implements IGameState {
 	
 	
 	/* Setters */
+	
+	/** Sets the state scene provider.
+	 * <p>
+	 * If supported this gamestate will be injected via {@link InjectGameState}.
+	 * 
+	 * @param sceneProvider
+	 * @throws NullPointerException If sceneProvider is null.
+	 */
+	private void setSceneProvider(Provider<? extends IGameScene> sceneProvider) {
+		if(sceneProvider == null) {
+			throw new NullPointerException();
+		}
+		
+		gamestateInjector.injectInto(sceneProvider);
+		this.stateSceneProvider = sceneProvider;
+	}
 	
 	/** Sets the state scene control.
 	 * <p>

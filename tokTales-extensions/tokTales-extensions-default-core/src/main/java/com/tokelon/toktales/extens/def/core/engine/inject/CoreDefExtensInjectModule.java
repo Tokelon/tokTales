@@ -12,6 +12,7 @@ import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpre
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamescene;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
@@ -31,7 +32,7 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 		 install(new FactoryModuleBuilder()
 				 .implement(ILocalMapControlHandler.class, LocalMapControlHandler.class)
 				 .build(ILocalMapControlHandlerFactory.class));
-    	
+    	bind(ILocalMapGamescene.class).to(LocalMapGamestate.EmptyLocalMapGamescene.class);
 		 
 	    // ConsoleGamestate
 		bind(IConsoleGamestate.class).to(ConsoleGamestate.class);
