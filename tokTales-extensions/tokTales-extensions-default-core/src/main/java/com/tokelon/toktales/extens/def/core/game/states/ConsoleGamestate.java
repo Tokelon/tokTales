@@ -16,6 +16,7 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.DefaultModularStateRender;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
@@ -30,7 +31,7 @@ import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer;
 
-public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate {
+public class ConsoleGamestate extends BaseGamestate<IGameScene> implements IConsoleGamestate {
 	
 	public static final String TAG = "ConsoleGamestate";
 	
@@ -55,7 +56,7 @@ public class ConsoleGamestate extends BaseGamestate implements IConsoleGamestate
 			@ForClass(ConsoleGamestate.class) IRenderingStrategy renderingStrategy,
 			@ForClass(ConsoleGamestate.class) IConsoleInterpreter consoleInterpreter
 	) {
-		super(null, null, null, inputHandler, null, null);
+		super(IGameScene.class, null, inputHandler, null, null);
 		
 		this.mRenderingStrategy = renderingStrategy;
 		this.consoleInterpreter = consoleInterpreter;

@@ -52,6 +52,7 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderOrder;
 import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.DefaultGamestate;
 import com.tokelon.toktales.core.game.states.GameSceneControl;
 import com.tokelon.toktales.core.game.states.GameSceneControl.GameSceneControlFactory;
 import com.tokelon.toktales.core.game.states.GameStateControl;
@@ -64,6 +65,7 @@ import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSc
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.world.DefaultCollisionStrategy;
 import com.tokelon.toktales.core.game.world.ICollisionStrategy;
@@ -157,9 +159,12 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		
 		// Other
-		bind(IGameState.class).to(BaseGamestate.class);
-		bind(InitialGamestate.class);
+		bind(IGameState.class).to(DefaultGamestate.class);
 		bind(IGameScene.class).to(BaseGamescene.class);
+		bind(new TypeLiteral<ITypedGameState<IGameScene>>() {}).to(new TypeLiteral<BaseGamestate<IGameScene>>() {});
+		bind(new TypeLiteral<BaseGamestate<IGameScene>>() {}).toProvider(() -> new BaseGamestate<>(IGameScene.class));
+		bind(BaseGamestate.class).toProvider(() -> new BaseGamestate<>(IGameScene.class));
+		bind(InitialGamestate.class);
 		
 		bindGameSceneControlTypes();
 		

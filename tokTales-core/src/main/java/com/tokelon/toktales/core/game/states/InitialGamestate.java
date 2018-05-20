@@ -4,14 +4,14 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.inject.ForClass;
 
-public class InitialGamestate extends BaseGamestate {
+public class InitialGamestate extends BaseGamestate<IGameScene> {
 	
 	public static final String TAG = "InitialGamestate";
 	
 	
     @Inject
 	public InitialGamestate(@ForClass(InitialGamestate.class) IGameStateInputHandler inputHandler) {
-    	super(null, null, null, inputHandler, null, null);
+    	super(IGameScene.class, null, inputHandler, null, null);
 	}
     
     

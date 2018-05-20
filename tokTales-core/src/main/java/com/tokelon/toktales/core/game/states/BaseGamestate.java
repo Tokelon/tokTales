@@ -12,6 +12,7 @@ import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
+import com.tokelon.toktales.core.game.states.IGameSceneControl.IGameSceneControlFactory;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 import com.tokelon.toktales.tools.inject.IParameterInjector;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
@@ -30,7 +31,8 @@ import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFa
  * 
  */
 @RequiresInjection
-public class BaseGamestate implements IGameState {
+public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
+	// TODO: Adjust documentations to new inject logic
 
 	public static final String BASE_TAG = "BaseGamestate";
 
@@ -55,8 +57,8 @@ public class BaseGamestate implements IGameState {
 
 	
 	/* State objects */
-	private Provider<? extends IGameScene> stateSceneProvider;
-	private IModifiableGameSceneControl<? extends IGameScene> stateSceneControl;
+	private Provider<? extends T> stateSceneProvider; // TODO: Should this be <T> or <? extends T>
+	private IModifiableGameSceneControl<T> stateSceneControl;
 	private IStateRender stateRender;
 	
 	private IGameStateInputHandler stateInputHandler;
@@ -64,45 +66,78 @@ public class BaseGamestate implements IGameState {
 	private IControlHandler stateControlHandler;
 	
 
-
+	private final Class<? extends T> sceneType;
+	
 	/** Default constructor.
+	 * 
+	 * @param sceneType The type of this state's scenes.
 	 */
-	@Inject
-	public BaseGamestate() {
-		// Used for injection
+	public BaseGamestate(Class<? extends T> sceneType) {
+		if(sceneType == null) {
+			throw new NullPointerException("sceneType must not be null");
+		}
+		
+		this.sceneType = sceneType;
 	}
 	
 	
-	/** Constructor with custom scene type paramters.
-	 */
-	protected BaseGamestate(
-			Provider<? extends IGameScene> defaultSceneProvider,
-			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl
-	) {
-		this.stateSceneProvider = defaultSceneProvider;
-		this.stateSceneControl = defaultSceneControl;
-	}
-
-	
-	/** Constructor with optional state objects.
+	/** Constructor with optional state parameters.
 	 * <p>
-	 * You can pass any objects you'd like to assign. Null values are permitted.
+	 * You can pass any objects you'd like to assign. Null values are permitted for all values except the scene type.
 	 * <p>
-	 * <b>Note: Injected base objects like the context will not be available here.</b>
+	 * <b>Note: Injected base objects like the context will not be available at this point.</b>
 	 * <p>
 	 * Useful for custom constructor injection, for manual creation see {@link #initStateDependencies}.<br>
 	 * Alternatively you can use method injection, which will be called after base injection has happened.
 	 * 
+	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			Provider<? extends IGameScene> defaultSceneProvider,
-			IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl,
+			Class<T> sceneType,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		this();
+		this(sceneType, null, null, defaultRender, defaultInputHandler, defaultControlScheme, defaultControlHandler);
+	}
+	
+	
+	/** Constructor with optional scene type parameters.
+	 * <p>
+	 * You can pass any objects you'd like to assign. Null values are permitted for all values except the scene type.
+	 * <p>
+	 * <b>Note: Injected base objects like the context will not be available at this point.</b>
+	 * 
+	 * @throws NullPointerException If sceneType is null.
+	 */
+	protected <S extends T> BaseGamestate(
+			Class<S> sceneType,
+			Provider<S> defaultSceneProvider,
+			IModifiableGameSceneControl<T> defaultSceneControl
+	) {
+		this(sceneType, defaultSceneProvider, defaultSceneControl, null, null, null, null);
+	}
+	
+
+	/** Constructor with optional state and scene type parameters.
+	 * <p>
+	 * You can pass any objects you'd like to assign. Null values are permitted for all values except the scene type.
+	 * <p>
+	 * <b>Note: Injected base objects like the context will not be available at this point.</b>
+	 * 
+	 * @throws NullPointerException If sceneType is null.
+	 */
+	protected <S extends T> BaseGamestate(
+			Class<S> sceneType,
+			Provider<S> defaultSceneProvider,
+			IModifiableGameSceneControl<T> defaultSceneControl,
+			IStateRender defaultRender,
+			IGameStateInputHandler defaultInputHandler,
+			IControlScheme defaultControlScheme,
+			IControlHandler defaultControlHandler
+	) {
+		this(sceneType);
 		
 		// Any of these can be null
 		this.stateSceneProvider = defaultSceneProvider;
@@ -114,6 +149,7 @@ public class BaseGamestate implements IGameState {
 	}
 	
 
+	
 	/** Injects all dependencies for a state and object initialization.
 	 * <p>
 	 * Note that this method will be called before any <i>method</i> injections of subtypes.
@@ -124,8 +160,7 @@ public class BaseGamestate implements IGameState {
 	@Inject
 	protected void injectDependencies(
 			IParameterInjectorFactory parameterInjectorFactory,
-			Provider<IGameScene> sceneProvider, // Cannot use extends because of injection, use the ctor instead
-			IModifiableGameSceneControl<? extends IGameScene> sceneControl,
+			IGameSceneControlFactory sceneControlFactory,
 			IEngineContext context,
 			IRenderOrder renderOrder,
 			IGameStateInput input,
@@ -136,12 +171,12 @@ public class BaseGamestate implements IGameState {
 	) {
 		// Initialize internal dependencies
 		this.gamestateInjector = parameterInjectorFactory.create(InjectGameState.class, this);
-
 		
-		Provider<? extends IGameScene> defaultSceneProvider = stateSceneProvider == null ? sceneProvider : stateSceneProvider;
+		
+		Provider<? extends T> defaultSceneProvider = stateSceneProvider == null ? createDefaultSceneProvider(context) : stateSceneProvider;
 		setSceneProvider(defaultSceneProvider);
 
-		IModifiableGameSceneControl<? extends IGameScene> defaultSceneControl = stateSceneControl == null ? sceneControl : stateSceneControl;
+		IModifiableGameSceneControl<T> defaultSceneControl = stateSceneControl == null ? createDefaultSceneControl(context, sceneControlFactory) : stateSceneControl;
 		setSceneControl(defaultSceneControl);
 		
 		
@@ -165,7 +200,26 @@ public class BaseGamestate implements IGameState {
 		afterInitStateDependencies();
 		
 	}
-
+	
+	/** Creates the default scene provider for this state.
+	 * 
+	 * @param context the engine context
+	 * @return A scene provider for this state's scene type.
+	 */
+	protected Provider<? extends T> createDefaultSceneProvider(IEngineContext context) {
+		return context.getInjector().getProvider(sceneType);
+	}
+	
+	/** Creates the default scene control for this state.
+	 * 
+	 * @param context the engine context
+	 * @param defaultSceneControlFactory the default scene control factory
+	 * @return A scene control for this state's scene type.
+	 */
+	protected IModifiableGameSceneControl<T> createDefaultSceneControl(IEngineContext context, IGameSceneControlFactory defaultSceneControlFactory) {
+		return defaultSceneControlFactory.createModifiable();
+	}
+	
 	/** Called after dependencies have been injected, during {@link #injectDependencies}.
 	 * 
 	 * @see #injectDependencies
@@ -274,36 +328,31 @@ public class BaseGamestate implements IGameState {
 		getEngine().getRenderService().getSurfaceHandler().addCallback(getStateRender());
 	}
 	
+	
 	/** Creates and assigns the initial gamescene to this state's scene control.
 	 * <p>
-	 * Uses {@link #atCreateInitialScene()} to create the initial scene.
+	 * Uses {@link #createInitialScene()} to create the initial scene.
 	 * 
-	 * @see #atCreateInitialScene()
+	 * @see #createInitialScene()
 	 */
-	protected void atSetupInitialGamescene() {
-		IGameScene initialGamescene = atCreateInitialScene();
-		Class<? extends IGameScene> stateSceneType = getStateSceneType();
+	protected boolean atSetupInitialGamescene() {
+		T initialGamescene = createInitialScene();
 		
-		if(stateSceneType.isInstance(initialGamescene)) {
-			if(assignScene(INITIAL_SCENE_NAME, initialGamescene)) {
-				changeScene(INITIAL_SCENE_NAME);
-			}
-			else {
-				getLog().e(getTag(), String.format("Failed to assign initial scene of type [%s] to scene control of type [%s]", initialGamescene.getClass(), stateSceneType));
-			}
+		boolean assigned = assignSceneTyped(INITIAL_SCENE_NAME, initialGamescene);
+		if(assigned) {
+			changeScene(INITIAL_SCENE_NAME);
 		}
-		else {
-			getLog().w(getTag(), String.format("Initial scene of type [%s] is not compatible with scene control type [%s]", initialGamescene.getClass(), stateSceneType));
-		}
+		
+		return assigned;
 	}
 	
 	/** Creates and returns the initial scene.
 	 * <p>
 	 * Can be overridden to return a custom initial scene.
 	 * 
-	 * @return An instance of the initial gamescene.
+	 * @return An instance for the initial gamescene.
 	 */
-	protected IGameScene atCreateInitialScene() { // TODO: Keep this?
+	protected T createInitialScene() {
 		return stateSceneProvider.get();
 	}
 
@@ -346,114 +395,42 @@ public class BaseGamestate implements IGameState {
 
 	/* Other methods */
 
-	/** Returns this state's scene type.
-	 * <p>
-	 * This type must be the generic type of this state's scene control.
-	 * 
-	 * @return The scene type of this state.
-	 * @see #getSceneControlTyped(Class)
-	 */
-	protected Class<? extends IGameScene> getStateSceneType() {
-		return IGameScene.class;
-	}
 	
-	
-	/** Returns the state scene provider with compatibility to this state's scene type.
-	 * 
-	 * @param sceneType
-	 * @return This state's scene provider, in compatibility with this state's scene type.
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T extends IGameScene> Provider<T> getSceneProviderTyped(Class<T> sceneType) {
-		checkIfSceneTypeCompatible(sceneType);
-		
-		Provider<T> typedSceneProvider = (Provider<T>) stateSceneProvider;
-		return typedSceneProvider;
-	}
-	
-	/** Returns the state scene control with compatibility to this state's scene type.
-	 * <p>
-	 * <b>Important:</b> The given type must be equal or a supertype of this state's scene type (returned by {@link #getStateSceneType()}).
-	 * This means that to use this method with a custom type, you first need to override {@link #getStateSceneType()} to return your custom type.
-	 * 
-	 * @param sceneType A type compatible with this state's scene type.
-	 * @return This state's scene control, in compatibility with this state's scene type.
-	 * @throws RuntimeException If the given type is not equal or a supertype of this state's scene type.
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T extends IGameScene> IModifiableGameSceneControl<T> getSceneControlTyped(Class<T> sceneType) {
-		// Do a type check first
-		checkIfSceneTypeCompatible(sceneType);
-		
-		IModifiableGameSceneControl<T> typedSceneControl = (IModifiableGameSceneControl<T>) stateSceneControl;
-		return typedSceneControl;
-	}
-	
-	private void checkIfSceneTypeCompatible(Class<? extends IGameScene> sceneType) {
-		Class<? extends IGameScene> stateSceneType = getStateSceneType();
-		if(!sceneType.isAssignableFrom(stateSceneType)) { // stateSceneType must be same or a superclass of sceneType
-			throw new RuntimeException(String.format("Invalid scene type! This state's scene type [%s] is not assignable from the given type [%s]. Make sure you override getStateSceneType()", stateSceneType, sceneType));
-		}
-	}
-	
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public boolean assignScene(String name, IGameScene scene) {
 		if(name == null || scene == null) {
 			throw new NullPointerException("name and scene must not be null");
 		}
-		
-		Class<? extends IGameScene> stateSceneType = getStateSceneType();
-		
+
 		boolean assigned;
-		if(stateSceneType.isInstance(scene)) {
-			
-			assigned = scene.assign(this);
-			if(assigned) {
-				// Using raw type here - should be safe because of type check
-				IModifiableGameSceneControl sceneControl = getSceneControl();
-				sceneControl.addScene(name, scene);
-			}
-			else {
-				getLog().w(getTag(), String.format("Failed to assign scene. Scene [%s] assign() returned false", scene.getClass()));
-			}
+		if(getSceneType().isInstance(scene)) {
+			// Cast and assign like normal
+			@SuppressWarnings("unchecked") T typedScene = (T) scene;
+			assigned = assignSceneTyped(name, typedScene);
 		}
 		else {
-			getLog().e(getTag(), String.format("Failed to assign scene. Type [%s] is not an instance of scene control type [%s]", scene.getClass(), stateSceneType));
+			getLog().e(getTag(), String.format("Failed to assign scene. Type [%s] is not an instance of scene type [%s]", scene.getClass(), getSceneType()));
 			assigned = false;
 		}
 		
 		return assigned;
 	}
-
-
-	/** Does what {@link #assignScene(String, IGameScene)} does except with a given scene control and custom class.
-	 * 
-	 * @param sceneClass
-	 * @param sceneControl
-	 * @param name
-	 * @param scene
-	 * @return True if the given scene was assigned successful, false if not.
-	 */
-	protected <T extends IGameScene> boolean assignSceneGeneric(Class<T> sceneClass, IModifiableGameSceneControl<T> sceneControl, String sceneName, IGameScene scene) { // Why is sceneClass needed?
-		if(sceneClass == null || sceneControl == null || sceneName == null || scene == null) {
-			throw new NullPointerException("sceneClass, sceneControl, name, scene must not be null");
+	
+	
+	@Override
+	public boolean assignSceneTyped(String name, T scene) {
+		if(name == null || scene == null) {
+			throw new NullPointerException("name and scene must not be null");
 		}
-
-		// Check if correct type
-		if(!sceneClass.isInstance(scene)) {
-			getLog().e(getTag(), String.format("Scene \"%s\" is not assignable to gamestate \"%s\"", sceneName, this.getClass().getSimpleName()));
-			return false;
-		}
-
-		T typedScene = sceneClass.cast(scene);
-
+		
 		boolean assigned = scene.assign(this);
 		if(assigned) {
-			sceneControl.addScene(sceneName, typedScene);
+			getSceneControl().addScene(name, scene);
 		}
-
+		else {
+			getLog().w(getTag(), String.format("Failed to assign scene. Scene [%s] assign() returned false", scene.getClass()));
+		}
+		
 		return assigned;
 	}
 
@@ -482,7 +459,7 @@ public class BaseGamestate implements IGameState {
 	}
 
 	@Override
-	public IGameScene getActiveScene() {
+	public T getActiveScene() {
 		return getSceneControl().getActiveScene();
 	}
 
@@ -543,17 +520,19 @@ public class BaseGamestate implements IGameState {
 
 
 	@Override
-	public IModifiableGameSceneControl<? extends IGameScene> getSceneControl() {
+	public IModifiableGameSceneControl<T> getSceneControl() {
 		return stateSceneControl;
 	}
 
 
-	/** Override to return you custom tag.
+	/** Returns this state's scene type.
+	 * <p>
+	 * This type must be the generic type of this state's scene control.
 	 * 
-	 * @return The tag for this state.
+	 * @return The scene type of this state.
 	 */
-	protected String getTag() {
-		return BASE_TAG;
+	protected Class<? extends T> getSceneType() {
+		return sceneType;
 	}
 	
 	
@@ -564,7 +543,24 @@ public class BaseGamestate implements IGameState {
 	protected IParameterInjector getGamestateInjector() {
 		return gamestateInjector;
 	}
+
 	
+	/** Returns the scene provider for this state.
+	 * 
+	 * @return A provider for scenes of this state's scene type.
+	 */
+	protected Provider<? extends T> getSceneProvider() {
+		return stateSceneProvider;
+	}
+
+	
+	/** Override to return you custom tag.
+	 * 
+	 * @return The tag for this state.
+	 */
+	protected String getTag() {
+		return BASE_TAG;
+	}
 	
 	
 	
@@ -577,7 +573,7 @@ public class BaseGamestate implements IGameState {
 	 * @param sceneProvider
 	 * @throws NullPointerException If sceneProvider is null.
 	 */
-	private void setSceneProvider(Provider<? extends IGameScene> sceneProvider) {
+	private void setSceneProvider(Provider<? extends T> sceneProvider) {
 		if(sceneProvider == null) {
 			throw new NullPointerException();
 		}
@@ -593,7 +589,7 @@ public class BaseGamestate implements IGameState {
 	 * @param sceneControl
 	 * @throws NullPointerException If sceneControl is null.
 	 */
-	private void setSceneControl(IModifiableGameSceneControl<? extends IGameScene> sceneControl) {
+	private void setSceneControl(IModifiableGameSceneControl<T> sceneControl) {
 		if(sceneControl == null) {
 			throw new NullPointerException();
 		}
