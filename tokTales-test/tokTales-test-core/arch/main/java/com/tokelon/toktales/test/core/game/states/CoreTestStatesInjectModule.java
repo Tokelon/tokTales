@@ -10,9 +10,11 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule;
+import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamescene;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestateControlHandler;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestateRender;
+import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamescene;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestate;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestate.IEngineGamestateType;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateControlHandler;
@@ -42,7 +44,8 @@ public class CoreTestStatesInjectModule extends AbstractInjectModule {
 		install(new FactoryModuleBuilder()
 				.implement(IEngineGamestateControlHandler.class, EngineGamestateControlHandler.class)
 				.build(IEngineGamestateControlHandlerFactory.class));
-
+		bind(IEngineGamescene.class).to(EngineGamescene.class);
+		
 		// EngineGamestate - Mocked
 		bind(IControlScheme.class).annotatedWith(IEngineGamestateType.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IEngineGamestateInputHandlerFactory.class).toInstance(engineStateInputHandlerFactoryMock);

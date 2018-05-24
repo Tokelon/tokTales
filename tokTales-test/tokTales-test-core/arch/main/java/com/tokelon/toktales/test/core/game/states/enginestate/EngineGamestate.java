@@ -6,14 +6,13 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
-import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateControlHandler.IEngineGamestateControlHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
 
-public class EngineGamestate extends BaseGamestate<IGameScene> implements IEngineGamestate {
-
+public class EngineGamestate extends BaseGamestate<IEngineGamescene> implements IEngineGamestate {
+	
 	private static final String TAG = "EngineGamestate";
 	
 	
@@ -28,7 +27,7 @@ public class EngineGamestate extends BaseGamestate<IGameScene> implements IEngin
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,
 			@IEngineGamestateType IControlScheme controlScheme
 	) {
-		super(IGameScene.class, null, null, controlScheme, null);
+		super(IEngineGamescene.class, null, null, controlScheme, null);
 		
 		this.stateRenderFactory = renderFactory;
 		this.stateControlHandlerFactory = controlHandlerFactory;

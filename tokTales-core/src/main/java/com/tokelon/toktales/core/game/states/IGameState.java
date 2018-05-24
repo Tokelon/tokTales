@@ -51,7 +51,7 @@ public interface IGameState {
 	
 	
 	
-	/** Assigns a scene with the given name to this gamestate.
+	/** Assigns a scene to this gamestate with the given name.
 	 * <p>
 	 * The scene must be compatible with this state, in that it must match the type this state expects.
 	 * 
