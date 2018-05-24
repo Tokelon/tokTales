@@ -23,6 +23,10 @@ import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateIn
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateRender;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
+import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.ISubEngineGamescene;
+import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.ISubEngineGamestate;
+import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.SubEngineGamescene;
+import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.SubEngineGamestate;
 
 public class CoreTestStatesInjectModule extends AbstractInjectModule {
 
@@ -49,6 +53,10 @@ public class CoreTestStatesInjectModule extends AbstractInjectModule {
 		// EngineGamestate - Mocked
 		bind(IControlScheme.class).annotatedWith(IEngineGamestateType.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IEngineGamestateInputHandlerFactory.class).toInstance(engineStateInputHandlerFactoryMock);
+		
+		// SubEngineGamestate
+		bind(ISubEngineGamestate.class).to(SubEngineGamestate.class);
+		bind(ISubEngineGamescene.class).to(SubEngineGamescene.class);
 		
 	}
 	

@@ -1,17 +1,19 @@
 package com.tokelon.toktales.test.core.game.states.enginestate;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateControlHandler.IEngineGamestateControlHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
 
-public class EngineGamestate extends BaseGamestate<IEngineGamescene> implements IEngineGamestate {
+public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T> implements IEngineGamestate {
 	
 	private static final String TAG = "EngineGamestate";
 	
@@ -20,18 +22,54 @@ public class EngineGamestate extends BaseGamestate<IEngineGamescene> implements 
 	private final IEngineGamestateControlHandlerFactory stateControlHandlerFactory;
 	private final IEngineGamestateInputHandlerFactory stateInputHandlerFactory;
 	
-	@Inject
+	
 	public EngineGamestate(
+			Class<? extends T> sceneType,
 			IEngineGamestateRenderFactory renderFactory,
-			IEngineGamestateControlHandlerFactory controlHandlerFactory,
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,
-			@IEngineGamestateType IControlScheme controlScheme
+			@IEngineGamestateType IControlScheme controlScheme,
+			IEngineGamestateControlHandlerFactory controlHandlerFactory
 	) {
-		super(IEngineGamescene.class, null, null, controlScheme, null);
+		super(sceneType, null, null, controlScheme, null);
 		
 		this.stateRenderFactory = renderFactory;
 		this.stateControlHandlerFactory = controlHandlerFactory;
 		this.stateInputHandlerFactory = inputHandlerFactory;
+	}
+	
+	@Inject
+	protected EngineGamestate(
+			IEngineGamestateRenderFactory renderFactory,
+			IEngineGamestateInputHandlerFactory inputHandlerFactory,
+			@IEngineGamestateType IControlScheme controlScheme,
+			IEngineGamestateControlHandlerFactory controlHandlerFactory
+	) {
+		this(getSceneClass(), renderFactory, inputHandlerFactory, controlScheme, controlHandlerFactory);
+	}
+	
+	
+	// Testing
+	protected <S extends T> EngineGamestate(
+			Class<S> sceneType,
+			Provider<S> defaultSceneProvider,
+			IModifiableGameSceneControl<T> defaultSceneControl,
+			IEngineGamestateRenderFactory renderFactory,
+			IEngineGamestateInputHandlerFactory inputHandlerFactory,
+			@IEngineGamestateType IControlScheme controlScheme,
+			IEngineGamestateControlHandlerFactory controlHandlerFactory
+	) {
+		super(sceneType, defaultSceneProvider, defaultSceneControl, null, null, controlScheme, null);
+		
+		this.stateRenderFactory = renderFactory;
+		this.stateControlHandlerFactory = controlHandlerFactory;
+		this.stateInputHandlerFactory = inputHandlerFactory;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private static <S extends IEngineGamescene> Class<? extends S> getSceneClass() {
+		// For some reason the compiler does not understand that the class of IEngineGamescene is valid without cast
+		return (Class<? extends S>) IEngineGamescene.class;
 	}
 	
 	
@@ -51,11 +89,24 @@ public class EngineGamestate extends BaseGamestate<IEngineGamescene> implements 
 		
 		super.initStateDependencies(stateRender, stateInputHandler, defaultControlScheme, stateControlHandler);
 	}
-	
-	
+
+
 	@Override
 	protected String getTag() {
 		return TAG + "_" + BASE_TAG;
+	}
+
+	
+	/* For testing purposes only */
+	
+	@Override
+	public Class<? extends T> getSceneType() {
+		return super.getSceneType();
+	}
+	
+	@Override
+	public Provider<? extends T> getSceneProvider() {
+		return super.getSceneProvider();
 	}
 	
 }
