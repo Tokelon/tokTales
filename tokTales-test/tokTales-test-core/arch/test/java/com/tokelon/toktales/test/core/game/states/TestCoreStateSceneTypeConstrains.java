@@ -24,7 +24,7 @@ import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.Sub
 public class TestCoreStateSceneTypeConstrains {
 
 
-	// Compile Test
+	@Test // Compile Test
 	@SuppressWarnings("unused")
 	public void BaseGamestate_GenericTypes_ShouldCompile() {
 		Injector injector = CoreTestStatesInjectModule.createCoreStatesInjector();
@@ -33,28 +33,33 @@ public class TestCoreStateSceneTypeConstrains {
 		BaseGamestate<IGameScene> defaultGamestate = injector.getInstance(DefaultGamestate.class);
 
 		BaseGamestate<IEngineGamescene> engineGamestate = new BaseGamestate<>(IEngineGamescene.class);
-		// TODO: This is somewhat problematic - Trying to assign an IEngineGamescene will fail
-		BaseGamestate<IEngineGamescene> engineGamestateWithSubClass = new BaseGamestate<>(ISubEngineGamescene.class);
+		//BaseGamestate<IEngineGamescene> engineGamestateWithSub = new BaseGamestate<>(ISubEngineGamescene.class); // Not allowed - sceneType has to be same as T
+		//BaseGamestate<ISubEngineGamescene> engineGamestateReversed = new BaseGamestate<>(IEngineGamescene.class); // Does not work
+		BaseGamestate<ISubEngineGamescene> engineGamestateWithSubClass = new BaseGamestate<>(ISubEngineGamescene.class);
+
 		
-		// This does not work because of constrain
-		//BaseGamestate<ISubEngineGamescene> engineGamestateBad = new BaseGamestate<>(IEngineGamescene.class);
-		
-		
+		// Standard Interface
 		Provider<IGameScene> gamesceneProviderStandard = null;
 		IModifiableGameSceneControl<IGameScene> gamesceneControlStandard = null;
-		BaseGamestate<IGameScene> baseGamestateStandard = new BaseGamestate<IGameScene>(IGameScene.class, gamesceneProviderStandard, gamesceneControlStandard) { };
+		BaseGamestate<IGameScene> baseGamestateStandard = new BaseGamestate<IGameScene>(IGameScene.class, gamesceneProviderStandard, gamesceneControlStandard) { }; // Anon type
 		
-		Provider<IEngineGamescene> gamesceneProviderSubInterface = null; // Works, has to be same as sceneType
+		
+		// Different Provider type
+		Provider<IEngineGamescene> gamesceneProviderSubInterface = null; // Works, has to extends from sceneType
+		
 		IModifiableGameSceneControl<IGameScene> gamesceneControlSubInterface = null; // Must be the same as T
-		//IModifiableGameSceneControl<IEngineGamescene> gamesceneControlSubInterface = null; // Does not work
-		BaseGamestate<IGameScene> baseGamestateSubInterface = new BaseGamestate<IGameScene>(IEngineGamescene.class, gamesceneProviderSubInterface, gamesceneControlSubInterface) { };
+		//IModifiableGameSceneControl<IEngineGamescene> gamesceneControlSubInterface = null; // Not allowed
 		
+		BaseGamestate<IGameScene> baseGamestateSubInterface = new BaseGamestate<IGameScene>(IGameScene.class, gamesceneProviderSubInterface, gamesceneControlSubInterface) { };
+		
+		
+		// Standard Class
 		Provider<EngineGamescene> gamesceneProviderSub = null;
-		IModifiableGameSceneControl<IGameScene> gamesceneControlSub = null;
-		BaseGamestate<IGameScene> baseGamestateSub = new BaseGamestate<IGameScene>(EngineGamescene.class, gamesceneProviderSub, gamesceneControlSub) { };
-		
+		IModifiableGameSceneControl<EngineGamescene> gamesceneControlSub = null;
+		BaseGamestate<EngineGamescene> baseGamestateSub = new BaseGamestate<EngineGamescene>(EngineGamescene.class, gamesceneProviderSub, gamesceneControlSub) { };
 	}
 
+	
 	@Test
 	public void EngineGamestateInjection_ShouldUseCorrectSceneType() {
 		Injector injector = CoreTestStatesInjectModule.createCoreStatesInjector();
@@ -76,6 +81,7 @@ public class TestCoreStateSceneTypeConstrains {
 		assertTrue(gamestate.getActiveScene() instanceof SubEngineGamescene);
 		assertTrue(gamestate.getSceneProvider().get() instanceof SubEngineGamescene);
 	}
+	
 	
 	@Test
 	public void SubEngineGamestateSceneAddition_ShouldAddSceneToSceneControlSuccessfully() {

@@ -57,8 +57,8 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 	
 	/* State objects */
-	private Provider<? extends T> stateSceneProvider; // TODO: Should this be <T> or <? extends T>
-	private IModifiableGameSceneControl<T> stateSceneControl;
+	private Provider<? extends T> stateSceneProvider; // Can be used with subclasses of T
+	private IModifiableGameSceneControl<T> stateSceneControl; // Must have type T to allow for adding objects
 	private IStateRender stateRender;
 	
 	private IGameStateInputHandler stateInputHandler;
@@ -66,13 +66,20 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	private IControlHandler stateControlHandler;
 	
 
-	private final Class<? extends T> sceneType;
+	/* The sceneType must be the class of T.
+	 * 
+	 * It's possible to use Class<? extends T> however then it would not be possible to assign any T,
+	 * it would have to be an instance of sceneType. This would be confusing.
+	 * There also is no real advantage in using it. You can still use it for the Provider.  
+	 * 
+	 */
+	private final Class<T> sceneType;
 	
 	/** Default constructor.
 	 * 
 	 * @param sceneType The type of this state's scenes.
 	 */
-	public BaseGamestate(Class<? extends T> sceneType) {
+	public BaseGamestate(Class<T> sceneType) {
 		if(sceneType == null) {
 			throw new NullPointerException("sceneType must not be null");
 		}
@@ -93,7 +100,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			Class<? extends T> sceneType,
+			Class<T> sceneType,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
@@ -111,9 +118,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * 
 	 * @throws NullPointerException If sceneType is null.
 	 */
-	protected <S extends T> BaseGamestate(
-			Class<S> sceneType,
-			Provider<S> defaultSceneProvider,
+	protected BaseGamestate(
+			Class<T> sceneType,
+			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl
 	) {
 		this(sceneType, defaultSceneProvider, defaultSceneControl, null, null, null, null);
@@ -128,9 +135,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * 
 	 * @throws NullPointerException If sceneType is null.
 	 */
-	protected <S extends T> BaseGamestate(
-			Class<S> sceneType,
-			Provider<S> defaultSceneProvider,
+	protected BaseGamestate(
+			Class<T> sceneType,
+			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
@@ -152,7 +159,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	/** Injects all dependencies for a state and object initialization.
 	 * <p>
-	 * Note that this method will be called before any <i>method</i> injections of subtypes.
+	 * Note that this method will be called before any <i>method</i> injections in subclasses.
 	 * 
 	 * @see #initBaseDependencies
 	 * @see #initStateDependencies
@@ -545,7 +552,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * 
 	 * @return The scene type of this state.
 	 */
-	protected Class<? extends T> getSceneType() {
+	protected Class<T> getSceneType() {
 		return sceneType;
 	}
 	

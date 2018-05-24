@@ -26,7 +26,7 @@ public class SubEngineGamestate extends EngineGamestate<ISubEngineGamescene> imp
 
 	// Testing
 	protected SubEngineGamestate(
-			Provider<ISubEngineGamescene> defaultSceneProvider,
+			Provider<SubEngineGamescene> defaultSceneProvider, // Use the implementation type here, as an example
 			IModifiableGameSceneControl<ISubEngineGamescene> defaultSceneControl,
 			IEngineGamestateRenderFactory renderFactory,
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,

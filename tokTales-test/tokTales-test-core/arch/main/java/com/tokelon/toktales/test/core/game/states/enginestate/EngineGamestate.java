@@ -7,8 +7,8 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateControlHandler.IEngineGamestateControlHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
@@ -24,7 +24,7 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 	
 	
 	public EngineGamestate(
-			Class<? extends T> sceneType,
+			Class<T> sceneType,
 			IEngineGamestateRenderFactory renderFactory,
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,
 			@IEngineGamestateType IControlScheme controlScheme,
@@ -49,9 +49,9 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 	
 	
 	// Testing
-	protected <S extends T> EngineGamestate(
-			Class<S> sceneType,
-			Provider<S> defaultSceneProvider,
+	protected EngineGamestate(
+			Class<T> sceneType,
+			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl,
 			IEngineGamestateRenderFactory renderFactory,
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,
@@ -67,9 +67,9 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 	
 	
 	@SuppressWarnings("unchecked")
-	private static <S extends IEngineGamescene> Class<? extends S> getSceneClass() {
+	private static <S extends IEngineGamescene> Class<S> getSceneClass() {
 		// For some reason the compiler does not understand that the class of IEngineGamescene is valid without cast
-		return (Class<? extends S>) IEngineGamescene.class;
+		return (Class<S>) IEngineGamescene.class;
 	}
 	
 	
@@ -100,7 +100,7 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 	/* For testing purposes only */
 	
 	@Override
-	public Class<? extends T> getSceneType() {
+	public Class<T> getSceneType() {
 		return super.getSceneType();
 	}
 	
