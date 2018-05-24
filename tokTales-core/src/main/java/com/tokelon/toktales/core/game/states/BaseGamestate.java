@@ -181,7 +181,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		
 		
 		// Dependencies have been injected
-		afterInjectDependencies();
+		afterDependencyInjection();
 		
 		
 		// Initialize base dependencies
@@ -199,6 +199,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		initStateDependencies(defaultStateRender, defaultStateInputHandler, defaultStateControlScheme, defaultStateControlHandler);
 		afterInitStateDependencies();
 		
+		
+		// injectDependencies() has run (call this last)
+		afterInjectDependencies();
 	}
 	
 	/** Creates the default scene provider for this state.
@@ -224,7 +227,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * 
 	 * @see #injectDependencies
 	 */
-	protected void afterInjectDependencies() { }
+	protected void afterDependencyInjection() { }
 	
 	
 	/* Add dependencies here that are the same for all gamestate classes.
@@ -236,7 +239,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * <p>
 	 * Overriding this method is usually not necessary, however if you do you must call super().
 	 * <p>
-	 * This method will be called after {@link #injectDependencies}} and {@link #afterInjectDependencies()}.
+	 * This method will be called during {@link #injectDependencies}, after {@link #afterDependencyInjection()}.
 	 * 
 	 * @see #afterInitBaseDependencies()
 	 */
@@ -263,7 +266,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 */
 	protected void afterInitBaseDependencies() { }
 
-
 	
 	/* Add dependencies here that differ between gamestate classes.
 	 * 
@@ -281,7 +283,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * If any state objects have been set before this call (ex. in the constructor),
 	 * those will be passed here as parameters.
 	 * <p>
-	 * This method will be called after {@link #initBaseDependencies} and {@link #afterInitBaseDependencies()},
+	 * This method will be called during {@link #injectDependencies}, after {@link #initBaseDependencies} and {@link #afterInitBaseDependencies()},
 	 * so the context and any other injected objects will have their injected values.
 	 * 
 	 * @see #afterInitStateDependencies
@@ -302,7 +304,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * <p>
 	 * The default implementation for this will:<br>
 	 * - Register the state input handler given by {@link #getStateInputHandler()}, to the state input given by {@link #getStateInput()}
-	 * by calling {@link IGameStateInputHandler#register(IGameStateInput)}.
+	 * by calling {@link IGameStateInputHandler#register(IGameStateInput)}.<br>
 	 * 
 	 * @see #initStateDependencies
 	 */
@@ -317,13 +319,25 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 	
 
+	/** Called after {@link #injectDependencies} has run (at the end of it).
+	 * 
+	 * The default implementation for this will:<br>
+	 * - Setup the initial game scene using {@link #atSetupInitialGamescene()}.<br>
+	 * 
+	 * @see #injectDependencies
+	 */
+	protected void afterInjectDependencies() {
+		
+		// Create and assign initial scene
+		atSetupInitialGamescene();
+	}
+	
+	
 	
 	/* Lifecycle callbacks */
 
 	@Override
 	public void onEngage() {
-		// Create and assign initial scene
-		atSetupInitialGamescene();
 		
 		getEngine().getRenderService().getSurfaceHandler().addCallback(getStateRender());
 	}
