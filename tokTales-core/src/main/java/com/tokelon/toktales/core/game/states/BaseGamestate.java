@@ -93,7 +93,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			Class<T> sceneType,
+			Class<? extends T> sceneType,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
@@ -207,7 +207,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @return A scene provider for this state's scene type.
 	 */
 	protected Provider<? extends T> createDefaultSceneProvider(IEngineContext context) {
-		return context.getInjector().getProvider(sceneType);
+		return context.getInjector().getProvider(getSceneType());
 	}
 	
 	/** Creates the default scene control for this state.
