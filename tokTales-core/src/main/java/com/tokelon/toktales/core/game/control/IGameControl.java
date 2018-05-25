@@ -1,21 +1,22 @@
 package com.tokelon.toktales.core.game.control;
 
+import java.util.Set;
+
 /** The game control can be used to control the states and modes of the game.
  */
 public interface IGameControl {
-	// TODO: Document the importance of thread safety
-	// Implementations must be threadsafe! -> Why?
+	// Does this need thread safety? If yes, document/implement it
 
 	
-	/*
-	public static final int GAME_MODE_EMPTY = 0;
-	public static final int GAME_MODE_FPS = 1;
-	public static final int GAME_MODE_EDIT = 2;
-	public static final int GAME_MODE_MAP = 3;
-	public static final int GAME_MODE_DIALOG = 4;
-	public static final int GAME_MODE_CUTSCENE = 5;
-	*/
-
+	public enum GameStatus {
+		CREATED,
+		STARTED,
+		RUNNING,
+		PAUSED,
+		STOPPED,
+		DESTROYED
+	}
+	
 	
 	/**
 	 * @throws GameStatusException
@@ -60,44 +61,57 @@ public interface IGameControl {
 	public void renderGame();
 	
 	
-	
-	// TODO: Probably refactor modes
-	
 	/**
-	 * @throws GameStatusException
+	 * @return The current game status.
 	 */
-	public void enterMode(int mode);
+	public GameStatus getGameStatus();
 	
-	/**
-	 * @throws GameStatusException
-	 */
-	public void exitMode(int mode);
+	
+	
 
-	
-	public boolean isModeActivated(int mode);
-	
-	
-	
-	/** Calls {@code registerModeListener(modeListener, true)}.
+	/** Activates the given mode.
+	 * <p>
+	 * If the mode is already active, there will be no effect.
+	 * 
+	 * @param mode
 	 */
-	public void registerModeListener(IGameModeListener modeListener);
-	public void registerModeListener(IGameModeListener modeListener, boolean receivePast);
+	public void enterMode(String mode);
 	
-	/** Calls {@code registerModeListener(basicModeListener, true)}.
+	/** Deactivates the given mode.
+	 * <p>
+	 * If the mode is not active, there will be no effect.
+	 * 
+	 * @param mode
 	 */
-	public void registerModeListener(IGameModeBasicListener basicModeListener);
-	public void registerModeListener(IGameModeBasicListener basicModeListener, boolean receivePast);
+	public void exitMode(String mode);
+
+	/** Returns whether the given mode is active or not.
+	 * 
+	 * @param mode
+	 * @return True if the given mode is active, false if not.
+	 */
+	public boolean isModeActive(String mode);
+
+	/**
+	 * @return An unmodifiable set of the currently active modes.
+	 */
+	public Set<String> getActiveModes();
 	
-	/** Calls {@code registerStateListener(stateListener, true)}.
+	
+
+	/** Equivalent to {@code registerStatusListener(stateListener, true)}.
 	 */
 	public void registerStatusListener(IGameStatusListener stateListener);
 	public void registerStatusListener(IGameStatusListener stateListener, boolean receivePast);
 	
+	public void removeStatusListener(IGameStatusListener stateListener);
+
 	
+	/** Equivalent to {@code registerModeListener(modeListener, true)}.
+	 */
+	public void registerModeListener(IGameModeListener modeListener);
+	public void registerModeListener(IGameModeListener modeListener, boolean receivePast);
 	
 	public void removeModeListener(IGameModeListener modeListener);
-	public void removeModeListener(IGameModeBasicListener basicModeListener);
-	
-	public void removeStateListener(IGameStatusListener stateListener);
 	
 }

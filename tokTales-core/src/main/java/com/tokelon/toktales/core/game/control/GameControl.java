@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.game.control;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,10 +10,6 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.IGameLogicManager;
 
 public class GameControl implements IGameControl {
-	// TODO: Important - Reevaluate the thread safe implementation
-	// -> TODO: Do not make thread safe, and remove the runtime exceptions
-	
-	// TODO: Implement state machine for created, running, paused, destroyed
 	
 	public static final String TAG = "GameControl";
 	
@@ -20,15 +17,14 @@ public class GameControl implements IGameControl {
 	//private final Set<IGameListener> gameListeners;
 	
 	private final Set<IGameModeListener> gameModeListeners = new HashSet<IGameModeListener>();
-	private final Set<IGameModeBasicListener> gameModeBasicListeners = new HashSet<IGameModeBasicListener>();
 	private final Set<IGameStatusListener> gameStatusListeners = new HashSet<IGameStatusListener>();
 
 	
-	private final Set<Integer> modesEnabled = new HashSet<Integer>();
+	private final Set<String> modesEnabled = new HashSet<>();
+	private final Set<String> modesEnabledUnmodifiable = Collections.unmodifiableSet(modesEnabled);
 
-	private boolean statusStarted;
-	private boolean statusRunning;
-	
+	private GameStatus gameStatus = GameStatus.DESTROYED;
+
 	
 	private final ILogger logger;
 	private final IGameLogicManager logicManager;
@@ -40,110 +36,136 @@ public class GameControl implements IGameControl {
 	}
 	
 	
+	private void changeStatusTo(GameStatus newGameStatus) {
+		gameStatus = newGameStatus;
+		notifyOfStatusChange(newGameStatus);
+	}
+	
+	private void notifyOfStatusChange(GameStatus newGameStatus) {
+		for(IGameStatusListener gameStatusListener: gameStatusListeners) {
+			gameStatusListener.gameStatusChanged(newGameStatus);
+		}
+	}
+	
 	
 	@Override
 	public void createGame() {
-		// TODO: Check status and throw exception if needed
+		if(gameStatus == GameStatus.CREATED) {
+			logger.d(TAG, "Game is already created");
+			return;
+		}
+		if(gameStatus != GameStatus.DESTROYED) {
+			throw new GameStatusException("Cannot create game with status: " + gameStatus);
+		}
+
+		logger.d(TAG, "Game is being created...");
+
 		logicManager.onGameCreate();
-	}
-	
-	@Override
-	public void destroyGame() {
-		// TODO: Check status and throw exception if needed
-		logicManager.onGameDestroy();
+
+		changeStatusTo(GameStatus.CREATED);
+		logger.i(TAG, "Game was created");
 	}
 	
 	
 	@Override
 	public synchronized void startGame() {
-		logger.d(TAG, "Game is starting...");
-		
-		if(statusStarted) {
-			throw new GameStatusException("Game is already started");
+		if(gameStatus == GameStatus.STARTED) {
+			logger.d(TAG, "Game is already started");
+			return;
 		}
+		if(gameStatus != GameStatus.CREATED && gameStatus != GameStatus.STOPPED) {
+			throw new GameStatusException("Cannot start game with status: " + gameStatus);
+		}
+		
+		logger.d(TAG, "Game is starting...");
 		
 		logicManager.onGameStart();
 		
-
-		statusStarted = true;
-		for(IGameStatusListener gsl: gameStatusListeners) {
-			gsl.gameStarted();
-		}
-		
+		changeStatusTo(GameStatus.STARTED);
 		logger.i(TAG, "Game was started");
 	}
 
-	@Override
-	public synchronized void pauseGame() {
-		logger.d(TAG, "Game is pausing...");
-		
-		if(!statusRunning) {
-			throw new GameStatusException("Cannot pause game that isn't running");
-		}
-		
-		logicManager.onGamePause();
-		
-		
-		statusRunning = false;
-		for(IGameStatusListener gsl: gameStatusListeners) {
-			gsl.gamePaused();
-		}
-		
-		logger.i(TAG, "Game was paused");
-	}
 
 	@Override
 	public synchronized void resumeGame() {
+		if(gameStatus == GameStatus.RUNNING) {
+			logger.d(TAG, "Game is already running");
+			return;
+		}
+		if(gameStatus != GameStatus.STARTED && gameStatus != GameStatus.PAUSED) {
+			throw new GameStatusException("Cannot resume game with status: " + gameStatus);
+		}
+		
 		logger.d(TAG, "Game is resuming...");
-		
-		if(!statusStarted) {
-			throw new GameStatusException("Cannot unpause game that isn't started");
-		}
-		
-		if(statusRunning) {
-			throw new GameStatusException("Cannot unpause game that is running");
-		}
 		
 		logicManager.onGameResume();
 		
-		
-		statusRunning = true;
-		for(IGameStatusListener gsl: gameStatusListeners) {
-			gsl.gameRunning();
-		}
-		
+		changeStatusTo(GameStatus.RUNNING);
 		logger.i(TAG, "Game was resumed");
 	}
 	
 	
 	@Override
-	public synchronized void stopGame() {
-		logger.d(TAG, "Game is stopping...");
-		
-		if(statusRunning) {
-			throw new GameStatusException("Cannot stop game that isn't paused");
+	public synchronized void pauseGame() {
+		if(gameStatus == GameStatus.PAUSED) {
+			logger.d(TAG, "Game is already paused");
+			return;
+		}
+		if(gameStatus != GameStatus.RUNNING) {
+			throw new GameStatusException("Cannot pause game with status: " + gameStatus);
 		}
 		
-		if(!statusStarted) {
-			throw new GameStatusException("Cannot stop game that isn't started");
-		}
-	
-		logicManager.onGameStop();
+		logger.d(TAG, "Game is pausing...");
 		
+		logicManager.onGamePause();
 		
-		statusStarted = false;
-		for(IGameStatusListener gsl: gameStatusListeners) {
-			gsl.gameStopped();
-		}
-		
-		logger.i(TAG, "Game was stopped");
+		changeStatusTo(GameStatus.PAUSED);
+		logger.i(TAG, "Game was paused");
 	}
 
 	
 	@Override
+	public synchronized void stopGame() {
+		if(gameStatus == GameStatus.STOPPED) {
+			logger.d(TAG, "Game is already stopped");
+			return;
+		}
+		if(gameStatus != GameStatus.STARTED && gameStatus != GameStatus.PAUSED) {
+			throw new GameStatusException("Cannot stop game with status: " + gameStatus);
+		}
+		
+		logger.d(TAG, "Game is stopping...");
+	
+		logicManager.onGameStop();
+		
+		changeStatusTo(GameStatus.STOPPED);
+		logger.i(TAG, "Game was stopped");
+	}
+
+
+	@Override
+	public void destroyGame() {
+		if(gameStatus == GameStatus.DESTROYED) {
+			logger.d(TAG, "Game is already destroyed");
+			return;
+		}
+		if(gameStatus != GameStatus.CREATED && gameStatus != GameStatus.STOPPED) {
+			throw new GameStatusException("Cannot destroy game with status: " + gameStatus);
+		}
+		
+		logger.d(TAG, "Game is being destroyed...");
+
+		logicManager.onGameDestroy();
+		
+		changeStatusTo(GameStatus.DESTROYED);
+		logger.i(TAG, "Game was destroyed");
+	}
+	
+	
+	@Override
 	public void updateGame() {
-		if(!statusRunning) {
-			throw new GameStatusException("Cannot update game that isn't running");
+		if(gameStatus != GameStatus.RUNNING) {
+			throw new GameStatusException("Cannot update game with status: " + gameStatus);
 		}
 		
 		logicManager.onGameUpdate();
@@ -151,54 +173,52 @@ public class GameControl implements IGameControl {
 	
 	@Override
 	public void renderGame() {
-		if(!statusRunning) {
-			throw new GameStatusException("Cannot render game that isn't running");
+		if(gameStatus != GameStatus.RUNNING) {
+			throw new GameStatusException("Cannot render game with status: " + gameStatus);
 		}
 		
 		logicManager.onGameRender();
 	}
 	
 	
+	@Override
+	public GameStatus getGameStatus() {
+		return gameStatus;
+	}
 	
 	
 	
 	@Override
-	public synchronized void enterMode(int mode) {
+	public synchronized void enterMode(String mode) {
 		logger.d(TAG, "Game is entering mode: " + mode);
 		
 		if(modesEnabled.contains(mode)) {
-			//throw new GameStateException("Mode is already activated");
+			logger.d(TAG, "Game mode is already active: " + mode);
 			return;
 		}
 		
 		
 		modesEnabled.add(mode);
 		for(IGameModeListener gml: gameModeListeners) {
-			gml.gameEnteredMode(mode);
-		}
-		for(IGameModeBasicListener gmbl: gameModeBasicListeners) {
-			gmbl.gameModeChanged(mode, true);
+			gml.gameModeChanged(mode, true);
 		}
 		
 		logger.i(TAG, "Game has entered mode: " + mode);
 	}
 
 	@Override
-	public synchronized void exitMode(int mode) {
+	public synchronized void exitMode(String mode) {
 		logger.d(TAG, "Game is exiting mode: " + mode);
 
 		if(!modesEnabled.contains(mode)) {
-			//throw new GameStateException("Mode is not activated");
+			logger.d(TAG, "Game mode is not yet active: " + mode);
 			return;
 		}
 		
 		
 		modesEnabled.remove(mode);
 		for(IGameModeListener gml: gameModeListeners) {
-			gml.gameExitMode(mode);
-		}
-		for(IGameModeBasicListener gmbl: gameModeBasicListeners) {
-			gmbl.gameModeChanged(mode, false);
+			gml.gameModeChanged(mode, false);
 		}
 		
 		logger.i(TAG, "Game has exited mode: " + mode);
@@ -206,73 +226,80 @@ public class GameControl implements IGameControl {
 
 
 	@Override
-	public synchronized boolean isModeActivated(int mode) {
+	public synchronized boolean isModeActive(String mode) {
 		return modesEnabled.contains(mode);
 	}
 	
+	@Override
+	public Set<String> getActiveModes() {
+		return modesEnabledUnmodifiable;
+	}
+	
+	
+
+	@Override
+	public synchronized void registerStatusListener(IGameStatusListener stateListener) {
+		registerStatusListener(stateListener, true);
+	}
+	
+	@Override
+	public synchronized void registerStatusListener(IGameStatusListener stateListener,	boolean receivePast) {
+		gameStatusListeners.add(stateListener);
+
+		if(receivePast) {
+			switch (gameStatus) {
+			case CREATED:
+				stateListener.gameStatusChanged(GameStatus.CREATED);
+				break;
+			case STARTED:
+				stateListener.gameStatusChanged(GameStatus.CREATED);
+				stateListener.gameStatusChanged(GameStatus.STARTED);
+				break;
+			case RUNNING:
+				stateListener.gameStatusChanged(GameStatus.CREATED);
+				stateListener.gameStatusChanged(GameStatus.STARTED);
+				stateListener.gameStatusChanged(GameStatus.RUNNING);
+				break;
+			case PAUSED:
+				stateListener.gameStatusChanged(GameStatus.CREATED);
+				stateListener.gameStatusChanged(GameStatus.STARTED);
+				stateListener.gameStatusChanged(GameStatus.PAUSED);
+				break;
+			case STOPPED:
+				stateListener.gameStatusChanged(GameStatus.CREATED);
+				stateListener.gameStatusChanged(GameStatus.STOPPED);
+				break;
+			case DESTROYED:
+				// Nothing
+			}
+		}
+	}
+
+	@Override
+	public synchronized void removeStatusListener(IGameStatusListener listener) {
+		gameStatusListeners.remove(listener);
+	}
 	
 	
 	@Override
 	public synchronized void registerModeListener(IGameModeListener modeListener) {
 		registerModeListener(modeListener, true);
 	}
+	
 	@Override
 	public synchronized void registerModeListener(IGameModeListener modeListener, boolean receivePast) {
 		gameModeListeners.add(modeListener);
 		
 		if(receivePast) {
-			for(Integer m: modesEnabled) {
-				modeListener.gameEnteredMode(m);
+			for(String m: modesEnabled) {
+				modeListener.gameModeChanged(m, true);
 			}
 		}
 	}
-	
-	@Override
-	public synchronized void registerModeListener(IGameModeBasicListener basicModeListener) {
-		registerModeListener(basicModeListener, true);
-	}
-	@Override
-	public synchronized void registerModeListener(IGameModeBasicListener basicModeListener, boolean receivePast) {
-		gameModeBasicListeners.add(basicModeListener);
-		
-		if(receivePast) {
-			for(Integer m: modesEnabled) {
-				basicModeListener.gameModeChanged(m, true);
-			}
-		}
-	}
-	
-	@Override
-	public synchronized void registerStatusListener(IGameStatusListener stateListener) {
-		registerStatusListener(stateListener, true);
-	}
-	@Override
-	public synchronized void registerStatusListener(IGameStatusListener stateListener,	boolean receivePast) {
-		gameStatusListeners.add(stateListener);
-
-		if(receivePast && statusStarted) {
-			stateListener.gameStarted();
-
-			if(statusRunning) {
-				stateListener.gameRunning();
-			}
-		}
-	}
-	
 	
 	@Override
 	public synchronized void removeModeListener(IGameModeListener listener) {
 		gameModeListeners.remove(listener);
-	}
-	
-	@Override
-	public synchronized void removeModeListener(IGameModeBasicListener basicModeListener) {
-		gameModeBasicListeners.remove(basicModeListener);
-	}
-
-	@Override
-	public synchronized void removeStateListener(IGameStatusListener listener) {
-		gameStatusListeners.remove(listener);
 	}
 
 }
