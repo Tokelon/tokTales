@@ -1,5 +1,7 @@
 package com.tokelon.toktales.android.activity.integration;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.android.render.opengl.IGLRenderView;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLRenderer;
 import com.tokelon.toktales.core.engine.IEngine;
@@ -16,6 +18,7 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	private final ILogger logger;
 	private final OpenGLRenderer renderer;
 	
+	@Inject
 	public SurfaceViewIntegration(ILogger logger, IEngine engine, IGame game) {
 		this.logger = logger;
 		renderer = new OpenGLRenderer(logger, engine, game);

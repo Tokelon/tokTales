@@ -1,8 +1,13 @@
 package com.tokelon.toktales.android.activity;
 
+import java.util.Map;
+
 import com.tokelon.toktales.android.R;
+import com.tokelon.toktales.android.activity.integration.GameIntegration;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
-import com.tokelon.toktales.android.logic.process.GLRenderingProcess;
+import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.TokTales;
 
@@ -31,6 +36,9 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 	public static final String TAG = "GameActivity";
 	
+	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "GameActivity_Integration_SurfaceView";
+	public static final String ACTIVITY_INTEGRATION_GAME = "GameActivity_Integration_Game";
+
 	
 	private View mRootView;
 	private RenderGLSurfaceView mRenderView;
@@ -40,7 +48,22 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	
 	private ProxyTextWatcher textViewProxyTextWatcher;
 	
-	private GLRenderingProcess renderingProcess;
+
+	private SurfaceViewIntegration surfaceViewIntegration;
+	
+	
+	@Override
+	protected Map<String, IActivityIntegration> createActivityIntegrations() {
+		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
+		
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
+		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
+		
+		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
+		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		
+		return integrations;
+	}
 
 	
 	@Override
@@ -73,18 +96,15 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 		
 		mRootView = layout;
 		setContentView(mRootView);
+		
+		// Use with OpenGL renderer
+		surfaceViewIntegration.integrateRenderView(mRenderView);
 	}
 	
 	private void initLogic() {
 		
 		mTextView.addTextChangedListener(textViewProxyTextWatcher = new ProxyTextWatcher());
 		mTextView.setOnKeyListener(new TextViewOnKeyListener());
-		
-		renderingProcess = new GLRenderingProcess(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
-
-		// Use with OpenGL renderer
-		renderingProcess.setObjRenderView(mRenderView);
-		renderingProcess.startProcess();
 	}
 	
 	private void initDialog() {
@@ -104,30 +124,6 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	
 	
 	/* Lifecycle methods */
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		renderingProcess.unpause();
-	}
-
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		renderingProcess.pause();
-	}
-	
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		
-		renderingProcess.endProcess();
-	}
-	
 	
 	
 	@SuppressLint("NewApi") @Override

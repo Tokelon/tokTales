@@ -1,13 +1,18 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
+import java.util.Map;
+
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
 import com.tokelon.toktales.android.activity.SettingsActivity;
+import com.tokelon.toktales.android.activity.integration.GameIntegration;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
-import com.tokelon.toktales.android.logic.process.GLRenderingProcess;
+import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.TokTales;
@@ -45,6 +50,9 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	
 	public static final String ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH = "ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH";
 	
+	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "TaleActivity_Integration_SurfaceView";
+	public static final String ACTIVITY_INTEGRATION_GAME = "TaleActivity_Integration_Game";
+
 	
 	
 	private AlertDialog.Builder backDialogBuilder;
@@ -58,20 +66,27 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	private ProxyTextWatcher textViewProxyTextWatcher;
 
 	
-	private GLRenderingProcess renderingProcess;
-
-	private TaleProcess taleProcess;
+	
+	private SurfaceViewIntegration surfaceViewIntegration;
 	
 	
-	private boolean errorLoadingActivity = false;
-	
+	@Override
+	protected Map<String, IActivityIntegration> createActivityIntegrations() {
+		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
+		
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
+		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
+		
+		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
+		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		
+		return integrations;
+	}
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		renderingProcess = new GLRenderingProcess(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
 		
 		// Set activity to fullscreen
 		setFullscreen();
@@ -88,7 +103,6 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		if(taleAppPath == null) {
 			TokTales.getLog().e(TAG, "Intend is missing data");
 			
-			errorLoadingActivity = true;
 			finish();
 		}
 		else {
@@ -117,19 +131,13 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		configManager.getConfig(IConfigManager.MAIN_CONFIG).removeAllListeners();
 		
 		
-
-		// Use with OpenGL renderer
-		renderingProcess.setObjRenderView(renderGLView);
-		renderingProcess.startProcess();
-		
-		
 		
 		// TODO: Refactor - Inject state via ActivityHelper
 		ILocalMapGamestate state = TokTales.getContext().getInjector().getInstance(ILocalMapGamestate.class);
 		TokTales.getGame().getStateControl().addState(TokelonGameStates.STATE_LOCAL_MAP, state);
 
 		EmptyPauseableProcess emptyProcess = new EmptyPauseableProcess();
-		taleProcess = new TaleProcess(emptyProcess, TokTales.getContext(), TokelonGameStates.STATE_LOCAL_MAP);
+		TaleProcess taleProcess = new TaleProcess(emptyProcess, TokTales.getContext(), TokelonGameStates.STATE_LOCAL_MAP);
 		taleProcess.setObjTaleAppPath(taleApplicationPath);
 		
 
@@ -166,6 +174,10 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		// Set the content view
 		setContentView(rootView);
+		
+
+		// Use with OpenGL renderer
+		surfaceViewIntegration.integrateRenderView(renderGLView);
 	}
 	
 
@@ -193,45 +205,15 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	
 	
 	
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		if(!errorLoadingActivity) {
-
-			renderingProcess.unpause();
-			taleProcess.unpause();	
-		}
-	}
-
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		if(!errorLoadingActivity) {
-			taleProcess.pause();
-			renderingProcess.pause();
-		}
-	}
-	
-	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
-		if(!errorLoadingActivity) {
-			taleProcess.endProcess();
-			renderingProcess.endProcess();
-		}
 
 		// Make sure application is terminated completely
 		Process.killProcess(Process.myPid());
 	}
 
 	
-
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
