@@ -8,11 +8,11 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
-import com.tokelon.toktales.core.logic.process.GameProcess;
 import com.tokelon.toktales.desktop.engine.inject.DesktopInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopSetupInjectModule;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
@@ -65,29 +65,18 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 		// Run after setting up TokTales
 		setup.run(engineContext);
 		
-		
-		// calls onCreate on adapter
-		engineContext.getGame().getGameControl().createGame();
 
 		try {
-			additionalSetup();
+			additionalSetup(engineContext);
 		} catch (LWJGLException e) {
 			throw new EngineException(e);
 		}
 		
-		engineContext.getGame().getGameControl().destroyGame();
-		
 	}
 
 	
-	private void additionalSetup() throws LWJGLException {
+	private void additionalSetup(IEngineContext engineContext) throws EngineException, LWJGLException {
 		// Put this in setup or not?
-		
-		
-
-		// TODO: Start everything (if needed)
-		//TokTales.getGame().getGameControl().start()
-		
 		
 		LWJGLProgram lwProgram = new LWJGLProgram();
 		
@@ -103,28 +92,36 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 				
 				GLFWInputDriver inputControl = new GLFWInputDriver(lwMainWindow);
 				
-				// TODO: Check for cast! Refactor if possible
-				((IDesktopInputService)TokTales.getEngine().getInputService()).setInputDriver(inputControl);
+				// TODO: Refactor if possible
+				IInputService inputService = engineContext.getEngine().getInputService();
+				if(inputService instanceof IDesktopInputService) {
+					((IDesktopInputService) inputService).setInputDriver(inputControl);
+				}
+				else {
+					throw new EngineException("Input service must be of type " + IDesktopInputService.class);
+				}
 				
 				
-				LWJGLRenderer renderer = new LWJGLRenderer(TokTales.getGame());
+				LWJGLRenderer renderer = new LWJGLRenderer(engineContext.getGame());
 				ISurface surface = renderer.onWindowCreated(lwMainWindow);
 				
-				TokTales.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface);
-				TokTales.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
+				engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface);
+				engineContext.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
 				
 				
-				GameProcess gameProcess = new GameProcess(TokTales.getContext());
-				gameProcess.startProcess();
-				gameProcess.unpause();
-				
-				
-				renderer.runLoop();
-				
-				
-				gameProcess.pause();
-				gameProcess.endProcess();
-				
+				engineContext.getGame().getGameControl().createGame(); // calls onCreate on adapter
+
+				engineContext.getGame().getGameControl().startGame();
+				engineContext.getGame().getGameControl().resumeGame();
+				try {
+					renderer.runLoop();
+				}
+				finally {
+					engineContext.getGame().getGameControl().pauseGame();
+					engineContext.getGame().getGameControl().stopGame();
+					
+					engineContext.getGame().getGameControl().destroyGame();
+				}
 			}
 			finally {
 				lwMainWindow.destroy();
@@ -133,9 +130,6 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 		}
 		finally {
 			lwProgram.tearDown();
-			
-			// TODO: Terminate all that needs to be terminated
-			//TokTales.getGame().getGameControl().stop()
 		}
 		
 	}
@@ -166,6 +160,5 @@ public class DesktopEngineLauncher implements IEngineLauncher {
 		
 		return mainWindow;
 	}
-	
 	
 }

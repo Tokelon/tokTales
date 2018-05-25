@@ -48,7 +48,9 @@ import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
 @TokTalesRequired
 public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
-
+	// TODO: This is not actually a process, it is a procedure
+	// It gets input parameters, creates a result and returns it
+	
 	/* TODO: Refactor this to create a gamescene !!
 	 * 
 	 */
@@ -79,7 +81,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 	
 	
 	@Override
-	protected void internalAfterStartProcess() {
+	public void internalAfterStartProcess() {
 		
 
 		IStorageService storageService = engine.getStorageService();
@@ -246,7 +248,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 	}
 	
 	@Override
-	protected void internalClearObjects() {
+	public void internalClearObjects() {
 		this.objTaleAppPath = null;
 	}
 	

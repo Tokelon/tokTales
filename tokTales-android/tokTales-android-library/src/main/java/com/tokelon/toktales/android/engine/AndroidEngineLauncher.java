@@ -15,9 +15,9 @@ import android.content.Context;
 
 public class AndroidEngineLauncher implements IEngineLauncher {
 
+	
 	private final IHierarchicalInjectConfig injectConfig;
 	private final Context appContext;
-	
 	
 	/** Ctor with an inject config and an application context.
 	 * 
@@ -60,13 +60,11 @@ public class AndroidEngineLauncher implements IEngineLauncher {
 		engineContext.getGame().getGameControl().createGame();
 
 		
-		// Called in GameProcess when process is started
 		engineContext.getGame().getGameControl().startGame();
 		engineContext.getGame().getGameControl().resumeGame();
 		
 		
 		// TODO: Implement calling .destroy() somewhere
 	}
-	
 	
 }

@@ -2,10 +2,9 @@ package com.tokelon.toktales.extens.def.desktop.game.states;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.states.InjectGameState;
-import com.tokelon.toktales.core.logic.process.GameProcess;
+import com.tokelon.toktales.core.logic.process.IPauseableProcess.EmptyPauseableProcess;
 import com.tokelon.toktales.core.logic.process.TaleProcess;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
@@ -48,24 +47,20 @@ public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpre
 				}
 				
 
-				GameProcess gameProcess = new GameProcess(TokTales.getContext());
 				
 				ILocalMapGamestate state = localMapGamestateProvider.get();
 				consoleGamestate.getGame().getStateControl().addState(TokelonGameStates.STATE_LOCAL_MAP, state);
 
-				TaleProcess taleProcess = new TaleProcess(gameProcess, TokTales.getContext(), TokelonGameStates.STATE_LOCAL_MAP);
+				EmptyPauseableProcess emptyProcess = new EmptyPauseableProcess();
+				TaleProcess taleProcess = new TaleProcess(emptyProcess, consoleGamestate.getEngineContext(), TokelonGameStates.STATE_LOCAL_MAP);
 				
 				String taleDirAppPath = new MutablePathImpl(new LocationImpl("Tales").getLocationPath()).getPathAppendedBy(talename);
 				taleProcess.setObjTaleAppPath(taleDirAppPath);
 				
+				
+				taleProcess.internalAfterStartProcess();
+				taleProcess.internalClearObjects();
 
-				
-				consoleGamestate.getGame().getGameControl().pauseGame();
-				consoleGamestate.getGame().getGameControl().stopGame();
-				
-				taleProcess.startProcess();
-				taleProcess.unpause();
-				
 				
 				console.print("Loading tale " + talename);
 				return true;
