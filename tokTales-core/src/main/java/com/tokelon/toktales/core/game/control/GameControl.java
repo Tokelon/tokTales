@@ -5,12 +5,16 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.IGameLogicManager;
 
 public class GameControl implements IGameControl {
-
-
-	private final IGameLogicManager logicManager;
+	// TODO: Important - Reevaluate the thread safe implementation
+	// -> TODO: Do not make thread safe, and remove the runtime exceptions
+	
+	// TODO: Implement state machine for created, running, paused, destroyed
+	
+	public static final String TAG = "GameControl";
 	
 	
 	//private final Set<IGameListener> gameListeners;
@@ -18,19 +22,20 @@ public class GameControl implements IGameControl {
 	private final Set<IGameModeListener> gameModeListeners = new HashSet<IGameModeListener>();
 	private final Set<IGameModeBasicListener> gameModeBasicListeners = new HashSet<IGameModeBasicListener>();
 	private final Set<IGameStatusListener> gameStatusListeners = new HashSet<IGameStatusListener>();
+
 	
-	
+	private final Set<Integer> modesEnabled = new HashSet<Integer>();
+
 	private boolean statusStarted;
 	private boolean statusRunning;
 	
-	private final Set<Integer> modesEnabled = new HashSet<Integer>();
 	
-	
-	// TODO: Important - Reevaluate the thread safe implementation
-	// -> TODO: Do not make thread safe, and remove the runtime exceptions
-	
+	private final ILogger logger;
+	private final IGameLogicManager logicManager;
+
 	@Inject
-	public GameControl(IGameLogicManager logicManager) {
+	public GameControl(ILogger logger, IGameLogicManager logicManager) {
+		this.logger = logger;
 		this.logicManager = logicManager;
 	}
 	
@@ -38,17 +43,21 @@ public class GameControl implements IGameControl {
 	
 	@Override
 	public void createGame() {
+		// TODO: Check status and throw exception if needed
 		logicManager.onGameCreate();
 	}
 	
 	@Override
 	public void destroyGame() {
+		// TODO: Check status and throw exception if needed
 		logicManager.onGameDestroy();
 	}
 	
 	
 	@Override
 	public synchronized void startGame() {
+		logger.d(TAG, "Game is starting...");
+		
 		if(statusStarted) {
 			throw new GameStatusException("Game is already started");
 		}
@@ -60,16 +69,14 @@ public class GameControl implements IGameControl {
 		for(IGameStatusListener gsl: gameStatusListeners) {
 			gsl.gameStarted();
 		}
-		/*
-		for(IGameListener gl: gameListeners) {
-			if(gl instanceof IGameStateListener) {
-				((IGameStateListener) gl).gameStarted();
-			}
-		}*/
+		
+		logger.i(TAG, "Game was started");
 	}
 
 	@Override
 	public synchronized void pauseGame() {
+		logger.d(TAG, "Game is pausing...");
+		
 		if(!statusRunning) {
 			throw new GameStatusException("Cannot pause game that isn't running");
 		}
@@ -81,10 +88,14 @@ public class GameControl implements IGameControl {
 		for(IGameStatusListener gsl: gameStatusListeners) {
 			gsl.gamePaused();
 		}
+		
+		logger.i(TAG, "Game was paused");
 	}
 
 	@Override
 	public synchronized void resumeGame() {
+		logger.d(TAG, "Game is resuming...");
+		
 		if(!statusStarted) {
 			throw new GameStatusException("Cannot unpause game that isn't started");
 		}
@@ -101,12 +112,14 @@ public class GameControl implements IGameControl {
 			gsl.gameRunning();
 		}
 		
-		// TODO: Add log "game control is now unpaused'
+		logger.i(TAG, "Game was resumed");
 	}
 	
 	
 	@Override
 	public synchronized void stopGame() {
+		logger.d(TAG, "Game is stopping...");
+		
 		if(statusRunning) {
 			throw new GameStatusException("Cannot stop game that isn't paused");
 		}
@@ -122,6 +135,8 @@ public class GameControl implements IGameControl {
 		for(IGameStatusListener gsl: gameStatusListeners) {
 			gsl.gameStopped();
 		}
+		
+		logger.i(TAG, "Game was stopped");
 	}
 
 	
@@ -149,11 +164,10 @@ public class GameControl implements IGameControl {
 	
 	@Override
 	public synchronized void enterMode(int mode) {
-		/*
+		logger.d(TAG, "Game is entering mode: " + mode);
+		
 		if(modesEnabled.contains(mode)) {
-			throw new GameStateException("Mode is already activated");
-		}*/
-		if(modesEnabled.contains(mode)) {
+			//throw new GameStateException("Mode is already activated");
 			return;
 		}
 		
@@ -165,15 +179,16 @@ public class GameControl implements IGameControl {
 		for(IGameModeBasicListener gmbl: gameModeBasicListeners) {
 			gmbl.gameModeChanged(mode, true);
 		}
+		
+		logger.i(TAG, "Game has entered mode: " + mode);
 	}
 
 	@Override
 	public synchronized void exitMode(int mode) {
-		/*
+		logger.d(TAG, "Game is exiting mode: " + mode);
+
 		if(!modesEnabled.contains(mode)) {
-			throw new GameStateException("Mode is not activated");
-		}*/
-		if(!modesEnabled.contains(mode)) {
+			//throw new GameStateException("Mode is not activated");
 			return;
 		}
 		
@@ -185,6 +200,8 @@ public class GameControl implements IGameControl {
 		for(IGameModeBasicListener gmbl: gameModeBasicListeners) {
 			gmbl.gameModeChanged(mode, false);
 		}
+		
+		logger.i(TAG, "Game has exited mode: " + mode);
 	}
 
 
@@ -194,8 +211,6 @@ public class GameControl implements IGameControl {
 	}
 	
 	
-	
-	// TODO: Important - Implement callbacks for already activated modes and states
 	
 	@Override
 	public synchronized void registerModeListener(IGameModeListener modeListener) {
@@ -245,25 +260,19 @@ public class GameControl implements IGameControl {
 	}
 	
 	
-	
-	// Not sure when removing a listener even makes sense
-	
 	@Override
 	public synchronized void removeModeListener(IGameModeListener listener) {
 		gameModeListeners.remove(listener);
 	}
-
 	
 	@Override
 	public synchronized void removeModeListener(IGameModeBasicListener basicModeListener) {
 		gameModeBasicListeners.remove(basicModeListener);
 	}
 
-	
 	@Override
 	public synchronized void removeStateListener(IGameStatusListener listener) {
 		gameStatusListeners.remove(listener);
 	}
-
 
 }

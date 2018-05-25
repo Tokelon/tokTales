@@ -31,21 +31,31 @@ public class GameStateControl implements IGameStateControl {
 		this.logger = logger;
 	}
 	
+	
+	
+	@Override
+	public void resumeState() {
+		getActiveState().onResume();
+	}
+	
+	@Override
+	public void pauseState() {
+		getActiveState().onPause();
+	}
+	
 
 	@Override
-	public void update(long timeMillis) {
-		currentState.update(timeMillis);
-		
-		//game.getLogicManager().updateFrame(timeMillis);
+	public void updateState(long timeMillis) {
+		getActiveState().update(timeMillis);
 	}
 
 	@Override
-	public void render() {
+	public void renderState() {
 		logAcessState = false;
 		logAcessCurrentState = false;
 		
 		
-		currentState.render();
+		getActiveState().render();
 
 		
 		logAcessState = enableLogAccessState;
@@ -156,6 +166,5 @@ public class GameStateControl implements IGameStateControl {
 	public String getActiveStateName() {
 		return currentStateName;
 	}
-
 	
 }

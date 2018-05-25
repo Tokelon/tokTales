@@ -2,15 +2,15 @@ package com.tokelon.toktales.core.game;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
 
-/** All methods will be called after the main event logic has run.
- * 
+/** The game adapter is the main entry point for your custom logic.
+ * <p>
+ * Here you can initialize your game logic, create game states and react to game events.
+ * <p>
+ * Note: All methods will be called after the main event logic has run.
  */
 public interface IGameAdapter {
-
-	//TODO: Check and document which methods might not be called
 	
 
-	//onGameCreate() ?
 	public default void onCreate(IEngineContext engineContext) { }
 	
 	public default void onStart() { }

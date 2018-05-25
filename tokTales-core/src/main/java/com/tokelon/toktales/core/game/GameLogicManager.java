@@ -5,9 +5,9 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
 
-
 public class GameLogicManager implements IGameLogicManager {
 
+	
 	private IGame game;
 	
 	private final Provider<IEngineContext> engineContextProvider;
@@ -36,8 +36,11 @@ public class GameLogicManager implements IGameLogicManager {
 
 	@Override
 	public void onGameResume() {
-		/* Start the time */
+		// Start the time
 		game.getTimeManager().startTime();
+		
+		// Resume the active state
+		game.getStateControl().resumeState();
 		
 		
 		game.getGameAdapter().onResume();
@@ -45,8 +48,11 @@ public class GameLogicManager implements IGameLogicManager {
 
 	@Override
 	public void onGamePause() {
-		/* Stop the time */
+		// Stop the time
 		game.getTimeManager().stopTime();
+		
+		// Pause the active state
+		game.getStateControl().pauseState();
 		
 		
 		game.getGameAdapter().onPause();
@@ -64,10 +70,12 @@ public class GameLogicManager implements IGameLogicManager {
 		game.getGameAdapter().onDestroy();
 	}
 
+	
 	@Override
 	public void onGameUpdate() {
+		// Update the active state
 		long gt = game.getTimeManager().getGameTimeMillis();
-		game.getStateControl().update(gt);
+		game.getStateControl().updateState(gt);
 		
 		
 		game.getGameAdapter().onUpdate();
@@ -75,11 +83,11 @@ public class GameLogicManager implements IGameLogicManager {
 
 	@Override
 	public void onGameRender() {
-		game.getStateControl().render();
+		// Render the active state
+		game.getStateControl().renderState();
 		
 		
 		game.getGameAdapter().onRender();
 	}
-
 
 }

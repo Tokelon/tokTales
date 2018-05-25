@@ -34,6 +34,22 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	
 	
 	@Override
+	public void resumeScene() {
+		getActiveScene().onResume();
+	}
+	
+	@Override
+	public void pauseScene() {
+		getActiveScene().onPause();
+	}
+	
+	@Override
+	public void updateScene(long timeMillis) {
+		getActiveScene().onUpdate(timeMillis);		
+	}
+	
+	
+	@Override
 	public T getActiveScene() {
 		return activeScene;
 	}

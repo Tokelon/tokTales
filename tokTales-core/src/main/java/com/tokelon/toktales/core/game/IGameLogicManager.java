@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game;
 
+/** The game logic manager is responsible for reacting to game events and generally handling the game flow.
+ */
 public interface IGameLogicManager {
 	
 	
@@ -12,6 +14,5 @@ public interface IGameLogicManager {
 	
 	public void onGameUpdate();
 	public void onGameRender();
-	
 	
 }

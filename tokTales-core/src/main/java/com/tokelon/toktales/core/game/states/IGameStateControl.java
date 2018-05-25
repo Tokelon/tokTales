@@ -1,32 +1,30 @@
 package com.tokelon.toktales.core.game.states;
 
 public interface IGameStateControl {
+	// Implement listener support?
 
-	// TODO: Implement listener support
-
-
-	// Remove these two ?
-	public void update(long timeMillis);
-	public void render();
+	
+	public void resumeState();
+	public void pauseState();
+	
+	public void updateState(long timeMillis);
+	public void renderState();
 	
 	
 
 	public IGameState getActiveState();
-	
 	public String getActiveStateName();
 	
-	
-	public void changeState(String stateName);
-	
-	public void addState(String name, IGameState state);
-	
+
 	public boolean hasState(String stateName);
-	
-	public IGameState removeState(String stateName);
 	
 	public IGameState getState(String stateName);
 	
 	
+	public void changeState(String stateName);
 
+	public void addState(String name, IGameState state);
+	
+	public IGameState removeState(String stateName);
 	
 }

@@ -32,9 +32,15 @@ public interface IGameState {
 	 */
 	public void onEnter();
 
+	/** Called when the state is paused.
+	 */
+	public void onPause();
+
+	/** Called when the state is resumed.
+	 */
+	public void onResume();
 	
 	/** Called when the state stops being the active state.
-	 * 
 	 */
 	public void onExit();
 	
@@ -95,10 +101,26 @@ public interface IGameState {
 	
 	
 	
-	// Have it just inherit from IEngineContext instead of redeclaring these here?
+	// Redeclare here to avoid being bound to the engine context (and have to include the injector)
+
+	/**
+	 * @return The context game.
+	 */
 	public IGame getGame();
+	
+	/**
+	 * @return The context engine.
+	 */
 	public IEngine getEngine();
+	
+	/**
+	 * @return The log.
+	 */
 	public ILogger getLog();
+	
+	/**
+	 * @return The engine context.
+	 */
 	public IEngineContext getEngineContext();
 	
 	

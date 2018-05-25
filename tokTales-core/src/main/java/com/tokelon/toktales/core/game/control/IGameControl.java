@@ -1,14 +1,11 @@
 package com.tokelon.toktales.core.game.control;
 
-/** Implementations must be threadsafe! -> Why?
- * 
- * 
- *
+/** The game control can be used to control the states and modes of the game.
  */
 public interface IGameControl {
-
 	// TODO: Document the importance of thread safety
-	
+	// Implementations must be threadsafe! -> Why?
+
 	
 	/*
 	public static final int GAME_MODE_EMPTY = 0;
@@ -20,21 +17,17 @@ public interface IGameControl {
 	*/
 
 	
-	
-	/* TODO: Move these into IGame ?
-	 * 
+	/**
+	 * @throws GameStatusException
 	 */
-	
 	public void createGame();
 	
-	public void destroyGame();	// exitGame()
+	/**
+	 * @throws GameStatusException
+	 */
+	public void destroyGame();
 	
 	
-	
-	
-	
-	//public void start(String gamestateName, IGameState gamestate);
-
 	/**
 	 * @throws GameStatusException
 	 */

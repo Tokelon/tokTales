@@ -380,23 +380,27 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	@Override
 	public void onEnter() {
-		getActiveScene().onStart();
+		// Nothing yet
 	}
 
+	@Override
+	public void onPause() {
+		getSceneControl().pauseScene();
+	}
+	
+	@Override
+	public void onResume() {
+		getSceneControl().resumeScene();
+	}
 	
 	@Override
 	public void onExit() {
-		getActiveScene().onStop();
+		// Nothing yet
 	}
 
 	
 	@Override
 	public void onDisengage() {
-		// TODO: Implement
-		
-		// Remove all scenes?
-		//getSceneControl().clear();
-		
 		
 		getEngine().getRenderService().getSurfaceHandler().removeCallback(getStateRender());
 	}
@@ -404,7 +408,8 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 	@Override
 	public void update(long timeMillis) {
-		getActiveScene().onUpdate(timeMillis);
+		
+		getSceneControl().updateScene(timeMillis);
 	}
 
 	@Override

@@ -3,16 +3,21 @@ package com.tokelon.toktales.core.game.states;
 import java.util.Map;
 
 public interface IGameSceneControl<T extends IGameScene> {
-	// Listener support?
+	// Implement listener support?
 
+	
+	public void pauseScene();
+	public void resumeScene();
+	
+	public void updateScene(long timeMillis);
+	
+	
 	
 	public T getActiveScene();
-	
 	public String getActiveSceneName();
 
-	
 	public boolean hasScene(String name);
-
+	
 	public T getScene(String name);
 
 	
@@ -22,11 +27,6 @@ public interface IGameSceneControl<T extends IGameScene> {
 	public Map<String, T> getSceneMap();
 
 
-	// Might want these, or do directly in gamestate
-	//public void pauseActiveScene();
-	//public void resumeActiveScene();
-
-	
 	
 	public interface IModifiableGameSceneControl<T extends IGameScene> extends IGameSceneControl<T> {
 		
