@@ -27,7 +27,7 @@ import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFa
  * <br>- If needed there are hooks for {@link #afterInitBaseDependencies()} and {@link #afterInitStateDependencies()}.
  * <br>- Override {@link #getSceneControl()} to return your custom scene control and use the helper {@link #assignSceneGeneric}.
  * <br>- Override {@link #getTag()} and return your own tag to trace logs to the actual gamestate implementation.
- * <br>- The default {@link #render()} implementation will draw using {@link #getRenderOrder()}.
+ * <br>- The default {@link #onRender()} implementation will draw using {@link #getRenderOrder()}.
  * 
  */
 @RequiresInjection
@@ -407,13 +407,13 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 
 	@Override
-	public void update(long timeMillis) {
+	public void onUpdate(long timeMillis) {
 		
 		getSceneControl().updateScene(timeMillis);
 	}
 
 	@Override
-	public void render() {
+	public void onRender() {
 		renderRunner.run();
 	}
 	

@@ -9,8 +9,6 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 
 public interface IGameState {
 	
-	// TODO: Implement onPause() and onResume() and call the gamescene methods as well
-	
 	// TODO: Add those?
 	//public void onSurfaceCreated(ISurface surface);
 	//public void onSurfaceChanged(ISurface surface);
@@ -48,12 +46,17 @@ public interface IGameState {
 	/** Called when the state is removed from the state control.
 	 */
 	public void onDisengage();
-	
 
 
-	public void update(long timeMillis);
+	/** Called to update the state.
+	 * 
+	 * @param timeMillis
+	 */
+	public void onUpdate(long timeMillis);
 	
-	public void render();
+	/** Called to render the state.
+	 */
+	public void onRender();
 	
 	
 	

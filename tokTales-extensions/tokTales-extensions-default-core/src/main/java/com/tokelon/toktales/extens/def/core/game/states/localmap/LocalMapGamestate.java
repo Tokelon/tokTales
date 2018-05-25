@@ -178,7 +178,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	
 	
 	@Override
-	public void render() {
+	public void onRender() {
 		long renderStart = System.currentTimeMillis();
 
 		
@@ -192,7 +192,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			long drawStart = System.currentTimeMillis();
 
 			// Actual rendering
-			super.render();
+			super.onRender();
 
 			
 			int drawDT = (int) (System.currentTimeMillis() - drawStart);

@@ -46,7 +46,7 @@ public class GameStateControl implements IGameStateControl {
 
 	@Override
 	public void updateState(long timeMillis) {
-		getActiveState().update(timeMillis);
+		getActiveState().onUpdate(timeMillis);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class GameStateControl implements IGameStateControl {
 		logAcessCurrentState = false;
 		
 		
-		getActiveState().render();
+		getActiveState().onRender();
 
 		
 		logAcessState = enableLogAccessState;
