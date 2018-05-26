@@ -1,8 +1,10 @@
-package com.tokelon.toktales.core.config;
+package com.tokelon.toktales.extens.def.core.tale.config;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tokelon.toktales.core.config.CiniFileConfig;
+import com.tokelon.toktales.core.config.CiniFileConfig.IValueFactory;
 import com.tokelon.toktales.tools.config.ConfigDataException;
 import com.tokelon.toktales.tools.config.ICiniConfig.IMutableCiniConfig;
 

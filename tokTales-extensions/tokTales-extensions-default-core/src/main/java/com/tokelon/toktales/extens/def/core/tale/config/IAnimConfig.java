@@ -1,6 +1,8 @@
-package com.tokelon.toktales.core.config;
+package com.tokelon.toktales.extens.def.core.tale.config;
 
 import java.util.List;
+
+import com.tokelon.toktales.core.config.IFileConfig;
 
 public interface IAnimConfig extends IFileConfig {
 

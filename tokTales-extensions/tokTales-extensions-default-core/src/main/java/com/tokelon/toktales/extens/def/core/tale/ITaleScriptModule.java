@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.script;
+package com.tokelon.toktales.extens.def.core.tale;
 
 public interface ITaleScriptModule {
 	

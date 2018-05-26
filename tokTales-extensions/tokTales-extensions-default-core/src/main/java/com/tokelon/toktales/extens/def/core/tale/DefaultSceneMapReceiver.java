@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.logic.map;
+package com.tokelon.toktales.extens.def.core.tale;
 
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.controller.map.MapController;

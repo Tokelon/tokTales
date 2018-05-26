@@ -1,4 +1,6 @@
-package com.tokelon.toktales.core.config;
+package com.tokelon.toktales.extens.def.core.tale.config;
+
+import com.tokelon.toktales.core.config.IFileConfig;
 
 public interface ITaleConfig extends IFileConfig {
 
