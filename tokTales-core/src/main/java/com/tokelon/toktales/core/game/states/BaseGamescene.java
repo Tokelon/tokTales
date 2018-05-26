@@ -2,9 +2,11 @@ package com.tokelon.toktales.core.game.states;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
@@ -23,7 +25,7 @@ import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFa
 @RequiresInjection
 public class BaseGamescene implements IGameScene {
 
-	public static final String TAG = "BaseGamescene";
+	public static final String BASE_TAG = "BaseGamescene";
 
 	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
 
@@ -38,7 +40,9 @@ public class BaseGamescene implements IGameScene {
 	/* Injected base objects */
 	
 	private IEngineContext engineContext;
-
+	private IEngine engine;
+	private ILogger log;
+	private IGame game;
 	
 	/* Scene objects */
 
@@ -46,9 +50,9 @@ public class BaseGamescene implements IGameScene {
 
 	// TODO: Handle controllers differently? More like data maybe?
 	private IControllerManager sceneControllerManager;
-	private IPlayerController sceneControllerPlayer;
-	private ICameraController sceneControllerCamera;
-	private IMapController sceneControllerMap;
+	private IPlayerController scenePlayerController;
+	private ICameraController sceneCameraController;
+	private IMapController sceneMapController;
 	
 	private IControlHandler sceneControlHandler;
 	
@@ -72,9 +76,9 @@ public class BaseGamescene implements IGameScene {
 		this.sceneWorldspace = defaultWorldspace;
 		this.sceneControlHandler = defaultControlHandler;
 		this.sceneControllerManager = defaultControllerManager;
-		this.sceneControllerPlayer = defaultPlayerController;
-		this.sceneControllerCamera = defaultCameraController;
-		this.sceneControllerMap = defaultMapController;
+		this.scenePlayerController = defaultPlayerController;
+		this.sceneCameraController = defaultCameraController;
+		this.sceneMapController = defaultMapController;
 	}
 	
 	
@@ -107,9 +111,9 @@ public class BaseGamescene implements IGameScene {
 		IWorldspace defaultWorldspace = sceneWorldspace == null ? worldspace : sceneWorldspace;
 		IControlHandler defaultControlHandler = sceneControlHandler == null ? controlHandler : sceneControlHandler;
 		IControllerManager defaultControllerManager = sceneControllerManager == null ? controllerManager : sceneControllerManager;
-		IPlayerController defaultPlayerController = sceneControllerPlayer == null ? playerController : sceneControllerPlayer;
-		ICameraController defaultCameraController = sceneControllerCamera == null ? cameraController : sceneControllerCamera;
-		IMapController defaultMapController = sceneControllerMap == null ? mapController : sceneControllerMap;
+		IPlayerController defaultPlayerController = scenePlayerController == null ? playerController : scenePlayerController;
+		ICameraController defaultCameraController = sceneCameraController == null ? cameraController : sceneCameraController;
+		IMapController defaultMapController = sceneMapController == null ? mapController : sceneMapController;
 		
 		initSceneDependencies(defaultWorldspace, defaultControlHandler, defaultControllerManager, defaultPlayerController, defaultCameraController, defaultMapController);
 		afterInitSceneDependencies();
@@ -126,6 +130,9 @@ public class BaseGamescene implements IGameScene {
 	) {
 		
 		this.engineContext = context;
+		this.engine = context.getEngine();
+		this.log = context.getLog();
+		this.game = context.getGame();
 	}
 	
 	/** Called after base dependencies have been initialized.
@@ -199,7 +206,8 @@ public class BaseGamescene implements IGameScene {
 	
 	@Override
 	public void onAssign() {
-		// Nothing yet
+		
+		registerMapRenderOrder(getGamestate(), getMapController());
 	}
 	
 	
@@ -222,21 +230,21 @@ public class BaseGamescene implements IGameScene {
 
 		
 		long dt = System.currentTimeMillis() - startTime;
-		if(logUpdateTime && startTime % 1000 > 0 && startTime % 1000 < 200) TokTales.getLog().d(TAG, "Gamestate Update Time: " +dt);		
+		if(logUpdateTime && startTime % 1000 > 0 && startTime % 1000 < 200) getLog().d(getTag(), "Gamestate Update Time: " +dt);		
 	}
 	
 
 	// TODO: Remove or refactor
 	public void setMapController(IMapController mapController) {
-		this.sceneControllerMap = mapController;
+		this.sceneMapController = mapController;
 		sceneControllerManager.setController(CONTROLLER_MAP, mapController);
-		
+
 		onMapChange(mapController);
 	}
-	
-	// TODO: Refactor these
+
+	// TODO: Refactor these?
 	protected void onMapChange(IMapController mapController) {
-		registerMapRenderOrder(mapController);
+		registerMapRenderOrder(getGamestate(), mapController);
 	}
 	
 	protected void onPlayerChange(IPlayerController playerController) {
@@ -249,12 +257,21 @@ public class BaseGamescene implements IGameScene {
 	}
 	
 	
-	
-	// TODO: Make separate MapGamescene and move this into there
-	private void registerMapRenderOrder(IMapController mapController) {
+	// TODO: Make separate MapGamescene and move this into there -> No, refactor somehow
+	private void registerMapRenderOrder(IGameState gamestate, IMapController mapController) {
+		if(gamestate == null || mapController == null) {
+			getLog().w(getTag(), "Cannot register map render order at this time");
+			return;
+		}
+		
 		IBlockMap map = mapController.getMap();
-		IRenderOrder renderOrder = getGamestate().getRenderOrder();
-		IStateRender renderer = getGamestate().getStateRender();
+		if(map == null) {
+			// TODO: FIX!
+			return;
+		}
+		
+		IRenderOrder renderOrder = gamestate.getRenderOrder();
+		IStateRender renderer = gamestate.getStateRender();
 		synchronized (renderOrder) {
 		
 			// Remove old callbacks
@@ -312,19 +329,37 @@ public class BaseGamescene implements IGameScene {
 
 	@Override
 	public IPlayerController getPlayerController() {
-		return sceneControllerPlayer;
+		return scenePlayerController;
 	}
 	
 	@Override
 	public ICameraController getCameraController() {
-		return sceneControllerCamera;
+		return sceneCameraController;
 	}
 
 	@Override
 	public IMapController getMapController() {
-		return sceneControllerMap;
+		return sceneMapController;
 	}
 
+
+	// Make these public/interface methods?
+	protected IEngineContext getEngineContext() {
+		return engineContext;
+	}
+	
+	protected IEngine getEngine() {
+		return engine;
+	}
+
+	protected ILogger getLog() {
+		return log;
+	}
+
+	protected IGame getGame() {
+		return game;
+	}
+	
 	
 	/** Returns an injector that can be used to inject this gamescene into dependencies via {@link InjectGameScene}.
 	 * 
@@ -333,9 +368,14 @@ public class BaseGamescene implements IGameScene {
 	protected IParameterInjector getGamesceneInjector() {
 		return gamesceneInjector;
 	}
-
-	protected IEngineContext getEngineContext() {
-		return engineContext;
+	
+	
+	/** Override to return you custom tag.
+	 * 
+	 * @return The tag for this state.
+	 */
+	protected String getTag() {
+		return BASE_TAG;
 	}
 
 	
@@ -393,8 +433,10 @@ public class BaseGamescene implements IGameScene {
 		}
 		
 		gamesceneInjector.injectInto(playerController);
-		this.sceneControllerPlayer = playerController;
+		this.scenePlayerController = playerController;
 		sceneControllerManager.setController(CONTROLLER_PLAYER, playerController);
+		
+		onPlayerChange(scenePlayerController);
 	}
 	
 	/** Sets the scene camera controller.
@@ -408,8 +450,10 @@ public class BaseGamescene implements IGameScene {
 		}
 		
 		gamesceneInjector.injectInto(cameraController);
-		this.sceneControllerCamera = cameraController;
+		this.sceneCameraController = cameraController;
 		sceneControllerManager.setController(CONTROLLER_CAMERA, cameraController);
+		
+		onCameraChange(sceneCameraController);
 	}
 	
 	/** Sets the scene map controller.
@@ -423,8 +467,10 @@ public class BaseGamescene implements IGameScene {
 		}
 		
 		gamesceneInjector.injectInto(mapController);
-		this.sceneControllerMap = mapController;
+		this.sceneMapController = mapController;
 		sceneControllerManager.setController(CONTROLLER_MAP, mapController);
+		
+		onMapChange(sceneMapController);
 	}
 	
 }
