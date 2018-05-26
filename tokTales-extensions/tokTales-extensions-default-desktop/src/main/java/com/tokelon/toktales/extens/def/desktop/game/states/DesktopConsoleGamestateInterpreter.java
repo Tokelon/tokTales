@@ -5,7 +5,6 @@ import com.google.inject.Provider;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.states.InjectGameState;
 import com.tokelon.toktales.core.logic.process.IPauseableProcess.EmptyPauseableProcess;
-import com.tokelon.toktales.core.logic.process.TaleProcess;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
@@ -13,6 +12,7 @@ import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpre
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
+import com.tokelon.toktales.extens.def.core.tale.TaleProcess;
 
 @InjectGameState
 public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpreter implements IConsoleInterpreter {

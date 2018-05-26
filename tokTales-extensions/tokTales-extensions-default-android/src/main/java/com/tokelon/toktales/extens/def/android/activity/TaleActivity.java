@@ -17,9 +17,9 @@ import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.logic.process.IPauseableProcess.EmptyPauseableProcess;
-import com.tokelon.toktales.core.logic.process.TaleProcess;
 import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
+import com.tokelon.toktales.extens.def.core.tale.TaleProcess;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

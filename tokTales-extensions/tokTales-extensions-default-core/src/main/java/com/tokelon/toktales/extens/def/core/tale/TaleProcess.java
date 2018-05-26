@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.logic.process;
+package com.tokelon.toktales.extens.def.core.tale;
 
 import java.io.IOException;
 import java.io.InputStream;
