@@ -321,7 +321,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		// Register input handler
 		IGameStateInput stateInput = getStateInput();
 		IGameStateInputHandler stateInputHandler = getStateInputHandler();
-		getLog().d(getTag(), String.format("Registering state input handler [%s] to state input [%s]", stateInputHandler.getClass(), stateInput.getClass()));
+		getLog().d(getTag(), String.format("Registering state input handler [%s] to state input [%s]", stateInputHandler, stateInput));
 		stateInputHandler.register(stateInput);
 	}
 	
@@ -452,6 +452,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		boolean assigned = scene.assign(this);
 		if(assigned) {
 			getSceneControl().addScene(name, scene);
+			scene.onAssign();
 		}
 		else {
 			getLog().w(getTag(), String.format("Failed to assign scene. Scene [%s] assign() returned false", scene.getClass()));

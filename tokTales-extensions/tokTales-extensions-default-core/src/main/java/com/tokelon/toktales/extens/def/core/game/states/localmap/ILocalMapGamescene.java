@@ -5,17 +5,12 @@ import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 
 public interface ILocalMapGamescene extends IGameScene {
 	
-	/* HANDLING CONTROL FOR SCENES
-	 * 2 Ways to do this
+	
+	/* Handling control for scenes
 	 * 
-	 * 1. Like here implemented, the state has it's own control handler which is called before state control handler.
-	 * 
-	 * 2. Have the control handler be settable in the state, the scene could then implement a wrapper around it,
-	 * and then set the wrapper as the main handler.
-	 * -> LOL, nevermind - only one scene could set it's handler then!!
-	 * 
+	 * Like here implemented, the state has it's own control handler which is called before state control handler.
 	 */
-
+	
 	@Override
 	public ILocalMapControlHandler getSceneControlHandler();
 
@@ -24,10 +19,5 @@ public interface ILocalMapGamescene extends IGameScene {
 	 * @return The scene console interpreter, or null if there is none.
 	 */
 	public IConsoleInterpreter getSceneConsoleInterpreter();
-	
-	
-	// TESTING
-	//public void interact();
-
 	
 }

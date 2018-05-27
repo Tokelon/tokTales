@@ -5,10 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IFileConfig;
 import com.tokelon.toktales.core.config.IFileConfig.OnConfigChangeListener;
-import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -17,7 +15,6 @@ import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
-import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
@@ -114,6 +111,10 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	
 	
 	
+	/** Use instead of {@link #setStateRender(IStateRender)}.
+	 * 
+	 * @param renderer
+	 */
 	protected void setStateRenderCustom(ILocalMapStateRenderer renderer) {
 		this.customRenderer = renderer;
 		
@@ -126,6 +127,10 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 	
 	
+	/** Use instead of {@link #setStateControlHandler(IControlHandler)}.
+	 * 
+	 * @param controlHandler
+	 */
 	protected void setStateControlHandlerCustom(ILocalMapControlHandler controlHandler) {
 		this.customControlHandler = controlHandler;
 		
@@ -359,22 +364,6 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	
 	public static class EmptyLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
 		private final EmptyLocalMapControlHandler emptyControlHandler = new EmptyLocalMapControlHandler();
-		
-		@Override
-		public void onAssign() {
-			super.onAssign();
-			
-			// This is old stuff, only used as fallback
-			IConfigManager configManager = getGamestate().getGame().getConfigManager();
-			IMainConfig mainConfig = (IMainConfig) configManager.getConfig(IConfigManager.MAIN_CONFIG);
-
-			ICamera camera = getCameraController().getCamera();
-			camera.setSize(mainConfig.getConfigCameraSizeUnitsX(), mainConfig.getConfigCameraSizeUnitsY());
-			//getCamera().setSize(IWorld.GRID_TILE_SIZE * 8, IWorld.GRID_TILE_SIZE * 8);
-			
-			// TODO: Important - This should probably not be done here
-			getCameraController().enableCameraFollow(getPlayerController().getPlayer());
-		}
 		
 		@Override
 		public ILocalMapControlHandler getSceneControlHandler() {

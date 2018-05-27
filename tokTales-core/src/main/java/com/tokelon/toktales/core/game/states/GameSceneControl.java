@@ -77,7 +77,7 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		
 
 		//logger.d(TAG, String.format("Scene change in [%s]", this));
-		logger.i(TAG, String.format("Scene was changed: from %s [%s] to %s [%s]", activeSceneName, activeScene, name, newScene));
+		logger.i(TAG, String.format("Scene was changed: '%s' -> '%s' | [%s] -> [%s]", activeSceneName, name, activeScene, newScene));
 
 		activeScene = newScene;
 		activeSceneName = name;
@@ -94,10 +94,10 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		}
 		
 		scenes.put(name, scene);
-		scene.onAssign();
+		//scene.onAssign(); // Do this in BaseGamestate, right?
 		
 		//logger.d(TAG, String.format("Scene addition in [%s]", this));
-		logger.i(TAG, String.format("Scene was added: %s [%s]", name, scene));
+		logger.i(TAG, String.format("Scene was added: '%s' | [%s]", name, scene));
 	}
 
 	@Override

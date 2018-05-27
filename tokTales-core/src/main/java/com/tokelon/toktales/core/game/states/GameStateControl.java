@@ -77,7 +77,7 @@ public class GameStateControl implements IGameStateControl {
 		IGameState newState = states.get(stateName);
 
 		//logger.d(TAG, String.format("State change in [%s]", this));
-		logger.i(TAG, String.format("State was changed: from %s [%s] to %s [%s]", currentStateName, currentState, stateName, newState));
+		logger.i(TAG, String.format("State was changed: '%s' -> '%s' | [%s] -> [%s]", currentStateName, stateName, currentState, newState));
 		
 		currentState = newState;
 		currentStateName = stateName;
@@ -96,7 +96,7 @@ public class GameStateControl implements IGameStateControl {
 		state.onEngage();
 		
 		//logger.d(TAG, String.format("State addition in [%s]", this));
-		logger.i(TAG, String.format("State was added: %s [%s]", name, state));
+		logger.i(TAG, String.format("State was added: '%s' | [%s]", name, state));
 	}
 	
 	

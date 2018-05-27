@@ -2,6 +2,9 @@ package com.tokelon.toktales.core.game.states;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.config.IConfigManager;
+import com.tokelon.toktales.core.config.IFileConfig;
+import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
@@ -11,6 +14,7 @@ import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
+import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.IStateRender;
@@ -29,6 +33,9 @@ public class BaseGamescene implements IGameScene {
 
 	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
 
+	private static final float DEFAULT_CAMERA_WIDTH = 640;
+
+	private static final float DEFAULT_CAMERA_HEIGHT = 360;
 
 	/* Base objects */
 	
@@ -204,9 +211,32 @@ public class BaseGamescene implements IGameScene {
 	}
 
 	
+	/** The default implementation for this will:<br>
+	 * 1. Set a default camera size.<br>
+	 * 2. Register the map render order (TODO: Improve)<br>
+	 * 
+	 */
 	@Override
 	public void onAssign() {
+		/* 1. Set default camera size */
+		float cameraWidth = DEFAULT_CAMERA_WIDTH;
+		float cameraHeight = DEFAULT_CAMERA_HEIGHT;
 		
+		IConfigManager configManager = getGamestate().getGame().getConfigManager();
+		IFileConfig config = configManager.getConfig(IConfigManager.MAIN_CONFIG);
+		if(config instanceof IMainConfig) {
+			IMainConfig mainConfig = (IMainConfig) configManager.getConfig(IConfigManager.MAIN_CONFIG);
+			
+			cameraWidth = mainConfig.getConfigCameraSizeUnitsX();
+			cameraHeight = mainConfig.getConfigCameraSizeUnitsY();
+		}
+
+		ICamera camera = getCameraController().getCamera();
+		camera.setSize(cameraWidth, cameraHeight);
+		getLog().i(getTag(), String.format("Camera size was set to default %.2fx%.2f", cameraWidth, cameraHeight));
+
+		
+		/* 2. Register map render order */
 		registerMapRenderOrder(getGamestate(), getMapController());
 	}
 	
