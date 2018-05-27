@@ -1,10 +1,10 @@
 package com.tokelon.toktales.extens.def.android.states.localmap;
 
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
-import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlScheme;
 
-public class AndroidLocalMapControlScheme implements IControlScheme {
+public class AndroidLocalMapControlScheme implements ILocalMapControlScheme {
 
 	@Override
 	public String map(int vk) {

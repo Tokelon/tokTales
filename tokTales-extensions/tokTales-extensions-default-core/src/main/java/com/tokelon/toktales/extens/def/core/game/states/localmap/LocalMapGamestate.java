@@ -10,7 +10,6 @@ import com.tokelon.toktales.core.config.IFileConfig.OnConfigChangeListener;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
@@ -38,7 +37,7 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateR
 
 public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> implements ILocalMapGamestate {
 
-	public static final String TAG = "LocalMapGamestate";
+	public static final String SUB_TAG = "LocalMapGamestate";
 	
 	
 	private static final double CALLBACK_POSITION_CONSOLE = 10d;
@@ -78,7 +77,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	public LocalMapGamestate(
 			ILocalMapStateRendererFactory stateRendererFactory,
 			ILocalMapInputHandlerFactory inputHandlerFactory,
-			@ForClass(LocalMapGamestate.class) IControlScheme controlScheme,
+			ILocalMapControlScheme controlScheme,
 			ILocalMapControlHandlerFactory controlHandlerFactory
 	) {
 		super(ILocalMapGamescene.class);
@@ -159,7 +158,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		
 		font = loadFont();
 		if(font == null) {
-			TokTales.getLog().e(TAG, "Failed to load font");
+			TokTales.getLog().e(getTag(), "Failed to load font");
 		}
 		
 		
@@ -201,7 +200,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 
 			
 			int drawDT = (int) (System.currentTimeMillis() - drawStart);
-			if(logDrawTime) TokTales.getLog().d(TAG, "Draw Time MS = " + drawDT);
+			if(logDrawTime) TokTales.getLog().d(getTag(), "Draw Time MS = " + drawDT);
 		}
 		finally {
 			if(mapController != null) {	// TODO: MapController should never be null
@@ -213,12 +212,12 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		if(fpsModeEnabled) {
 			int fps = frameTool.countFps();
 			if(fps != -1) {
-				TokTales.getLog().d(TAG, "FPS: " +fps);
+				TokTales.getLog().d(getTag(), "FPS: " +fps);
 			}
 		}
 		
 		int renderDT = (int) (System.currentTimeMillis() - renderStart);
-		if(logRenderTime) TokTales.getLog().d(TAG, "Render Time MS = " + renderDT);
+		if(logRenderTime) TokTales.getLog().d(getTag(), "Render Time MS = " + renderDT);
 	}
 	
 	
@@ -240,9 +239,9 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			
 			font = getEngine().getContentService().loadFontFromFile(fontFile);
 		} catch (ContentException e) {
-			TokTales.getLog().e(TAG, "Unable to load font: " + e.getMessage());
+			TokTales.getLog().e(getTag(), "Unable to load font: " + e.getMessage());
 		} catch (StorageException e) {
-			TokTales.getLog().e(TAG, "Unable to read font file: " + e.getMessage());
+			TokTales.getLog().e(getTag(), "Unable to read font file: " + e.getMessage());
 		}
 
 		return font;
@@ -251,7 +250,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	
 	@Override
 	protected String getTag() {
-		return TAG + "_" + BASE_TAG;
+		return SUB_TAG + "_" + BASE_TAG;
 	}
 
 	

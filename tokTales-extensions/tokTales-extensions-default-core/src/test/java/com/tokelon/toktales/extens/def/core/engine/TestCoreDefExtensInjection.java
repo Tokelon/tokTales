@@ -18,12 +18,13 @@ public class TestCoreDefExtensInjection {
 	public static final String[] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES =
 	{
 			"ILocalMapInputHandler$ILocalMapInputHandlerFactory",
-			"IConsoleGamestateInputHandler$IConsoleGamestateInputHandlerFactory"
+			"IConsoleGamestateInputHandler$IConsoleGamestateInputHandlerFactory",
+			"ILocalMapControlScheme"
 	};
 	
 	public static final String[][] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS = 
 	{
-			{ "IControlScheme", "ForClass", "LocalMapGamestate" },
+			{ "IControlScheme", "ForClass", },
 			{ "IGameStateInputHandler", "ForClass", "ConsoleGamestate"}
 	};
 	
