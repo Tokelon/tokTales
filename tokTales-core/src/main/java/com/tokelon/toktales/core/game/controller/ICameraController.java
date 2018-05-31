@@ -23,9 +23,7 @@ public interface ICameraController extends IController {
 	
 
 	
-	public void startMoving(int direction, int speedHorizontal, int speedVertical);
-	
-	public void stopMoving();
-	
+	public void cameraStartMoving(int direction);
+	public void cameraStopMoving();
 	
 }

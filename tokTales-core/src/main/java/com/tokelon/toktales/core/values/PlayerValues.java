@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.values;
 
-public final class PlayerValues {
+public class PlayerValues {
 
 	private PlayerValues() {}
 	

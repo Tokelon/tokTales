@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.game.world;
 
 public interface ICompassDirection {
 
+	
 	public static final int NORTH = 1;
 	public static final int EAST = 2;
 	public static final int SOUTH = 3;
@@ -14,12 +15,7 @@ public interface ICompassDirection {
 	
 	
 	
-	
-	
-	
-	
 	public static final class Tools {
-		
 		private Tools() {}
 		
 		
@@ -75,8 +71,6 @@ public interface ICompassDirection {
 				return 0;
 			}
 		}
-		
 	}
-	
 	
 }

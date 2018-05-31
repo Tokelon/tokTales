@@ -8,7 +8,8 @@ import com.tokelon.toktales.core.game.model.ICamera.CameraParticipant;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.GameEntityObserver;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.IGameEntityObserver;
-import com.tokelon.toktales.core.game.world.ICompassDirection;
+import com.tokelon.toktales.core.game.world.ICrossDirection;
+import com.tokelon.toktales.core.values.CameraValues;
 
 public class CameraController extends AbstractController implements ICameraController {
 
@@ -17,7 +18,7 @@ public class CameraController extends AbstractController implements ICameraContr
 
 	private final FollowEntityObserver followEntityObserver;
 	
-	private final Camera mCamera;
+	private final ICamera mCamera;
 
 	@Inject
 	public CameraController() {
@@ -25,6 +26,15 @@ public class CameraController extends AbstractController implements ICameraContr
 		mCamera.getParticipation().addParticipant(new MyCameraParticipant());
 		
 		followEntityObserver = new FollowEntityObserver();
+		
+		setupCamera();
+	}
+	
+	private void setupCamera() {
+		float cameraMoveSpeedUnits = CameraValues.CAMERA_MOVE_SPEED_UNITS;
+
+		mCamera.setSpeedX(cameraMoveSpeedUnits);
+		mCamera.setSpeedY(cameraMoveSpeedUnits);
 	}
 	
 	
@@ -63,14 +73,14 @@ public class CameraController extends AbstractController implements ICameraContr
 	
 	
 	@Override
-	public void startMoving(int direction, int speedHorizontal, int speedVertical) {
-		mCamera.setVelocity(
-				ICompassDirection.Tools.horizontalVelocitySignFromDirection(direction) * speedHorizontal,
-				ICompassDirection.Tools.verticalVelocitySignFromDirectionInvertY(direction) * speedVertical);
+	public void cameraStartMoving(int direction) {
+		mCamera.setVelocity( // Use ICompassDirection?
+				mCamera.getSpeedX() * ICrossDirection.Tools.horizontalVelocitySignFromDirection(direction),
+				mCamera.getSpeedY() * ICrossDirection.Tools.verticalVelocitySignFromDirectionInvertY(direction));
 	}
 
 	@Override
-	public void stopMoving() {
+	public void cameraStopMoving() {
 		mCamera.setVelocity(0f, 0f);
 	}
 

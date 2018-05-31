@@ -17,6 +17,10 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 	private float cameraWidth = 0.0f;
 	private float cameraHeight = 0.0f;
 	
+	private float cameraSpeedX = 0.0f;
+	private float cameraSpeedY = 0.0f;
+	
+	
 	private float cameraAspectRatio = 0.0f;
 	
 	private float cameraZoom = 1.0f;
@@ -117,7 +121,16 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 	public float getHeight() {
 		return cameraHeight;
 	}
-
+	
+	@Override
+	public float getSpeedX() {
+		return cameraSpeedX;
+	}
+	
+	@Override
+	public float getSpeedY() {
+		return cameraSpeedY;
+	}
 	
 	@Override
 	public float getOriginX() {
@@ -220,7 +233,7 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 		
 		this.cameraBounds.setWidth(width);
 		this.cameraBounds.setHeight(height);
-		
+
 		// Re-center camera by correcting the camera bounds
 		cameraBounds.moveTo(cameraCoordinates.x - cameraOrigin.x, cameraCoordinates.y - cameraOrigin.y);
 
@@ -287,6 +300,29 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 		getParticipation().notifyOfChange(CHANGE_CAMERA_ZOOM);
 	}
 	
+
+	@Override
+	public void setSpeed(float sx, float sy) {
+		cameraSpeedX = sx;
+		cameraSpeedY = sy;
+		
+		getParticipation().notifyOfChange(CHANGE_CAMERA_SPEED);
+	}
+	
+	@Override
+	public void setSpeedX(float sx) {
+		cameraSpeedX = sx;
+		
+		getParticipation().notifyOfChange(CHANGE_CAMERA_SPEED);
+	}
+	
+	@Override
+	public void setSpeedY(float sy) {
+		cameraSpeedY = sy;
+		
+		getParticipation().notifyOfChange(CHANGE_CAMERA_SPEED);
+	}
+
 
 	@Override
 	public void setVelocityX(float vx) {

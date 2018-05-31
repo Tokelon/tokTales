@@ -34,12 +34,13 @@ public interface ICamera extends IParticipable<ICamera> {
 	public static final String CHANGE_CAMERA_COORDINATES = "change_camera_coordinates";
 	public static final String CHANGE_CAMERA_ADJUST_STATE = "change_camera_adjust_state";
 	public static final String CHANGE_CAMERA_VELOCITY = "change_camera_velocity";
-	
+	public static final String CHANGE_CAMERA_SPEED = "change_camera_speed";
+
 	
 	public static final String[] CHANGE_LIST_CAMERA =
 	{
 		CHANGE_CAMERA_ORIGIN, CHANGE_CAMERA_SIZE, CHANGE_CAMERA_ZOOM, CHANGE_CAMERA_ASPECT_RATIO, CHANGE_CAMERA_ORIENTATION,
-		CHANGE_CAMERA_COORDINATES, CHANGE_CAMERA_ADJUST_STATE, CHANGE_CAMERA_VELOCITY
+		CHANGE_CAMERA_COORDINATES, CHANGE_CAMERA_ADJUST_STATE, CHANGE_CAMERA_VELOCITY, CHANGE_CAMERA_SPEED
 	};
 	
 	public static final Set<String> CHANGE_LIST_CAMERA_SET = new HashSet<String>(Arrays.asList(CHANGE_LIST_CAMERA));
@@ -69,7 +70,10 @@ public interface ICamera extends IParticipable<ICamera> {
 	
 	public float getWidth();
 	public float getHeight();
-	
+
+	public float getSpeedX();
+	public float getSpeedY();
+
 	
 	public float getOriginX();
 	public float getOriginY();
@@ -135,6 +139,10 @@ public interface ICamera extends IParticipable<ICamera> {
 	 */
 	public void setZoom(float zoom, boolean center);
 	
+
+	public void setSpeedX(float sx);
+	public void setSpeedY(float sy);
+	public void setSpeed(float sx, float sy);
 
 	public void setVelocityX(float vx);
 	public void setVelocityY(float vy);
@@ -214,6 +222,7 @@ public interface ICamera extends IParticipable<ICamera> {
 		public void cameraCoordinatesChanged(ICamera camera);
 		public void cameraStateWasAdjusted(ICamera camera);
 		public void cameraVelocityChanged(ICamera camera);
+		public void cameraSpeedChanged(ICamera camera);
 		
 	}
 	
@@ -255,6 +264,9 @@ public interface ICamera extends IParticipable<ICamera> {
 		
 		@Override
 		public void cameraVelocityChanged(ICamera camera) {	}
+		
+		@Override
+		public void cameraSpeedChanged(ICamera camera) { }
 	}
 	
 	
@@ -277,6 +289,7 @@ public interface ICamera extends IParticipable<ICamera> {
 		public boolean onCameraCoordinatesChange(ICamera camera);
 		public boolean onCameraStateAdjust(ICamera camera);
 		public boolean onCameraVelocityChange(ICamera camera);
+		public boolean onCameraSpeedChange(ICamera camera);
 		
 	}
 	
@@ -317,6 +330,9 @@ public interface ICamera extends IParticipable<ICamera> {
 		
 		@Override
 		public boolean onCameraVelocityChange(ICamera camera) { return false; }
+
+		@Override
+		public boolean onCameraSpeedChange(ICamera camera) { return false; }
 	}
 	
 	
