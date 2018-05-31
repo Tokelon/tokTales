@@ -221,6 +221,10 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 		this.cameraBounds.setWidth(width);
 		this.cameraBounds.setHeight(height);
 		
+		// Re-center camera by correcting the camera bounds
+		cameraBounds.moveTo(cameraCoordinates.x - cameraOrigin.x, cameraCoordinates.y - cameraOrigin.y);
+
+		
 		getParticipation().notifyOfChange(CHANGE_CAMERA_SIZE);
 		getParticipation().notifyOfChange(CHANGE_CAMERA_ORIGIN);
 		getParticipation().notifyOfChange(CHANGE_CAMERA_ASPECT_RATIO);
