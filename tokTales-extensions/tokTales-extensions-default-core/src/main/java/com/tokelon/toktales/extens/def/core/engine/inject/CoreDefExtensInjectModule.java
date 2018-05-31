@@ -18,12 +18,19 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateR
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
+import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
+import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
+import com.tokelon.toktales.extens.def.core.tale.states.TaleGamescene;
+import com.tokelon.toktales.extens.def.core.tale.states.TaleGamestate;
 
 public class CoreDefExtensInjectModule extends AbstractInjectModule {
 
 	
     @Override
     protected void configure() {
+    	bind(ITaleGamestate.class).to(TaleGamestate.class);
+		bind(ITaleGamescene.class).to(TaleGamescene.class);
+		
     	// LocalMapGamestate
     	bind(ILocalMapGamestate.class).to(LocalMapGamestate.class);
 		 install(new FactoryModuleBuilder()
