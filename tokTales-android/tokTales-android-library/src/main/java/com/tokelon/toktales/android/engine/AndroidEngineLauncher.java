@@ -60,8 +60,10 @@ public class AndroidEngineLauncher implements IEngineLauncher {
 		engineContext.getGame().getGameControl().createGame();
 
 		
-		engineContext.getGame().getGameControl().startGame();
-		engineContext.getGame().getGameControl().resumeGame();
+		// The Android lifecycle is a bit more dynamic, so we can not do this here
+		// These will have to be called in an activity or something like GameIntegration
+		//engineContext.getGame().getGameControl().startGame();
+		//engineContext.getGame().getGameControl().resumeGame();
 		
 		
 		// TODO: Implement calling .destroy() somewhere

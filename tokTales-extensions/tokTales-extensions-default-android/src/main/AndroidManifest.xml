@@ -2,6 +2,8 @@
     package="com.tokelon.toktales.extens.def.android" >
 	
 	<application>
+		<activity android:name="com.tokelon.toktales.extens.def.android.activity.LoadTaleActivity"></activity>
+
 		<activity
 			android:name="com.tokelon.toktales.extens.def.android.activity.TaleActivity"
 			android:screenOrientation="portrait"
