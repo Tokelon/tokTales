@@ -7,11 +7,9 @@ import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.logic.map.DefaultSceneMapReceiver;
 import com.tokelon.toktales.core.game.logic.map.MapException;
 import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.resources.IResourceType;
 import com.tokelon.toktales.core.resources.Resource;
@@ -19,10 +17,13 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;
+import com.tokelon.toktales.extens.def.core.tale.DefaultSceneMapReceiver;
+import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.tools.tiledmap.MapFormatException;
 import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
 public class TestingProcess {
+	// TODO: Remove/Rename and move
 	
 	public static final String TAG = "TestingProcess";
 
@@ -68,7 +69,7 @@ public class TestingProcess {
 			
 			IBlockMap loadedMap = loader.getLoadedMap();
 			
-			DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver((BaseGamescene) gamestate.getActiveScene());
+			DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver((ITaleGamescene) gamestate.getActiveScene());
 			receiver.receiveMap(loadedMap);
 			
 
@@ -121,8 +122,5 @@ public class TestingProcess {
 		}
 		
 	}
-	
-	
-	
 	
 }

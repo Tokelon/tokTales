@@ -2,19 +2,23 @@ package com.tokelon.toktales.extens.def.core.tale;
 
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.controller.map.MapController;
+import com.tokelon.toktales.core.game.logic.map.IMapReceiver;
+import com.tokelon.toktales.core.game.logic.map.MapException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.IBlockMapConfig;
 import com.tokelon.toktales.core.game.model.map.MapPositionImpl;
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementImpl;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
-import com.tokelon.toktales.core.game.states.BaseGamescene;
+import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 
 public class DefaultSceneMapReceiver implements IMapReceiver {
+	// TODO: Rename to TaleSceneMapReceiver or if possible replace -> Move into TaleGamescene?
 
-	private final BaseGamescene gamescene;
 	
-	public DefaultSceneMapReceiver(BaseGamescene gamescene) {
+	private final ITaleGamescene gamescene;
+	
+	public DefaultSceneMapReceiver(ITaleGamescene gamescene) {
 		this.gamescene = gamescene;
 	}
 	
@@ -38,7 +42,7 @@ public class DefaultSceneMapReceiver implements IMapReceiver {
 
 		
 		MapController mapContr = new MapController(map);
-		gamescene.setMapController(mapContr);
+		gamescene.setMap(mapContr);
 		
 		
 		float pworldx = TokTales.getGame().getWorld().getGrid().tileToWorld(playerStartPos.x);	// - 4
@@ -54,6 +58,5 @@ public class DefaultSceneMapReceiver implements IMapReceiver {
 		gamescene.getPlayerController().getPlayer().setWorldCoordinates(pworldx, pworldy);
 		gamescene.getCameraController().getCamera().setWorldCoordinates(pworldx, pworldy);
 	}
-	
 	
 }

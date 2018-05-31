@@ -24,7 +24,7 @@ import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.tools.inject.IParameterInjector;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 
-/** Use as the base for game scenes. 
+/** Use as the base for game scenes.
  */
 @RequiresInjection
 public class BaseGamescene implements IGameScene {
@@ -34,8 +34,8 @@ public class BaseGamescene implements IGameScene {
 	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
 
 	private static final float DEFAULT_CAMERA_WIDTH = 640;
-
 	private static final float DEFAULT_CAMERA_HEIGHT = 360;
+
 
 	/* Base objects */
 	
@@ -263,14 +263,6 @@ public class BaseGamescene implements IGameScene {
 		if(logUpdateTime && startTime % 1000 > 0 && startTime % 1000 < 200) getLog().d(getTag(), "Gamestate Update Time: " +dt);		
 	}
 	
-
-	// TODO: Remove or refactor
-	public void setMapController(IMapController mapController) {
-		this.sceneMapController = mapController;
-		sceneControllerManager.setController(CONTROLLER_MAP, mapController);
-
-		onMapChange(mapController);
-	}
 
 	// TODO: Refactor these?
 	protected void onMapChange(IMapController mapController) {

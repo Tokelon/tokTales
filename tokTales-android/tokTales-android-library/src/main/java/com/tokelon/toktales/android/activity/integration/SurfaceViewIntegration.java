@@ -39,7 +39,8 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 			logger.w(TAG, "No render view set: cannot pause");
 		}
 		else {
-			renderView.onPause();	
+			logger.i(TAG, "Render view was paused");
+			renderView.onPause();
 		}
 	}
 	
@@ -49,7 +50,8 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 			logger.w(TAG, "No render view set: cannot resume");
 		}
 		else {
-			renderView.onResume();	
+			logger.i(TAG, "Render view was resumed");
+			renderView.onResume();
 		}
 	}
 	

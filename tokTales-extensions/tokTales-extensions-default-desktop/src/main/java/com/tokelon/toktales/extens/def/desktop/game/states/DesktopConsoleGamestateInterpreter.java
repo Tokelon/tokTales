@@ -1,30 +1,31 @@
 package com.tokelon.toktales.extens.def.desktop.game.states;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.states.InjectGameState;
-import com.tokelon.toktales.core.logic.process.IPauseableProcess.EmptyPauseableProcess;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
-import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
-import com.tokelon.toktales.extens.def.core.tale.TaleProcess;
+import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
+import com.tokelon.toktales.extens.def.core.tale.TaleException;
 
 @InjectGameState
 public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpreter implements IConsoleInterpreter {
 	// TODO: Refactor structure with super interpreter into wrapper?
 	
+	public static final String TAG = "DesktopConsoleGamestateInterpreter";
 	
-	private final Provider<ILocalMapGamestate> localMapGamestateProvider;
+	
 	private IConsoleGamestate consoleGamestate;
 	
+	private final ITaleLoader taleLoader;
+	
 	@Inject
-	public DesktopConsoleGamestateInterpreter(Provider<ILocalMapGamestate> localMapGamestateProvider) {
-		this.localMapGamestateProvider = localMapGamestateProvider;
+	public DesktopConsoleGamestateInterpreter(ITaleLoader taleLoader) {
+		this.taleLoader = taleLoader;
 	}
 
 	@InjectGameState
@@ -42,27 +43,27 @@ public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpre
 			if(inputSplit.length > 2) {
 				String talename = inputSplit[2];
 				
-				if(talename.equals("1")) {
+				// TODO: For debugging - remove
+				if(talename.equals("1")) { // TODO: Implement loading tales with [<index>] ex. [0]
 					talename = "#015GK93";
 				}
 				
-
-				
-				ILocalMapGamestate state = localMapGamestateProvider.get();
-				consoleGamestate.getGame().getStateControl().addState(TokelonGameStates.STATE_LOCAL_MAP, state);
-
-				EmptyPauseableProcess emptyProcess = new EmptyPauseableProcess();
-				TaleProcess taleProcess = new TaleProcess(emptyProcess, consoleGamestate.getEngineContext(), TokelonGameStates.STATE_LOCAL_MAP);
-				
-				String taleDirAppPath = new MutablePathImpl(new LocationImpl("Tales").getLocationPath()).getPathAppendedBy(talename);
-				taleProcess.setObjTaleAppPath(taleDirAppPath);
-				
-				
-				taleProcess.internalAfterStartProcess();
-				taleProcess.internalClearObjects();
-
 				
 				console.print("Loading tale " + talename);
+
+				
+				String taleDirAppPath = new MutablePathImpl(new LocationImpl("Tales").getLocationPath()).getPathAppendedBy(talename);
+				
+				String sceneName = talename;
+				String stateName = TokelonGameStates.STATE_LOCAL_MAP;
+				try {
+					taleLoader.loadTaleIntoGame(taleDirAppPath, sceneName, stateName);
+					consoleGamestate.getGame().getStateControl().changeState(stateName);
+				}
+				catch(TaleException e) {
+					consoleGamestate.getLog().e(TAG, "Loading tale failed: " + e);
+				}
+				
 				return true;
 			}
 			

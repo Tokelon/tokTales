@@ -4,39 +4,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.tokelon.toktales.core.config.CiniAnimConfig;
 import com.tokelon.toktales.core.config.CiniMainConfig;
-import com.tokelon.toktales.core.config.CiniTaleConfig;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IMainConfig;
-import com.tokelon.toktales.core.config.ITaleConfig;
 import com.tokelon.toktales.core.content.sprite.SpriteImpl;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
+import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.graphic.SpriteGraphicImpl;
 import com.tokelon.toktales.core.game.graphic.animation.GameAnimation;
 import com.tokelon.toktales.core.game.graphic.animation.IGameAnimation;
-import com.tokelon.toktales.core.game.logic.map.DefaultSceneMapReceiver;
 import com.tokelon.toktales.core.game.logic.map.MapException;
 import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.core.game.states.BaseGamescene;
-import com.tokelon.toktales.core.game.states.IGameScene;
-import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
-import com.tokelon.toktales.core.prog.annotation.TokTalesRequired;
 import com.tokelon.toktales.core.resources.IResourceType;
 import com.tokelon.toktales.core.resources.Resource;
-import com.tokelon.toktales.core.script.ITaleScriptModule;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
+import com.tokelon.toktales.extens.def.core.tale.config.CiniAnimConfig;
+import com.tokelon.toktales.extens.def.core.tale.config.CiniTaleConfig;
+import com.tokelon.toktales.extens.def.core.tale.config.ITaleConfig;
+import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.tools.config.CiniConfigStreamReader;
 import com.tokelon.toktales.tools.config.ConfigDataException;
 import com.tokelon.toktales.tools.config.ConfigFormatException;
@@ -46,14 +42,10 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
 import com.tokelon.toktales.tools.tiledmap.MapFormatException;
 import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
-@TokTalesRequired
-public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
-	// TODO: This is not actually a process, it is a procedure
-	// It gets input parameters, creates a result and returns it
+class TaleProcess {
+	// TODO: Refactor internal structure and error handling
+	// Implement as a procedure?
 	
-	/* TODO: Refactor this to create a gamescene !!
-	 * 
-	 */
 	
 	public static final String TAG = "TaleProcess";
 
@@ -64,30 +56,38 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 	
 	private static final String TALE_SCENE_CLASS_POSTFIX = "TaleGamescene";
 	
+	
+	
+	private ITaleGamescene gamesceneResult;
+	
+	private final IEngineContext engineContext;
+	private final ILogger log;
 	private final IEngine engine;
 	private final IGame game;
-	private final String gamestateName;
+
+	private String taleAppPath;
 	
-	private String objTaleAppPath;
-
-
-	public TaleProcess(IPauseableProcess parentProcess, IEngineContext context, String gamestateName) {
-		super(parentProcess);
+	public TaleProcess(IEngineContext engineContext, String taleApplicationPath) {
+		this.engineContext = engineContext;
+		this.log = engineContext.getLog();
+		this.engine = engineContext.getEngine();
+		this.game = engineContext.getGame();
 		
-		this.engine = context.getEngine();
-		this.game = context.getGame();
-		this.gamestateName = gamestateName;
+		this.taleAppPath = taleApplicationPath;
+	}
+
+	
+	public ITaleGamescene getResult() {
+		return gamesceneResult;
 	}
 	
 	
-	@Override
-	public void internalAfterStartProcess() {
+	public void run() {
 		
-
 		IStorageService storageService = engine.getStorageService();
 
 		// Root directory of the Tale
-		LocationImpl taleLocation = new LocationImpl(objTaleAppPath);
+		LocationImpl taleLocation = new LocationImpl(taleAppPath);
 
 		
 		
@@ -97,7 +97,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 			fileNames = storageService.listAppDirOnExternal(taleLocation);
 			
 		} catch (StorageException e) {
-			TokTales.getLog().e(TAG, "List Tale directory failed: " +e.getMessage());
+			log.e(TAG, "List Tale directory failed: " +e.getMessage());
 			return;
 		}
 		
@@ -113,7 +113,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		
 		if(mainFileName == null) {
-			TokTales.getLog().e(TAG, "No main Tale file found");
+			log.e(TAG, "No main Tale file found");
 			return;
 		}
 		
@@ -127,7 +127,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		InputStream configFileIn = storageService.tryReadAppFileOnExternal(taleLocation, configFileName);
 		
 		if(configFileIn != null) {
-			TokTales.getLog().i(TAG, "Tale main config file found: " +configFileName);
+			log.i(TAG, "Tale main config file found: " +configFileName);
 			
 			
 			CiniConfigStreamReader reader = new CiniConfigStreamReader();
@@ -137,15 +137,15 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 				MutableCiniConfig ciniConfig = reader.readConfig(configFileIn);
 				
 				
-				TokTales.getLog().i(TAG, "Checking config...");
+				log.i(TAG, "Checking config...");
 
 				mainConfig = new CiniMainConfig(ciniConfig);
 				
-				TokTales.getLog().i(TAG, "Config was loaded.");
+				log.i(TAG, "Config was loaded.");
 			} catch (ConfigFormatException cfe) {
-				TokTales.getLog().w(TAG, "Bad config file: " +cfe.getMessage());
+				log.w(TAG, "Bad config file: " +cfe.getMessage());
 			} catch (ConfigDataException cde) {
-				TokTales.getLog().w(TAG, "Unsupported config: " +cde.getMessage());
+				log.w(TAG, "Unsupported config: " +cde.getMessage());
 			}
 			finally {
 				try {
@@ -154,7 +154,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 			}
 			
 			if(mainConfig == null) {
-				TokTales.getLog().i(TAG, "No main config was loaded.");
+				log.i(TAG, "No main config was loaded.");
 			}
 			else {
 				// TODO: 096 Load a tale specific config and not the main config
@@ -166,15 +166,18 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		
 		// Load tale
+		ITaleGamescene taleScene = null; // TODO: If taleScene is null, the rest should probably not execute
 		try {
-			loadTale(storageService, taleLocation, mainFileName);
-			
+			taleScene = loadTale(storageService, taleLocation, mainFileName);
+			gamesceneResult = taleScene;
+		} catch (TaleException te) {
+			log.e(TAG, "Loading Tale failed. Tale error: " +te);
 		} catch (StorageException se) {
-			TokTales.getLog().e(TAG, "Loading Tale failed. IO error: " +se);
+			log.e(TAG, "Loading Tale failed. IO error: " +se);
 		} catch (ConfigFormatException cfe) {
-			TokTales.getLog().e(TAG, "Loading Tale failed. Config format error: " +cfe);
+			log.e(TAG, "Loading Tale failed. Config format error: " +cfe);
 		} catch (ConfigDataException cde) {
-			TokTales.getLog().e(TAG, "Loading Tale failed. Config data error: " +cde);
+			log.e(TAG, "Loading Tale failed. Config data error: " +cde);
 		}
 		
 		
@@ -191,18 +194,18 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		// Check if there is a script file
 		InputStream scriptFileIn = storageService.tryReadAppFileOnExternal(taleLocation, scriptFileName);
 		if(scriptFileIn != null) {
-			TokTales.getLog().i(TAG, "Tale main script file found: " +configFileName);
+			log.i(TAG, "Tale main script file found: " +configFileName);
 			
 			IScriptModule taleModule;
 			try {
 				taleModule = game.getScriptManager().loadModule(scriptFileIn, scriptFileName);
-				taleModule.callFunction(ITaleScriptModule.FUNCTION_onTaleCreate);
+				taleModule.callFunction(ITaleScriptModule.FUNCTION_onTaleCreate, taleScene);
 				
 				
 				/*
 				Object result = taleModule.callFunction("createActor", "Actor_Jack");
 				if(!(result instanceof IActor)) {
-					TokTales.getLog().w(TAG, "Return type for module function createActor does not match the expected type (IActor)");
+					log.w(TAG, "Return type for module function createActor does not match the expected type (IActor)");
 				}
 				else {
 
@@ -215,7 +218,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 					String gravityFileName = "Gravity.lua";
 					InputStream gravityFileIn = storageFramework.tryReadAppFileOnExternal(taleLocation, gravityFileName);
 					if(gravityFileIn != null) {
-						TokTales.getLog().i(TAG, "Gravity module file found");
+						log.i(TAG, "Gravity module file found");
 						IScriptModule gravityModule = game.getScriptManager().loadModule(gravityFileIn, gravityFileName);
 						
 						Object participantResult = gravityModule.callFunction("createGravityParticipant", null);
@@ -224,7 +227,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 							jack.getParticipation().addParticipant(participant);
 						}
 						else {
-							TokTales.getLog().w(TAG, "Return type for module function createGravityParticipant does not match the expected type (IGameEntityParticipant)");
+							log.w(TAG, "Return type for module function createGravityParticipant does not match the expected type (IGameEntityParticipant)");
 						}
 					}
 					
@@ -232,38 +235,20 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 				*/
 				
 			} catch (ScriptErrorException e) {
-				TokTales.getLog().w(TAG, "Script failed to load: " +e.getMessage());
+				log.w(TAG, "Script failed to load: " +e.getMessage());
 			}
 			
 			
 		}
 		
 		
-		TokTales.getLog().d(TAG, "Reading Tale finished");
+		log.d(TAG, "Reading Tale finished");
 	}
 
-
-	public void setObjTaleAppPath(String taleApplicationPath) {
-		this.objTaleAppPath = taleApplicationPath;
-	}
-	
-	@Override
-	public void internalClearObjects() {
-		this.objTaleAppPath = null;
-	}
-	
-	public IEngine getEngine() {
-		return engine;
-	}
-	
-	public IGame getGame() {
-		return game;
-	}
 	
 	
-	private void loadTale(IStorageService storageService, LocationImpl taleLocation, String mainFileName) throws StorageException, ConfigFormatException, ConfigDataException {
-
-		TokTales.getLog().d(TAG, "Reading Tale: Started");
+	private ITaleGamescene loadTale(IStorageService storageService, LocationImpl taleLocation, String mainFileName) throws TaleException, StorageException, ConfigFormatException, ConfigDataException {
+		log.d(TAG, "Reading Tale: Started");
 		
 		
 		// Load main Tale file
@@ -273,44 +258,39 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 			CiniConfigStreamReader ccReader = new CiniConfigStreamReader();
 			MutableCiniConfig cConfig = ccReader.readConfig(mainFileIn);
 			
-			taleConfig = new CiniTaleConfig(cConfig);			
+			taleConfig = new CiniTaleConfig(cConfig);
 		} catch (IOException e3) { /* Nothing */ }
 		
-		
-		IGameState activeState = game.getStateControl().getState(gamestateName);
-		String activeStateName = gamestateName;
-		
 
+		ITaleGamescene sceneResult = null;
 		String initialSceneCodename = taleConfig.getConfigTaleInitialSceneCodename().trim();
-		if(!initialSceneCodename.isEmpty()) {
+		if(initialSceneCodename.isEmpty()) {
+			sceneResult = engineContext.getInjector().getInstance(ITaleGamescene.class);
+			log.i(TAG, "Loaded default scene implementation");
+		}
+		else {
 		    String sceneClassName = initialSceneCodename + TALE_SCENE_CLASS_POSTFIX;
 
 		    try {
 		        Class<?> sceneClass = Class.forName(sceneClassName);
-		        TokTales.getLog().i(TAG, "Loading initial scene with class: " +sceneClass.getName());
+		        log.i(TAG, "Loading initial scene with class: " +sceneClass.getName());
 		        
-		        if(IGameScene.class.isAssignableFrom(sceneClass)) {
-		            // TODO: Implement catching Exception and disregarding custom scene
-		            IGameScene scene = (IGameScene) TokTales.getInjector().getInstance(sceneClass);
-		            TokTales.getLog().i(TAG, "Loaded scene with implementation: " + scene.getClass().getName());
-
-
-		            int lastIndexOfDot = initialSceneCodename.lastIndexOf('.');
-		            String sceneName = initialSceneCodename.substring(lastIndexOfDot == -1 ? 0 : lastIndexOfDot + 1);
-
-		            if(activeState.assignScene(sceneName, scene)) { 
-		                activeState.changeScene(sceneName);
-		                TokTales.getLog().i(TAG, "Loading scene success");
-		            }
-		            else {
-		                TokTales.getLog().e(TAG, "Loading scene failed | Scene is not compatible with gamestate: " + activeStateName);
-		            }
+		        if(ITaleGamescene.class.isAssignableFrom(sceneClass)) {
+		        	try {
+		        		sceneResult = (ITaleGamescene) engineContext.getInjector().getInstance(sceneClass);
+		        		log.i(TAG, "Loaded scene with implementation: " + sceneResult.getClass().getName());
+		        	}
+		        	catch (Exception e) {
+		        		throw new TaleException(e);
+					}
 		        }
 		        else {
-		            TokTales.getLog().e(TAG, "Loading scene failed | Scene class is not an IGameScene: " + sceneClassName);
+		            //log.e(TAG, "Loading scene failed | Scene class is not an ITaleGamescene: " + sceneClassName);
+		            throw new TaleException("Loading scene failed | Scene class is not an ITaleGamescene: " + sceneClassName);
 		        }
 		    } catch (ClassNotFoundException e) {
-		        TokTales.getLog().e(TAG, "Loading scene failed | Scene class not found");
+		        //log.e(TAG, "Loading scene failed | Scene class not found: " + sceneClassName);
+	            throw new TaleException("Loading scene failed | Scene class not found: " + sceneClassName);
 		    }
 		}
 
@@ -319,48 +299,42 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		LocationImpl mapsLocation = new LocationImpl(taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesMapDirectory()));
 		String initialMapfileName = taleConfig.getConfigTaleInitialMapfileName();
 		if(initialMapfileName.trim().isEmpty()) {
-			TokTales.getLog().e(TAG, "Loading Tale failed: No initial map");
-			return;
+			log.e(TAG, "Loading Tale failed: No initial map");
+			return null;
 		}
 		
 
-		TokTales.getLog().d(TAG, "Loading initial map...");
+		log.d(TAG, "Loading initial map...");
 		// Read the initial map
 		IBlockMap initialMap = readTiledMap(mapsLocation, initialMapfileName);
 		
 		if(initialMap == null) {
-			TokTales.getLog().e(TAG, "Loading Tale failed: Could not read initial map");
-			return;
+			log.e(TAG, "Loading Tale failed: Could not read initial map");
+			return null;
 		}
 		else {
 			// Map was read fine
 			
 			// Load the map into our map manager
-			boolean res = loadMapIntoGame(initialMap, taleConfig, taleLocation);
+			boolean res = loadMapIntoGame(initialMap, taleConfig, taleLocation, sceneResult);
 			if(!res) {
-				TokTales.getLog().e(TAG, "Loading Tale failed: Could not load map into game");
-				return;
+				log.e(TAG, "Loading Tale failed: Could not load map into game");
+				return null;
 			}
-			
-			
-			
-			// Set state to local map
-			
-			game.getStateControl().changeState(gamestateName);
-			
 		}
-		
-		
 
+		
 		// Load player sprites and animations
-		setupPlayerEntity(storageService, taleLocation, taleConfig);
+		setupPlayerEntity(storageService, taleLocation, taleConfig, sceneResult);
 
+		return sceneResult;
 	}
 	
 	
-	private void setupPlayerEntity(IStorageService storageService, LocationImpl taleLocation, ITaleConfig taleConfig) {
+	private void setupPlayerEntity(IStorageService storageService, LocationImpl taleLocation, ITaleConfig taleConfig, ITaleGamescene taleScene) {
 		
-		IPlayer player = game.getStateControl().getState(gamestateName).getActiveScene().getPlayerController().getPlayer();
+		IPlayerController playerController = taleScene.getPlayerController();
+		IPlayer player = playerController.getPlayer();
 		
 		
 		// Values
@@ -426,8 +400,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		
 		
-		game.getStateControl().getState(gamestateName).getActiveScene().getPlayerController().playerLook(ICrossDirection.DOWN);
-		
+		playerController.playerLook(ICrossDirection.DOWN);
 	}
 	
 	private void loadAnimationIntoPlayer(IStorageService storageService, LocationImpl animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IPlayer player) {
@@ -447,7 +420,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		
 		if(animFilename.trim().isEmpty()) {
-			TokTales.getLog().w(TAG, "No animation file for code: " +animCode);
+			log.w(TAG, "No animation file for code: " +animCode);
 			
 			player.getGraphicsImage().assignAnimation(animCode, null);
 			return;
@@ -456,7 +429,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		InputStream animIn = storageService.tryReadAppFileOnExternal(animLocation, animFilename);
 		if(animIn == null) {
-			TokTales.getLog().w(TAG, String.format("Failed to read animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
+			log.w(TAG, String.format("Failed to read animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
 			
 			player.getGraphicsImage().assignAnimation(animCode, null);
 			return;
@@ -465,7 +438,7 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		IGameAnimation animation = loadAnimation(animIn, ciniReader, aniTime);
 		if(animation == null) {
-			TokTales.getLog().w(TAG, String.format("Failed to load animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
+			log.w(TAG, String.format("Failed to load animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
 
 			player.getGraphicsImage().assignAnimation(animCode, null);
 			return;
@@ -473,7 +446,6 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 
 		player.getGraphicsImage().assignAnimation(animCode, animation);
 	}
-	
 	
 	
 	private IGameAnimation loadAnimation(InputStream animIn, CiniConfigStreamReader reader, int defaultAnimTime) {
@@ -534,19 +506,15 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 			return animation;
 
 		} catch (ConfigFormatException cfe) {
-			TokTales.getLog().w(TAG, "Invalid format: " +cfe.getMessage());
+			log.w(TAG, "Invalid format: " +cfe.getMessage());
 		} catch (ConfigDataException cde) {
-			TokTales.getLog().w(TAG, "Invalid data: " +cde.getMessage());
+			log.w(TAG, "Invalid data: " +cde.getMessage());
 		}
 
 
 		// Error
 		return null;
 	}
-	
-	
-	
-	
 	
 	
 	private IBlockMap readTiledMap(LocationImpl location, String fileName) {
@@ -559,13 +527,13 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 			loader.setTarget(location, fileName);
 			
 		} catch (StorageException se) {
-			TokTales.getLog().e(TAG, "StorageException while configuring loader: " +se.getMessage());
+			log.e(TAG, "StorageException while configuring loader: " +se.getMessage());
 			return null;
 		}
 		
 		
 		
-		TokTales.getLog().d(TAG, "Reading Tiled map: Started");
+		log.d(TAG, "Reading Tiled map: Started");
 
 		try {
 			loader.runComplete();
@@ -574,11 +542,11 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 			return loader.getLoadedMap();
 			
 		} catch (MapFormatException mfe) {
-			TokTales.getLog().e(TAG, "MapFormatException at loading map: " +mfe.getMessage());
+			log.e(TAG, "MapFormatException at loading map: " +mfe.getMessage());
 		} catch (IOException ioe) {
-			TokTales.getLog().e(TAG, "IOException at loading map: " +ioe.getMessage());
+			log.e(TAG, "IOException at loading map: " +ioe.getMessage());
 		} catch (MapLoaderException mle) {
-			TokTales.getLog().e(TAG, "MapLoaderException at loading map: " +mle.getMessage());
+			log.e(TAG, "MapLoaderException at loading map: " +mle.getMessage());
 		}
 		
 		return null;
@@ -586,11 +554,10 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 	
 	
 
-	private boolean loadMapIntoGame(IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation) {
+	private boolean loadMapIntoGame(IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
 		
-		// TODO: Important - Fix cast and fix gamescene usage in here
-		IGameState state = getGame().getStateControl().getState(gamestateName);
-		DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver((BaseGamescene) state.getActiveScene());
+		// TODO: Refactor?
+		DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver(taleScene);
 		
 		try {
 			receiver.receiveMap(map);
@@ -635,6 +602,5 @@ public class TaleProcess extends AbstractWrapperProcess<IPauseableProcess> {
 		
 		return true;
 	}
-	
 	
 }

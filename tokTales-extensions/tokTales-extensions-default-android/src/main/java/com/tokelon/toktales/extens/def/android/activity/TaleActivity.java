@@ -2,8 +2,11 @@ package com.tokelon.toktales.extens.def.android.activity;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
+import com.tokelon.toktales.android.activity.ActivityHelper;
 import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
@@ -15,11 +18,11 @@ import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegr
 import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
+import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.logic.process.IPauseableProcess.EmptyPauseableProcess;
 import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
-import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
-import com.tokelon.toktales.extens.def.core.tale.TaleProcess;
+import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
+import com.tokelon.toktales.extens.def.core.tale.TaleException;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -66,12 +69,21 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	private ProxyTextWatcher textViewProxyTextWatcher;
 
 	
-	
 	private SurfaceViewIntegration surfaceViewIntegration;
+
+	private IEngineContext engineContext;
+	private ITaleLoader taleLoader;
+	
+	@Inject
+	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader) {
+		this.engineContext = engineContext;
+		this.taleLoader = taleLoader;
+	}
 	
 	
 	@Override
 	protected Map<String, IActivityIntegration> createActivityIntegrations() {
+		// injectDependencies has not run at this point
 		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
 		
 		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
@@ -88,6 +100,10 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		// Inject dependencies
+		ActivityHelper.injectActivityDependencies(this);
+		
+		
 		// Set activity to fullscreen
 		setFullscreen();
 
@@ -101,8 +117,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		String taleAppPath = getIntent().getStringExtra(ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH);
 		if(taleAppPath == null) {
-			TokTales.getLog().e(TAG, "Intend is missing data");
-			
+			engineContext.getLog().e(TAG, "Intent is missing data");
 			finish();
 		}
 		else {
@@ -114,12 +129,10 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	
 	
 	private void initLogic(String taleApplicationPath) {
-		
 		textView.addTextChangedListener(textViewProxyTextWatcher = new ProxyTextWatcher());
 
 		
 		// TODO: What needs to be done here with configs and preferences?
-
 		
 		/* TODO: 096 Do this somehow else
 		 * 
@@ -129,21 +142,18 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		// Removes any old listeners for the main config
 		IConfigManager configManager = (IConfigManager) TokTales.getGame().getConfigManager();
 		configManager.getConfig(IConfigManager.MAIN_CONFIG).removeAllListeners();
-		
-		
-		
-		// TODO: Refactor - Inject state via ActivityHelper
-		ILocalMapGamestate state = TokTales.getContext().getInjector().getInstance(ILocalMapGamestate.class);
-		TokTales.getGame().getStateControl().addState(TokelonGameStates.STATE_LOCAL_MAP, state);
 
-		EmptyPauseableProcess emptyProcess = new EmptyPauseableProcess();
-		TaleProcess taleProcess = new TaleProcess(emptyProcess, TokTales.getContext(), TokelonGameStates.STATE_LOCAL_MAP);
-		taleProcess.setObjTaleAppPath(taleApplicationPath);
 		
-
-		taleProcess.internalAfterStartProcess();
-		taleProcess.internalClearObjects();
-
+		
+		String sceneName = taleApplicationPath;
+		String stateName = TokelonGameStates.STATE_LOCAL_MAP;
+		try {
+			taleLoader.loadTaleIntoGame(taleApplicationPath, sceneName, stateName);
+			engineContext.getGame().getStateControl().changeState(stateName);
+		} catch (TaleException e) {
+			engineContext.getLog().e(TAG, "Loading tale failed: " + e);
+		}
+		
 	}
 	
 	
@@ -271,7 +281,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		IKeyboardActivityIntegration keyboardIntegration = getIntegrator().getIntegrationByType(IKeyboardActivityIntegration.class);
 		if(keyboardIntegration == null) {
-			TokTales.getLog().e(TAG, "No integration for IKeyboardIntegration");
+			engineContext.getLog().e(TAG, "No integration for IKeyboardIntegration");
 		}
 		else {
 			keyboardIntegration.showKeyboard(textView);	
@@ -306,7 +316,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		super.onConfigurationChanged(newConfig);
 		
 		// Stop Activity from recreating
-		TokTales.getLog().i(TAG, "TaleActivity configuration changed");
+		engineContext.getLog().i(TAG, "TaleActivity configuration changed");
 	}
 	
 
