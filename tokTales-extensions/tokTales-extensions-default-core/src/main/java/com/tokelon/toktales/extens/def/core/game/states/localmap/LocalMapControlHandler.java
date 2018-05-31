@@ -74,6 +74,26 @@ public class LocalMapControlHandler extends ConsoleOverlayControlHandler impleme
 		return true;
 	}
 	
+	
+	@Override
+	public boolean handleCameraMove(int direction) {
+		if(!gamestate.getActiveScene().getSceneControlHandler().handleCameraMove(direction)) {
+			gamestate.getActiveScene().getCameraController().cameraStartMoving(direction);
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public boolean handleCameraStopMove() {
+		if(!gamestate.getActiveScene().getSceneControlHandler().handleCameraStopMove()) {
+			gamestate.getActiveScene().getCameraController().cameraStopMoving();
+		}
+		
+		return true;
+	}
+
+	
 	@Override
 	public boolean handleDebugOpen() {
 		if(!gamestate.getActiveScene().getSceneControlHandler().handleDebugOpen()) {

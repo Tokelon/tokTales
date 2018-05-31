@@ -10,6 +10,11 @@ public interface ILocalMapControlHandler extends IConsoleOverlayControlHandler {
 	public static final String MOVE_RIGHT = "local_map_move_right";
 	public static final String MOVE_DOWN = "local_map_move_down";
 	
+	public static final String CAMERA_LEFT = "local_map_camera_left";
+	public static final String CAMERA_UP = "local_map_camera_up";
+	public static final String CAMERA_RIGHT = "local_map_camera_right";
+	public static final String CAMERA_DOWN = "local_map_camera_down";
+	
 	public static final String JUMP = "local_map_jump";
 	public static final String INTERACT = "local_map_interact";
 	public static final String DEBUG_OPEN = "local_map_debug_open";
@@ -33,8 +38,13 @@ public interface ILocalMapControlHandler extends IConsoleOverlayControlHandler {
 	
 	public default boolean handleJump() { return false; }
 	public default boolean handleInteract() { return false; }
+	
 	public default boolean handleMove(int direction) { return false; }
 	public default boolean handleStopMove() { return false; }
+	
+	public default boolean handleCameraMove(int direction) { return false; }
+	public default boolean handleCameraStopMove() { return false; }
+	
 	public default boolean handleDebugOpen() { return false; }
 	
 	

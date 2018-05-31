@@ -27,6 +27,14 @@ public class DesktopLocalMapControlScheme extends DesktopConsoleOverlayControlSc
 			return ILocalMapControlHandler.MOVE_RIGHT;
 		case TInput.VK_DOWN:
 			return ILocalMapControlHandler.MOVE_DOWN;
+		case TInput.VK_A:
+			return ILocalMapControlHandler.CAMERA_LEFT;
+		case TInput.VK_W:
+			return ILocalMapControlHandler.CAMERA_UP;
+		case TInput.VK_D:
+			return ILocalMapControlHandler.CAMERA_RIGHT;
+		case TInput.VK_S:
+			return ILocalMapControlHandler.CAMERA_DOWN;
 		default:
 			break;
 		}

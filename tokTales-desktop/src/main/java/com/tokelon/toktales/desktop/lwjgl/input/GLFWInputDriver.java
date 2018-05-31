@@ -81,7 +81,7 @@ public class GLFWInputDriver implements IDesktopInputDriver {
 				// Ignore actions where the cursor is outside the window
 				return;
 			}
-			TokTales.getLog().d(TAG, String.format("Mouse action=%d for Button %d with mods=%d", action, button, mods));
+			//TokTales.getLog().d(TAG, String.format("Mouse action=%d for Button %d with mods=%d", action, button, mods));
 			
 			
 			int vb = GLFWInput.keyGlfwToVk(button);
@@ -147,7 +147,7 @@ public class GLFWInputDriver implements IDesktopInputDriver {
 
 		@Override
 		public void invoke(long window, int codepoint) {
-			TokTales.getLog().d(TAG, String.format("Char action for codepoint: %s", new String(Character.toChars(codepoint))));
+			//TokTales.getLog().d(TAG, String.format("Char action for codepoint: %s", new String(Character.toChars(codepoint))));
 			
 			if(inputCharCallback != null) {
 				inputCharCallback.invoke(codepoint);
