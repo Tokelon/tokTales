@@ -41,11 +41,20 @@ import com.tokelon.toktales.core.game.control.TimeManager;
 import com.tokelon.toktales.core.game.controller.CameraController;
 import com.tokelon.toktales.core.game.controller.ControllerManager;
 import com.tokelon.toktales.core.game.controller.ICameraController;
+import com.tokelon.toktales.core.game.controller.ICameraController.ICameraControllerFactory;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
+import com.tokelon.toktales.core.game.controller.IPlayerController.IPlayerControllerFactory;
 import com.tokelon.toktales.core.game.controller.PlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
+import com.tokelon.toktales.core.game.controller.map.IMapController.IMapControllerFactory;
 import com.tokelon.toktales.core.game.controller.map.MapController;
+import com.tokelon.toktales.core.game.model.Camera;
+import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.model.IPlayer;
+import com.tokelon.toktales.core.game.model.Player;
+import com.tokelon.toktales.core.game.model.map.EmptyBlockMap;
+import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.screen.EmptyStateRender;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
@@ -177,9 +186,15 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);
 		
 		bind(IControllerManager.class).to(ControllerManager.class);
-		bind(IPlayerController.class).to(PlayerController.class);
+		bind(ICamera.class).to(Camera.class);
 		bind(ICameraController.class).to(CameraController.class);
+		bind(ICameraControllerFactory.class).to(CameraController.CameraControllerFactory.class);
+		bind(IPlayer.class).to(Player.class);
+		bind(IPlayerController.class).to(PlayerController.class);
+		bind(IPlayerControllerFactory.class).to(PlayerController.PlayerControllerFactory.class);
+		bind(IBlockMap.class).to(EmptyBlockMap.class);
 		bind(IMapController.class).to(MapController.class);
+		bind(IMapControllerFactory.class).to(MapController.MapControllerFactory.class);
 		bind(IWorldspace.class).to(Worldspace.class);
 		bind(ICollisionStrategy.class).to(DefaultCollisionStrategy.class);
 		

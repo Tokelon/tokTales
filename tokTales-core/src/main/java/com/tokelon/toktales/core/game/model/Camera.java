@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game.model;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.logic.observers.IObservation;
 import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.logic.observers.Participation;
@@ -40,7 +42,7 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 	private final Point2fImpl calculatedVelocityRe = new Point2fImpl();
 
 
-	
+	@Inject
 	public Camera() {
 		mParticipation = new Participation<ICamera, ICameraObserver, ICameraParticipant>(this, this);
 	}
@@ -235,7 +237,7 @@ public class Camera implements ICamera, IParticipationHook<ICameraObserver, ICam
 		this.cameraBounds.setHeight(height);
 
 		// Re-center camera by correcting the camera bounds
-		cameraBounds.moveTo(cameraCoordinates.x - cameraOrigin.x, cameraCoordinates.y - cameraOrigin.y);
+		this.cameraBounds.moveTo(cameraCoordinates.x - cameraOrigin.x, cameraCoordinates.y - cameraOrigin.y);
 
 		
 		getParticipation().notifyOfChange(CHANGE_CAMERA_SIZE);

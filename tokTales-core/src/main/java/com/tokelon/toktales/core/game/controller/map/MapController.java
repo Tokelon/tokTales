@@ -26,10 +26,6 @@ public class MapController extends AbstractController implements IMapController 
 	private final IBlockMap map;
 	
 	@Inject
-	public MapController() {
-		map = null; // TODO: Refactor this
-	}
-	
 	public MapController(IBlockMap blockMap) {
 		map = blockMap;
 	}
@@ -177,6 +173,15 @@ public class MapController extends AbstractController implements IMapController 
 	@Override
 	public IBlockMap getMap() {
 		return map;
+	}
+	
+	
+	public static class MapControllerFactory implements IMapControllerFactory {
+
+		@Override
+		public IMapController create(IBlockMap map) {
+			return new MapController(map);
+		}
 	}
 
 }

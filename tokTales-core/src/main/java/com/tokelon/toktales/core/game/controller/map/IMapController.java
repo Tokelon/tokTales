@@ -6,7 +6,6 @@ import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.IMapPosition;
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 
-
 public interface IMapController extends IController {
 
 	public IActionScheduler getActionScheduler();
@@ -79,9 +78,13 @@ public interface IMapController extends IController {
 	//public void elementSyncCopy()...
 	
 	/*
-	
 	public void elementSyncMoveAndOverride(
-	
 	*/
 	
+	
+	public interface IMapControllerFactory {
+		
+		public IMapController create(IBlockMap map);
+	}
+		
 }

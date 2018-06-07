@@ -2,7 +2,6 @@ package com.tokelon.toktales.core.game.controller;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.game.model.Camera;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.ICamera.CameraParticipant;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
@@ -18,29 +17,46 @@ public class CameraController extends AbstractController implements ICameraContr
 
 	private final FollowEntityObserver followEntityObserver;
 	
-	private final ICamera mCamera;
+	
+	private final ICamera camera;
 
 	@Inject
-	public CameraController() {
-		mCamera = new Camera();
-		mCamera.getParticipation().addParticipant(new MyCameraParticipant());
+	public CameraController(ICamera camera) {
+		this.camera = camera;
+		this.camera.getParticipation().addParticipant(new MyCameraParticipant());
 		
 		followEntityObserver = new FollowEntityObserver();
 		
 		setupCamera();
 	}
 	
+	
 	private void setupCamera() {
 		float cameraMoveSpeedUnits = CameraValues.CAMERA_MOVE_SPEED_UNITS;
 
-		mCamera.setSpeedX(cameraMoveSpeedUnits);
-		mCamera.setSpeedY(cameraMoveSpeedUnits);
+		camera.setSpeedX(cameraMoveSpeedUnits);
+		camera.setSpeedY(cameraMoveSpeedUnits);
 	}
 	
 	
 	@Override
 	public ICamera getCamera() {
-		return mCamera;
+		return camera;
+	}
+	
+	
+
+	@Override
+	public void cameraStartMoving(int direction) {
+		camera.setVelocity( // Use ICompassDirection?
+				camera.getSpeedX() * ICrossDirection.Tools.horizontalVelocitySignFromDirection(direction),
+				camera.getSpeedY() * ICrossDirection.Tools.verticalVelocitySignFromDirectionInvertY(direction)
+		);
+	}
+
+	@Override
+	public void cameraStopMoving() {
+		camera.setVelocity(0f, 0f);
 	}
 	
 	
@@ -70,20 +86,6 @@ public class CameraController extends AbstractController implements ICameraContr
 		return followEntity;
 	}
 	
-	
-	
-	@Override
-	public void cameraStartMoving(int direction) {
-		mCamera.setVelocity( // Use ICompassDirection?
-				mCamera.getSpeedX() * ICrossDirection.Tools.horizontalVelocitySignFromDirection(direction),
-				mCamera.getSpeedY() * ICrossDirection.Tools.verticalVelocitySignFromDirectionInvertY(direction));
-	}
-
-	@Override
-	public void cameraStopMoving() {
-		mCamera.setVelocity(0f, 0f);
-	}
-
 	
 	
 	private class MyCameraParticipant extends CameraParticipant {
@@ -137,6 +139,15 @@ public class CameraController extends AbstractController implements ICameraContr
 			if(CameraController.this.isCameraFollowEnabled()) {
 				getCamera().setWorldCoordinates(entity.getWorldX(), entity.getWorldY());
 			}
+		}
+	}
+	
+	
+	public static class CameraControllerFactory implements ICameraControllerFactory {
+
+		@Override
+		public ICameraController create(ICamera camera) {
+			return new CameraController(camera);
 		}
 	}
 	

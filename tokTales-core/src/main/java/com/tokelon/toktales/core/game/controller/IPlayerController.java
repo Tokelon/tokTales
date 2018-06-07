@@ -2,15 +2,10 @@ package com.tokelon.toktales.core.game.controller;
 
 import com.tokelon.toktales.core.game.model.IPlayer;
 
-public interface IPlayerController extends IController { //, IDataPlace<DataRead, DataWrite> {
+public interface IPlayerController extends IController {
 
 	
 	public IPlayer getPlayer();
-	
-	
-	//public void enableCameraFollowPlayer(boolean enable);
-	//public boolean isCameraFollowPlayerEnabled();
-	
 	
 	
 	
@@ -26,4 +21,10 @@ public interface IPlayerController extends IController { //, IDataPlace<DataRead
 	public boolean playerJump();
 	
 
+	
+	public interface IPlayerControllerFactory {
+		
+		public IPlayerController create(IPlayer player);
+	}
+	
 }
