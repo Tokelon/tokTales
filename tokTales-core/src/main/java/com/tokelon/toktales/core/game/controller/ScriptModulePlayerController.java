@@ -24,8 +24,28 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 	}
 
 	
+
 	@Override
-	public void setup(IControllerManager cm) {
+	public void onControllerAdd(IControllerManager manager, String controllerId, IController addedController) {
+		if(addedController == this) {
+			setup(manager);
+		}
+	}
+	
+	@Override
+	public void onControllerChange(IControllerManager manager, String controllerId, IController oldController, IController newController) {
+		onControllerChange(manager, controllerId);
+	}
+	
+	@Override
+	public void onControllerRemove(IControllerManager manager, String controllerId, IController removedController) {
+		if(removedController == this) {
+			// Do something?
+		}
+	}
+	
+	
+	private void setup(IControllerManager cm) {
 		try {
 			getScriptModule().callFunction(FUNCTION_SETUP, cm);
 		} catch (ScriptErrorException e) {
@@ -33,8 +53,7 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 		}
 	}
 	
-	@Override
-	public void onControllerChange(IControllerManager cm, String controllerId) {
+	private void onControllerChange(IControllerManager cm, String controllerId) {
 		try {
 			getScriptModule().callFunction(FUNCTION_CONTROLLER_RELOAD);
 		} catch (ScriptErrorException e) {
@@ -143,7 +162,5 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 			return false;
 		}
 	}
-
-		
 	
 }
