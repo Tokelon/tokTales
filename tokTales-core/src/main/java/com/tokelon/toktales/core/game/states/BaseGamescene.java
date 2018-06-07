@@ -10,28 +10,18 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
-import com.tokelon.toktales.core.game.controller.IPlayerController;
-import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.core.game.model.map.IMapLayer;
-import com.tokelon.toktales.core.game.screen.IStateRender;
-import com.tokelon.toktales.core.game.screen.order.IRenderLayerStack;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.tools.inject.IParameterInjector;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 
-/** Use as the base for game scenes.
+/** Use as a base for game scenes.
  */
 @RequiresInjection
 public class BaseGamescene implements IGameScene {
 
 	public static final String BASE_TAG = "BaseGamescene";
 
-	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
 
 	private static final float DEFAULT_CAMERA_WIDTH = 640;
 	private static final float DEFAULT_CAMERA_HEIGHT = 360;
@@ -53,14 +43,8 @@ public class BaseGamescene implements IGameScene {
 	
 	/* Scene objects */
 
-	private IWorldspace sceneWorldspace;
-
-	// TODO: Handle controllers differently? More like data maybe?
 	private IControllerManager sceneControllerManager;
-	private IPlayerController scenePlayerController;
-	private ICameraController sceneCameraController;
-	private IMapController sceneMapController;
-	
+	private ICamera sceneCamera;
 	private IControlHandler sceneControlHandler;
 	
 
@@ -71,27 +55,21 @@ public class BaseGamescene implements IGameScene {
 		// Used for injection
 	}
 	
-	public BaseGamescene(
-			IWorldspace defaultWorldspace,
-			IControlHandler defaultControlHandler,
+	protected BaseGamescene(
 			IControllerManager defaultControllerManager,
-			IPlayerController defaultPlayerController,
-			ICameraController defaultCameraController,
-			IMapController defaultMapController
+			ICamera defaultCamera,
+			IControlHandler defaultControlHandler
 	) {
 		// Any of these can be null
-		this.sceneWorldspace = defaultWorldspace;
-		this.sceneControlHandler = defaultControlHandler;
 		this.sceneControllerManager = defaultControllerManager;
-		this.scenePlayerController = defaultPlayerController;
-		this.sceneCameraController = defaultCameraController;
-		this.sceneMapController = defaultMapController;
+		this.sceneCamera = defaultCamera;
+		this.sceneControlHandler = defaultControlHandler;
 	}
 	
 	
-	/** Injects all dependencies for a scene and object initialization.
+	/** Injects all dependencies for the scene.
 	 * <p>
-	 * Note that this method will be called before any <i>method</i> injections of subtypes.
+	 * Note that this method will be called before any <i>method</i> injections of subclasses.
 	 * 
 	 * @see #initBaseDependencies
 	 * @see #initSceneDependencies
@@ -100,12 +78,9 @@ public class BaseGamescene implements IGameScene {
 	protected void injectDependencies(
 			IParameterInjectorFactory parameterInjectorFactory,
 			IEngineContext context,
-			IWorldspace worldspace,
-			IControlHandler controlHandler,
 			IControllerManager controllerManager,
-			IPlayerController playerController,
-			ICameraController cameraController,
-			IMapController mapController
+			ICamera camera,
+			IControlHandler controlHandler
 	) {
 		
 		this.gamesceneInjector = parameterInjectorFactory.create(InjectGameScene.class, this);
@@ -115,14 +90,11 @@ public class BaseGamescene implements IGameScene {
 		afterInitBaseDependencies();
 		
 		
-		IWorldspace defaultWorldspace = sceneWorldspace == null ? worldspace : sceneWorldspace;
-		IControlHandler defaultControlHandler = sceneControlHandler == null ? controlHandler : sceneControlHandler;
 		IControllerManager defaultControllerManager = sceneControllerManager == null ? controllerManager : sceneControllerManager;
-		IPlayerController defaultPlayerController = scenePlayerController == null ? playerController : scenePlayerController;
-		ICameraController defaultCameraController = sceneCameraController == null ? cameraController : sceneCameraController;
-		IMapController defaultMapController = sceneMapController == null ? mapController : sceneMapController;
+		ICamera defaultCamera = sceneCamera == null ? camera : sceneCamera;
+		IControlHandler defaultControlHandler = sceneControlHandler == null ? controlHandler : sceneControlHandler;
 		
-		initSceneDependencies(defaultWorldspace, defaultControlHandler, defaultControllerManager, defaultPlayerController, defaultCameraController, defaultMapController);
+		initSceneDependencies(defaultControllerManager, defaultCamera, defaultControlHandler);
 		afterInitSceneDependencies();
 		
 	}
@@ -149,33 +121,26 @@ public class BaseGamescene implements IGameScene {
 	protected void afterInitBaseDependencies() { }
 	
 
-	/** Initializes the state dependencies.
+	/** Initializes the scene dependencies.
 	 * 
 	 * @see #afterInitSceneDependencies()
 	 */
 	protected void initSceneDependencies(
-			IWorldspace defaultWorldspace,
-			IControlHandler defaultControlHandler,
 			IControllerManager defaultControllerManager,
-			IPlayerController defaultPlayerController,
-			ICameraController defaultCameraController,
-			IMapController defaultMapController
+			ICamera defaultCamera,
+			IControlHandler defaultControlHandler
+			
 	) {
-		setSceneWorldspace(defaultWorldspace);
-		setSceneControlHandler(defaultControlHandler);
 		setSceneControllerManager(defaultControllerManager);
-		setScenePlayerController(defaultPlayerController);
-		setSceneCameraController(defaultCameraController);
-		setSceneMapController(defaultMapController);
+		setSceneCamera(defaultCamera);
+		setSceneControlHandler(defaultControlHandler);
 	}
 	
 	/** Called after scene dependencies have been initialized.
 	 * 
 	 * @see #initSceneDependencies
 	 */
-	protected void afterInitSceneDependencies() {
-		// Nothing yet
-	}
+	protected void afterInitSceneDependencies() { }
 	
 
 	/** This implementation will assign the given gamestate to the current gamestate, obtainable by {@link #getGamestate()}.
@@ -213,7 +178,6 @@ public class BaseGamescene implements IGameScene {
 	
 	/** The default implementation for this will:<br>
 	 * 1. Set a default camera size.<br>
-	 * 2. Register the map render order (TODO: Improve)<br>
 	 * 
 	 */
 	@Override
@@ -231,13 +195,10 @@ public class BaseGamescene implements IGameScene {
 			cameraHeight = mainConfig.getConfigCameraSizeUnitsY();
 		}
 
-		ICamera camera = getCameraController().getCamera();
+		ICamera camera = getSceneCamera();
 		camera.setSize(cameraWidth, cameraHeight);
 		getLog().i(getTag(), String.format("Camera size was set to default %.2fx%.2f", cameraWidth, cameraHeight));
 
-		
-		/* 2. Register map render order */
-		registerMapRenderOrder(getGamestate(), getMapController());
 	}
 	
 	
@@ -245,18 +206,8 @@ public class BaseGamescene implements IGameScene {
 	public void onUpdate(long timeMillis) {
 		long startTime = System.currentTimeMillis();
 		
-
-		// Important - Adjust the camera first, then the player (and everything else)
-
-		getCameraController().getCamera().adjustState(timeMillis);
-
-		getPlayerController().getPlayer().adjustState(timeMillis);	// The player is an entity as well so it does not really need explicit updating ?
-
-		getWorldspace().adjustState(timeMillis);
 		
-
-		
-		//if(hasMap())
+		getSceneCamera().adjustState(timeMillis);
 
 		
 		long dt = System.currentTimeMillis() - startTime;
@@ -264,56 +215,6 @@ public class BaseGamescene implements IGameScene {
 	}
 	
 
-	// TODO: Refactor these?
-	protected void onMapChange(IMapController mapController) {
-		registerMapRenderOrder(getGamestate(), mapController);
-	}
-	
-	protected void onPlayerChange(IPlayerController playerController) {
-		// Is this ok?
-		getWorldspace().putEntity("player", getPlayerController().getPlayer());
-	}
-	
-	protected void onCameraChange(ICameraController cameraController) {
-		// Nothing yet
-	}
-	
-	
-	// TODO: Make separate MapGamescene and move this into there -> No, refactor somehow
-	private void registerMapRenderOrder(IGameState gamestate, IMapController mapController) {
-		if(gamestate == null || mapController == null) {
-			getLog().w(getTag(), "Cannot register map render order at this time");
-			return;
-		}
-		
-		IBlockMap map = mapController.getMap();
-		if(map == null) {
-			// TODO: FIX!
-			return;
-		}
-		
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
-		IStateRender renderer = gamestate.getStateRender();
-		synchronized (renderOrder) {
-		
-			// Remove old callbacks
-			renderOrder.removeAllTaggedLayers(RENDER_LAYER_TAG);
-			
-			
-			int index = 1;
-			for(int i = map.getLevelReference().getLowestLevel(); i <= map.getLevelReference().getHighestLevel(); i++) {
-				IMapLayer mapLayer = mapController.getMap().getLayerOnLevel(i);
-				String layerName = mapLayer.getName();
-				
-				renderOrder.insertTaggedLayerAt(index, layerName, RENDER_LAYER_TAG);
-				IRenderLayerStack stack = renderOrder.getStackForIndex(index);
-				stack.addCallbackAt(0d, renderer);
-				
-				index++;
-			}
-		}
-	}
-	
 	
 	@Override
 	public void onStart() {	}
@@ -329,39 +230,22 @@ public class BaseGamescene implements IGameScene {
 	
 	@Override
 	public void onDeassign() { }
+	
 
 	
-	
-	
-	@Override
-	public IControlHandler getSceneControlHandler() {
-		return sceneControlHandler;
-	}
-
-	@Override
-	public IWorldspace getWorldspace() {
-		return sceneWorldspace;
-	}
-
-
 	@Override
 	public IControllerManager getControllerManager() {
 		return sceneControllerManager;
 	}
 
 	@Override
-	public IPlayerController getPlayerController() {
-		return scenePlayerController;
-	}
-	
-	@Override
-	public ICameraController getCameraController() {
-		return sceneCameraController;
+	public IControlHandler getSceneControlHandler() {
+		return sceneControlHandler;
 	}
 
 	@Override
-	public IMapController getMapController() {
-		return sceneMapController;
+	public ICamera getSceneCamera() {
+		return sceneCamera;
 	}
 
 
@@ -401,19 +285,32 @@ public class BaseGamescene implements IGameScene {
 	}
 
 	
-
-	/** Sets the scene worldspace.
+	/** Sets the scene controller manager.
 	 * 
-	 * @param worldspace
-	 * @throws NullPointerException If worldspace is null.
+	 * @param controllerManager
+	 * @throws NullPointerException If controllerManager is null.
 	 */
-	protected void setSceneWorldspace(IWorldspace worldspace) {
-		if(worldspace == null) {
+	protected void setSceneControllerManager(IControllerManager controllerManager) {
+		if(controllerManager == null) {
 			throw new NullPointerException();
 		}
 		
-		gamesceneInjector.injectInto(worldspace);
-		this.sceneWorldspace = worldspace;
+		getGamesceneInjector().injectInto(controllerManager);
+		this.sceneControllerManager = controllerManager;
+	}
+	
+	/** Sets the scene camera.
+	 * 
+	 * @param camera
+	 * @throws NullPointerException If camera is null.
+	 */
+	protected void setSceneCamera(ICamera camera) {
+		if(camera == null) {
+			throw new NullPointerException();
+		}
+		
+		getGamesceneInjector().injectInto(camera);
+		this.sceneCamera = camera;
 	}
 	
 	/** Sets the scene control handler.
@@ -426,73 +323,8 @@ public class BaseGamescene implements IGameScene {
 			throw new NullPointerException();
 		}
 		
-		gamesceneInjector.injectInto(controlHandler);
+		getGamesceneInjector().injectInto(controlHandler);
 		this.sceneControlHandler = controlHandler;
-	}
-	
-	/** Sets the scene controller manager.
-	 * 
-	 * @param controllerManager
-	 * @throws NullPointerException If controllerManager is null.
-	 */
-	protected void setSceneControllerManager(IControllerManager controllerManager) {
-		if(controllerManager == null) {
-			throw new NullPointerException();
-		}
-		
-		gamesceneInjector.injectInto(controllerManager);
-		this.sceneControllerManager = controllerManager;
-	}
-	
-	/** Sets the scene player controller.
-	 * 
-	 * @param playerController
-	 * @throws NullPointerException If playerController is null.
-	 */
-	protected void setScenePlayerController(IPlayerController playerController) {
-		if(playerController == null) {
-			throw new NullPointerException();
-		}
-		
-		gamesceneInjector.injectInto(playerController);
-		this.scenePlayerController = playerController;
-		sceneControllerManager.setController(CONTROLLER_PLAYER, playerController);
-		
-		onPlayerChange(scenePlayerController);
-	}
-	
-	/** Sets the scene camera controller.
-	 * 
-	 * @param cameraController
-	 * @throws NullPointerException If cameraController is null.
-	 */
-	protected void setSceneCameraController(ICameraController cameraController) {
-		if(cameraController == null) {
-			throw new NullPointerException();
-		}
-		
-		gamesceneInjector.injectInto(cameraController);
-		this.sceneCameraController = cameraController;
-		sceneControllerManager.setController(CONTROLLER_CAMERA, cameraController);
-		
-		onCameraChange(sceneCameraController);
-	}
-	
-	/** Sets the scene map controller.
-	 * 
-	 * @param mapController
-	 * @throws NullPointerException If mapController is null.
-	 */
-	protected void setSceneMapController(IMapController mapController) {
-		if(mapController == null) {
-			throw new NullPointerException();
-		}
-		
-		gamesceneInjector.injectInto(mapController);
-		this.sceneMapController = mapController;
-		sceneControllerManager.setController(CONTROLLER_MAP, mapController);
-		
-		onMapChange(sceneMapController);
 	}
 	
 }

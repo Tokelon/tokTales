@@ -16,7 +16,8 @@ import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
@@ -54,15 +55,15 @@ public class EntityRenderer implements IEntityRenderer {
 
 	
 	
-	private final IGameState mGamestate;
+	private final ITypedGameState<? extends IExtendedGameScene> gamestate;
 	
 	private IRenderDriver spriteDriver;
 	
 	private IViewTransformer mViewTransformer;
 
 
-	public EntityRenderer(IGameState gamestate) {
-		this.mGamestate = gamestate;
+	public EntityRenderer(ITypedGameState<? extends IExtendedGameScene> gamestate) {
+		this.gamestate = gamestate;
 		
 		spriteModel.setInvertYAxis(true);
 	}
@@ -71,7 +72,7 @@ public class EntityRenderer implements IEntityRenderer {
 	@Override
 	public void contextCreated() {
 		
-		spriteDriver = mGamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
+		spriteDriver = gamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
 		if(spriteDriver == null) {
 			throw new RenderException("No render driver found for: " +ISpriteModel.class.getName());
 		}
@@ -79,7 +80,7 @@ public class EntityRenderer implements IEntityRenderer {
 		spriteDriver.create();
 		
 		
-		spriteModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
+		spriteModel.setTextureCoordinator(gamestate.getStateRender().getTextureCoordinator());
 	}
 
 	
@@ -144,13 +145,13 @@ public class EntityRenderer implements IEntityRenderer {
 		int drawDepth = options.getOrDefault(OPTION_DRAW_DEPTH, -1);
 		
 		
-		drawEntities(mGamestate.getActiveScene().getWorldspace());
+		drawEntities(gamestate.getActiveScene().getWorldspace());
 	}
 
 	
 	@Override
 	public void drawFull(INamedOptions options) {
-		drawEntities(mGamestate.getActiveScene().getWorldspace());
+		drawEntities(gamestate.getActiveScene().getWorldspace());
 	}
 
 	
@@ -211,20 +212,20 @@ public class EntityRenderer implements IEntityRenderer {
 				ISpriteGraphic spriteGraphic = (ISpriteGraphic) entityGraphic;
 				ISprite entitySprite = spriteGraphic.getSprite();
 
-				ISpriteAsset entitySpriteAsset = mGamestate.getGame().getContentManager().getSpriteManager().getSpriteAsset(entitySprite);
+				ISpriteAsset entitySpriteAsset = gamestate.getGame().getContentManager().getSpriteManager().getSpriteAsset(entitySprite);
 
 				if(entitySpriteAsset == null) {
 					// Asset not loaded yet
 					continue;
 				}
 
-				boolean assetIsSpecial = mGamestate.getGame().getContentManager().getSpriteManager().assetIsSpecial(entitySpriteAsset);
+				boolean assetIsSpecial = gamestate.getGame().getContentManager().getSpriteManager().assetIsSpecial(entitySpriteAsset);
 				if(assetIsSpecial) {
 					// Do something ?
 				}
 				
 				
-				ITexture entityTexture = mGamestate.getEngine().getContentService().extractAssetTexture(entitySpriteAsset.getContent());
+				ITexture entityTexture = gamestate.getEngine().getContentService().extractAssetTexture(entitySpriteAsset.getContent());
 				if(entityTexture == null) {
 					return;	// TODO: Workaround for special assets
 				}

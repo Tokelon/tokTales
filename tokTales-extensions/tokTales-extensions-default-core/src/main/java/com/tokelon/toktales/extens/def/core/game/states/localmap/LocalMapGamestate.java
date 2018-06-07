@@ -18,8 +18,8 @@ import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.ExtendedGamescene;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
@@ -187,11 +187,9 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 
 		
 		IMapController mapController = getActiveScene().getMapController();
-		if(mapController != null) {
+		
 			// TODO: Use rendering action scheduler ?
 			mapController.getActionScheduler().requestActionOrError(actionTaker);
-		}
-		
 		try {
 			long drawStart = System.currentTimeMillis();
 
@@ -203,10 +201,8 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			if(logDrawTime) TokTales.getLog().d(getTag(), "Draw Time MS = " + drawDT);
 		}
 		finally {
-			if(mapController != null) {	// TODO: MapController should never be null
 				mapController.getActionScheduler().finishAction(actionTaker);
 			}
-		}
 		
 
 		if(fpsModeEnabled) {
@@ -324,7 +320,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 						int xval = Integer.parseInt(inputWords[2]);
 						int yval = Integer.parseInt(inputWords[3]);
 						
-						getActiveScene().getCameraController().getCamera().setSize(xval, yval);
+						getActiveScene().getSceneCamera().setSize(xval, yval);
 					}
 					catch(NumberFormatException nfe) {
 						response = "Bad x y values";
@@ -340,7 +336,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 					try {
 						float zoom = Float.parseFloat(inputWords[2]);
 						
-						getActiveScene().getCameraController().getCamera().setZoom(zoom, false);
+						getActiveScene().getSceneCamera().setZoom(zoom, false);
 					}
 					catch(NumberFormatException nfe) {
 						response = "Bad zoom value";
@@ -361,7 +357,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 
 	
-	public static class EmptyLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
+	public static class EmptyLocalMapGamescene extends ExtendedGamescene implements ILocalMapGamescene {
 		private final EmptyLocalMapControlHandler emptyControlHandler = new EmptyLocalMapControlHandler();
 		
 		@Override

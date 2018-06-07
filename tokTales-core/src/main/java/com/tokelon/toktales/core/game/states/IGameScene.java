@@ -1,10 +1,7 @@
 package com.tokelon.toktales.core.game.states;
 
-import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
-import com.tokelon.toktales.core.game.controller.IPlayerController;
-import com.tokelon.toktales.core.game.controller.map.IMapController;
-import com.tokelon.toktales.core.game.world.IWorldspace;
+import com.tokelon.toktales.core.game.model.ICamera;
 
 public interface IGameScene {
 	// Add getters for context access?
@@ -13,16 +10,7 @@ public interface IGameScene {
 	 * the scene defines with what data (and logic)
 	 * 
 	 */
-	
-	// Map
-	// Worldspace - Entities
-	// Events?
-	// Logic
-	// Player?
-	
-	public static final String CONTROLLER_PLAYER = "gamescene-controller_player";
-	public static final String CONTROLLER_MAP = "gamescene-controller_map";
-	public static final String CONTROLLER_CAMERA = "gamescene-controller_camera";
+	// Map / Worldspace - Entities / Events? / Logic / Player?
 	
 	
 
@@ -78,31 +66,27 @@ public interface IGameScene {
 	public void onUpdate(long timeMillis);
 
 	// no onRender() -> for custom rendering the scene should use render order
-	
-	
-	
-	/** This scene's worldspace.
-	 * 
-	 * @return The worldspace for this scene.
-	 */
-	public IWorldspace getWorldspace();
 
+	
+
+	/** The controller manager for this scene.
+	 * 
+	 * @return The scene controller manager.
+	 */
+	public IControllerManager getControllerManager();
+
+	
+	/** The camera used for this scene.
+	 * 
+	 * @return The scene camera.
+	 */
+	public ICamera getSceneCamera();
+	
+	
 	/** The control handler for scene specific action handling.
 	 * 
 	 * @return The scene control handler.
 	 */
 	public IControlHandler getSceneControlHandler();
 
-
-	/* Notes:
-	 * 1. No setters.
-	 * 2. Controllers should never be null.
-	 * 
-	 */
-	public IControllerManager getControllerManager();
-
-	public IPlayerController getPlayerController();
-	public ICameraController getCameraController();
-	public IMapController getMapController();
-	
 }

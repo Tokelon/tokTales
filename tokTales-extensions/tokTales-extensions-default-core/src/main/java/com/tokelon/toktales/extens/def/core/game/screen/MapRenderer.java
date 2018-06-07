@@ -6,6 +6,7 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic.IGraphicType;
@@ -32,6 +33,7 @@ import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.values.ControllerValues;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 import com.tokelon.toktales.tools.tiledmap.ITiledTileElement;
 import com.tokelon.toktales.tools.tiledmap.TiledMapElementTypes;
@@ -146,13 +148,17 @@ public class MapRenderer implements IMapRenderer {
 
 	@Override
 	public void drawLayer(INamedOptions options, String layerName) {
-		IMapController mapController = mGamestate.getActiveScene().getMapController();
-		
-		// TODO: MapController should never be NULL !!
-		if(mapController == null) {
+		IController controller = mGamestate.getActiveScene().getControllerManager().getController(ControllerValues.CONTROLLER_MAP);
+		if(controller == null) {
 			TokTales.getLog().e(TAG, "Draw was called but no Map is available");
 			return;
 		}
+		else if(!(controller instanceof IMapController)) {
+			TokTales.getLog().e(TAG, "Controller is not an IMapController");
+			return;
+		}
+		IMapController mapController = (IMapController) controller;
+		
 		
 		drawMapLayer(mapController, layerName);
 	}

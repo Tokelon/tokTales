@@ -5,8 +5,8 @@ public class ControllerValues {
 	private ControllerValues() {}
 	
 
-	public static final String CONTROLLER_PLAYER = "gamescene-controller_player";
-	public static final String CONTROLLER_MAP = "gamescene-controller_map";
-	public static final String CONTROLLER_CAMERA = "gamescene-controller_camera";
+	public static final String CONTROLLER_PLAYER = "controller_player";
+	public static final String CONTROLLER_MAP = "controller_map";
+	public static final String CONTROLLER_CAMERA = "controller_camera";
 	
 }

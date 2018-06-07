@@ -14,7 +14,8 @@ import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.RenderException;
@@ -55,10 +56,10 @@ public class PlayerRenderer implements IPlayerRenderer {
 
 	private IRenderDriver spriteDriver;
 	
-	private final IGameState mGamestate;
+	private final ITypedGameState<? extends IExtendedGameScene> gamestate;
 
-	public PlayerRenderer(IGameState gamestate) {
-		this.mGamestate = gamestate;
+	public PlayerRenderer(ITypedGameState<? extends IExtendedGameScene> gamestate) {
+		this.gamestate = gamestate;
 
 		spriteModel.setInvertYAxis(true);
 	}
@@ -68,7 +69,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 	@Override
 	public void contextCreated() {
 		
-		spriteDriver = mGamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
+		spriteDriver = gamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
 		if(spriteDriver == null) {
 			throw new RenderException("No render driver found for: " +ISpriteModel.class.getName());
 		}
@@ -76,7 +77,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		spriteDriver.create();
 		
 		
-		spriteModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
+		spriteModel.setTextureCoordinator(gamestate.getStateRender().getTextureCoordinator());
 	}
 	
 
@@ -142,7 +143,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		int drawDepth = options.getOrDefault(OPTION_DRAW_DEPTH, -1);
 
 		
-		IPlayerController playerController = mGamestate.getActiveScene().getPlayerController();
+		IPlayerController playerController = gamestate.getActiveScene().getPlayerController();
 
 		drawPlayer(playerController);
 	}
@@ -193,18 +194,18 @@ public class PlayerRenderer implements IPlayerRenderer {
 			ISpriteGraphic spriteGraphic = (ISpriteGraphic) playerGraphic;
 			ISprite playerSprite = spriteGraphic.getSprite();
 
-			ISpriteAsset playerSpriteAsset = mGamestate.getGame().getContentManager().getSpriteManager().getSpriteAsset(playerSprite);
+			ISpriteAsset playerSpriteAsset = gamestate.getGame().getContentManager().getSpriteManager().getSpriteAsset(playerSprite);
 			if(playerSpriteAsset == null) {
 				// Asset not loaded yet
 				return;
 			}
 			
-			boolean assetIsSpecial = mGamestate.getGame().getContentManager().getSpriteManager().assetIsSpecial(playerSpriteAsset);
+			boolean assetIsSpecial = gamestate.getGame().getContentManager().getSpriteManager().assetIsSpecial(playerSpriteAsset);
 			if(assetIsSpecial) {
 				// Do what?
 			}
 
-			ITexture playerTexture = mGamestate.getEngine().getContentService().extractAssetTexture(playerSpriteAsset.getContent());
+			ITexture playerTexture = gamestate.getEngine().getContentService().extractAssetTexture(playerSpriteAsset.getContent());
 			if(playerTexture == null) {
 				return;	// TODO: Workaround for special assets
 			}
@@ -247,7 +248,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 	
 	@Override
 	public void drawFull(INamedOptions options) {
-		drawPlayer(mGamestate.getActiveScene().getPlayerController());
+		drawPlayer(gamestate.getActiveScene().getPlayerController());
 	}
 	
 }

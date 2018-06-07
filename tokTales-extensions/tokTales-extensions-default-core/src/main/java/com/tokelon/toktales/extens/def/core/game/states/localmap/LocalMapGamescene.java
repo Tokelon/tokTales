@@ -2,16 +2,17 @@ package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.game.controller.ICameraController;
+import com.tokelon.toktales.core.game.controller.ICameraController.ICameraControllerFactory;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
-import com.tokelon.toktales.core.game.states.BaseGamescene;
+import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.states.ExtendedGamescene;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 
-public class LocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
+public class LocalMapGamescene extends ExtendedGamescene implements ILocalMapGamescene {
 
 	
 	private ILocalMapControlHandler customControlHandler;
@@ -23,15 +24,17 @@ public class LocalMapGamescene extends BaseGamescene implements ILocalMapGamesce
 		customControlHandler = new ILocalMapControlHandler.EmptyLocalMapControlHandler();
 	}
 
+	
 	protected LocalMapGamescene(
-			IWorldspace defaultWorldspace,
-			ILocalMapControlHandler defaultControlHandler,
 			IControllerManager defaultControllerManager,
+			ICamera defaultCamera,
+			ILocalMapControlHandler defaultControlHandler,
+			IWorldspace defaultWorldspace,
+			ICameraControllerFactory defaultCameraControllerFactory,
 			IPlayerController defaultPlayerController,
-			ICameraController defaultCameraController,
 			IMapController defaultMapController
 	) {
-		super(defaultWorldspace, defaultControlHandler, defaultControllerManager, defaultPlayerController, defaultCameraController, defaultMapController);
+		super(defaultControllerManager, defaultCamera, defaultControlHandler, defaultWorldspace, defaultCameraControllerFactory, defaultPlayerController, defaultMapController);
 		
 		customControlHandler = defaultControlHandler == null ? new ILocalMapControlHandler.EmptyLocalMapControlHandler() : defaultControlHandler;
 	}

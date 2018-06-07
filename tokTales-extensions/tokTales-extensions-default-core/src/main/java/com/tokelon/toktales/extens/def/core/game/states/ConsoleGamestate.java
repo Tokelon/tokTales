@@ -74,7 +74,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	public void onEngage() {
 		super.onEngage();
 
-		ICamera camera = getActiveScene().getCameraController().getCamera();
+		ICamera camera = getActiveScene().getSceneCamera();
 		//getCamera().setSize(720, 1280);
 		camera.setSize(1280, 720);
 		//getCamera().setSize(1860, 1080);

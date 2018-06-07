@@ -1,23 +1,23 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
+import com.tokelon.toktales.core.game.controller.IControllerManager;
+import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.states.BaseGamescene;
+import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
-import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.model.ScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
 
-public class DialogBaseLocalMapGamescene extends BaseGamescene implements ILocalMapGamescene {
+public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 
 	
 	private static final double CALLBACK_POSITION_DIALOG = 2d;
 	
 
-	private DialogBaseLocalMapControlHandler controlHandler;
 	
 	private DialogRenderCallback dialogRenderCallback;
 	
@@ -25,9 +25,17 @@ public class DialogBaseLocalMapGamescene extends BaseGamescene implements ILocal
 	
 	
 	public DialogBaseLocalMapGamescene() {
-		controlHandler = new DialogBaseLocalMapControlHandler();
-		
 		this.dialogController = new DefaultDialogController(new ScreenDialog(10, 10, 10));
+	}
+	
+	@Override
+	protected void initSceneDependencies(
+			IControllerManager defaultControllerManager,
+			ICamera defaultCamera,
+			IControlHandler defaultControlHandler
+	) {
+		
+		super.initSceneDependencies(defaultControllerManager, defaultCamera, new DialogBaseLocalMapControlHandler());
 	}
 	
 	
@@ -48,12 +56,6 @@ public class DialogBaseLocalMapGamescene extends BaseGamescene implements ILocal
 		dialogRenderCallback = new DialogRenderCallback(getGamestate());
 	}
 	
-	
-	
-	@Override
-	public ILocalMapControlHandler getSceneControlHandler() {
-		return controlHandler;
-	}
 	
 	
 	protected class DialogBaseLocalMapControlHandler extends EmptyLocalMapControlHandler {
@@ -94,12 +96,5 @@ public class DialogBaseLocalMapGamescene extends BaseGamescene implements ILocal
 			return "renders a dialog";
 		}
 	}
-	
-	
-	@Override
-	public IConsoleInterpreter getSceneConsoleInterpreter() {
-		return null;
-	}
-	
 	
 }

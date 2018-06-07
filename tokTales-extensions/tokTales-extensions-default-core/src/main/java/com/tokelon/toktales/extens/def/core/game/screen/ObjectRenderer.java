@@ -10,14 +10,13 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.IPolyline2f.IExtendablePolyline2f;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.map.IMapObject;
-import com.tokelon.toktales.core.game.states.IGameScene;
-import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.world.IEllipseGeometry;
 import com.tokelon.toktales.core.game.world.IObjectContainer;
 import com.tokelon.toktales.core.game.world.IPolygonGeometry;
@@ -39,13 +38,14 @@ import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.render.model.TriangleModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.values.ControllerValues;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer {
 
 	
 	// TODO: Change: exclude gamescene
-	public static final String DEFAULT_MAP_CONTROLLER_NAME = IGameScene.CONTROLLER_MAP;
+	public static final String DEFAULT_MAP_CONTROLLER_NAME = ControllerValues.CONTROLLER_MAP;
 	
 	private String mapControllerName = DEFAULT_MAP_CONTROLLER_NAME;
 	
@@ -83,14 +83,14 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	private IRenderDriver lastUsedDriver = null;
 	
 
-	private final IGameState gamestate;
+	private final ITypedGameState<? extends IExtendedGameScene> gamestate;
 	private final ISpriteManager spriteManager;
 	
 	private IRenderDriver shapeDriver;
 	private IRenderDriver spriteDriver;
 	
 	
-	public ObjectRenderer(IGameState gamestate) {
+	public ObjectRenderer(ITypedGameState<? extends IExtendedGameScene> gamestate) {
 		this.gamestate = gamestate;
 		this.spriteManager = gamestate.getGame().getContentManager().getSpriteManager();
 		
@@ -164,14 +164,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 
 	@Override
 	public void drawLayer(INamedOptions options, String layerName) {
-		IController controller = gamestate.getActiveScene().getControllerManager().getController(mapControllerName);
-		
-		// TODO: Map Controller should never be NULL !!
-		if(!(controller instanceof IMapController)) {
-			assert false : "Invalid type for map controller";
-			return;
-		}
-		IMapController mapController = (IMapController) controller;
+		IMapController mapController = gamestate.getActiveScene().getMapController();
 		
 		drawObjectsOnMapLayer(mapController, layerName);
 	}

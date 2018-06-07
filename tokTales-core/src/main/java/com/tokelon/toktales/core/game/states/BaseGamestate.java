@@ -470,7 +470,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		}
 
 		getSceneControl().changeScene(name);
-		getStateRender().updateCamera(scene.getCameraController().getCamera());
+		getStateRender().updateCamera(scene.getSceneCamera());
 		return true;
 	}
 

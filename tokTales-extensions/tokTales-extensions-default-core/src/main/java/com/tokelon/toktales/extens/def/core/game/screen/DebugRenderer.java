@@ -9,6 +9,8 @@ import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewGridTransformer;
+import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.IWorldGrid;
 import com.tokelon.toktales.core.game.world.IWorldspace;
@@ -18,6 +20,7 @@ import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.LineShape;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.values.ControllerValues;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	
@@ -71,7 +74,15 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 
 	@Override
 	public void drawFull(INamedOptions options) {
-		drawDebug(gamestate.getActiveScene().getPlayerController(), gamestate.getActiveScene().getWorldspace());
+		IGameScene gamescene = gamestate.getActiveScene();
+		IPlayerController playerController = gamescene.getControllerManager().getControllerAs(ControllerValues.CONTROLLER_PLAYER, IPlayerController.class);
+
+		IWorldspace worldspace = null;
+		if(gamescene instanceof IExtendedGameScene) {
+			worldspace = ((IExtendedGameScene) gamescene).getWorldspace();
+		}
+		
+		drawDebug(playerController, worldspace);
 	}
 	
 	

@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.game.controller.IController;
+import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.IPoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
@@ -18,6 +20,7 @@ import com.tokelon.toktales.core.game.model.map.IBlock;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.InjectGameScene;
+import com.tokelon.toktales.core.values.ControllerValues;
 
 @InjectGameScene
 public class Worldspace implements IWorldspace {
@@ -344,155 +347,164 @@ public class Worldspace implements IWorldspace {
 	
 	private boolean mapCheck(IGameEntity entity, float destX, float destY) {
 		boolean canMove = true;
+		
+		IController controller = gamescene.getControllerManager().getController(ControllerValues.CONTROLLER_MAP);
+		if(controller == null) {
+			return true;
+		}
+		else if(!(controller instanceof IMapController)) {
+			// TODO: throw exception or log once?
+			return true;
+		}
+		IMapController mapController = (IMapController) controller;
 
-		if(gamescene.getMapController() != null) {	// TODO: Should never be null
-			// Check map for area
-			IBlockMap map = gamescene.getMapController().getMap();
+		// Check map for area
+		IBlockMap map = mapController.getMap();
 
-			
-			// Calculate which is the entity front size (moving direction)
-			// then check all blocks that the whole side moves through
-			// Do this for both vertically and horizontal movement
-			
-			float startx = entity.getWorldX();
-			float endx = destX;
-			
-			if(startx > endx) {
-				// Moving WEST
-				// Take the left side of the collision bounds
 
-				// -originx to get to the 0 (left side) + left collision value
-				endx += -entity.getOriginX() + entity.getCollisionBoxBack().getLeft();	// If collision box is 0, this will just be the left bound
-				startx += -entity.getOriginX() + entity.getCollisionBoxBack().getLeft(); // startx also needs to be ajusted to the collision box!!
-			}
-			else if(startx < endx) {
-				// Moving EAST
-				// Take the right side
-				
-				endx += -entity.getOriginX() + entity.getCollisionBoxBack().getRight();
-				startx += -entity.getOriginX() + entity.getCollisionBoxBack().getRight();
-			}
-			else {
-				// Not moving
-			}
-			
-			
-			int tileIndexStartX = world.getGrid().worldToTile(startx);
-			int tileIndexEndX = world.getGrid().worldToTile(endx);
-			
-			int posOffsetX = tileIndexEndX - tileIndexStartX > 0 ? 1 : -1;
+		// Calculate which is the entity front size (moving direction)
+		// then check all blocks that the whole side moves through
+		// Do this for both vertically and horizontal movement
 
-			int blockDistanceX = Math.abs(tileIndexStartX - tileIndexEndX);
+		float startx = entity.getWorldX();
+		float endx = destX;
 
-			
-			
-			
-			
-			float starty = entity.getWorldY();
-			float endy = destY;
-			
-			if(starty > endy) {
-				// Moving NORTH
-				// Take the top side of the entity bounds
-				
-				endy += -entity.getOriginY() + entity.getCollisionBoxBack().getTop();
-				starty += -entity.getOriginY() + entity.getCollisionBoxBack().getTop();
-			}
-			else if(starty < endy) {
-				// Moving SOUTH
-				// Take the bottom side
-				
-				endy += -entity.getOriginY() + entity.getCollisionBoxBack().getBottom();
-				starty += -entity.getOriginY() + entity.getCollisionBoxBack().getBottom();
-			}
-			else {
-				// Not moving
-			}
-			
-			
-			int tileIndexStartY = world.getGrid().worldToTile(starty);
-			int tileIndexEndY = world.getGrid().worldToTile(endy);
-			
-			int posOffsetY = tileIndexEndY - tileIndexStartY > 0 ? 1 : -1;
-			
-			int blockDistanceY = Math.abs(tileIndexStartY - tileIndexEndY);
-			
-			
-			
-			
-			/* Some sort of optimization possible with this ?
+		if(startx > endx) {
+			// Moving WEST
+			// Take the left side of the collision bounds
+
+			// -originx to get to the 0 (left side) + left collision value
+			endx += -entity.getOriginX() + entity.getCollisionBoxBack().getLeft();	// If collision box is 0, this will just be the left bound
+			startx += -entity.getOriginX() + entity.getCollisionBoxBack().getLeft(); // startx also needs to be ajusted to the collision box!!
+		}
+		else if(startx < endx) {
+			// Moving EAST
+			// Take the right side
+
+			endx += -entity.getOriginX() + entity.getCollisionBoxBack().getRight();
+			startx += -entity.getOriginX() + entity.getCollisionBoxBack().getRight();
+		}
+		else {
+			// Not moving
+		}
+
+
+		int tileIndexStartX = world.getGrid().worldToTile(startx);
+		int tileIndexEndX = world.getGrid().worldToTile(endx);
+
+		int posOffsetX = tileIndexEndX - tileIndexStartX > 0 ? 1 : -1;
+
+		int blockDistanceX = Math.abs(tileIndexStartX - tileIndexEndX);
+
+
+
+
+
+		float starty = entity.getWorldY();
+		float endy = destY;
+
+		if(starty > endy) {
+			// Moving NORTH
+			// Take the top side of the entity bounds
+
+			endy += -entity.getOriginY() + entity.getCollisionBoxBack().getTop();
+			starty += -entity.getOriginY() + entity.getCollisionBoxBack().getTop();
+		}
+		else if(starty < endy) {
+			// Moving SOUTH
+			// Take the bottom side
+
+			endy += -entity.getOriginY() + entity.getCollisionBoxBack().getBottom();
+			starty += -entity.getOriginY() + entity.getCollisionBoxBack().getBottom();
+		}
+		else {
+			// Not moving
+		}
+
+
+		int tileIndexStartY = world.getGrid().worldToTile(starty);
+		int tileIndexEndY = world.getGrid().worldToTile(endy);
+
+		int posOffsetY = tileIndexEndY - tileIndexStartY > 0 ? 1 : -1;
+
+		int blockDistanceY = Math.abs(tileIndexStartY - tileIndexEndY);
+
+
+
+
+		/* Some sort of optimization possible with this ?
 			if(worldDistanceX < world.getGridTileSize() && worldDistanceY < world.getGridTileSize()) {
 				// This will usually be the case except for fast entities ?
 				// Only check 1 or two blocks in each direction
 			}
-			*/
-			
-			
-			if(blockDistanceX == 0 && blockDistanceY == 0) {
-				// Moving inside the same block
-				// Normally this is fine
-				
-				// Basically end the map checking
-			}
-			else if(blockDistanceX == 0) {
-				
-				int leftTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getLeft());	//entity.getLeftBound());
-				int rightTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getRight());
-				
-				for(int tileY = tileIndexStartY; tileY - tileIndexEndY != posOffsetY; tileY += posOffsetY) {
-					
-					for(int tileX = leftTile; tileX <= rightTile; tileX++) {	// Entity tile coverage horizontally
-
-						if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
-							// Not in map bounds
-							continue;
-						}
+		 */
 
 
-						IBlock block = map.getBlockAt(tileX, tileY);
-						
-						if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
-							// Iterate through elements and compare with entity walkable value
-							// Or use dominant walkable value of element
-							//IMapElement.WALKABLE_YES;
-							
-							canMove = false;
-							break;
-						}
+		if(blockDistanceX == 0 && blockDistanceY == 0) {
+			// Moving inside the same block
+			// Normally this is fine
+
+			// Basically end the map checking
+		}
+		else if(blockDistanceX == 0) {
+
+			int leftTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getLeft());	//entity.getLeftBound());
+			int rightTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getRight());
+
+			for(int tileY = tileIndexStartY; tileY - tileIndexEndY != posOffsetY; tileY += posOffsetY) {
+
+				for(int tileX = leftTile; tileX <= rightTile; tileX++) {	// Entity tile coverage horizontally
+
+					if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
+						// Not in map bounds
+						continue;
+					}
+
+
+					IBlock block = map.getBlockAt(tileX, tileY);
+
+					if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
+						// Iterate through elements and compare with entity walkable value
+						// Or use dominant walkable value of element
+						//IMapElement.WALKABLE_YES;
+
+						canMove = false;
+						break;
 					}
 				}
 			}
-			else if(blockDistanceY == 0) {
-				
-				int upperTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getTop());
-				int lowerTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getBottom());
+		}
+		else if(blockDistanceY == 0) {
 
-				
-				for(int tileX = tileIndexStartX; tileX - tileIndexEndX != posOffsetX; tileX += posOffsetX) {
-					
-					for(int tileY = upperTile; tileY <= lowerTile; tileY++) {	// Entity tile coverage vertically
-						
-						if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
-							// Not in map bounds
-							continue;
-						}
-						
-						
-						IBlock block = map.getBlockAt(tileX, tileY);
-						
-						if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
-							// Iterate through elements and compare with entity walkable value
-							// Or use dominant walkable value of element
-							//IMapElement.WALKABLE_YES;
-							
-							canMove = false;
-							break;
-						}
+			int upperTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getTop());
+			int lowerTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getBottom());
+
+
+			for(int tileX = tileIndexStartX; tileX - tileIndexEndX != posOffsetX; tileX += posOffsetX) {
+
+				for(int tileY = upperTile; tileY <= lowerTile; tileY++) {	// Entity tile coverage vertically
+
+					if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
+						// Not in map bounds
+						continue;
+					}
+
+
+					IBlock block = map.getBlockAt(tileX, tileY);
+
+					if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
+						// Iterate through elements and compare with entity walkable value
+						// Or use dominant walkable value of element
+						//IMapElement.WALKABLE_YES;
+
+						canMove = false;
+						break;
 					}
 				}
 			}
-			else {
-				/*
+		}
+		else {
+			/*
 				// TODO: This most likely does not work yet!
 
 				for(int tileX = tileIndexStartX; tileX - tileIndexEndX != posOffsetX; tileX += posOffsetX) {
@@ -502,96 +514,91 @@ public class Worldspace implements IWorldspace {
 							continue;
 						}
 
-						
+
 						IBlock block = map.getBlockAt(tileX, tileY);
-						
+
 						if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
 							// Iterate through elements and compare with entity walkable value
 							// Or use dominant walkable value of element
 							//IMapElement.WALKABLE_YES;
-							
+
 							canMove = false;
 							break;
 						}
 					}
-					
+
 					if(canMove) {
 						break;
 					}
 				}
-				*/
-				
-				
+			 */
 
-				// vertical
-				int upperTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getTop());
-				int lowerTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getBottom());
 
-				for(int tileX = tileIndexStartX; tileX - tileIndexEndX != posOffsetX; tileX += posOffsetX) {
-					
-					for(int tileY = upperTile; tileY <= lowerTile; tileY++) {	// Entity tile coverage vertically
-						
+
+			// vertical
+			int upperTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getTop());
+			int lowerTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getBottom());
+
+			for(int tileX = tileIndexStartX; tileX - tileIndexEndX != posOffsetX; tileX += posOffsetX) {
+
+				for(int tileY = upperTile; tileY <= lowerTile; tileY++) {	// Entity tile coverage vertically
+
+					if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
+						// Not in map bounds
+						continue;
+					}
+
+
+					IBlock block = map.getBlockAt(tileX, tileY);
+
+					if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
+						// Iterate through elements and compare with entity walkable value
+						// Or use dominant walkable value of element
+						//IMapElement.WALKABLE_YES;
+
+						canMove = false;
+						break;
+					}
+				}
+			}
+
+
+			if(canMove == true) {	// If not already cannot move
+
+				// horizontal
+				int leftTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getLeft());	//entity.getLeftBound());
+				int rightTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getRight());
+
+				for(int tileY = tileIndexStartY; tileY - tileIndexEndY != posOffsetY; tileY += posOffsetY) {
+
+					for(int tileX = leftTile; tileX <= rightTile; tileX++) {	// Entity tile coverage horizontally
+
 						if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
 							// Not in map bounds
 							continue;
 						}
-						
-						
+
+
 						IBlock block = map.getBlockAt(tileX, tileY);
-						
+
 						if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
 							// Iterate through elements and compare with entity walkable value
 							// Or use dominant walkable value of element
 							//IMapElement.WALKABLE_YES;
-							
+
 							canMove = false;
 							break;
 						}
 					}
 				}
-				
-				
-				if(canMove == true) {	// If not already cannot move
-					
-					// horizontal
-					int leftTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getLeft());	//entity.getLeftBound());
-					int rightTile = world.getGrid().worldToTile(entity.getCollisionBoundsBack().getRight());
-					
-					for(int tileY = tileIndexStartY; tileY - tileIndexEndY != posOffsetY; tileY += posOffsetY) {
-						
-						for(int tileX = leftTile; tileX <= rightTile; tileX++) {	// Entity tile coverage horizontally
 
-							if(tileX < 0 || tileX >= map.getHorizontalSize() || tileY < 0 || tileY >= map.getVerticalSize()) {
-								// Not in map bounds
-								continue;
-							}
-
-
-							IBlock block = map.getBlockAt(tileX, tileY);
-							
-							if(!block.isWalkableForPlayer()) {	// TODO: Make generic is walkable or something
-								// Iterate through elements and compare with entity walkable value
-								// Or use dominant walkable value of element
-								//IMapElement.WALKABLE_YES;
-								
-								canMove = false;
-								break;
-							}
-						}
-					}
-					
-				}
-			
-				
-				// else end
 			}
-			
+
 		}
 		
 		
 		return canMove;
 	}
-	
 	
 	
 	

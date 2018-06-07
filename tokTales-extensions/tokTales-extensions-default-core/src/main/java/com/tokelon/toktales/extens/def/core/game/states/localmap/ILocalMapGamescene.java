@@ -1,9 +1,9 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
-import com.tokelon.toktales.core.game.states.IGameScene;
+import com.tokelon.toktales.core.game.states.IExtendedGameScene;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 
-public interface ILocalMapGamescene extends IGameScene {
+public interface ILocalMapGamescene extends IExtendedGameScene {
 	
 	
 	/* Handling control for scenes

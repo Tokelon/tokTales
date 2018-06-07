@@ -49,7 +49,7 @@ public class DefaultModularStateRender implements IModularStateRender {
 	public DefaultModularStateRender(IRenderingStrategy strategy, IGameState gamestate) {
 		this.mStrategy = strategy;
 		this.mGamestate = gamestate;
-		this.camera = gamestate.getActiveScene().getCameraController().getCamera();
+		this.camera = gamestate.getActiveScene().getSceneCamera();
 
 		this.contextViewTransformer = new DefaultViewTransformer();
 		this.textureCoordinator = new DefaultTextureCoordinator(gamestate.getGame().getContentManager().getTextureManager());
