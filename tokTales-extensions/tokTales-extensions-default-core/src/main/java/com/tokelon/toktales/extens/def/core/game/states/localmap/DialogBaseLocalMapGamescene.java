@@ -1,13 +1,21 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.game.controller.ICameraController.ICameraControllerFactory;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
+import com.tokelon.toktales.core.game.controller.IPlayerController;
+import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.InjectGameScene;
+import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
+import com.tokelon.toktales.extens.def.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.model.ScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
@@ -23,21 +31,33 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 	
 	private IDialogController dialogController;
 	
-	
+	@Inject
 	public DialogBaseLocalMapGamescene() {
-		this.dialogController = new DefaultDialogController(new ScreenDialog(10, 10, 10));
+		this(null, null, null, null, null, null, null, null, null);
 	}
 	
-	@Override
-	protected void initSceneDependencies(
+	public DialogBaseLocalMapGamescene(IScreenDialog defaultScreenDialog, IDialogController defaultDialogController) {
+		this(null, null, null, null, null, null, null, defaultScreenDialog, defaultDialogController);
+	}
+	
+	protected DialogBaseLocalMapGamescene(
 			IControllerManager defaultControllerManager,
 			ICamera defaultCamera,
-			IControlHandler defaultControlHandler
+			ILocalMapControlHandler defaultControlHandler,
+			IWorldspace defaultWorldspace,
+			ICameraControllerFactory defaultCameraControllerFactory,
+			IPlayerController defaultPlayerController,
+			IMapController defaultMapController,
+			IScreenDialog defaultScreenDialog,
+			IDialogController defaultDialogController
 	) {
-		
-		super.initSceneDependencies(defaultControllerManager, defaultCamera, new DialogBaseLocalMapControlHandler());
+		super(defaultControllerManager, defaultCamera, defaultControlHandler == null ? new DialogBaseLocalMapControlHandler() : defaultControlHandler,
+				defaultWorldspace, defaultCameraControllerFactory, defaultPlayerController, defaultMapController);
+
+		IScreenDialog screenDialog = defaultScreenDialog == null ? new ScreenDialog(10, 10, 10) : defaultScreenDialog;
+		this.dialogController = defaultDialogController == null ? new DefaultDialogController(screenDialog) : defaultDialogController;
 	}
-	
+
 	
 	protected IDialogController getDialogController() {
 		return dialogController;
@@ -53,47 +73,87 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 	public void onAssign() {
 		super.onAssign();
 
-		dialogRenderCallback = new DialogRenderCallback(getGamestate());
+		dialogRenderCallback = new DialogRenderCallback(getGamestate(), this);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		
+		dialogRenderCallback.register();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		
+		dialogRenderCallback.unregister();
 	}
 	
 	
 	
-	protected class DialogBaseLocalMapControlHandler extends EmptyLocalMapControlHandler {
+	protected static class DialogBaseLocalMapControlHandler extends EmptyLocalMapControlHandler {
+		private DialogBaseLocalMapGamescene gamescene;
+
+		@InjectGameScene
+		protected void injectGamescene(DialogBaseLocalMapGamescene gamescene) {
+			this.gamescene = gamescene;
+		}
+		
 		@Override
 		public boolean handleInteract() {
-			boolean previousValue = getDialogController().getDialog().getEntity().isVisible();
-			getDialogController().getDialog().getEntity().setVisible(!previousValue);
+			IGameEntity dialogEntity = gamescene.getDialogController().getDialog().getEntity();
+			
+			boolean previousValue = dialogEntity.isVisible();
+			dialogEntity.setVisible(!previousValue);
+			
 			return true;
 		}
 	}
 	
 	
-	private class DialogRenderCallback implements IRenderCallback {
+	protected static class DialogRenderCallback implements IRenderCallback {
 
 		private static final String DIALOG_RENDERER_NAME = "DialogBaseLocalMapGamescene_DialogRenderer";
 		
-		private final DialogRenderer dialogRenderer;
 		
-		public DialogRenderCallback(IGameState gamestate) {
-			dialogRenderer = new DialogRenderer(gamestate); // gamestate is not actually needed
+		private final DialogRenderer dialogRenderer;
+
+		private final IGameState gamestate;
+		private final DialogBaseLocalMapGamescene gamescene;
+		
+		public DialogRenderCallback(IGameState gamestate, DialogBaseLocalMapGamescene gamescene) {
+			this.gamestate = gamestate;
+			this.gamescene = gamescene;
 			
+			dialogRenderer = new DialogRenderer(gamestate);
+		}
+		
+		
+		public void register() {
 			// Add to managed renderers
 			gamestate.getStateRender().addManagedRenderer(DIALOG_RENDERER_NAME, dialogRenderer);
-			
+
 			// Add to render order
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DIALOG, this);
 		}
+		
+		public void unregister() {
+			gamestate.getStateRender().removeManagedRenderer(DIALOG_RENDERER_NAME);
+			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(CALLBACK_POSITION_DIALOG);
+		}
+
 		
 		@Override
 		public void renderCall(String layerName, double stackPosition) {
 			// This is the render call
 			
-			dialogRenderer.drawDialog(getDialogController());
+			dialogRenderer.drawDialog(gamescene.getDialogController());
 		}
 
 		@Override
 		public String getDescription() {
-			return "renders a dialog";
+			return "Renders a dialog.";
 		}
 	}
 	
