@@ -171,7 +171,8 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		}
 		
 		
-		consoleRenderCallback = new ConsoleRenderCallback(getStateRenderCustom(), consoleController, getRenderOrder());
+		consoleRenderCallback = new ConsoleRenderCallback(getStateRenderCustom(), consoleController);
+		getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_CONSOLE, consoleRenderCallback);
 	}
 	
 	
@@ -250,6 +251,8 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 
 	
+	// TODO: Implement or remove
+	@SuppressWarnings("unused")
 	private class MainConfigChangeListener implements OnConfigChangeListener {
 
 		@Override
@@ -263,20 +266,20 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			// TODO Auto-generated method stub
 			
 		}
-		
 	}
+		
 	
+	
+	// TODO: Extract these
 	
 	private class ConsoleRenderCallback implements IRenderCallback {
 		
 		private final IConsoleOverlayRenderer coRenderer;
 		private final IConsoleController coController;
 		
-		public ConsoleRenderCallback(ILocalMapStateRenderer stateRenderer, IConsoleController consoleController, IRenderOrder renderOrder) {
+		public ConsoleRenderCallback(ILocalMapStateRenderer stateRenderer, IConsoleController consoleController) {
 			coRenderer = stateRenderer.getConsoleOverlayRenderer();
 			coController = consoleController;
-			
-			renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_CONSOLE, this);
 		}
 		
 		@Override

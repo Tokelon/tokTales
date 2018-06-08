@@ -27,6 +27,9 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	
 	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
 
+	
+	private boolean initialMapRenderRegistrationPending = false;
+	
 
 	private IWorldspace sceneWorldspace;
 
@@ -135,7 +138,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 			IWorldspace defaultWorldspace,
 			ICameraController defaultCameraController,
 			IPlayerController defaultPlayerController,
-			IMapController defaultMapController			
+			IMapController defaultMapController
 	) {
 
 		setSceneWorldspace(defaultWorldspace);
@@ -153,71 +156,79 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	
 	/** The default implementation for this will:<br>
 	 * 1. Invoke the default implementation {@link BaseGamescene#onAssign()}.<br>
-	 * 2. Register the map render order<br>
 	 * 
 	 */
 	@Override
 	public void onAssign() {
 		super.onAssign();
 		
+		// TODO: Add listener that will invoke onMapChange, etc. | Remove on deassign?
+		//getControllerManager().addListener(listener);
+		
 
-		/* 2. Register map render order (TODO: Improve) */
-		registerMapRenderOrder(getGamestate(), getMapController());
+		/* Register map render order if needed */
+		if(initialMapRenderRegistrationPending) {
+			initialMapRenderRegistrationPending = false;
+			getLog().w(getTag(), "Registering map render callbacks to previously unavailable gamestate");
+
+			unregisterMapRenderCallbacks(getGamestate());
+			registerMapRenderCallbacks(getGamestate(), getMapController());
+		}
+	}
+	
+	
+	@Override
+	public void onDeassign() {
+		super.onDeassign();
+		
+		unregisterMapRenderCallbacks(getGamestate());
 	}
 	
 	
 	@Override
 	public void onUpdate(long timeMillis) {
 		super.onUpdate(timeMillis);
-		
 
 		// Important - Adjust the camera first (in base), then the player (and everything else)
-
 		getPlayerController().getPlayer().adjustState(timeMillis);	// The player is an entity as well so it does not really need explicit updating ?
 
 		getWorldspace().adjustState(timeMillis);
 		
 		
 		// Adjust map?
-		
 	}
 	
 
 	// TODO: Refactor these?
-	protected void onMapChange(IMapController mapController) {
-		registerMapRenderOrder(getGamestate(), mapController);
+	protected void onCameraControllerChange(ICameraController cameraController) {
+		// Nothing yet
 	}
 	
-	protected void onPlayerChange(IPlayerController playerController) {
+	protected void onPlayerControllerChange(IPlayerController playerController) {
 		// Is this ok?
 		getWorldspace().putEntity("player", getPlayerController().getPlayer());
 	}
 	
-	protected void onCameraChange(ICameraController cameraController) {
-		// Nothing yet
-	}
-	
-	
-	// TODO: Make separate MapGamescene and move this into there -> No, refactor somehow
-	private void registerMapRenderOrder(IGameState gamestate, IMapController mapController) {
-		if(gamestate == null || mapController == null) {
-			getLog().w(getTag(), "Cannot register map render order at this time");
+	protected void onMapControllerChange(IMapController mapController) {
+		IGameState gamestate = getGamestate();
+		if(gamestate == null) {
+			getLog().i(getTag(), "Cannot register map render callbacks: no gamestate assigned yet");
+			initialMapRenderRegistrationPending = true;
 			return;
 		}
 		
+		unregisterMapRenderCallbacks(gamestate);
+		registerMapRenderCallbacks(gamestate, mapController);
+	}
+	
+	
+	// TODO: Refactor by making separate render order for map and combining it with the state render order
+	protected void registerMapRenderCallbacks(IGameState gamestate, IMapController mapController) {
 		IBlockMap map = mapController.getMap();
-		if(map == null) {
-			// TODO: FIX!
-			return;
-		}
 		
 		IRenderOrder renderOrder = gamestate.getRenderOrder();
 		IStateRender renderer = gamestate.getStateRender();
 		synchronized (renderOrder) {
-		
-			// Remove old callbacks
-			renderOrder.removeAllTaggedLayers(RENDER_LAYER_TAG);
-			
 			
 			int index = 1;
 			for(int i = map.getLevelReference().getLowestLevel(); i <= map.getLevelReference().getHighestLevel(); i++) {
@@ -233,6 +244,14 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		}
 	}
 	
+	protected void unregisterMapRenderCallbacks(IGameState gamestate) {
+		IRenderOrder renderOrder = gamestate.getRenderOrder();
+
+		synchronized (renderOrder) {
+			// Remove previous map callbacks
+			renderOrder.removeAllTaggedLayers(RENDER_LAYER_TAG);
+		}
+	}
 	
 	
 	@Override
@@ -293,7 +312,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		this.scenePlayerController = playerController;
 		getControllerManager().setController(ControllerValues.CONTROLLER_PLAYER, playerController);
 		
-		onPlayerChange(scenePlayerController);
+		onPlayerControllerChange(scenePlayerController);
 	}
 	
 	/** Sets the scene camera controller.
@@ -310,7 +329,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		this.sceneCameraController = cameraController;
 		getControllerManager().setController(ControllerValues.CONTROLLER_CAMERA, cameraController);
 		
-		onCameraChange(sceneCameraController);
+		onCameraControllerChange(sceneCameraController);
 	}
 	
 	/** Sets the scene map controller.
@@ -327,7 +346,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		this.sceneMapController = mapController;
 		getControllerManager().setController(ControllerValues.CONTROLLER_MAP, mapController);
 		
-		onMapChange(sceneMapController);
+		onMapControllerChange(sceneMapController);
 	}
 	
 }
