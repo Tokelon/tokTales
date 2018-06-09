@@ -123,9 +123,9 @@ public class DefaultModularStateRender implements IModularStateRender {
 	public void updateCamera(ICamera camera) {
 		this.camera = camera;
 		
-		contextViewTransformer.setCamera(camera);
+		contextViewTransformer.updateCamera(camera);
 		for(IViewTransformer viewTransformer: viewTransformerList) {
-			viewTransformer.setCamera(camera);
+			viewTransformer.updateCamera(camera);
 		}
 	}
 	
@@ -207,7 +207,7 @@ public class DefaultModularStateRender implements IModularStateRender {
 		contextViewport.setSize(masterViewport.getWidth(), masterViewport.getHeight());
 		contextViewport.setOffset(masterViewport.getHorizontalOffset(), masterViewport.getVerticalOffset());
 		
-		contextViewTransformer.setViewport(contextViewport);
+		contextViewTransformer.updateViewport(contextViewport);
 
 		contextProjectionMatrix.set(surface.getProjectionMatrix());
 

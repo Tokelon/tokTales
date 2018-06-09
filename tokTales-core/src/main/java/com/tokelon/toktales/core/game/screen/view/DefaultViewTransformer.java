@@ -3,8 +3,8 @@ package com.tokelon.toktales.core.game.screen.view;
 import com.tokelon.toktales.core.game.model.Camera;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.IPoint2f;
-import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
+import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
 public class DefaultViewTransformer implements IViewTransformer {
@@ -27,7 +27,7 @@ public class DefaultViewTransformer implements IViewTransformer {
 		this.camera = camera;
 		this.viewport = new AccurateViewport();
 		
-		setViewport(viewport);
+		updateViewport(viewport);
 	}
 	
 	
@@ -44,12 +44,12 @@ public class DefaultViewTransformer implements IViewTransformer {
 
 	
 	@Override
-	public void setCamera(ICamera camera) {
+	public void updateCamera(ICamera camera) {
 		this.camera = camera;
 	}
 	
 	@Override
-	public void setViewport(IScreenViewport viewport) {
+	public void updateViewport(IScreenViewport viewport) {
 		// TODO: assign the viewport to currentExternalViewport and to currentViewport
 		// Same as with camera really
 		
@@ -221,6 +221,5 @@ public class DefaultViewTransformer implements IViewTransformer {
 				cameraToViewportY(cRect.bottom())
 				);
 	}
-
 	
 }

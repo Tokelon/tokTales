@@ -294,7 +294,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	public void updateCamera(ICamera camera) {
 		// TODO: Normally we should synchronize this with rendering
 		this.camera = camera;
-		this.currentViewTransformer.setCamera(camera);
+		this.currentViewTransformer.updateCamera(camera);
 	}
 	
 	
@@ -326,7 +326,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	protected IViewTransformer onSurfaceChangeRefreshContextViewport(ISurface surface) {
 		IScreenViewport surfaceViewport = surface.getViewport();
 		
-		defaultViewTransformer.setViewport(surfaceViewport);
+		defaultViewTransformer.updateViewport(surfaceViewport);
 
 		return defaultViewTransformer;
 	}

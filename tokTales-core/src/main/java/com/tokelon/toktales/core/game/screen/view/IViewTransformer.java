@@ -2,8 +2,8 @@ package com.tokelon.toktales.core.game.screen.view;
 
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.IPoint2f;
-import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
+import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
 /** Transforms coordinates through different layers.
@@ -32,8 +32,8 @@ public interface IViewTransformer {
 	public IScreenViewport getCurrentViewport();
 	public ICamera getCurrentCamera();
 
-	public void setCamera(ICamera camera);
-	public void setViewport(IScreenViewport viewport);
+	public void updateCamera(ICamera camera);
+	public void updateViewport(IScreenViewport viewport);
 	
 
 	/** Use this to convert from world units to screen pixels.
@@ -135,6 +135,7 @@ public interface IViewTransformer {
 	 * @param wResult Returns a world area (units).
 	 */
 	public void unproject(IRectangle2f sRect, IMutableRectangle2f wResult);
+	
 	
 	
 	// TODO: cameraToScreen and cameraToViewport should return int values?
@@ -239,7 +240,5 @@ public interface IViewTransformer {
 	
 	// From viewport to world, omitted
 	//public void viewportToWorld(float vx, float vy, IMutablePoint2f wResult);
-	
-	
 	
 }

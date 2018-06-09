@@ -100,7 +100,7 @@ public abstract class AbstractStateRender implements IStateRender {
 	@Override
 	public void updateCamera(ICamera camera) {
 		this.currentCamera = camera;
-		this.viewTransformer.setCamera(camera);
+		this.viewTransformer.updateCamera(camera);
 	}
 	
 	@Override
@@ -156,7 +156,7 @@ public abstract class AbstractStateRender implements IStateRender {
 		
 		projectionMatrix.set(surface.getProjectionMatrix());
 		
-		viewTransformer.setViewport(contextViewport);
+		viewTransformer.updateViewport(contextViewport);
 		
 		
 		hasView = true;
