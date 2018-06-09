@@ -1,11 +1,17 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import java.io.File;
 import java.util.Set;
 
 import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
+import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.model.IPlayer;
+import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewGridTransformer;
@@ -15,27 +21,33 @@ import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.IWorldGrid;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.AbstractRenderer;
+import com.tokelon.toktales.core.render.CharRenderer;
 import com.tokelon.toktales.core.render.ShapeRenderer;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.LineShape;
+import com.tokelon.toktales.core.storage.IApplicationLocation;
+import com.tokelon.toktales.core.storage.utils.LocationImpl;
+import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.values.ControllerValues;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	
+	public static final String TAG = "DebugRenderer";
 
-	/**
-	 * TODO: Move other renderers into extensions/
-	 * And anything that is in predef or buildin
-	 */
 	
 	private static final RGBAColorImpl gridColor = RGBAColorImpl.createFromCode("FF0000", 0.5f);
 	private static final RGBAColorImpl cameraOriginColor = RGBAColorImpl.createFromCode("00FF00");
 	private static final RGBAColorImpl playerCollisionBoxColor = RGBAColorImpl.createFromCode("42F4F4");
 	private static final RGBAColorImpl entityCollisionBoxColor = RGBAColorImpl.createFromCode("F28D44");
-	
+	private static final RGBAColorImpl frameInfoColor = RGBAColorImpl.createFromCode("00FF00");
+	private static final RGBAColorImpl flashColor = RGBAColorImpl.createFromCode("FF0000A0");
+
 	private static final float gridLineWidth = 1.0f;
+	private static final float fontSize = 8f;
+	private static final float charDistance = 0f;
+	private static final float lineDistance = 2f;
 
 	
 	private final Rectangle2fImpl playerCollisionBounds = new Rectangle2fImpl();
@@ -44,21 +56,37 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private final Rectangle2fImpl entityCollisionBounds = new Rectangle2fImpl();
 	private final Rectangle2fImpl entityCollisionCameraBounds = new Rectangle2fImpl();
 	
+	private final Point2fImpl entityRawCoordinates = new Point2fImpl();
+	private final Point2fImpl entityRawCameraCoordinates = new Point2fImpl();
+	
 	private final LineShape gridLine = new LineShape();
+	
 	
 	private DefaultViewGridTransformer gridTransformer;
 
-	private final ShapeRenderer shapeRenderer;
+	private final FrameTool frameTool = new FrameTool();
+	private int lastFps;
+	private long lastFpsTime;
+	private long lastGameTime;
+	private long lastDelta;
+	private long lastGameDelta;
+	private int flashCountdown = 0;
 
 	
-	private final IGameState gamestate;
+	private final ITextureFont textureFont;
 	
+	private ShapeRenderer shapeRenderer;
+	private CharRenderer charRenderer;
+	
+	private final IGameState gamestate;
 	
 	public DebugRenderer(IGameState gamestate) {
 		this.gamestate = gamestate;
 		
-		IRenderAccess renderAccess = gamestate.getEngine().getRenderService().getRenderAccess();
-		shapeRenderer = new ShapeRenderer(renderAccess);
+		textureFont = loadFont();
+
+		lastFpsTime = System.currentTimeMillis();
+		lastGameTime = gamestate.getGame().getTimeManager().getGameTimeMillis();
 	}
 	
 	
@@ -95,9 +123,86 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		
 		drawGrid();
 		drawCameraOrigin();
-		drawPlayerCollisionBox(playerController);
-		drawEntitiesCollisionBoxes(worldspace);
+		if(playerController != null) {
+			drawPlayerCollisionBox(playerController);	
+		}
+		if(worldspace != null) {
+			drawEntityCollisionBoxes(worldspace);
+			drawEntityDebugInfos(worldspace);	
+		}
+		drawFrameInfo();
 	}
+	
+	
+	@Override
+	public void drawFrameInfo()	{
+		if(!hasView()) {
+			assert false : "Cannot draw without view";
+			return;
+		}
+		int fpsDraw = lastFps;
+		long deltaDraw = lastDelta, gameDeltaDraw = lastGameDelta;
+		
+		int fps = frameTool.countFps();
+		if(fps != -1) {
+			lastFps = fps;
+			fpsDraw = fps;
+		}
+		
+		
+		long delta = System.currentTimeMillis() - lastFpsTime;
+		lastFpsTime = System.currentTimeMillis();
+		if(Math.abs(delta - lastDelta) > 2) {
+			lastDelta = delta;
+			deltaDraw = delta;
+		}
+		
+		
+		long gameDelta = gamestate.getGame().getTimeManager().getGameTimeMillis() - lastGameTime;
+		lastGameTime = gamestate.getGame().getTimeManager().getGameTimeMillis();
+		if(Math.abs(gameDelta - lastGameDelta) > 2) {
+			lastGameDelta = gameDelta;
+			gameDeltaDraw = gameDelta;
+		}
+		
+		
+		float x = 0f, y = 0f;
+		drawText("FPS: " + fpsDraw, x, y, fontSize, charDistance);
+		y += fontSize + lineDistance;
+		drawText("MS DT: " + deltaDraw, x, y, fontSize, charDistance);
+		y += fontSize + lineDistance;
+		drawText("GM DT: " + gameDeltaDraw, x, y, fontSize, charDistance);
+		
+		if(delta > 20) {
+			flashCountdown = 15;
+		}
+		
+		if(flashCountdown > 0) {
+			float width = getViewTransformer().getCurrentViewport().getWidth();
+			float height = getViewTransformer().getCurrentViewport().getHeight();
+
+			shapeRenderer.setColor(flashColor);
+			shapeRenderer.setFill(true);
+			shapeRenderer.drawRectangle(0f, 0f, width, height);
+			shapeRenderer.setFill(false);
+			flashCountdown--;
+		}
+		
+	}
+	
+	private void drawText(String text, float posx, float posy, float fontSize, float charDistance) {
+		float x = posx, y = posy;
+		charRenderer.setColor(frameInfoColor);
+		charRenderer.startBatchDraw();
+		for(char c: text.toCharArray()) {
+			charRenderer.setPosition(x, y);
+			charRenderer.drawChar(c);
+			
+			x += fontSize + charDistance;
+		}
+		charRenderer.finishBatchDraw();
+	}
+	
 	
 	@Override
 	public void drawGrid() {
@@ -181,7 +286,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	
 	
 	@Override
-	public void drawEntitiesCollisionBoxes(IWorldspace worldspace) {
+	public void drawEntityCollisionBoxes(IWorldspace worldspace) {
 		
 		Set<String> entityIDSet = worldspace.getEntityIDSet();
 		for(String entityID: entityIDSet) {
@@ -208,11 +313,44 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		
 	}
 	
+	@Override
+	public void drawEntityDebugInfos(IWorldspace worldspace) {
+		Set<String> entityIDSet = worldspace.getEntityIDSet();
+		for(String entityID: entityIDSet) {
+			
+			IGameEntity entity = worldspace.getEntity(entityID);
+			
+			if(!entity.isActive()) { //!entity.isVisible()
+				continue;
+			}
+			
+
+			getViewTransformer().getCurrentCamera().worldToCamera(entity.getCollisionBounds(entityCollisionBounds), entityCollisionCameraBounds);
+			String entityRawCoordsText = String.format("[%.2f, %.2f]", entityCollisionBounds.left(), entityCollisionBounds.top());
+			
+			getViewTransformer().getCurrentCamera().worldToCamera(entity.getRawWorldCoordinates(entityRawCoordinates), entityRawCameraCoordinates);
+			float renderx = entityRawCameraCoordinates.x;
+			float rendery = entityRawCameraCoordinates.y - 10;
+			float textSize = 5f;
+			
+			charRenderer.setColor(entityCollisionBoxColor);
+			drawText(entityRawCoordsText, renderx, rendery, textSize, 0);
+		}
+	}
+	
 	
 	@Override
 	protected void onContextCreated() {
+		IRenderAccess renderAccess = gamestate.getEngine().getRenderService().getRenderAccess();
+		
+		shapeRenderer = new ShapeRenderer(renderAccess);
 		shapeRenderer.contextCreated();
 		
+		charRenderer = new CharRenderer(renderAccess, gamestate.getStateRender().getTextureCoordinator());
+		charRenderer.contextCreated();
+		
+		charRenderer.setFont(textureFont);
+		charRenderer.setSize(fontSize, fontSize);
 	}
 
 	@Override
@@ -220,14 +358,47 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		gridTransformer = new DefaultViewGridTransformer(gamestate.getGame().getWorld().getGrid(), getViewTransformer());
 		
 		shapeRenderer.contextChanged(getViewTransformer(), getMatrixProjection());
+		charRenderer.contextChanged(getViewTransformer(), getMatrixProjection());
 	}
 	
 	@Override
 	protected void onContextDestroyed() {
 		shapeRenderer.contextDestroyed();
+		charRenderer.contextDestroyed();
 		
 		gridTransformer = null;
 	}
 	
+	
+	// TODO: Refactor - Extract
+	private ITextureFont loadFont() {
+		
+		boolean isAndroid = gamestate.getEngine().getEnvironment().getPlatformName().equals("Android");
+		String fontPath = isAndroid ? "assets/fonts" : "assets\\fonts";
+		
+		
+		String fontFilename = "m5x7.ttf";
+		IApplicationLocation fontLocation = new LocationImpl(fontPath);
+		
+		ITextureFont font = null;
+		try {
+			File fontFile = gamestate.getEngine().getStorageService().getAppFileOnExternal(fontLocation, fontFilename);
+			
+			font = gamestate.getEngine().getContentService().loadFontFromFile(fontFile);
+		} catch (ContentException e) {
+			TokTales.getLog().e(TAG, "Unable to load font: " + e.getMessage());
+		} catch (StorageException e) {
+			TokTales.getLog().e(TAG, "Unable to read font file: " + e.getMessage());
+		}
+		
 
+		// Create textures for ascii codepoints
+		for(int i = 0; i < 255; i++) {
+			font.getTextureForCodepoint(i);
+			font.getCodepointBitmapBox(i);
+		}
+
+		return font;
+	}
+	
 }

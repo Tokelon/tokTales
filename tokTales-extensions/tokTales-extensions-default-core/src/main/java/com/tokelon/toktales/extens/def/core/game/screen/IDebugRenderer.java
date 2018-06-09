@@ -10,12 +10,16 @@ public interface IDebugRenderer extends ISegmentRenderer {
 	public void drawDebug(IPlayerController playerController, IWorldspace worldspace);
 	
 	
+	public void drawFrameInfo();
+	
 	public void drawGrid();
 	
 	public void drawCameraOrigin();
 	
 	public void drawPlayerCollisionBox(IPlayerController playerController);
 	
-	public void drawEntitiesCollisionBoxes(IWorldspace worldspace);
+	public void drawEntityCollisionBoxes(IWorldspace worldspace);
+	
+	public void drawEntityDebugInfos(IWorldspace worldspace);
 	
 }
