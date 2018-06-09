@@ -1,10 +1,10 @@
-package com.tokelon.toktales.extens.def.core.game.states;
+package com.tokelon.toktales.extens.def.core.values;
 
-import com.tokelon.toktales.core.game.states.TokelonStates;
+import com.tokelon.toktales.core.values.GameStateValues;
 
-public class TokelonExtensionsStates extends TokelonStates {
+public class GameStateExtensionsValues extends GameStateValues {
 
-	protected TokelonExtensionsStates() {
+	protected GameStateExtensionsValues() {
 		throw new UnsupportedOperationException();
 	}
 	

@@ -1,13 +1,13 @@
-package com.tokelon.toktales.core.game.states;
+package com.tokelon.toktales.core.values;
 
-public class TokelonStates {
+public class GameStateValues {
 
-	protected TokelonStates() {
+	protected GameStateValues() {
 		throw new UnsupportedOperationException();
 	}
 	
+
 	
 	public static final String STATE_INITIAL = "tokTales_states_initial_state";
-	
 	
 }

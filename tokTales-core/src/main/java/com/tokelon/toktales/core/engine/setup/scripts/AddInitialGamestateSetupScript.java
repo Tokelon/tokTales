@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.engine.setup.scripts;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.game.states.TokelonStates;
+import com.tokelon.toktales.core.values.GameStateValues;
 
 public class AddInitialGamestateSetupScript implements ISetupScript {
 
@@ -13,8 +13,8 @@ public class AddInitialGamestateSetupScript implements ISetupScript {
 		// Resolve and add initial state
 		InitialGamestate initialState = context.getInjector().getInstance(InitialGamestate.class);
 
-		context.getGame().getStateControl().addState(TokelonStates.STATE_INITIAL, initialState);
-		context.getGame().getStateControl().changeState(TokelonStates.STATE_INITIAL);
+		context.getGame().getStateControl().addState(GameStateValues.STATE_INITIAL, initialState);
+		context.getGame().getStateControl().changeState(GameStateValues.STATE_INITIAL);
 	}
 
 }

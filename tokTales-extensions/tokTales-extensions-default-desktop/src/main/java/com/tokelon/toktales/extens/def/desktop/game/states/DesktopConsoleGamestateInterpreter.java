@@ -8,9 +8,9 @@ import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
-import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
+import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 
 @InjectGameState
 public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpreter implements IConsoleInterpreter {
@@ -55,7 +55,7 @@ public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpre
 				String taleDirAppPath = new MutablePathImpl(new LocationImpl("Tales").getLocationPath()).getPathAppendedBy(talename);
 				
 				String sceneName = talename;
-				String stateName = TokelonGameStates.STATE_LOCAL_MAP;
+				String stateName = GameStateExtensionsValues.STATE_LOCAL_MAP;
 				try {
 					taleLoader.loadTaleIntoGame(taleDirAppPath, sceneName, stateName);
 					consoleGamestate.getGame().getStateControl().changeState(stateName);

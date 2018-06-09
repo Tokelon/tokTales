@@ -20,9 +20,9 @@ import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.extens.def.core.game.states.TokelonGameStates;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
+import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -146,7 +146,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		
 		String sceneName = taleApplicationPath;
-		String stateName = TokelonGameStates.STATE_LOCAL_MAP;
+		String stateName = GameStateExtensionsValues.STATE_LOCAL_MAP;
 		try {
 			taleLoader.loadTaleIntoGame(taleApplicationPath, sceneName, stateName);
 			engineContext.getGame().getStateControl().changeState(stateName);
