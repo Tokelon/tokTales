@@ -39,7 +39,28 @@ public class LocalMapGamescene extends ExtendedGamescene implements ILocalMapGam
 		customControlHandler = defaultControlHandler == null ? new ILocalMapControlHandler.EmptyLocalMapControlHandler() : defaultControlHandler;
 	}
 	
+	
+	@Override
+	protected void initSceneDependencies(IControllerManager defaultControllerManager, ICamera defaultCamera, IControlHandler defaultControlHandler) {
+		// We have to set our custom control handler here, by checking the provided one and, if incompatible, setting the default
+		ILocalMapControlHandler controlHandler;
+		if(defaultControlHandler instanceof ILocalMapControlHandler) {
+			controlHandler = (ILocalMapControlHandler) defaultControlHandler;
+		}
+		else {
+			// if the default control handler is incompatible, we replace it with the default one, to avoid having it be different from our custom one
+			getLog().e(getTag(), String.format("The control handler of type [%s] is not compatible with [%s] and will be overriden by the default control handler", defaultControlHandler.getClass(), ILocalMapControlHandler.class));
+			controlHandler = customControlHandler;
+		}
+		
+		// First set our custom one
+		customControlHandler = controlHandler;
 
+		// Secondly pass it down
+		super.initSceneDependencies(defaultControllerManager, defaultCamera, controlHandler);
+	}
+
+	
 	/** The default implementation for this will:<br>
 	 * 1. Enabled camera follow for the current player.<br>
 	 * 
