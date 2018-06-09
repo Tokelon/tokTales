@@ -2,26 +2,32 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import java.io.File;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.storage.StorageException;
+import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewGridTransformer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IExtendedGameScene;
-import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.world.IWorldGrid;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.CharRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ShapeRenderer;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
@@ -30,7 +36,6 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.core.util.INamedOptions;
-import com.tokelon.toktales.core.values.ControllerValues;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	
@@ -77,16 +82,64 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	
 	private ShapeRenderer shapeRenderer;
 	private CharRenderer charRenderer;
+
+
+	private final ILogger logger;
+	private final IEngine engine;
+	private final IGame game;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IPlayerController> playerControllerSupplier;
+	private final Supplier<IWorldspace> worlspaceSupplier;
 	
-	private final IGameState gamestate;
-	
-	public DebugRenderer(IGameState gamestate) {
-		this.gamestate = gamestate;
+	public DebugRenderer(
+			IEngineContext engineContext,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IPlayerController> playerControllerSupplier,
+			Supplier<IWorldspace> worlspaceSupplier
+	) {
+		this.logger = engineContext.getLog();
+		this.engine = engineContext.getEngine();
+		this.game = engineContext.getGame();
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.playerControllerSupplier = playerControllerSupplier;
+		this.worlspaceSupplier = worlspaceSupplier;
+		
 		
 		textureFont = loadFont();
 
 		lastFpsTime = System.currentTimeMillis();
-		lastGameTime = gamestate.getGame().getTimeManager().getGameTimeMillis();
+		lastGameTime = engineContext.getGame().getTimeManager().getGameTimeMillis();
+	}
+	
+	
+	@Override
+	protected void onContextCreated() {
+		IRenderAccess renderAccess = engine.getRenderService().getRenderAccess();
+		
+		shapeRenderer = new ShapeRenderer(renderAccess);
+		shapeRenderer.contextCreated();
+		
+		charRenderer = new CharRenderer(renderAccess, textureCoordinatorSupplier.get());
+		charRenderer.contextCreated();
+		
+		charRenderer.setFont(textureFont);
+		charRenderer.setSize(fontSize, fontSize);
+	}
+
+	@Override
+	protected void onContextChanged() {
+		gridTransformer = new DefaultViewGridTransformer(game.getWorld().getGrid(), getViewTransformer());
+		
+		shapeRenderer.contextChanged(getViewTransformer(), getMatrixProjection());
+		charRenderer.contextChanged(getViewTransformer(), getMatrixProjection());
+	}
+	
+	@Override
+	protected void onContextDestroyed() {
+		shapeRenderer.contextDestroyed();
+		charRenderer.contextDestroyed();
+		
+		gridTransformer = null;
 	}
 	
 	
@@ -102,13 +155,9 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 
 	@Override
 	public void drawFull(INamedOptions options) {
-		IGameScene gamescene = gamestate.getActiveScene();
-		IPlayerController playerController = gamescene.getControllerManager().getControllerAs(ControllerValues.CONTROLLER_PLAYER, IPlayerController.class);
+		IPlayerController playerController = playerControllerSupplier.get();
+		IWorldspace worldspace = worlspaceSupplier.get();
 
-		IWorldspace worldspace = null;
-		if(gamescene instanceof IExtendedGameScene) {
-			worldspace = ((IExtendedGameScene) gamescene).getWorldspace();
-		}
 		
 		drawDebug(playerController, worldspace);
 	}
@@ -158,8 +207,8 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		}
 		
 		
-		long gameDelta = gamestate.getGame().getTimeManager().getGameTimeMillis() - lastGameTime;
-		lastGameTime = gamestate.getGame().getTimeManager().getGameTimeMillis();
+		long gameDelta = game.getTimeManager().getGameTimeMillis() - lastGameTime;
+		lastGameTime = game.getTimeManager().getGameTimeMillis();
 		if(Math.abs(gameDelta - lastGameDelta) > 2) {
 			lastGameDelta = gameDelta;
 			gameDeltaDraw = gameDelta;
@@ -339,41 +388,11 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	}
 	
 	
-	@Override
-	protected void onContextCreated() {
-		IRenderAccess renderAccess = gamestate.getEngine().getRenderService().getRenderAccess();
-		
-		shapeRenderer = new ShapeRenderer(renderAccess);
-		shapeRenderer.contextCreated();
-		
-		charRenderer = new CharRenderer(renderAccess, gamestate.getStateRender().getTextureCoordinator());
-		charRenderer.contextCreated();
-		
-		charRenderer.setFont(textureFont);
-		charRenderer.setSize(fontSize, fontSize);
-	}
-
-	@Override
-	protected void onContextChanged() {
-		gridTransformer = new DefaultViewGridTransformer(gamestate.getGame().getWorld().getGrid(), getViewTransformer());
-		
-		shapeRenderer.contextChanged(getViewTransformer(), getMatrixProjection());
-		charRenderer.contextChanged(getViewTransformer(), getMatrixProjection());
-	}
-	
-	@Override
-	protected void onContextDestroyed() {
-		shapeRenderer.contextDestroyed();
-		charRenderer.contextDestroyed();
-		
-		gridTransformer = null;
-	}
-	
 	
 	// TODO: Refactor - Extract
 	private ITextureFont loadFont() {
 		
-		boolean isAndroid = gamestate.getEngine().getEnvironment().getPlatformName().equals("Android");
+		boolean isAndroid = engine.getEnvironment().getPlatformName().equals("Android");
 		String fontPath = isAndroid ? "assets/fonts" : "assets\\fonts";
 		
 		
@@ -382,13 +401,13 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		
 		ITextureFont font = null;
 		try {
-			File fontFile = gamestate.getEngine().getStorageService().getAppFileOnExternal(fontLocation, fontFilename);
+			File fontFile = engine.getStorageService().getAppFileOnExternal(fontLocation, fontFilename);
 			
-			font = gamestate.getEngine().getContentService().loadFontFromFile(fontFile);
+			font = engine.getContentService().loadFontFromFile(fontFile);
 		} catch (ContentException e) {
-			TokTales.getLog().e(TAG, "Unable to load font: " + e.getMessage());
+			logger.e(TAG, "Unable to load font: " + e.getMessage());
 		} catch (StorageException e) {
-			TokTales.getLog().e(TAG, "Unable to read font file: " + e.getMessage());
+			logger.e(TAG, "Unable to read font file: " + e.getMessage());
 		}
 		
 
@@ -399,6 +418,41 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		}
 
 		return font;
+	}
+	
+
+	public static class DebugRendererFactory implements IDebugRendererFactory {
+
+		@Override
+		public DebugRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IPlayerController> playerControllerSupplier,
+				Supplier<IWorldspace> worlspaceSupplier
+		) {
+			return new DebugRenderer(engineContext, textureCoordinatorSupplier, playerControllerSupplier, worlspaceSupplier);
+		}
+
+
+		@Override
+		public DebugRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worlspaceSupplier) {
+			return new DebugRenderer(
+					gamestate.getEngineContext(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofPlayerControllerFromManager(gamestate),
+					worlspaceSupplier
+			);
+		}
+
+		@Override
+		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
+			return new DebugRenderer(
+					typedGamestate.getEngineContext(),
+					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
+					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
+			);
+		}
 	}
 	
 }

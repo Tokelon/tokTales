@@ -1,9 +1,16 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import com.tokelon.toktales.core.game.controller.IController;
+import java.util.function.Supplier;
+
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.AbstractRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ShapeRenderer;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.RectangleShape;
@@ -11,12 +18,11 @@ import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
 import com.tokelon.toktales.extens.def.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;
+import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class DialogRenderer extends AbstractRenderer implements IDialogRenderer {
-
-	public static final String DEFAULT_DIALOG_CONTROLLER_NAME = "controller_dialog";
 	
-	private String dialogControllerName = DEFAULT_DIALOG_CONTROLLER_NAME;
+	public static final String TAG = "DialogRenderer";
 
 	
 	private TextRenderer textRenderer;
@@ -25,29 +31,34 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	private final RectangleShape border;
 	private final RectangleShape background;
 	
-	private final IGameState gamestate;
 	
-	public DialogRenderer(IGameState gamestate) {
-		this.gamestate = gamestate;
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IDialogController> dialogControllerSupplier;
+	
+	public DialogRenderer(
+			ILogger logger,
+			IEngine engine,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IDialogController> dialogControllerSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.dialogControllerSupplier = dialogControllerSupplier;
+		
 		
 		this.border = new RectangleShape();
 		this.background = new RectangleShape();
 	}
 	
 	
-	public String getDialogControllerName() {
-		return dialogControllerName;
-	}
-	
-	public void setDialogControllerName(String name) {
-		this.dialogControllerName = name;
-	}
-	
 	
 	@Override
 	protected void onContextCreated() {
-		textRenderer = new TextRenderer(gamestate.getEngine().getRenderService().getRenderAccess(), gamestate.getStateRender().getTextureCoordinator());
-		shapeRenderer = new ShapeRenderer(gamestate.getEngine().getRenderService().getRenderAccess());
+		textRenderer = new TextRenderer(renderService.getRenderAccess(), textureCoordinatorSupplier.get());
+		shapeRenderer = new ShapeRenderer(renderService.getRenderAccess());
 		
 		textRenderer.contextCreated();
 		shapeRenderer.contextCreated();
@@ -80,12 +91,12 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 
 	@Override
 	public void drawFull(INamedOptions options) {
-		IController controller = gamestate.getActiveScene().getControllerManager().getController(dialogControllerName);
-		if(!(controller instanceof IDialogController)) {
-			assert false : "Invalid type for dialog controller";
+		IDialogController dialogController = dialogControllerSupplier.get();
+		if(dialogController == null) {
+			logger.i(TAG, "Draw was called but no dialog is available");
 			return;
 		}
-		IDialogController dialogController = (IDialogController) controller;
+		
 		
 		drawDialog(dialogController);
 	}
@@ -143,6 +154,45 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 		
 		
 		textRenderer.drawTextBox(dialog, dialog.getTextColor());
+	}
+	
+	
+	public static class DialogRendererFactory implements IDialogRendererFactory {
+		
+		@Override
+		public DialogRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IDialogController> dialogControllerSupplier
+		) {
+			return new DialogRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					textureCoordinatorSupplier,
+					dialogControllerSupplier
+			);
+		}
+		
+		
+		@Override
+		public DialogRenderer createForGamestate(IGameState gamestate) {
+			return new DialogRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_DIALOG, IDialogController.class)
+			);
+		}
+		
+		@Override
+		public DialogRenderer createForGamestate(IGameState gamestate, Supplier<IDialogController> dialogControllerSupplier) {
+			return new DialogRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					dialogControllerSupplier
+			);
+		}
 	}
 	
 }

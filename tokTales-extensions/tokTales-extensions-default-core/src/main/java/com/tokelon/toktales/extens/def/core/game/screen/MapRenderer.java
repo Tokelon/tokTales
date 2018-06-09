@@ -1,12 +1,17 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import java.util.function.Supplier;
+
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.game.controller.IController;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic.IGraphicType;
@@ -25,15 +30,19 @@ import com.tokelon.toktales.core.game.model.map.predef.IGroundElement;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
+import com.tokelon.toktales.core.game.states.IExtendedGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.ITypedGameState;
+import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
-import com.tokelon.toktales.core.values.ControllerValues;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 import com.tokelon.toktales.tools.tiledmap.ITiledTileElement;
 import com.tokelon.toktales.tools.tiledmap.TiledMapElementTypes;
@@ -41,10 +50,6 @@ import com.tokelon.toktales.tools.tiledmap.TiledMapElementTypes;
 public class MapRenderer implements IMapRenderer {
 
 	public static final String TAG = "MapRenderer";
-	
-	
-	private final IGameState mGamestate;
-	private final ISpriteManager mSpriteManager;
 	
 	
 	private final Matrix4f matrixProjection = new Matrix4f();
@@ -67,20 +72,39 @@ public class MapRenderer implements IMapRenderer {
 	private IViewGridTransformer mGridTransformer;
 
 	
-	public MapRenderer(IGameState gamestate) {
-		this.mGamestate = gamestate;
-		this.mSpriteManager = gamestate.getGame().getContentManager().getSpriteManager();
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final IContentService contentService;
+	private final ISpriteManager spriteManager;
+	private final IWorld world;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IMapController> mapControllerSupplier;
 
+	public MapRenderer(
+			ILogger logger,
+			IEngine engine,
+			ISpriteManager spriteManager,
+			IWorld world,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IMapController> mapControllerSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.contentService = engine.getContentService();
+		this.spriteManager = spriteManager;
+		this.world = world;
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.mapControllerSupplier = mapControllerSupplier;
+	
 		
 		spriteModel.setInvertYAxis(true);
-
 	}
+	
 	
 	
 	@Override
 	public void contextCreated() {
-		
-		spriteDriver = mGamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
+		spriteDriver = renderService.getRenderAccess().requestDriver(ISpriteModel.class.getName());
 		if(spriteDriver == null) {
 			throw new RenderException("No render driver found for: " +ISpriteModel.class.getName());
 		}
@@ -88,13 +112,13 @@ public class MapRenderer implements IMapRenderer {
 		spriteDriver.create();
 		
 
-		spriteModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
+		spriteModel.setTextureCoordinator(textureCoordinatorSupplier.get());
 	}
 
 	@Override
 	public void contextChanged(IViewTransformer viewTransformer, Matrix4f projectionMatrix) {
 		this.mViewTransformer = viewTransformer;
-		this.mGridTransformer = new DefaultViewGridTransformer(mGamestate.getGame().getWorld().getGrid(), viewTransformer);
+		this.mGridTransformer = new DefaultViewGridTransformer(world.getGrid(), viewTransformer);
 		
 		matrixProjection.set(projectionMatrix);
 		
@@ -148,17 +172,11 @@ public class MapRenderer implements IMapRenderer {
 
 	@Override
 	public void drawLayer(INamedOptions options, String layerName) {
-		IController controller = mGamestate.getActiveScene().getControllerManager().getController(ControllerValues.CONTROLLER_MAP);
-		if(controller == null) {
-			TokTales.getLog().e(TAG, "Draw was called but no Map is available");
+		IMapController mapController = mapControllerSupplier.get();
+		if(mapController == null) {
+			logger.i(TAG, "Draw was called but no map is available");
 			return;
 		}
-		else if(!(controller instanceof IMapController)) {
-			TokTales.getLog().e(TAG, "Controller is not an IMapController");
-			return;
-		}
-		IMapController mapController = (IMapController) controller;
-		
 		
 		drawMapLayer(mapController, layerName);
 	}
@@ -287,7 +305,7 @@ public class MapRenderer implements IMapRenderer {
 			// Ignore
 		}
 		else {
-			TokTales.getLog().logOnce('w', TAG + element.getClass(), TAG, "Cannot draw element: " +element);
+			logger.logOnce('w', TAG + element.getClass(), TAG, "Cannot draw element: " +element);
 		}
 		
 	}
@@ -295,18 +313,18 @@ public class MapRenderer implements IMapRenderer {
 	
 	private void drawElementSprite(ISprite sprite, DrawingMeta dmeta) {
 	
-		ISpriteAsset spriteAsset = mSpriteManager.getSpriteAsset(sprite);
+		ISpriteAsset spriteAsset = spriteManager.getSpriteAsset(sprite);
 		if(spriteAsset == null) {
 			// Asset has not been loaded yet
 			return;
 		}
 		
-		boolean assetIsSpecial = mSpriteManager.assetIsSpecial(spriteAsset);
+		boolean assetIsSpecial = spriteManager.assetIsSpecial(spriteAsset);
 		if(assetIsSpecial) {
 			// Do not draw special sprites like error sprites?
 		}
 		
-		ITexture spriteTexture = mGamestate.getEngine().getContentService().extractAssetTexture(spriteAsset.getContent());
+		ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset.getContent());
 		if(spriteTexture == null) {
 			// TODO: Implement special asset
 			return;
@@ -365,6 +383,53 @@ public class MapRenderer implements IMapRenderer {
 		private final Rectangle2fImpl tileSourceBounds = new Rectangle2fImpl();
 		private final Point2fImpl tileTranslation = new Point2fImpl();
 		
+	}
+
+
+	
+	public static class MapRendererFactory implements IMapRendererFactory {
+
+		@Override
+		public MapRenderer create(
+				IEngineContext engineContext,
+				IWorld world,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IMapController> mapControllerSupplier
+		) {
+			return new MapRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					engineContext.getGame().getContentManager().getSpriteManager(),
+					world,
+					textureCoordinatorSupplier,
+					mapControllerSupplier
+			);
+		}
+		
+		
+		@Override
+		public MapRenderer createForGamestate(IGameState gamestate) {
+			return new MapRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getSpriteManager(),
+					gamestate.getGame().getWorld(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofMapControllerFromManager(gamestate)
+			);
+		}
+		
+		@Override
+		public MapRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
+			return new MapRenderer(
+					typedGamestate.getLog(),
+					typedGamestate.getEngine(),
+					typedGamestate.getGame().getContentManager().getSpriteManager(),
+					typedGamestate.getGame().getWorld(),
+					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofMapControllerFromGamestate(typedGamestate)
+			);
+		}
 	}
 	
 }

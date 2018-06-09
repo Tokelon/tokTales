@@ -2,12 +2,18 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.content.sprite.ISpriteManager;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
 import com.tokelon.toktales.core.game.graphic.ISpriteGraphic;
@@ -16,11 +22,14 @@ import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
@@ -55,15 +64,32 @@ public class EntityRenderer implements IEntityRenderer {
 
 	
 	
-	private final ITypedGameState<? extends IExtendedGameScene> gamestate;
-	
 	private IRenderDriver spriteDriver;
 	
 	private IViewTransformer mViewTransformer;
 
+	
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final IContentService contentService;
+	private final ISpriteManager spriteManager;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IWorldspace> worldspaceSupplier;
 
-	public EntityRenderer(ITypedGameState<? extends IExtendedGameScene> gamestate) {
-		this.gamestate = gamestate;
+	public EntityRenderer(
+			ILogger logger,
+			IEngine engine,
+			ISpriteManager spriteManager,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IWorldspace> worldspaceSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.contentService = engine.getContentService();
+		this.spriteManager = spriteManager;
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.worldspaceSupplier = worldspaceSupplier;
+	
 		
 		spriteModel.setInvertYAxis(true);
 	}
@@ -72,7 +98,7 @@ public class EntityRenderer implements IEntityRenderer {
 	@Override
 	public void contextCreated() {
 		
-		spriteDriver = gamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
+		spriteDriver = renderService.getRenderAccess().requestDriver(ISpriteModel.class.getName());
 		if(spriteDriver == null) {
 			throw new RenderException("No render driver found for: " +ISpriteModel.class.getName());
 		}
@@ -80,7 +106,7 @@ public class EntityRenderer implements IEntityRenderer {
 		spriteDriver.create();
 		
 		
-		spriteModel.setTextureCoordinator(gamestate.getStateRender().getTextureCoordinator());
+		spriteModel.setTextureCoordinator(textureCoordinatorSupplier.get());
 	}
 
 	
@@ -145,13 +171,25 @@ public class EntityRenderer implements IEntityRenderer {
 		int drawDepth = options.getOrDefault(OPTION_DRAW_DEPTH, -1);
 		
 		
-		drawEntities(gamestate.getActiveScene().getWorldspace());
+		IWorldspace worldspace = worldspaceSupplier.get();
+		if(worldspace == null) {
+			logger.i(TAG, "Draw was called but no worldspace is available");
+			return;
+		}
+		
+		drawEntities(worldspace);
 	}
 
 	
 	@Override
 	public void drawFull(INamedOptions options) {
-		drawEntities(gamestate.getActiveScene().getWorldspace());
+		IWorldspace worldspace = worldspaceSupplier.get();
+		if(worldspace == null) {
+			logger.i(TAG, "Draw was called but no worldspace is available");
+			return;
+		}
+		
+		drawEntities(worldspace);
 	}
 
 	
@@ -212,20 +250,20 @@ public class EntityRenderer implements IEntityRenderer {
 				ISpriteGraphic spriteGraphic = (ISpriteGraphic) entityGraphic;
 				ISprite entitySprite = spriteGraphic.getSprite();
 
-				ISpriteAsset entitySpriteAsset = gamestate.getGame().getContentManager().getSpriteManager().getSpriteAsset(entitySprite);
+				ISpriteAsset entitySpriteAsset = spriteManager.getSpriteAsset(entitySprite);
 
 				if(entitySpriteAsset == null) {
 					// Asset not loaded yet
 					continue;
 				}
 
-				boolean assetIsSpecial = gamestate.getGame().getContentManager().getSpriteManager().assetIsSpecial(entitySpriteAsset);
+				boolean assetIsSpecial = spriteManager.assetIsSpecial(entitySpriteAsset);
 				if(assetIsSpecial) {
 					// Do something ?
 				}
 				
 				
-				ITexture entityTexture = gamestate.getEngine().getContentService().extractAssetTexture(entitySpriteAsset.getContent());
+				ITexture entityTexture = contentService.extractAssetTexture(entitySpriteAsset.getContent());
 				if(entityTexture == null) {
 					return;	// TODO: Workaround for special assets
 				}
@@ -247,7 +285,7 @@ public class EntityRenderer implements IEntityRenderer {
 			}
 			else {
 				// I dont even know
-				TokTales.getLog().w(TAG, "Cannot draw: Unknown graphic type");
+				logger.w(TAG, "Cannot draw: Unknown graphic type");
 			}
 			
 			
@@ -260,6 +298,48 @@ public class EntityRenderer implements IEntityRenderer {
 			*/	
 		} //end for loop
 		
+	}
+	
+	
+	public static class EntityRendererFactory implements IEntityRendererFactory {
+		
+		@Override
+		public EntityRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IWorldspace> worldspaceSupplier		
+		) {
+			return new EntityRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					engineContext.getGame().getContentManager().getSpriteManager(),
+					textureCoordinatorSupplier,
+					worldspaceSupplier
+			);
+		}
+		
+		
+		@Override
+		public EntityRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worldspaceSupplier) {
+			return new EntityRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getSpriteManager(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					worldspaceSupplier
+			);
+		}
+		
+		@Override
+		public EntityRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
+			return new EntityRenderer(
+					typedGamestate.getLog(),
+					typedGamestate.getEngine(),
+					typedGamestate.getGame().getContentManager().getSpriteManager(),
+					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
+			);
+		}
 	}
 	
 }

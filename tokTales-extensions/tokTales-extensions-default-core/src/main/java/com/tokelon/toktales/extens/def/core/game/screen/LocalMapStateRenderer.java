@@ -24,6 +24,12 @@ import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer.IConsoleOverlayRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
 
@@ -41,15 +47,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private static final RGBAColorImpl CLEAR_COLOR = RGBAColorImpl.createFromCode("#000");
 
 	
-	private final Map<String, IRenderer> managedRendererMap;
-
-	private final MapRenderer mapRenderer;
-	private final PlayerRenderer playerRenderer;
-	private final EntityRenderer entityRenderer;
-	private final DebugRenderer debugRenderer;
-	private final ObjectRenderer objectRenderer;
-	private final ConsoleOverlayRenderer consoleOverlayRenderer;
-	
 	private final NamedOptionsImpl options = new NamedOptionsImpl();
 	
 	private IRenderToolkit renderToolkit;
@@ -63,28 +60,48 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private boolean hasSurface = false;
 	private boolean hasView = false;
 	
+	
+	private final Map<String, IRenderer> managedRendererMap;
+
 	private IViewTransformer currentViewTransformer;
 	private Matrix4f currentProjectionMatrix;
 	private ISurface currentSurface;
 	
+
+	private final IMapRenderer mapRenderer;
+	private final IPlayerRenderer playerRenderer;
+	private final IEntityRenderer entityRenderer;
+	private final IDebugRenderer debugRenderer;
+	private final IObjectRenderer objectRenderer;
+	private final IConsoleOverlayRenderer consoleOverlayRenderer;
+	
 	private final ITextureCoordinator textureCoordinator;
 	private final ILocalMapGamestate gamestate;
 	
-	
 	@Inject
-	public LocalMapStateRenderer(ITextureCoordinator textureCoordinator, @DebugRenderingEnabled boolean debugRenderingEnabled, @Assisted ILocalMapGamestate gamestate) {
+	public LocalMapStateRenderer(
+			IPlayerRendererFactory playerRendererFactory,
+			IMapRendererFactory mapRendererFactory,
+			IEntityRendererFactory entityRendererFactory,
+			IObjectRendererFactory objecRendererFactory,
+			IConsoleOverlayRendererFactory consoleOverlayRendererFactory,
+			IDebugRendererFactory debugRendererFactory,
+			ITextureCoordinator textureCoordinator,
+			@DebugRenderingEnabled boolean debugRenderingEnabled,
+			@Assisted ILocalMapGamestate gamestate
+	) {
 		this.textureCoordinator = textureCoordinator;
 		this.debugRenderingEnabled = debugRenderingEnabled;
 		this.gamestate = gamestate;
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());
 
-		this.mapRenderer = new MapRenderer(gamestate);
-		this.playerRenderer = new PlayerRenderer(gamestate);
-		this.entityRenderer = new EntityRenderer(gamestate);
-		this.debugRenderer = new DebugRenderer(gamestate);
-		this.objectRenderer = new ObjectRenderer(gamestate);
-		this.consoleOverlayRenderer = new ConsoleOverlayRenderer(gamestate);
+		this.mapRenderer = mapRendererFactory.createForTypedGamestate(gamestate);
+		this.playerRenderer = playerRendererFactory.createForTypedGamestate(gamestate);
+		this.entityRenderer = entityRendererFactory.createForTypedGamestate(gamestate);
+		this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate);
+		this.objectRenderer = objecRendererFactory.createForTypedGamestate(gamestate);
+		this.consoleOverlayRenderer = consoleOverlayRendererFactory.createForGamestate(gamestate);
 		
 		this.defaultViewTransformer = new DefaultViewTransformer();
 		this.currentViewTransformer = defaultViewTransformer;

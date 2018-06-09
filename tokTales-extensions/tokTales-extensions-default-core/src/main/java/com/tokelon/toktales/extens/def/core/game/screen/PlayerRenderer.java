@@ -1,10 +1,17 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import java.util.function.Supplier;
+
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.content.sprite.ISpriteManager;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
@@ -14,10 +21,13 @@ import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
@@ -56,11 +66,29 @@ public class PlayerRenderer implements IPlayerRenderer {
 
 	private IRenderDriver spriteDriver;
 	
-	private final ITypedGameState<? extends IExtendedGameScene> gamestate;
-
-	public PlayerRenderer(ITypedGameState<? extends IExtendedGameScene> gamestate) {
-		this.gamestate = gamestate;
-
+	
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final IContentService contentService;
+	private final ISpriteManager spriteManager;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IPlayerController> playerControllerSupplier;
+	
+	public PlayerRenderer(
+			ILogger logger,
+			IEngine engine,
+			ISpriteManager spriteManager,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IPlayerController> playerControllerSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.contentService = engine.getContentService();
+		this.spriteManager = spriteManager;
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.playerControllerSupplier = playerControllerSupplier;
+		
+		
 		spriteModel.setInvertYAxis(true);
 	}
 	
@@ -69,7 +97,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 	@Override
 	public void contextCreated() {
 		
-		spriteDriver = gamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
+		spriteDriver = renderService.getRenderAccess().requestDriver(ISpriteModel.class.getName());
 		if(spriteDriver == null) {
 			throw new RenderException("No render driver found for: " +ISpriteModel.class.getName());
 		}
@@ -77,7 +105,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		spriteDriver.create();
 		
 		
-		spriteModel.setTextureCoordinator(gamestate.getStateRender().getTextureCoordinator());
+		spriteModel.setTextureCoordinator(textureCoordinatorSupplier.get());
 	}
 	
 
@@ -143,8 +171,12 @@ public class PlayerRenderer implements IPlayerRenderer {
 		int drawDepth = options.getOrDefault(OPTION_DRAW_DEPTH, -1);
 
 		
-		IPlayerController playerController = gamestate.getActiveScene().getPlayerController();
-
+		IPlayerController playerController = playerControllerSupplier.get();
+		if(playerController == null) {
+			logger.i(TAG, "Draw was called but no player is available");
+			return;
+		}
+		
 		drawPlayer(playerController);
 	}
 	
@@ -194,18 +226,18 @@ public class PlayerRenderer implements IPlayerRenderer {
 			ISpriteGraphic spriteGraphic = (ISpriteGraphic) playerGraphic;
 			ISprite playerSprite = spriteGraphic.getSprite();
 
-			ISpriteAsset playerSpriteAsset = gamestate.getGame().getContentManager().getSpriteManager().getSpriteAsset(playerSprite);
+			ISpriteAsset playerSpriteAsset = spriteManager.getSpriteAsset(playerSprite);
 			if(playerSpriteAsset == null) {
 				// Asset not loaded yet
 				return;
 			}
 			
-			boolean assetIsSpecial = gamestate.getGame().getContentManager().getSpriteManager().assetIsSpecial(playerSpriteAsset);
+			boolean assetIsSpecial = spriteManager.assetIsSpecial(playerSpriteAsset);
 			if(assetIsSpecial) {
 				// Do what?
 			}
 
-			ITexture playerTexture = gamestate.getEngine().getContentService().extractAssetTexture(playerSpriteAsset.getContent());
+			ITexture playerTexture = contentService.extractAssetTexture(playerSpriteAsset.getContent());
 			if(playerTexture == null) {
 				return;	// TODO: Workaround for special assets
 			}
@@ -230,7 +262,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 
 		}
 		else {
-			TokTales.getLog().w(TAG, "Cannot draw sprite: Unknown graphic type");
+			logger.w(TAG, "Cannot draw sprite: Unknown graphic type");
 		}
 		
 		
@@ -248,7 +280,49 @@ public class PlayerRenderer implements IPlayerRenderer {
 	
 	@Override
 	public void drawFull(INamedOptions options) {
-		drawPlayer(gamestate.getActiveScene().getPlayerController());
+		drawPlayer(playerControllerSupplier.get());
+	}
+	
+	
+	public static class PlayerRendererFactory implements IPlayerRendererFactory {
+		
+		@Override
+		public PlayerRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IPlayerController> playerControllerSupplier		
+		) {
+			return new PlayerRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					engineContext.getGame().getContentManager().getSpriteManager(),
+					textureCoordinatorSupplier,
+					playerControllerSupplier
+			);
+		}
+
+		
+		@Override
+		public PlayerRenderer createForGamestate(IGameState gamestate) {
+			return new PlayerRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getSpriteManager(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofPlayerControllerFromManager(gamestate)
+			);
+		}
+		
+		@Override
+		public PlayerRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
+			return new PlayerRenderer(
+					typedGamestate.getLog(),
+					typedGamestate.getEngine(),
+					typedGamestate.getGame().getContentManager().getSpriteManager(),
+					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofPlayerControllerFromGamestate(typedGamestate)
+			);
+		}
 	}
 	
 }

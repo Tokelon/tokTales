@@ -5,8 +5,20 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
+import com.tokelon.toktales.extens.def.core.game.screen.ConsoleOverlayRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderingStrategy;
+import com.tokelon.toktales.extens.def.core.game.screen.DebugRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.EntityRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer.IConsoleOverlayRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.LocalMapStateRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.MapRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.ObjectRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
@@ -47,6 +59,14 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 		bind(IConsoleGamestate.class).to(ConsoleGamestate.class);
 	    bind(IRenderingStrategy.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(ConsoleRenderingStrategy.class);
 	    bind(IConsoleInterpreter.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(ConsoleGamestateInterpreter.class);
+	    
+	    
+	    bind(IPlayerRendererFactory.class).to(PlayerRenderer.PlayerRendererFactory.class);
+	    bind(IMapRendererFactory.class).to(MapRenderer.MapRendererFactory.class);
+	    bind(IEntityRendererFactory.class).to(EntityRenderer.EntityRendererFactory.class);
+	    bind(IObjectRendererFactory.class).to(ObjectRenderer.ObjectRendererFactory.class);
+	    bind(IConsoleOverlayRendererFactory.class).to(ConsoleOverlayRenderer.ConsoleOverlayRendererFactory.class);
+	    bind(IDebugRendererFactory.class).to(DebugRenderer.DebugRendererFactory.class);
 	    
 	    
 	    bind(ITaleLoader.class).to(TaleLoader.class);

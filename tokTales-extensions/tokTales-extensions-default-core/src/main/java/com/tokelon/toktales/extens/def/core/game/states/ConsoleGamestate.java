@@ -28,8 +28,12 @@ import com.tokelon.toktales.extens.def.core.game.model.Console;
 import com.tokelon.toktales.extens.def.core.game.model.ScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.model.TextBox;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderer;
-import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderer.ConsoleRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer.DialogRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IDialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer.TextBoxRendererFactory;
+import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleGamestate extends BaseGamestate<IGameScene> implements IConsoleGamestate {
 	
@@ -39,7 +43,6 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	public static final String RENDERER_TEXT_NAME = "renderer_text_name";
 	public static final String RENDERER_DIALOG_NAME = "renderer_dialog_name";
 	
-	public static final String CONTROLLER_CONSOLE_ID = "console_gamestate-controller_console";
 
 	private static final String CONSOLE_PROMPT = ">"; //"> ";
 	
@@ -86,9 +89,9 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		console.setPrompt(CONSOLE_PROMPT);
 		
 		mConsoleController = new DefaultConsoleController(console);
-		getActiveScene().getControllerManager().setController(CONTROLLER_CONSOLE_ID, mConsoleController);
+		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_CONSOLE, mConsoleController);
 		
-		ConsoleRenderer consoleSegmentRenderer = new ConsoleRenderer(this, mConsoleController);
+		ConsoleRenderer consoleSegmentRenderer = new ConsoleRendererFactory().createForGamestate(this);
 		
 		
 		// Dialog
@@ -96,8 +99,8 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		dialog.setText("Hello World!");
 		DefaultDialogController dialogController = new DefaultDialogController(dialog);
 		
-		DialogRenderer dialogSegmentRenderer = new DialogRenderer(this);
-		getActiveScene().getControllerManager().setController(dialogSegmentRenderer.getDialogControllerName(), dialogController);
+		IDialogRenderer dialogSegmentRenderer = new DialogRendererFactory().createForGamestate(this);
+		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_DIALOG, dialogController);
 		
 		
 		// Text renderer
@@ -110,9 +113,9 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		//textBox.setText("I'm not even angry. \\\\ I'm being so sincere right now. \\\\ Even though you broke my heart and killed me. \\\\ And tore me to pieces. \\\\ And threw every piece into a fire. \\\\ As they burned it hurt because \\\\ I was so happy for you!");
 
 		
-		TextBoxRenderer textSegmentRenderer = new TextBoxRenderer(this);
+		TextBoxRenderer textSegmentRenderer = new TextBoxRendererFactory().createForGamestate(this);
 		textSegmentRenderer.setColor(RGBAColorImpl.createFromCode("#FFE688"));
-		getActiveScene().getControllerManager().setController(textSegmentRenderer.getTextBoxControllerName(), new DefaultTextBoxController(textBox));
+		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_TEXTBOX, new DefaultTextBoxController(textBox));
 		
 
 		// State renderer

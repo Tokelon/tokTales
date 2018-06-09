@@ -1,9 +1,15 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import java.util.function.Supplier;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
@@ -14,16 +20,22 @@ import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewGridTransformer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleRenderer implements ISegmentRenderer {
+
+	public static final String TAG = "ConsoleRenderer";
 
 	
 	public static final float CHAR_HOR_DISTANCE_MODIFIER_BASED_ON_TILESIZE = 0;//- 0.25f;
@@ -48,12 +60,26 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	
 	private IRenderDriver fontDriver;
 
-	private final IGameState mGamestate;
-	private final IConsoleController mConsoleController;
 	
-	public ConsoleRenderer(IGameState gamestate, IConsoleController consoleController) {
-		this.mGamestate = gamestate;
-		this.mConsoleController = consoleController;
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final IWorld world;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IConsoleController> consoleControllerSupplier;
+	
+	public ConsoleRenderer(
+			ILogger logger,
+			IEngine engine,
+			IWorld world,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IConsoleController> consoleControllerSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.world = world;
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.consoleControllerSupplier = consoleControllerSupplier;
+
 		
 		fontModel.setInvertYAxis(true);
 		fontModel.setTargetColor(new Vector4f(0.0f, 1.0f, 0.0f, 0.0f));
@@ -63,7 +89,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	@Override
 	public void contextCreated() {
 		
-		fontDriver = mGamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ITextureFontModel.class.getName());
+		fontDriver = renderService.getRenderAccess().requestDriver(ITextureFontModel.class.getName());
 		if(fontDriver == null) {
 			throw new RenderException("No render driver found for: " +ITextureFontModel.class.getName());
 		}
@@ -71,14 +97,14 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		fontDriver.create();
 		
 		
-		fontModel.setTextureCoordinator(mGamestate.getStateRender().getTextureCoordinator());
+		fontModel.setTextureCoordinator(textureCoordinatorSupplier.get());
 	}
 
 	
 	@Override
 	public void contextChanged(IViewTransformer viewTransformer, Matrix4f projectionMatrix) {
 		this.viewTransformer = viewTransformer;
-		this.gridTransformer = new DefaultViewGridTransformer(mGamestate.getGame().getWorld().getGrid(), viewTransformer);
+		this.gridTransformer = new DefaultViewGridTransformer(world.getGrid(), viewTransformer);
 		
 		matrixProjection.set(projectionMatrix);
 		
@@ -133,11 +159,17 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		}
 		
 		
-		IConsole console = mConsoleController.getConsole();
+		IConsoleController consoleController = consoleControllerSupplier.get();
+		if(consoleController == null) {
+			logger.i(TAG, "Draw was called but no console is available");
+			return;
+		}
 		
-		ITextureFont font = mConsoleController.getFont();
+		
+		IConsole console = consoleController.getConsole();
+		ITextureFont font = consoleController.getFont();
 		if(font == null) {
-			return;		// Can't render without a font
+			return; // Can't render without a font
 		}
 		
 		
@@ -323,6 +355,44 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		private final Point2iImpl gridPosition = new Point2iImpl();
 		private final Rectangle2fImpl tileSourceBounds = new Rectangle2fImpl();
 		private final Point2fImpl tileTranslation = new Point2fImpl();
+	}
+	
+	
+	public static class ConsoleRendererFactory {
+		
+		public ConsoleRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IConsoleController> consoleControllerSupplier
+		) {
+			return new ConsoleRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					engineContext.getGame().getWorld(),
+					textureCoordinatorSupplier,
+					consoleControllerSupplier
+			);
+		}
+		
+		public ConsoleRenderer createForGamestate(IGameState gamestate) {
+			return new ConsoleRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getWorld(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_CONSOLE, IConsoleController.class)
+			);
+		}
+		
+		public ConsoleRenderer createForGamestate(IGameState gamestate, Supplier<IConsoleController> consoleControllerSupplier) {
+			return new ConsoleRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getWorld(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					consoleControllerSupplier
+			);
+		}
 	}
 	
 }

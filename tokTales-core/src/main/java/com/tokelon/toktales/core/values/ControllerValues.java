@@ -2,7 +2,9 @@ package com.tokelon.toktales.core.values;
 
 public class ControllerValues {
 
-	private ControllerValues() {}
+	protected ControllerValues() {
+		throw new UnsupportedOperationException();
+	}
 	
 
 	public static final String CONTROLLER_PLAYER = "controller_player";

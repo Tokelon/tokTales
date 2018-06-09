@@ -1,32 +1,49 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import java.util.function.Supplier;
+
 import com.tokelon.toktales.core.content.IRGBAColor;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
-import com.tokelon.toktales.core.game.controller.IController;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.AbstractRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.extens.def.core.game.controller.ITextBoxController;
 import com.tokelon.toktales.extens.def.core.game.model.ITextBox;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;
+import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class TextBoxRenderer extends AbstractRenderer implements ISegmentRenderer {
 
-	public static final String DEFAULT_TEXT_BOX_CONTROLLER_NAME = "controller_text_box";
-	
-	private String textBoxControllername = DEFAULT_TEXT_BOX_CONTROLLER_NAME;
+	public static final String TAG = "TextBoxRenderer";
 
 	
 	private IRGBAColor color = RGBAColorImpl.createFromCode("FFF");
 	
 	private TextRenderer textRenderer;
-	
-	
-	private final IGameState gamestate;
 
-	public TextBoxRenderer(IGameState gamestate) {
-		this.gamestate = gamestate;
+	
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<ITextBoxController> textBoxControllerSupplier;
+	
+	public TextBoxRenderer(
+			ILogger logger,
+			IEngine engine,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<ITextBoxController> textBoxControllerSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.textBoxControllerSupplier = textBoxControllerSupplier;
 	}
 
 	
@@ -37,16 +54,24 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 	public IRGBAColor getColor() {
 		return color;
 	}
+
 	
-	
-	public void setTextBoxControllerName(String name) {
-		this.textBoxControllername = name;
+
+	@Override
+	protected void onContextCreated() {
+		textRenderer = new TextRenderer(renderService.getRenderAccess(), textureCoordinatorSupplier.get());
+		textRenderer.contextCreated();
 	}
-	
-	public String getTextBoxControllerName() {
-		return textBoxControllername;
+
+	@Override
+	protected void onContextChanged() {
+		textRenderer.contextChanged(getViewTransformer(), getMatrixProjection());		
 	}
-	
+
+	@Override
+	protected void onContextDestroyed() {
+		textRenderer.contextDestroyed();		
+	}
 	
 	
 	@Override
@@ -61,34 +86,50 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 
 	@Override
 	public void drawFull(INamedOptions options) {
-
-		IController controller = gamestate.getActiveScene().getControllerManager().getController(textBoxControllername);
-		if(!(controller instanceof ITextBoxController)) {
-			assert false : "Invalid type for text box controller";
+		ITextBoxController textBoxController = textBoxControllerSupplier.get();
+		if(textBoxController == null) {
+			logger.i(TAG, "Draw was called but no text box is available");
 			return;
 		}
-		ITextBoxController textBoxController = (ITextBoxController) controller;
-		ITextBox textBox = textBoxController.getModel();
 		
+		ITextBox textBox = textBoxController.getModel();
 		
 		textRenderer.drawTextBox(textBox, color);
 	}
-
 	
-	@Override
-	protected void onContextCreated() {
-		textRenderer = new TextRenderer(gamestate.getEngine().getRenderService().getRenderAccess(), gamestate.getStateRender().getTextureCoordinator());
-		textRenderer.contextCreated();		
-	}
-
-	@Override
-	protected void onContextChanged() {
-		textRenderer.contextChanged(getViewTransformer(), getMatrixProjection());		
-	}
-
-	@Override
-	protected void onContextDestroyed() {
-		textRenderer.contextDestroyed();		
-	}
 	
+	public static class TextBoxRendererFactory {
+		
+		public TextBoxRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<ITextBoxController> textBoxControllerSupplier
+		) {
+			return new TextBoxRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					textureCoordinatorSupplier,
+					textBoxControllerSupplier
+			);
+		}
+		
+		public TextBoxRenderer createForGamestate(IGameState gamestate) {
+			return new TextBoxRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_TEXTBOX, ITextBoxController.class)
+			);
+		}
+		
+		public TextBoxRenderer createForGamestate(IGameState gamestate, Supplier<ITextBoxController> textBoxControllerSupplier) {
+			return new TextBoxRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					textBoxControllerSupplier
+			);
+		}
+	}
+
 }

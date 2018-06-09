@@ -18,6 +18,7 @@ import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
 import com.tokelon.toktales.extens.def.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.model.ScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.DialogRenderer.DialogRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
 
 public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
@@ -126,7 +127,7 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 			this.gamestate = gamestate;
 			this.gamescene = gamescene;
 			
-			dialogRenderer = new DialogRenderer(gamestate);
+			dialogRenderer = new DialogRendererFactory().createForGamestate(gamestate);
 		}
 		
 		

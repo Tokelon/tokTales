@@ -1,6 +1,7 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.joml.Vector4f;
 
@@ -9,13 +10,19 @@ import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.IPolyline2f.IExtendablePolyline2f;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.map.IMapObject;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IExtendedGameScene;
+import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.world.IEllipseGeometry;
 import com.tokelon.toktales.core.game.world.IObjectContainer;
@@ -26,6 +33,7 @@ import com.tokelon.toktales.core.game.world.IWorldGeometry;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IPointModel;
@@ -38,17 +46,12 @@ import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.render.model.TriangleModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
-import com.tokelon.toktales.core.values.ControllerValues;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer {
 
-	
-	// TODO: Change: exclude gamescene
-	public static final String DEFAULT_MAP_CONTROLLER_NAME = ControllerValues.CONTROLLER_MAP;
-	
-	private String mapControllerName = DEFAULT_MAP_CONTROLLER_NAME;
-	
+	public static final String TAG = "ObjectRenderer";
+
 
 	private final Rectangle2fImpl spriteCoordinates = new Rectangle2fImpl();
 	
@@ -83,16 +86,31 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	private IRenderDriver lastUsedDriver = null;
 	
 
-	private final ITypedGameState<? extends IExtendedGameScene> gamestate;
-	private final ISpriteManager spriteManager;
 	
 	private IRenderDriver shapeDriver;
 	private IRenderDriver spriteDriver;
 	
+	private final ILogger logger;
+	private final IContentService contentService;
+	private final IRenderService renderService;
+	private final ISpriteManager spriteManager;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IMapController> mapControllerSupplier;
 	
-	public ObjectRenderer(ITypedGameState<? extends IExtendedGameScene> gamestate) {
-		this.gamestate = gamestate;
-		this.spriteManager = gamestate.getGame().getContentManager().getSpriteManager();
+	public ObjectRenderer(
+			ILogger logger,
+			IEngine engine,
+			ISpriteManager spriteManager,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IMapController> mapControllerSupplier
+	) {
+		this.logger = logger;
+		this.contentService = engine.getContentService();
+		this.renderService = engine.getRenderService();
+		this.spriteManager = spriteManager;
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.mapControllerSupplier = mapControllerSupplier;
+		
 		
 		objectRectModel.setFill(true);
 		objectRectModel.setTargetColor(colorVectorRectangle);
@@ -110,10 +128,11 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	}
 	
 	
+	
 
 	@Override
 	protected void onContextCreated() {
-		shapeDriver = gamestate.getEngine().getRenderService().getRenderAccess().requestDriver(IPointModel.class.getName() + ILineModel.class.getName() + ITriangleModel.class.getName() + IRectangleModel.class.getName());
+		shapeDriver = renderService.getRenderAccess().requestDriver(IPointModel.class.getName() + ILineModel.class.getName() + ITriangleModel.class.getName() + IRectangleModel.class.getName());
 		if(shapeDriver == null) {
 			throw new RenderException("No render driver found for shapes");
 		}
@@ -121,7 +140,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		shapeDriver.create();
 		
 
-		spriteDriver = gamestate.getEngine().getRenderService().getRenderAccess().requestDriver(ISpriteModel.class.getName());
+		spriteDriver = renderService.getRenderAccess().requestDriver(ISpriteModel.class.getName());
 		if(spriteDriver == null) {
 			throw new RenderException("No render driver found for sprites");
 		}
@@ -129,7 +148,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		spriteDriver.create();
 		
 
-		spriteModel.setTextureCoordinator(gamestate.getStateRender().getTextureCoordinator());
+		spriteModel.setTextureCoordinator(textureCoordinatorSupplier.get());
 	}
 
 	@Override
@@ -164,7 +183,11 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 
 	@Override
 	public void drawLayer(INamedOptions options, String layerName) {
-		IMapController mapController = gamestate.getActiveScene().getMapController();
+		IMapController mapController = mapControllerSupplier.get();
+		if(mapController == null) {
+			logger.i(TAG, "Draw was called but no Map is available");
+			return;
+		}
 		
 		drawObjectsOnMapLayer(mapController, layerName);
 	}
@@ -191,7 +214,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		synchronized (objectMap) {
 			for(IMapObject mapObject: objectMap.values()) {
 				if(!logStop) { // TODO: Remove
-					TokTales.getLog().d("ObjectRenderer", "Rendering Object: " +mapObject.getObjectName());	
+					//logger.d("ObjectRenderer", "Rendering Object: " +mapObject.getObjectName());	
 				}
 				
 				// TODO: Important - Implement only rendering when in camera!
@@ -213,7 +236,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 						continue;
 					}
 					
-					ITexture spriteTexture = gamestate.getEngine().getContentService().extractAssetTexture(spriteAsset.getContent());
+					ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset.getContent());
 					if(spriteTexture == null) {
 						continue;
 					}
@@ -384,6 +407,48 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	@Override
 	public void drawFull(INamedOptions options) {
 		assert false : "Not supported";
+	}
+	
+	
+	public static class ObjectRendererFactory implements IObjectRendererFactory {
+		
+		@Override
+		public ObjectRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IMapController> mapControllerSupplier		
+		) {
+			return new ObjectRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					engineContext.getGame().getContentManager().getSpriteManager(),
+					textureCoordinatorSupplier,
+					mapControllerSupplier
+			);
+		}
+		
+		
+		@Override
+		public ObjectRenderer createForGamestate(IGameState gamestate) {
+			return new ObjectRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getSpriteManager(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofMapControllerFromManager(gamestate)
+			);
+		}
+		
+		@Override
+		public ObjectRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> gamestate) {
+			return new ObjectRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getSpriteManager(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofMapControllerFromGamestate(gamestate)
+			);
+		}
 	}
 
 }

@@ -1,28 +1,34 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import java.util.function.Supplier;
+
 import com.tokelon.toktales.core.content.IRGBAColor;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
-import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.model.Camera;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.CharRenderer;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {
 
-	public static final String DEFAULT_CONSOLE_CONTROLLER_NAME = "console_controller";
+	public static final String TAG = "ConsoleOverlayRenderer";
 
-	private String consoleControllername = DEFAULT_CONSOLE_CONTROLLER_NAME;
 	
-
 	private float startX;
 	private float startY;
 	
@@ -34,21 +40,23 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	
 	private CharRenderer charRenderer;
 	
-	private final IGameState gamestate;
+	private final ILogger logger;
+	private final IRenderService renderService;
+	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final Supplier<IConsoleController> consoleControllerSupplier;
 	
-	public ConsoleOverlayRenderer(IGameState gamestate) {
-		this.gamestate = gamestate;
+	public ConsoleOverlayRenderer(
+			ILogger logger,
+			IEngine engine,
+			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+			Supplier<IConsoleController> consoleControllerSupplier
+	) {
+		this.logger = logger;
+		this.renderService = engine.getRenderService();
+		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
+		this.consoleControllerSupplier = consoleControllerSupplier;
 	}
 
-	
-	public void setConsoleControllerName(String name) {
-		this.consoleControllername = name;
-	}
-	
-	public String getConsoleControllerName() {
-		return this.consoleControllername;
-	}
-	
 	
 	public void setColor(IRGBAColor color) {
 		this.color = color;
@@ -64,6 +72,31 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	
 	public float getTextSize() {
 		return textSize;
+	}
+	
+	
+	@Override
+	protected void onContextCreated() {
+		charRenderer = new CharRenderer(renderService.getRenderAccess(), textureCoordinatorSupplier.get());
+		charRenderer.contextCreated();
+	}
+
+	@Override
+	protected void onContextChanged() {
+		IScreenViewport contextViewport = getViewTransformer().getCurrentViewport();
+		
+		Camera customCamera = new Camera();
+		customCamera.setSize(contextViewport.getWidth(), contextViewport.getHeight());
+		
+		customViewTransformer = new DefaultViewTransformer(customCamera, contextViewport);
+		
+		charRenderer.contextChanged(customViewTransformer, getMatrixProjection());
+	}
+
+	@Override
+	protected void onContextDestroyed() {
+		charRenderer.contextDestroyed();
+		charRenderer = null;
 	}
 	
 	
@@ -90,12 +123,12 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	
 	@Override
 	public void drawFull(INamedOptions options) {
-		IController controller = gamestate.getActiveScene().getControllerManager().getController(consoleControllername);
-		if(!(controller instanceof IConsoleController)) {
-			assert false : "Invalid type for console controller";
+		IConsoleController consoleController = consoleControllerSupplier.get();
+		if(consoleController == null) {
+			logger.i(TAG, "Draw was called but no console is available");
 			return;
 		}
-		IConsoleController consoleController = (IConsoleController) controller;
+		
 		
 		drawConsoleOverlay(consoleController);
 	}
@@ -177,29 +210,43 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		}
 	}
 	
-
-	@Override
-	protected void onContextCreated() {
-		charRenderer = new CharRenderer(gamestate.getEngine().getRenderService().getRenderAccess(), gamestate.getStateRender().getTextureCoordinator());
-		charRenderer.contextCreated();
-	}
-
-	@Override
-	protected void onContextChanged() {
-		IScreenViewport contextViewport = getViewTransformer().getCurrentViewport();
+	
+	public static class ConsoleOverlayRendererFactory implements IConsoleOverlayRendererFactory {
 		
-		Camera customCamera = new Camera();
-		customCamera.setSize(contextViewport.getWidth(), contextViewport.getHeight());
+		@Override
+		public ConsoleOverlayRenderer create(
+				IEngineContext engineContext,
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IConsoleController> consoleControllerSupplier
+		) {
+			return new ConsoleOverlayRenderer(
+					engineContext.getLog(),
+					engineContext.getEngine(),
+					textureCoordinatorSupplier,
+					consoleControllerSupplier
+			);
+		}
 		
-		customViewTransformer = new DefaultViewTransformer(customCamera, contextViewport);
 		
-		charRenderer.contextChanged(customViewTransformer, getMatrixProjection());
-	}
-
-	@Override
-	protected void onContextDestroyed() {
-		charRenderer.contextDestroyed();
-		charRenderer = null;
+		@Override
+		public ConsoleOverlayRenderer createForGamestate(IGameState gamestate) {
+			return new ConsoleOverlayRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_CONSOLE, IConsoleController.class)
+			);
+		}
+		
+		@Override
+		public ConsoleOverlayRenderer createForGamestate(IGameState gamestate, Supplier<IConsoleController> consoleControllerSupplier) {
+			return new ConsoleOverlayRenderer(
+					gamestate.getLog(),
+					gamestate.getEngine(),
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					consoleControllerSupplier
+			);
+		}
 	}
 	
 }

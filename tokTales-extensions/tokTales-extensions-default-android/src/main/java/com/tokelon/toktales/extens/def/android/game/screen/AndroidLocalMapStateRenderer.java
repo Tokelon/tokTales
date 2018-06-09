@@ -13,18 +13,35 @@ import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.world.IWorldGrid;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer.IConsoleOverlayRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.LocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 
 public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
-
+	// TODO: Merge with LocalMapStateRenderer if it makes sense
+	
 	public static final String TAG = "AndroidLocalMapStateRenderer";
 	
 	private final ILocalMapGamestate gamestate;
 	
 	@Inject
-	public AndroidLocalMapStateRenderer(ITextureCoordinator textureCoordinator, @DebugRenderingEnabled boolean debugRenderingEnabled, @Assisted ILocalMapGamestate gamestate) {
-		super(textureCoordinator, debugRenderingEnabled, gamestate);
+	public AndroidLocalMapStateRenderer(
+			IPlayerRendererFactory playerRendererFactory,
+			IMapRendererFactory mapRendererFactory,
+			IEntityRendererFactory entityRendererFactory,
+			IObjectRendererFactory objecRendererFactory,
+			IConsoleOverlayRendererFactory consoleOverlayRendererFactory,
+			IDebugRendererFactory debugRendererFactory,
+			ITextureCoordinator textureCoordinator,
+			@DebugRenderingEnabled boolean debugRenderingEnabled,
+			@Assisted ILocalMapGamestate gamestate
+	) {
+		super(playerRendererFactory, mapRendererFactory, entityRendererFactory, objecRendererFactory, consoleOverlayRendererFactory, debugRendererFactory, textureCoordinator, debugRenderingEnabled, gamestate);
 		
 		this.gamestate = gamestate;
 		
