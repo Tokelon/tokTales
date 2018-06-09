@@ -67,7 +67,10 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public synchronized void changeState(String stateName) {
 		if(!hasState(stateName)) {
-			throw new IllegalArgumentException("No state for this name: " +stateName);
+			String error = "Failed to change state. No state for name: " + stateName;
+			logger.e(TAG, error);
+			assert false : error;
+			return;
 		}
 		
 		if(currentState != null) {
@@ -89,7 +92,7 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public synchronized void addState(String name, IGameState state) {
 		if(name == null || state == null) {
-			throw new IllegalArgumentException("name and state must not be null");
+			throw new NullPointerException("name and state must not be null");
 		}
 		
 		states.put(name, state);
