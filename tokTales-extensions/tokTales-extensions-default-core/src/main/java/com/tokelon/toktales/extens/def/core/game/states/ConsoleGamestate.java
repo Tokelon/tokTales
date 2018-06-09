@@ -127,7 +127,9 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		baseStateRenderer.addSegmentRenderer(RENDERER_TEXT_NAME, textSegmentRenderer);
 		
 		
+		baseStateRenderer.updateCamera(getActiveScene().getSceneCamera());
 		setStateRender(baseStateRenderer);
+		
 		
 
 		/*

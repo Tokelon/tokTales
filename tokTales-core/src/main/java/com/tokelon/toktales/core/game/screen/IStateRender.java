@@ -36,7 +36,7 @@ public interface IStateRender extends ISurfaceCallback, IRenderCallback {
 	
 	// TODO: This method should make sure that the camera is not updated while rendering is running
 	public void updateCamera(ICamera camera);
-	public ICamera getCamera();
+	public ICamera getCurrentCamera();
 
 	
 	// Not sure how this would work since the context viewport is provided by the surface

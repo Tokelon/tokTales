@@ -69,7 +69,7 @@ public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 	@Override
 	protected IViewTransformer onSurfaceChangeRefreshContextViewport(ISurface surface) {
 
-		ICamera camera = getCamera();
+		ICamera camera = getCurrentCamera();
 		IWorldGrid worldGrid = gamestate.getGame().getWorld().getGrid();
 		IScreenViewport masterViewport = surface.getViewport();
 		

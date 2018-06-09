@@ -29,7 +29,6 @@ public abstract class AbstractStateRender implements IStateRender {
 	
 	
 	private ISurface currentSurface;
-	private ICamera currentCamera;
 
 	private final ITextureCoordinator textureCoordinator;
 	
@@ -64,16 +63,16 @@ public abstract class AbstractStateRender implements IStateRender {
 	
 	@Override
 	public void addManagedRenderer(String name, IRenderer renderer) {
-		// what if the name is taken?
 		managedRendererMap.put(name, renderer);
 		
 		if(hasSurface) {
 			renderer.contextCreated();
+			
+			if(hasView) {
+				renderer.contextChanged(viewTransformer, projectionMatrix);
+			}
 		}
 		
-		if(hasView) {
-			renderer.contextChanged(viewTransformer, projectionMatrix);
-		}
 	}
 	
 	@Override
@@ -99,13 +98,12 @@ public abstract class AbstractStateRender implements IStateRender {
 	
 	@Override
 	public void updateCamera(ICamera camera) {
-		this.currentCamera = camera;
-		this.viewTransformer.updateCamera(camera);
+		getViewTransformer().updateCamera(camera);
 	}
 	
 	@Override
-	public ICamera getCamera() {
-		return currentCamera;
+	public ICamera getCurrentCamera() {
+		return getViewTransformer().getCurrentCamera();
 	}
 	
 	@Override
@@ -133,18 +131,17 @@ public abstract class AbstractStateRender implements IStateRender {
 
 	@Override
 	public void surfaceCreated(ISurface surface) {
-		hasView = false;	// Do this?
+		hasView = false; // Do this?
 		currentSurface = surface;
 		
 		onSurfaceCreated();
-		
+		hasSurface = true;
+
 		synchronized (managedRendererMap) {
 			for(IRenderer renderer: managedRendererMap.values()) {
 				renderer.contextCreated();
 			}
 		}
-		
-		hasSurface = true;
 	}
 
 	@Override

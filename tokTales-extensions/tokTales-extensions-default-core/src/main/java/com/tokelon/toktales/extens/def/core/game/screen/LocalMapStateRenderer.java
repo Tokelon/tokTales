@@ -51,7 +51,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	
 	private IRenderToolkit renderToolkit;
 	
-	private ICamera camera;
 	private IViewTransformer defaultViewTransformer;
 	
 	
@@ -286,15 +285,13 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	
 	
 	@Override
-	public ICamera getCamera() {
-		return camera;
+	public ICamera getCurrentCamera() {
+		return getViewTransformer().getCurrentCamera();
 	}
 	
 	@Override
 	public void updateCamera(ICamera camera) {
-		// TODO: Normally we should synchronize this with rendering
-		this.camera = camera;
-		this.currentViewTransformer.updateCamera(camera);
+		getViewTransformer().updateCamera(camera);
 	}
 	
 	

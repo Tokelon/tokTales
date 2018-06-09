@@ -28,19 +28,17 @@ public class DefaultModularStateRender implements IModularStateRender {
 	private final Matrix4f contextProjectionMatrix = new Matrix4f();
 	private final IViewTransformer contextViewTransformer;
 
-	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<String, ISegmentRenderer>();
+	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<>();
+	private final Map<String, IRenderer> managedRendererMap = new HashMap<>();
+
+	private final List<IViewTransformer> viewTransformerList = new ArrayList<>();
 	
-	private final List<IViewTransformer> viewTransformerList = new ArrayList<IViewTransformer>();
-	
-	
-	private boolean mIsReady = false;
 	
 	private boolean hasSurface = false;
-	private boolean hasSurfaceValues = false;
+	private boolean hasView = false;
 	
 	private ISurface currentSurface;
 	
-	private ICamera camera;
 	
 	private final ITextureCoordinator textureCoordinator;
 	private final IRenderingStrategy mStrategy;
@@ -49,7 +47,6 @@ public class DefaultModularStateRender implements IModularStateRender {
 	public DefaultModularStateRender(IRenderingStrategy strategy, IGameState gamestate) {
 		this.mStrategy = strategy;
 		this.mGamestate = gamestate;
-		this.camera = gamestate.getActiveScene().getSceneCamera();
 
 		this.contextViewTransformer = new DefaultViewTransformer();
 		this.textureCoordinator = new DefaultTextureCoordinator(gamestate.getGame().getContentManager().getTextureManager());
@@ -67,9 +64,8 @@ public class DefaultModularStateRender implements IModularStateRender {
 		if(hasSurface) {
 			renderer.contextCreated();
 			
-			if(hasSurfaceValues) {
-				
-				IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), camera, name);
+			if(hasView) {
+				IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), getCurrentCamera(), name);
 				
 				renderer.contextChanged(rendererViewTransformer, currentSurface.getProjectionMatrix());
 			}
@@ -79,6 +75,11 @@ public class DefaultModularStateRender implements IModularStateRender {
 	@Override
 	public ISegmentRenderer getSegmentRenderer(String name) {
 		return segmentRendererMap.get(name);
+	}
+	
+	@Override
+	public boolean hasSegmentRenderer(String name) {
+		return segmentRendererMap.containsKey(name);
 	}
 	
 	@Override
@@ -102,7 +103,7 @@ public class DefaultModularStateRender implements IModularStateRender {
 	
 	@Override
 	public void renderCall(String layerName, double stackPosition) {
-		if(!mIsReady) {
+		if(!hasView) {
 			return;
 		}
 		
@@ -121,17 +122,16 @@ public class DefaultModularStateRender implements IModularStateRender {
 	
 	@Override
 	public void updateCamera(ICamera camera) {
-		this.camera = camera;
+		getViewTransformer().updateCamera(camera);
 		
-		contextViewTransformer.updateCamera(camera);
 		for(IViewTransformer viewTransformer: viewTransformerList) {
 			viewTransformer.updateCamera(camera);
 		}
 	}
 	
 	@Override
-	public ICamera getCamera() {
-		return camera;
+	public ICamera getCurrentCamera() {
+		return getViewTransformer().getCurrentCamera();
 	}
 	
 	@Override
@@ -155,30 +155,37 @@ public class DefaultModularStateRender implements IModularStateRender {
 	}
 
 
-	// TODO: How to handle these? Replace the other methods?
-
 	@Override
 	public void addManagedRenderer(String name, IRenderer renderer) {
-		// TODO Auto-generated method stub
+		managedRendererMap.put(name, renderer);
 		
+		if(hasSurface) {
+			renderer.contextCreated();
+			
+			if(hasView) {
+				renderer.contextChanged(contextViewTransformer, contextProjectionMatrix);
+			}
+		}
 	}
 
 	@Override
 	public IRenderer getManagedRenderer(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return managedRendererMap.get(name);
 	}
 
 	@Override
 	public IRenderer removeManagedRenderer(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		IRenderer renderer = managedRendererMap.get(name);
+		if(renderer != null && hasSurface) {
+			renderer.contextDestroyed();
+		}
+		
+		return managedRendererMap.remove(name);
 	}
 
 	@Override
 	public boolean hasManagedRenderer(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		return managedRendererMap.containsKey(name);
 	}
 	
 	
@@ -190,18 +197,17 @@ public class DefaultModularStateRender implements IModularStateRender {
 		currentSurface = surface;
 		hasSurface = true;
 		
-		for(ISegmentRenderer renderer: segmentRendererMap.values()) {
-			renderer.contextCreated();
+		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
+			segmentRenderer.contextCreated();
 		}
-	
 		
-		mIsReady = true;
+		for(IRenderer managedRenderer: managedRendererMap.values()) {
+			managedRenderer.contextCreated();
+		}
 	}
 
 	@Override
 	public void surfaceChanged(ISurface surface) {
-		hasSurfaceValues = true;
-
 		IScreenViewport masterViewport = surface.getViewport();
 
 		contextViewport.setSize(masterViewport.getWidth(), masterViewport.getHeight());
@@ -211,6 +217,9 @@ public class DefaultModularStateRender implements IModularStateRender {
 
 		contextProjectionMatrix.set(surface.getProjectionMatrix());
 
+		// Really do this before renderer callbacks?
+		hasView = true;
+
 		
 		viewTransformerList.clear();
 		
@@ -219,10 +228,14 @@ public class DefaultModularStateRender implements IModularStateRender {
 			ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
 			
 			
-			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(DefaultModularStateRender.this, masterViewport, camera, rendererName);
+			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(DefaultModularStateRender.this, masterViewport, getCurrentCamera(), rendererName);
 			viewTransformerList.add(rendererViewTransformer);
 			
 			renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);
+		}
+		
+		for(IRenderer managedRenderer: managedRendererMap.values()) {
+			managedRenderer.contextChanged(contextViewTransformer, contextProjectionMatrix);
 		}
 		
 
@@ -244,11 +257,14 @@ public class DefaultModularStateRender implements IModularStateRender {
 	public void surfaceDestroyed(ISurface surface) {
 		currentSurface = null;
 		hasSurface = false;
-		hasSurfaceValues = false;
-		mIsReady = false;
+		hasView = false;
 		
-		for(ISegmentRenderer renderer: segmentRendererMap.values()) {
-			renderer.contextDestroyed();
+		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
+			segmentRenderer.contextDestroyed();
+		}
+		
+		for(IRenderer managedRenderer: managedRendererMap.values()) {
+			managedRenderer.contextDestroyed();
 		}
 	}
 	

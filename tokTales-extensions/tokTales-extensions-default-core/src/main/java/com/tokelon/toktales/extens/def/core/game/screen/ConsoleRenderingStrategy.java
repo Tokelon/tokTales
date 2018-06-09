@@ -36,7 +36,6 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	
 	@Override
 	public void renderFrame(IModularStateRender baseRenderer) {
-		
 		IGameState gamestate = baseRenderer.getGamestate();
 		
 		long gameTimeMillis = gamestate.getGame().getTimeManager().getGameTimeMillis();
@@ -70,11 +69,8 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	
 	@Override
 	public IViewTransformer createViewTransformerForRenderer(IModularStateRender baseRenderer, IScreenViewport masterViewport, ICamera camera, String rendererName) {
-		IGameState gamestate = baseRenderer.getGamestate();
-		
 		DefaultViewTransformer viewTransformer = new DefaultViewTransformer(camera, masterViewport);
 		return viewTransformer;
 	}
-	
 	
 }
