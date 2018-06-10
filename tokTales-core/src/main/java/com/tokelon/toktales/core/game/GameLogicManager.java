@@ -23,7 +23,9 @@ public class GameLogicManager implements IGameLogicManager {
 	@Override
 	public void onGameCreate() {
 		game = gameProvider.get();
-		
+
+		game.getContentManager().startLoaders();
+
 		IEngineContext engineContext = engineContextProvider.get();
 		game.getGameAdapter().onCreate(engineContext);
 	}
@@ -66,6 +68,7 @@ public class GameLogicManager implements IGameLogicManager {
 
 	@Override
 	public void onGameDestroy() {
+		game.getContentManager().stopLoaders();
 		
 		game.getGameAdapter().onDestroy();
 	}

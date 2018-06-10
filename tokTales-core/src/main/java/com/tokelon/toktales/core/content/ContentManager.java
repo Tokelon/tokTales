@@ -4,28 +4,44 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.ITextureManager;
 
 public class ContentManager implements IContentManager {
 
 	private static final String TAG = ContentManager.class.getSimpleName();
 	
-	
+
+	private ILogger logger;
 	private IResourceManager managerResource;
 	private ISpriteManager managerSprite;
 	private ITextureManager textureManager;
 	
 	@Inject
-	public ContentManager(IResourceManager resourceManager, ISpriteManagerFactory spriteManagerFactory, ITextureManager textureManager) {
+	public ContentManager(
+			ILogger logger,
+			IResourceManager resourceManager,
+			ISpriteManagerFactory spriteManagerFactory,
+			ITextureManager textureManager
+	) {
+		this.logger = logger;
 		this.managerResource = resourceManager;
 		this.managerSprite = spriteManagerFactory.create(resourceManager);
 		this.textureManager = textureManager;
-		
-		managerSprite.startLoading();
-		
-		//managerSprite.stopLoading();	// TODO: Important - Stop this when terminating!
+	}
+
+	
+	@Override
+	public void startLoaders() {
+		logger.i(TAG, "Starting content loaders");
+		managerSprite.startLoading();		
 	}
 	
+	@Override
+	public void stopLoaders() {
+		logger.i(TAG, "Stopping content loaders");
+		managerSprite.stopLoading();		
+	}
 
 	
 	@Override
@@ -43,11 +59,5 @@ public class ContentManager implements IContentManager {
 		return textureManager;
 	}
 	
-
-	@Override
-	public void notifyResourcesChanged() {
-		
-		// Do something?
-	}
 
 }

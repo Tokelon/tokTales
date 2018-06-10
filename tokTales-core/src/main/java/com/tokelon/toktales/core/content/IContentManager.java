@@ -5,6 +5,10 @@ import com.tokelon.toktales.core.render.ITextureManager;
 
 public interface IContentManager {
 
+
+	public void startLoaders();
+	public void stopLoaders();
+	
 	
 	public IResourceManager getResourceManager();
 	
@@ -12,10 +16,7 @@ public interface IContentManager {
 	
 	public ITextureManager getTextureManager();
 
-
 	
-	public void notifyResourcesChanged();
-
 	
 	
 	

@@ -595,8 +595,6 @@ class TaleProcess {
 		game.getContentManager().getResourceManager().preloadResourceSet("tile_map_" +map.getFileName() +"_resources", map.getResources());
 
 		
-		
-		game.getContentManager().notifyResourcesChanged();
 		game.getContentManager().getSpriteManager().runClearAll();
 
 		

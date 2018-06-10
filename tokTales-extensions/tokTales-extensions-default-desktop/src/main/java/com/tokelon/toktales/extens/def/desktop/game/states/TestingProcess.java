@@ -100,8 +100,6 @@ public class TestingProcess {
 			game.getContentManager().getResourceManager().preloadResourceSet("blkmap_editor_loaded_map_resources", loadedMap.getResources());
 
 			
-			
-			game.getContentManager().notifyResourcesChanged();
 			game.getContentManager().getSpriteManager().runClearAll();
 
 			
