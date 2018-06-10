@@ -33,7 +33,7 @@ public class DesktopTestStatesInjectModule extends AbstractInjectModule {
 		
 		injectConfig.extend(new CoreTestStatesInjectModule());
 		injectConfig.override(new DesktopTestStatesInjectModule());
-		injectConfig.extend(new DesktopMockPlatformInjectModule());
+		injectConfig.override(new DesktopMockPlatformInjectModule());
 		
 		Injector injector = injectConfig.createInjector();
 		return injector;

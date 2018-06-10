@@ -5,6 +5,7 @@ import org.junit.Test;
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
@@ -27,7 +28,7 @@ public class TestDesktopInjection {
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 		
-		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 		
 		Injector injector = injectConfig.createInjector();
 	}
@@ -36,7 +37,7 @@ public class TestDesktopInjection {
 	public void engineCreationWithSetupModule_ShouldSucceed() {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 
-		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 		
 		Injector injector = injectConfig.createInjector();
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
@@ -46,7 +47,7 @@ public class TestDesktopInjection {
 	public void setupCreationWithSetupModule_ShouldSucceed() throws EngineException {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 
-		injectConfig.override(new DesktopSetupInjectModule(DummyGameAdapter.class));
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 
 		BaseInjectSetup setup = new BaseInjectSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
@@ -57,7 +58,7 @@ public class TestDesktopInjection {
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 		
-		injectConfig.extend(new DesktopMockPlatformInjectModule());
+		injectConfig.override(new DesktopMockPlatformInjectModule());
 		
 		BaseInjectSetup setup = new BaseInjectSetup();
 		IEngineContext engineContext = setup.create(injectConfig);

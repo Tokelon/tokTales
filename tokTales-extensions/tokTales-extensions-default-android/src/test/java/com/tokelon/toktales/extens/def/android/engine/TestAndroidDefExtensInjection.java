@@ -8,6 +8,7 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.extens.def.android.engine.inject.AndroidDefExtensInjectConfig;
 import com.tokelon.toktales.test.android.engine.inject.AndroidMockPlatformInjectModule;
@@ -24,7 +25,7 @@ public class TestAndroidDefExtensInjection {
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		AndroidDefExtensInjectConfig injectConfig = new AndroidDefExtensInjectConfig();
 		
-		injectConfig.override(new AndroidSetupInjectModule(DummyGameAdapter.class, mockedContext));
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
 		
 		Injector injector = injectConfig.createInjector();
 	}

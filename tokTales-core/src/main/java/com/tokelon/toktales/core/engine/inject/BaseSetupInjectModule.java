@@ -1,9 +1,8 @@
-package com.tokelon.toktales.desktop.engine.inject;
+package com.tokelon.toktales.core.engine.inject;
 
-import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
-public class DesktopSetupInjectModule extends AbstractInjectModule {
+public class BaseSetupInjectModule extends AbstractInjectModule {
 
     private final Class<? extends IGameAdapter> adapterClass;
     
@@ -11,7 +10,7 @@ public class DesktopSetupInjectModule extends AbstractInjectModule {
      * @param adapterClass
      * @throws NullPointerException If adapterClass is null.
      */
-    public DesktopSetupInjectModule(Class<? extends IGameAdapter> adapterClass) {
+    public BaseSetupInjectModule(Class<? extends IGameAdapter> adapterClass) {
     	if(adapterClass == null) {
     		throw new NullPointerException();
     	}
