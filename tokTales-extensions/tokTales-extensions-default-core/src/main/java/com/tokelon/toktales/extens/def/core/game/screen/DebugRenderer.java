@@ -2,7 +2,6 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import java.io.File;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
@@ -36,6 +35,7 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.function.Supplier;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	

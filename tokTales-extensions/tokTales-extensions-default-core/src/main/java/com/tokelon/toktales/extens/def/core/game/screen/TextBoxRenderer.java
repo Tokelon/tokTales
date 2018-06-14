@@ -1,7 +1,5 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import java.util.function.Supplier;
-
 import com.tokelon.toktales.core.content.IRGBAColor;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.engine.IEngine;
@@ -14,6 +12,7 @@ import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.extens.def.core.game.controller.ITextBoxController;
 import com.tokelon.toktales.extens.def.core.game.model.ITextBox;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;

@@ -1,7 +1,5 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import java.util.function.Supplier;
-
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -31,6 +29,7 @@ import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleRenderer implements ISegmentRenderer {

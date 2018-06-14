@@ -1,7 +1,5 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import java.util.function.Supplier;
-
 import com.tokelon.toktales.core.content.IRGBAColor;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
@@ -22,6 +20,7 @@ import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.CharRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {

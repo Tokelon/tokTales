@@ -1,12 +1,11 @@
 package com.tokelon.toktales.core.game.states;
 
-import java.util.function.Supplier;
-
 import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.world.IWorldspace;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.values.ControllerValues;
 
 public class GameStateSuppliers {

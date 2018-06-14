@@ -1,7 +1,5 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import java.util.function.Supplier;
-
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -15,6 +13,7 @@ import com.tokelon.toktales.core.render.ShapeRenderer;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.RectangleShape;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
 import com.tokelon.toktales.extens.def.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;

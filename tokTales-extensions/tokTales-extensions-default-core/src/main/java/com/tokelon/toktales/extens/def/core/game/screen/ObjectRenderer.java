@@ -1,7 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.joml.Vector4f;
 
@@ -46,6 +45,7 @@ import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.render.model.TriangleModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer {

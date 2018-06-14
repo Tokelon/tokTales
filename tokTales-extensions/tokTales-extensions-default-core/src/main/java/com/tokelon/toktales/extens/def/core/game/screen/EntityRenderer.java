@@ -2,7 +2,6 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import java.util.Locale;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import org.joml.Matrix4f;
 
@@ -35,6 +34,7 @@ import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class EntityRenderer implements IEntityRenderer {
