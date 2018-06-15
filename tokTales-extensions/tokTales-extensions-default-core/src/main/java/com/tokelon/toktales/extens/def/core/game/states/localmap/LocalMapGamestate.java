@@ -34,6 +34,7 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapContro
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
+import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 
 public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> implements ILocalMapGamestate {
 
@@ -96,6 +97,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
+		// TODO: Enable using the given params? If they are compatible?
 
 		ILocalMapStateRenderer stateRenderer = stateRendererFactory.create(this);
 		ILocalMapInputHandler stateInputHandler = inputHandlerFactory.create(this);
@@ -347,6 +349,13 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 				}
 				else {
 					response = "Bad syntax. Use: camera zoom z";
+				}
+			}
+			else if(input.equals("exit")) {
+				// TODO: Implement state history and switch to the previous state
+				if(getGame().getStateControl().hasState(GameStateExtensionsValues.STATE_CONSOLE)) {
+					getGame().getStateControl().changeState(GameStateExtensionsValues.STATE_CONSOLE);
+					response = "Exiting...";
 				}
 			}
 			else {

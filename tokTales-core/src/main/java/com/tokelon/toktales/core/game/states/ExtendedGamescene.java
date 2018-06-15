@@ -21,7 +21,8 @@ import com.tokelon.toktales.core.values.ControllerValues;
  */
 @RequiresInjection
 public class ExtendedGamescene extends BaseGamescene implements IExtendedGameScene {
-
+	// Register DefaultControllersSetterInterceptor on controller manager as default?
+	
 	public static final String EXTENDED_TAG = "ExtendedGamescene";
 	
 	
@@ -161,11 +162,8 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	@Override
 	public void onAssign() {
 		super.onAssign();
-		
-		// TODO: Add listener that will invoke onMapChange, etc. | Remove on deassign?
-		//getControllerManager().addListener(listener);
-		
 
+		
 		/* Register map render order if needed */
 		if(initialMapRenderRegistrationPending) {
 			initialMapRenderRegistrationPending = false;

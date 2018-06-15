@@ -14,8 +14,10 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
 
 public class LWJGLEngineLauncher extends DesktopEngineLauncher {
+	// TODO: Additional window properties, like visible resisable etc.
+	// Better: Make window object available through a solid interface
 
-
+	
 	private int windowWidth = 1280;
 	private int windowHeight = 720;
 	private String windowTitle = "";
@@ -86,9 +88,6 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	}
 	
 	
-
-	// TODO: Additional window properties, like visible resisable etc.
-	// Better: Make window object available through a solid interface
 	
 	public void setWindowSize(int width, int height) {
 		this.windowWidth = width;
