@@ -1,9 +1,9 @@
-package com.tokelon.toktales.extens.def.desktop.game.screen;
+package com.tokelon.toktales.extens.def.desktop.game.states.console;
 
 import org.lwjgl.opengl.GL11;
 
 import com.tokelon.toktales.core.game.screen.IModularStateRender;
-import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderingStrategy;
+import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleRenderingStrategy;
 
 public class DesktopConsoleRenderingStrategy extends ConsoleRenderingStrategy {
 

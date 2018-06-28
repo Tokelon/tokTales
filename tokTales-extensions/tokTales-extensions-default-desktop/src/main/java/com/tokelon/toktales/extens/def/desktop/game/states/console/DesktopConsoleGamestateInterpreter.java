@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.game.states;
+package com.tokelon.toktales.extens.def.desktop.game.states.console;
 
 import com.google.inject.Inject;
 import com.tokelon.toktales.core.game.model.IConsole;
@@ -6,8 +6,8 @@ import com.tokelon.toktales.core.game.states.InjectGameState;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
-import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpreter;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleGamestateInterpreter;
+import com.tokelon.toktales.extens.def.core.game.states.console.IConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;

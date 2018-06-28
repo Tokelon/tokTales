@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.core.game.screen;
+package com.tokelon.toktales.extens.def.core.game.states.console;
 
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.IModularStateRender;
@@ -9,7 +9,6 @@ import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
-import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
 
 public class ConsoleRenderingStrategy implements IRenderingStrategy {
 

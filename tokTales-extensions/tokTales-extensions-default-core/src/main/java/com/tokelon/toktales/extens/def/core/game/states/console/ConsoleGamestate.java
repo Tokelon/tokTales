@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.core.game.states;
+package com.tokelon.toktales.extens.def.core.game.states.console;
 
 import java.io.File;
 

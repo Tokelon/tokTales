@@ -1,9 +1,9 @@
-package com.tokelon.toktales.extens.def.android.game.screen;
+package com.tokelon.toktales.extens.def.android.states.console;
 
 import android.opengl.GLES20;
 
 import com.tokelon.toktales.core.game.screen.IModularStateRender;
-import com.tokelon.toktales.extens.def.core.game.screen.ConsoleRenderingStrategy;
+import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleRenderingStrategy;
 
 public class AndroidConsoleRenderingStrategy extends ConsoleRenderingStrategy {
 

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.android.states;
+package com.tokelon.toktales.extens.def.android.states.console;
 
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InjectGameState;
-import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.console.IConsoleGamestate;
 
 @InjectGameState
 public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScreenButtonCallback {

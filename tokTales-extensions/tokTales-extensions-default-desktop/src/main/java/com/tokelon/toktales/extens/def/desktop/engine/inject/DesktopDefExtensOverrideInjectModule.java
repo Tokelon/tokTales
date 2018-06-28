@@ -5,11 +5,11 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
-import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
-import com.tokelon.toktales.extens.def.desktop.game.screen.DesktopConsoleRenderingStrategy;
-import com.tokelon.toktales.extens.def.desktop.game.states.DesktopConsoleGamestateInterpreter;
+import com.tokelon.toktales.extens.def.desktop.game.states.console.DesktopConsoleGamestateInterpreter;
+import com.tokelon.toktales.extens.def.desktop.game.states.console.DesktopConsoleRenderingStrategy;
 import com.tokelon.toktales.extens.def.desktop.game.states.integration.DesktopConsoleIntegrationControlHandler;
 
 public class DesktopDefExtensOverrideInjectModule extends AbstractInjectModule {
