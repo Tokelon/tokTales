@@ -11,7 +11,7 @@ import com.tokelon.toktales.extens.def.desktop.game.states.consover.DesktopConso
 
 public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandler implements ILocalMapInputHandler {
 
-	public static final String TAG = "DesktopLocalMapInput";
+	public static final String TAG = "DesktopLocalMapInputHandler";
 	
 	
 	private final ILocalMapGamestate gamestate;
@@ -21,7 +21,7 @@ public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandl
 	
 	@Inject
 	public DesktopLocalMapInputHandler(@Assisted ILocalMapGamestate gamestate) {
-		super(gamestate);
+		super(() -> gamestate.getIntegrationConsole());
 		
 		this.gamestate = gamestate;
 	}
@@ -30,13 +30,13 @@ public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandl
 	
 	@Override
 	public boolean invokeKeyInput(int vk, int action) {
-		ILocalMapControlHandler controlHandler = gamestate.getStateControlHandler();
-		
 		boolean handled = super.invokeKeyInput(vk, action);
 		if(handled) {
 			return true;
 		}
-		
+
+		ILocalMapControlHandler controlHandler = gamestate.getStateControlHandler();
+
 		String ca = gamestate.getStateControlScheme().map(vk);
 		if(ILocalMapControlHandler.JUMP.equals(ca) && action == TInput.KEY_PRESS) {
 			controlHandler.handleJump();

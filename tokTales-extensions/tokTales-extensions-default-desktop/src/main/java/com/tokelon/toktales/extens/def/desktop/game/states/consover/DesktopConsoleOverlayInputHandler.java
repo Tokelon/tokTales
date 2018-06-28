@@ -1,27 +1,30 @@
 package com.tokelon.toktales.extens.def.desktop.game.states.consover;
 
+import com.tokelon.toktales.core.game.states.IControlScheme;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayGamestate;
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.desktop.input.TInput;
+import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 
 public class DesktopConsoleOverlayInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
 
 	
-	private final IConsoleOverlayGamestate gamestate;
-	
-	public DesktopConsoleOverlayInputHandler(IConsoleOverlayGamestate gamestate) {
-		this.gamestate = gamestate;
+	private final Supplier<IConsoleIntegration> consoleIntegrationSupplier;
+
+	public DesktopConsoleOverlayInputHandler(Supplier<IConsoleIntegration> consoleIntegrationSupplier) {
+		this.consoleIntegrationSupplier = consoleIntegrationSupplier;
 	}
 	
 	
 	@Override
 	public boolean invokeKeyInput(int vk, int action) {
-		IConsoleOverlayControlHandler controlHandler = gamestate.getStateControlHandler();
+		IControlScheme controlScheme = consoleIntegrationSupplier.get().getGamestate().getStateControlScheme();
+		IConsoleOverlayControlHandler controlHandler = consoleIntegrationSupplier.get().getConsoleOverlayControlHandler();
 		
-		String ca = gamestate.getStateControlScheme().map(vk);
+		String ca = controlScheme.map(vk);
 		
 		boolean handled = true;
 		if(action == TInput.KEY_PRESS) {
@@ -65,7 +68,7 @@ public class DesktopConsoleOverlayInputHandler implements IGameStateInputHandler
 
 	@Override
 	public boolean invokeCharInput(int codepoint) {
-		return gamestate.getStateControlHandler().handleConsoleInput(codepoint);
+		return consoleIntegrationSupplier.get().getConsoleOverlayControlHandler().handleConsoleInput(codepoint);
 	}
 	
 }

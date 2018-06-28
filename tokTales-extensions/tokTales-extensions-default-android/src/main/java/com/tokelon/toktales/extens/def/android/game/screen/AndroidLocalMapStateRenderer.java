@@ -10,10 +10,8 @@ import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.game.world.IWorldGrid;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
-import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer.IConsoleOverlayRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
@@ -35,13 +33,12 @@ public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 			IMapRendererFactory mapRendererFactory,
 			IEntityRendererFactory entityRendererFactory,
 			IObjectRendererFactory objecRendererFactory,
-			IConsoleOverlayRendererFactory consoleOverlayRendererFactory,
 			IDebugRendererFactory debugRendererFactory,
 			ITextureCoordinator textureCoordinator,
 			@DebugRenderingEnabled boolean debugRenderingEnabled,
 			@Assisted ILocalMapGamestate gamestate
 	) {
-		super(playerRendererFactory, mapRendererFactory, entityRendererFactory, objecRendererFactory, consoleOverlayRendererFactory, debugRendererFactory, textureCoordinator, debugRenderingEnabled, gamestate);
+		super(playerRendererFactory, mapRendererFactory, entityRendererFactory, objecRendererFactory, debugRendererFactory, textureCoordinator, debugRenderingEnabled, gamestate);
 		
 		this.gamestate = gamestate;
 		
@@ -70,7 +67,7 @@ public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 	protected IViewTransformer onSurfaceChangeRefreshContextViewport(ISurface surface) {
 
 		ICamera camera = getCurrentCamera();
-		IWorldGrid worldGrid = gamestate.getGame().getWorld().getGrid();
+		//IWorldGrid worldGrid = gamestate.getGame().getWorld().getGrid();
 		IScreenViewport masterViewport = surface.getViewport();
 		
 		AccurateViewport contextViewport = new AccurateViewport();

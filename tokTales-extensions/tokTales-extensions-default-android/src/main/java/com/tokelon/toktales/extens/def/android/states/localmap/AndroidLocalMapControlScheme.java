@@ -1,20 +1,25 @@
 package com.tokelon.toktales.extens.def.android.states.localmap;
 
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.extens.def.android.states.integration.AndroidConsoleIntegrationControlScheme;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlScheme;
 
-public class AndroidLocalMapControlScheme implements ILocalMapControlScheme {
+public class AndroidLocalMapControlScheme extends AndroidConsoleIntegrationControlScheme implements ILocalMapControlScheme {
 
+	
 	@Override
 	public String map(int vk) {
+		String action = super.map(vk);
+		if(!UNMAPPED.equals(action)) {
+			return action;
+		}
+		
 		switch(vk) {
 		case TokelonTypeAInputs.VB_A:
 			return ILocalMapControlHandler.JUMP;
 		case TokelonTypeAInputs.VB_B:
 			return ILocalMapControlHandler.INTERACT;
-		case TokelonTypeAInputs.VB_SP1:
-			return ILocalMapControlHandler.CONSOLE_TOGGLE;
 		case TokelonTypeAInputs.VB_SET:
 			return ILocalMapControlHandler.DEBUG_OPEN;
 		case TokelonTypeAInputs.VB_LEFT:

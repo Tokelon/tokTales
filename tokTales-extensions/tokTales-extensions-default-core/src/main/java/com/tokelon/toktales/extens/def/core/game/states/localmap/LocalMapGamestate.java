@@ -16,8 +16,6 @@ import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.screen.IStateRender;
-import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.ExtendedGamescene;
 import com.tokelon.toktales.core.game.states.IControlHandler;
@@ -29,7 +27,9 @@ import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultConsoleController;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.model.Console;
-import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer;
+import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler.IConsoleOverlayControlHandlerFactory;
+import com.tokelon.toktales.extens.def.core.game.states.integration.ConsoleIntegration;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
@@ -41,11 +41,10 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	public static final String SUB_TAG = "LocalMapGamestate";
 	
 	
-	private static final double CALLBACK_POSITION_CONSOLE = 10d;
-	
 	private static final String CONSOLE_PROMPT = ">"; //"> ";
 
 	public static final String CONTROLLER_CONSOLE_ID = "localmap_gamestate-controller_console";
+	public static final String GAMESTATE_INTEGRATION_CONSOLE = "localmap_gamestate-integration_console";
 
 	
 	private final ActionTakerImpl actionTaker = new ActionTakerImpl();
@@ -57,17 +56,16 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	private boolean logRenderTime = false;
 
 	
-	private ILocalMapStateRenderer customRenderer;
-
-	private ILocalMapControlHandler customControlHandler;
-	
-	private IConsoleController consoleController;
-
-	
-	private ConsoleRenderCallback consoleRenderCallback;
 	
 	private ITextureFont font;
 	
+	private IConsoleIntegration consoleIntegration;
+
+	private ILocalMapStateRenderer customRenderer;
+	private ILocalMapControlHandler customControlHandler;
+	
+	
+	private IConsoleOverlayControlHandlerFactory consoleOverlayControlHandlerFactory;
 	
 	private final ILocalMapStateRendererFactory stateRendererFactory;
 	private final ILocalMapInputHandlerFactory inputHandlerFactory;
@@ -87,6 +85,14 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		this.inputHandlerFactory = inputHandlerFactory;
 		this.controlScheme = controlScheme;
 		this.controlHandlerFactory = controlHandlerFactory;
+	}
+
+	
+	@Inject
+	protected void injectLocalMapStateDependencies(
+			IConsoleOverlayControlHandlerFactory consoleOverlayControlHandlerFactory
+	) {
+		this.consoleOverlayControlHandlerFactory = consoleOverlayControlHandlerFactory;
 	}
 	
 	
@@ -144,6 +150,11 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 	
 	
+	@Override
+	public IConsoleIntegration getIntegrationConsole() {
+		return consoleIntegration;
+	}
+	
 	
 	
 	@Override
@@ -167,21 +178,17 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		IConsole console = new Console(new ConsoleInterpreter());
 		console.setPrompt(CONSOLE_PROMPT);
 		
-		consoleController = new DefaultConsoleController(console);
+		IConsoleController consoleController = new DefaultConsoleController(console);
 		if(font != null) {
 			consoleController.setFont(font);
 		}
 		
-		
-		consoleRenderCallback = new ConsoleRenderCallback(getStateRenderCustom(), consoleController);
-		getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_CONSOLE, consoleRenderCallback);
+
+		consoleIntegration = new ConsoleIntegration(this, consoleController, consoleOverlayControlHandlerFactory);
+		getIntegrator().addIntegration(GAMESTATE_INTEGRATION_CONSOLE, consoleIntegration);
+		consoleIntegration.onStateEngage(this); // Any way to create it earlier and avoid this?
 	}
 	
-	
-	@Override
-	public IConsoleController getConsoleController() {
-		return consoleController;
-	}
 	
 	
 	@Override
@@ -191,8 +198,8 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		
 		IMapController mapController = getActiveScene().getMapController();
 		
-			// TODO: Use rendering action scheduler ?
-			mapController.getActionScheduler().requestActionOrError(actionTaker);
+		// TODO: Use rendering action scheduler ?
+		mapController.getActionScheduler().requestActionOrError(actionTaker);
 		try {
 			long drawStart = System.currentTimeMillis();
 
@@ -204,8 +211,8 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			if(logDrawTime) TokTales.getLog().d(getTag(), "Draw Time MS = " + drawDT);
 		}
 		finally {
-				mapController.getActionScheduler().finishAction(actionTaker);
-			}
+			mapController.getActionScheduler().finishAction(actionTaker);
+		}
 		
 
 		if(fpsModeEnabled) {
@@ -242,7 +249,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		} catch (StorageException e) {
 			TokTales.getLog().e(getTag(), "Unable to read font file: " + e.getMessage());
 		}
-
+		
 		return font;
 	}
 	
@@ -256,45 +263,17 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	// TODO: Implement or remove
 	@SuppressWarnings("unused")
 	private class MainConfigChangeListener implements OnConfigChangeListener {
-
 		@Override
 		public void onConfigChanged(IFileConfig config, String category, String key) {
 			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void onConfigBatchChanged(IFileConfig config, List<String> entryCategory, List<String> entryKey) {
 			// TODO Auto-generated method stub
-			
 		}
 	}
-		
 	
-	
-	// TODO: Extract these
-	
-	private class ConsoleRenderCallback implements IRenderCallback {
-		
-		private final IConsoleOverlayRenderer coRenderer;
-		private final IConsoleController coController;
-		
-		public ConsoleRenderCallback(ILocalMapStateRenderer stateRenderer, IConsoleController consoleController) {
-			coRenderer = stateRenderer.getConsoleOverlayRenderer();
-			coController = consoleController;
-		}
-		
-		@Override
-		public void renderCall(String layerName, double stackPosition) {
-			coRenderer.drawConsoleOverlay(coController);
-		}
-
-		@Override
-		public String getDescription() {
-			return "renders the console overlay";
-		}
-	}
-
 
 	
 	private class ConsoleInterpreter implements IConsoleInterpreter {

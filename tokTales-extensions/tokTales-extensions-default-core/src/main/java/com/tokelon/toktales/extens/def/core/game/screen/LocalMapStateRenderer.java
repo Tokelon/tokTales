@@ -24,7 +24,6 @@ import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
-import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer.IConsoleOverlayRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
@@ -42,7 +41,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	
 	private static final double CALLBACK_POSITION_PREPARE = -100d;
 	private static final double CALLBACK_POSITION_DEBUG = 5d;
-	private static final double CALLBACK_POSITION_CONSOLE = 10d;
 	
 	private static final RGBAColorImpl CLEAR_COLOR = RGBAColorImpl.createFromCode("#000");
 
@@ -72,7 +70,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private final IEntityRenderer entityRenderer;
 	private final IDebugRenderer debugRenderer;
 	private final IObjectRenderer objectRenderer;
-	private final IConsoleOverlayRenderer consoleOverlayRenderer;
 	
 	private final ITextureCoordinator textureCoordinator;
 	private final ILocalMapGamestate gamestate;
@@ -83,7 +80,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 			IMapRendererFactory mapRendererFactory,
 			IEntityRendererFactory entityRendererFactory,
 			IObjectRendererFactory objecRendererFactory,
-			IConsoleOverlayRendererFactory consoleOverlayRendererFactory,
 			IDebugRendererFactory debugRendererFactory,
 			ITextureCoordinator textureCoordinator,
 			@DebugRenderingEnabled boolean debugRenderingEnabled,
@@ -100,7 +96,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		this.entityRenderer = entityRendererFactory.createForTypedGamestate(gamestate);
 		this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate);
 		this.objectRenderer = objecRendererFactory.createForTypedGamestate(gamestate);
-		this.consoleOverlayRenderer = consoleOverlayRendererFactory.createForGamestate(gamestate);
 		
 		this.defaultViewTransformer = new DefaultViewTransformer();
 		this.currentViewTransformer = defaultViewTransformer;
@@ -108,7 +103,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		IRenderOrder renderOrder = gamestate.getRenderOrder();
 		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(CALLBACK_POSITION_PREPARE, this);
 		renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DEBUG, this);
-		renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_CONSOLE, this);
 	}
 	
 	
@@ -155,7 +149,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		entityRenderer.prepare(gameTime);
 		debugRenderer.prepare(gameTime);
 		objectRenderer.prepare(gameTime);
-		consoleOverlayRenderer.prepare(gameTime);
 	}
 
 	private void clearDraw() {
@@ -163,6 +156,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	}
 
 	
+	@SuppressWarnings("unused") // TODO: Old - Remove
 	private void renderFrame() {
 		if(!hasView) {
 			assert false : ASSERT_NOT_READY;
@@ -196,9 +190,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 			if(debugRenderingEnabled && position == CALLBACK_POSITION_DEBUG) {
 				debugRenderer.drawFull(options);
 			}
-			else if(position == CALLBACK_POSITION_CONSOLE) {
-				consoleOverlayRenderer.drawFull(options);
-			}
 		}
 		else {
 			IBlockMap map = gamestate.getActiveScene().getMapController().getMap();
@@ -215,11 +206,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		}
 	}
 	
-	
-	@Override
-	public IConsoleOverlayRenderer getConsoleOverlayRenderer() {
-		return consoleOverlayRenderer;
-	}
 	
 	@Override
 	public IDebugRenderer getDebugRenderer() {
@@ -338,7 +324,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		entityRenderer.contextCreated();
 		debugRenderer.contextCreated();
 		objectRenderer.contextCreated();
-		consoleOverlayRenderer.contextCreated();
 		
 		renderToolkit = gamestate.getEngine().getRenderService().getRenderAccess().requestToolkit();
 		if(renderToolkit == null) {
@@ -366,7 +351,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		entityRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
 		debugRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
 		objectRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
-		consoleOverlayRenderer.contextChanged(currentViewTransformer, currentProjectionMatrix);
 
 		// Iterate over the managed renderers
 		synchronized (managedRendererMap) {
@@ -387,7 +371,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		entityRenderer.contextDestroyed();
 		debugRenderer.contextDestroyed();
 		objectRenderer.contextDestroyed();
-		consoleOverlayRenderer.contextDestroyed();
 		
 		synchronized (managedRendererMap) {
 			for(IRenderer renderer: managedRendererMap.values()) {

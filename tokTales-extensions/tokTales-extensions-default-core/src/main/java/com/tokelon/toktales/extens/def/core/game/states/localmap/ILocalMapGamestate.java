@@ -1,9 +1,9 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
 import com.tokelon.toktales.core.game.states.ITypedGameState;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 
-public interface ILocalMapGamestate extends ITypedGameState<ILocalMapGamescene>, IConsoleOverlayGamestate {
+public interface ILocalMapGamestate extends ITypedGameState<ILocalMapGamescene> {
 
 	/* On overriding state dependencies with custom ones:
 	 * - Getters
@@ -30,5 +30,12 @@ public interface ILocalMapGamestate extends ITypedGameState<ILocalMapGamescene>,
 	 * @return The custom state render, or null if there is none.
 	 */
 	public ILocalMapStateRenderer getStateRenderCustom();
+	
+	
+	/** Returns the console integration for this state.
+	 * 
+	 * @return A console integration.
+	 */
+	public IConsoleIntegration getIntegrationConsole();
 	
 }

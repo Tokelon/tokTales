@@ -7,6 +7,7 @@ import com.tokelon.toktales.extens.def.desktop.game.states.consover.DesktopConso
 
 public class DesktopLocalMapControlScheme extends DesktopConsoleOverlayControlScheme implements ILocalMapControlScheme {
 
+	
 	@Override
 	public String map(int vk) {
 		String action = super.map(vk);

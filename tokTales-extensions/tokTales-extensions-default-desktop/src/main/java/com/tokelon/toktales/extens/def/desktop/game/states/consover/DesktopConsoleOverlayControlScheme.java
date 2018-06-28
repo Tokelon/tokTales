@@ -6,6 +6,7 @@ import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlay
 
 public class DesktopConsoleOverlayControlScheme implements IControlScheme {
 
+	
 	@Override
 	public String map(int vk) {
 		switch (vk) {

@@ -5,9 +5,9 @@ import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
-import com.tokelon.toktales.extens.def.core.game.states.consover.ConsoleOverlayControlHandler;
+import com.tokelon.toktales.core.game.states.IControlHandler.EmptyControlHandler;
 
-public class LocalMapControlHandler extends ConsoleOverlayControlHandler implements ILocalMapControlHandler {
+public class LocalMapControlHandler extends EmptyControlHandler implements ILocalMapControlHandler {
 	
 	public static final String TAG = "LocalMapControlHandler";
 	
@@ -16,8 +16,6 @@ public class LocalMapControlHandler extends ConsoleOverlayControlHandler impleme
 	
 	@Inject
 	public LocalMapControlHandler(@Assisted ILocalMapGamestate gamestate) {
-		super(gamestate);
-		
 		this.gamestate = gamestate;
 	}
 
@@ -108,55 +106,5 @@ public class LocalMapControlHandler extends ConsoleOverlayControlHandler impleme
 		
 		return true;
 	}
-
-	
-	
-	/* Methods from ConsoleOverlayControlHandler, because it does not consider the game state scene */
-	
-	@Override
-	public boolean handleConsoleClear() {
-		if(!gamestate.getActiveScene().getSceneControlHandler().handleConsoleClear()) {
-			return super.handleConsoleClear();
-		}
-		
-		return true;
-	}
-	
-	@Override
-	public boolean handleConsoleDelete() {
-		if(!gamestate.getActiveScene().getSceneControlHandler().handleConsoleDelete()) {
-			return super.handleConsoleDelete();
-		}
-		
-		return true;
-	}
-	
-	@Override
-	public boolean handleConsoleEnter() {
-		if(!gamestate.getActiveScene().getSceneControlHandler().handleConsoleEnter()) {
-			return super.handleConsoleEnter();
-		}
-		
-		return true;
-	}
-	
-	@Override
-	public boolean handleConsoleInput(int codepoint) {
-		if(!gamestate.getActiveScene().getSceneControlHandler().handleConsoleInput(codepoint)) {
-			return super.handleConsoleInput(codepoint);
-		}
-		
-		return true;
-	}
-	
-	@Override
-	public boolean handleConsoleToggle() {
-		if(!gamestate.getActiveScene().getSceneControlHandler().handleConsoleToggle()) {
-			return super.handleConsoleToggle();
-		}
-		
-		return true;
-	}
-	
 	
 }

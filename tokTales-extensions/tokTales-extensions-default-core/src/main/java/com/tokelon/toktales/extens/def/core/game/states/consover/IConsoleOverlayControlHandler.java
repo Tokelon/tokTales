@@ -1,6 +1,7 @@
 package com.tokelon.toktales.extens.def.core.game.states.consover;
 
 import com.tokelon.toktales.core.game.states.IControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 
 public interface IConsoleOverlayControlHandler extends IControlHandler {
 
@@ -23,6 +24,13 @@ public interface IConsoleOverlayControlHandler extends IControlHandler {
 	
 	public boolean handleConsoleInput(int codepoint);
 	
+	
+
+	public interface IConsoleOverlayControlHandlerFactory {
+		
+		public IConsoleOverlayControlHandler create(IConsoleIntegration consoleIntegration);
+	}
+
 	
 	public class EmptyConsoleOverlayControlHandler implements IConsoleOverlayControlHandler {
 		@Override

@@ -1,8 +1,8 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
+import com.tokelon.toktales.core.game.states.IControlHandler;
 
-public interface ILocalMapControlHandler extends IConsoleOverlayControlHandler {
+public interface ILocalMapControlHandler extends IControlHandler {
 
 	
 	public static final String MOVE_LEFT = "local_map_move_left";
@@ -54,7 +54,7 @@ public interface ILocalMapControlHandler extends IConsoleOverlayControlHandler {
 	}
 
 	
-	public class EmptyLocalMapControlHandler extends EmptyConsoleOverlayControlHandler implements ILocalMapControlHandler {
+	public class EmptyLocalMapControlHandler extends EmptyControlHandler implements ILocalMapControlHandler {
 
 	}
 	

@@ -6,17 +6,20 @@ import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButto
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
+import com.tokelon.toktales.extens.def.android.states.integration.AndroidConsoleIntegrationInputHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
 
-public class AndroidLocalMapInputHandler implements ILocalMapInputHandler, IScreenButtonCallback, IScreenPressCallback {
+public class AndroidLocalMapInputHandler extends AndroidConsoleIntegrationInputHandler implements ILocalMapInputHandler, IScreenButtonCallback, IScreenPressCallback {
 
 
 	private final ILocalMapGamestate gamestate;
 	
 	@Inject
 	public AndroidLocalMapInputHandler(@Assisted ILocalMapGamestate gamestate) {
+		super(() -> gamestate.getIntegrationConsole());
+		
 		this.gamestate = gamestate;
 	}
 
@@ -24,6 +27,11 @@ public class AndroidLocalMapInputHandler implements ILocalMapInputHandler, IScre
 
 	@Override
 	public boolean invokeScreenButton(int vb, int action) {
+		boolean handled = super.invokeScreenButton(vb, action);
+		if(handled) {
+			return true;
+		}
+		
 		ILocalMapControlHandler controlHandler = gamestate.getStateControlHandler();
 		
 		String ca = gamestate.getStateControlScheme().map(vb);
@@ -33,13 +41,13 @@ public class AndroidLocalMapInputHandler implements ILocalMapInputHandler, IScre
 		else if(ILocalMapControlHandler.INTERACT.equals(ca) && action == TokelonTypeAInputs.BUTTON_PRESS) {
 			controlHandler.handleInteract();
 		}
-		else if(ILocalMapControlHandler.CONSOLE_TOGGLE.equals(ca) && action == TokelonTypeAInputs.BUTTON_PRESS) {
-			controlHandler.handleConsoleToggle();	// TODO: Does not work for some reason
-		}
 		else if(ILocalMapControlHandler.DEBUG_OPEN.equals(ca) && action == TokelonTypeAInputs.BUTTON_PRESS) {
 			controlHandler.handleDebugOpen();
 		}
 		else {
+			// Implement camera moving when some debug state is enabled?
+			// Implement camera movement and zoom with drag and pinch?
+			
 			int direction = keyToDirection(ca); // Will return 0 if ca not directional key
 			if(direction <= 0) {
 				return false;
@@ -100,5 +108,4 @@ public class AndroidLocalMapInputHandler implements ILocalMapInputHandler, IScre
 		}
 	}
 
-	
 }

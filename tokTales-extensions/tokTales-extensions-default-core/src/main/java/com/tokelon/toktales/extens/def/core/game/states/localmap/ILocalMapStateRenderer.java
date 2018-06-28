@@ -1,7 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
 import com.tokelon.toktales.core.game.screen.IStateRender;
-import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer;
@@ -17,8 +16,6 @@ public interface ILocalMapStateRenderer extends IStateRender {
 	
 	public boolean isDebugRenderingEnabled();
 	
-	
-	public IConsoleOverlayRenderer getConsoleOverlayRenderer();
 	
 	public IDebugRenderer getDebugRenderer();
 	

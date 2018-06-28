@@ -106,10 +106,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 			return;
 		}
 		
-		ICamera camera = customViewTransformer.getCurrentCamera();
-		
-		startX = 10f;
-		startY = camera.getHeight() * 0.75f;
+		// Should not use prepare because it's omitted when calling specific draw methods
 	}
 	
 
@@ -139,9 +136,8 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 			assert false : "Cannot draw without view";
 			return;
 		}
-
-		IConsole console = consoleController.getConsole();
 		
+		IConsole console = consoleController.getConsole();
 		if(!consoleController.isConsoleOpen()) {
 			// Do not draw
 			return;
@@ -155,9 +151,14 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		}
 		
 		
+		// TODO: Refactor - Use console position?
 		ICamera camera = customViewTransformer.getCurrentCamera();
 		float width = camera.getWidth();
 		float height = camera.getHeight();
+		
+		startX = 10f;
+		startY = height * 0.75f;
+		
 		
 		charRenderer.setColor(color);
 		charRenderer.setFont(cFont);
