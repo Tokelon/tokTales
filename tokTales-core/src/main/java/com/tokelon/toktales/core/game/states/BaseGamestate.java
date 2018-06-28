@@ -14,6 +14,8 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderRunner;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IGameSceneControlFactory;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator;
+import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
 import com.tokelon.toktales.tools.inject.IParameterInjector;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 
@@ -39,10 +41,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	public static final String INITIAL_SCENE_NAME = "base_gamestate_initial_scene";
 	
 	
-	/* Base objects */
 	
+	/* Base objects */
 	private RenderRunner renderRunner;
-	private IParameterInjector gamestateInjector;
 
 
 	/* Injected base objects */
@@ -50,7 +51,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	private IEngine engine;
 	private ILogger log;
 	private IGame game;
-
+	
+	private IParameterInjector gamestateInjector;
+	private IGameStateIntegrator stateIntegrator;
 	private IRenderOrder stateRenderOrder;
 
 	private IGameStateInput stateInput;
@@ -167,10 +170,11 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	@Inject
 	protected void injectDependencies(
 			IParameterInjectorFactory parameterInjectorFactory,
-			IGameSceneControlFactory sceneControlFactory,
-			IEngineContext context,
+			IGameStateIntegratorFactory gamestateIntegratorFactory,
 			IRenderOrder renderOrder,
-			IGameStateInput input,
+			IEngineContext engineContext,
+			IGameStateInput gamestateInput,
+			IGameSceneControlFactory gamesceneControlFactory,
 			IStateRender render,
 			IGameStateInputHandler inputHandler,
 			IControlScheme controlScheme,
@@ -178,25 +182,24 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	) {
 		// Initialize internal dependencies
 		this.gamestateInjector = parameterInjectorFactory.create(InjectGameState.class, this);
-		
-		
-		Provider<? extends T> defaultSceneProvider = stateSceneProvider == null ? createDefaultSceneProvider(context) : stateSceneProvider;
-		setSceneProvider(defaultSceneProvider);
+		this.stateIntegrator = gamestateIntegratorFactory.create(this);
+		this.stateRenderOrder = renderOrder;
+		this.renderRunner = new RenderRunner(stateRenderOrder);
 
-		IModifiableGameSceneControl<T> defaultSceneControl = stateSceneControl == null ? createDefaultSceneControl(context, sceneControlFactory) : stateSceneControl;
-		setSceneControl(defaultSceneControl);
-		
-		
 		// Dependencies have been injected
 		afterDependencyInjection();
 		
+
+		// Determine the default base dependencies
+		Provider<? extends T> defaultSceneProvider = stateSceneProvider == null ? createDefaultSceneProvider(engineContext) : stateSceneProvider;
+		IModifiableGameSceneControl<T> defaultSceneControl = stateSceneControl == null ? createDefaultSceneControl(engineContext, gamesceneControlFactory) : stateSceneControl;
 		
 		// Initialize base dependencies
-		initBaseDependencies(context, renderOrder, input);
+		initBaseDependencies(engineContext, gamestateInput, defaultSceneProvider, defaultSceneControl);
 		afterInitBaseDependencies();
 		
 		
-		// Determine the defaults state dependencies
+		// Determine the default state dependencies
 		IStateRender defaultStateRender = stateRender == null ? render : stateRender;
 		IGameStateInputHandler defaultStateInputHandler = stateInputHandler == null ? inputHandler : stateInputHandler;
 		IControlScheme defaultStateControlScheme = stateControlScheme == null ? controlScheme : stateControlScheme;
@@ -251,20 +254,19 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @see #afterInitBaseDependencies()
 	 */
 	protected void initBaseDependencies(
-			IEngineContext context,
-			IRenderOrder renderOrder,
-			IGameStateInput input
+			IEngineContext defaultEngineContext,
+			IGameStateInput defaultGamestateInput,
+			Provider<? extends T> defaultGamesceneProvider,
+			IModifiableGameSceneControl<T> defaultGamesceneControl
 	) {
-		this.engineContext = context;
-		this.engine = context.getEngine();
-		this.log = context.getLog();
-		this.game = context.getGame();
+		this.engineContext = defaultEngineContext;
+		this.engine = defaultEngineContext.getEngine();
+		this.log = defaultEngineContext.getLog();
+		this.game = defaultEngineContext.getGame();
 
-		this.stateRenderOrder = renderOrder;
-		this.stateInput = input;
-
-		
-		this.renderRunner = new RenderRunner(stateRenderOrder);
+		setGamestateInput(defaultGamestateInput);
+		setGamesceneProvider(defaultGamesceneProvider);
+		setGamesceneControl(defaultGamesceneControl);
 	}
 
 	/** Called after base dependencies have been initialized.
@@ -338,17 +340,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		// Create and assign initial scene
 		atSetupInitialGamescene();
 	}
-	
-	
-	
-	/* Lifecycle callbacks */
 
-	@Override
-	public void onEngage() {
-		
-		getEngine().getRenderService().getSurfaceHandler().addCallback(getStateRender());
-	}
-	
 	
 	/** Creates and assigns the initial gamescene to this state's scene control.
 	 * <p>
@@ -376,45 +368,72 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	protected T createInitialScene() {
 		return stateSceneProvider.get();
 	}
+	
+	
+	
+	/* Lifecycle callbacks */
+
+	@Override
+	public void onEngage() {
+		getEngine().getRenderService().getSurfaceHandler().addCallback(getStateRender());
+		
+		
+		getIntegrator().onEngage();
+	}
 
 	
 	@Override
 	public void onEnter() {
-		// Nothing yet
+		
+		getIntegrator().onEnter();
 	}
 
 	@Override
 	public void onPause() {
 		getSceneControl().pauseScene();
+		
+		
+		getIntegrator().onPause();
 	}
 	
 	@Override
 	public void onResume() {
 		getSceneControl().resumeScene();
+		
+		
+		getIntegrator().onResume();
 	}
 	
 	@Override
 	public void onExit() {
-		// Nothing yet
+		
+		getIntegrator().onExit();
 	}
 
 	
 	@Override
 	public void onDisengage() {
-		
 		getEngine().getRenderService().getSurfaceHandler().removeCallback(getStateRender());
+		
+		
+		getIntegrator().onDisengage();
 	}
 
 
 	@Override
 	public void onUpdate(long timeMillis) {
-		
 		getSceneControl().updateScene(timeMillis);
+		
+		
+		getIntegrator().onUpdate(timeMillis);
 	}
 
 	@Override
 	public void onRender() {
 		renderRunner.run();
+		
+		
+		getIntegrator().onRender();
 	}
 	
 
@@ -453,6 +472,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		if(assigned) {
 			getSceneControl().addScene(name, scene);
 			scene.onAssign();
+			
+			
+			getIntegrator().onSceneAssign(name, scene);
 		}
 		else {
 			getLog().w(getTag(), String.format("Failed to assign scene. Scene [%s] assign() returned false", scene.getClass()));
@@ -471,6 +493,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 		getSceneControl().changeScene(name);
 		getStateRender().updateCamera(scene.getSceneCamera());
+		
+		
+		getIntegrator().onSceneChange(name);
 		return true;
 	}
 
@@ -482,6 +507,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		}
 		
 		getSceneControl().removeScene(name);
+		
+		
+		getIntegrator().onSceneRemove(name, scene);
 		return true;
 	}
 
@@ -493,7 +521,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 
 	/* Getters */
-
+	
 	@Override
 	public IEngineContext getEngineContext() {
 		return engineContext;
@@ -552,6 +580,15 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 
 
+	/** Returns the integrator for this state.
+	 * 
+	 * @return A gamestate integrator.
+	 */
+	protected IGameStateIntegrator getIntegrator() {
+		return stateIntegrator;
+	}
+	
+
 	/** Returns this state's scene type.
 	 * <p>
 	 * This type must be the generic type of this state's scene control.
@@ -593,36 +630,52 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	/* Setters */
 	
+	/** Sets the state input.
+	 * <p>
+	 * If supported this gamestate will be injected via {@link InjectGameState}.
+	 * 
+	 * @param gamestateInput
+	 * @throws NullPointerException If gamestateInput is null.
+	 */
+	private void setGamestateInput(IGameStateInput gamestateInput) {
+		if(gamestateInput == null) {
+			throw new NullPointerException();
+		}
+		
+		gamestateInjector.injectInto(gamestateInput);
+		this.stateInput = gamestateInput;
+	}
+	
 	/** Sets the state scene provider.
 	 * <p>
 	 * If supported this gamestate will be injected via {@link InjectGameState}.
 	 * 
-	 * @param sceneProvider
-	 * @throws NullPointerException If sceneProvider is null.
+	 * @param gamesceneProvider
+	 * @throws NullPointerException If gamesceneProvider is null.
 	 */
-	private void setSceneProvider(Provider<? extends T> sceneProvider) {
-		if(sceneProvider == null) {
+	private void setGamesceneProvider(Provider<? extends T> gamesceneProvider) {
+		if(gamesceneProvider == null) {
 			throw new NullPointerException();
 		}
 		
-		gamestateInjector.injectInto(sceneProvider);
-		this.stateSceneProvider = sceneProvider;
+		gamestateInjector.injectInto(gamesceneProvider);
+		this.stateSceneProvider = gamesceneProvider;
 	}
 	
 	/** Sets the state scene control.
 	 * <p>
 	 * If supported this gamestate will be injected via {@link InjectGameState}.
 	 * 
-	 * @param sceneControl
-	 * @throws NullPointerException If sceneControl is null.
+	 * @param gamesceneControl
+	 * @throws NullPointerException If gamesceneControl is null.
 	 */
-	private void setSceneControl(IModifiableGameSceneControl<T> sceneControl) {
-		if(sceneControl == null) {
+	private void setGamesceneControl(IModifiableGameSceneControl<T> gamesceneControl) {
+		if(gamesceneControl == null) {
 			throw new NullPointerException();
 		}
 
-		gamestateInjector.injectInto(sceneControl);
-		this.stateSceneControl = sceneControl;
+		gamestateInjector.injectInto(gamesceneControl);
+		this.stateSceneControl = gamesceneControl;
 	}
 
 	/** Sets the state render.
