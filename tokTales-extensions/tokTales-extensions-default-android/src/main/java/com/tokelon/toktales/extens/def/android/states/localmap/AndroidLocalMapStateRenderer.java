@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.android.game.screen;
+package com.tokelon.toktales.extens.def.android.states.localmap;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -17,8 +17,8 @@ import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityR
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
-import com.tokelon.toktales.extens.def.core.game.screen.LocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapStateRenderer;
 
 public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 	// TODO: Merge with LocalMapStateRenderer if it makes sense

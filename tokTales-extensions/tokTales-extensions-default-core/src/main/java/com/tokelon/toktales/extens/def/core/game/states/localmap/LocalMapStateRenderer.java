@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.core.game.screen;
+package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,13 +24,17 @@ import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer;
+import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
-import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
-import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
 
 public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 

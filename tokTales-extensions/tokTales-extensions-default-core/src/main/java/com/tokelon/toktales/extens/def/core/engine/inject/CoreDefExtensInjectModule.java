@@ -14,7 +14,6 @@ import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityR
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
-import com.tokelon.toktales.extens.def.core.game.screen.LocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.MapRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.ObjectRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
@@ -33,6 +32,7 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateR
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
