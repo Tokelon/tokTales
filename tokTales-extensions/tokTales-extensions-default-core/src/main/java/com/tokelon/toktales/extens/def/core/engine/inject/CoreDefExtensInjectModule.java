@@ -22,9 +22,9 @@ import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestateInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.IConsoleGamestate;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler.IConsoleOverlayControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.integration.ConsoleIntegrationControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamescene;
@@ -63,8 +63,8 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 	    bind(IRenderingStrategy.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(ConsoleRenderingStrategy.class);
 	    bind(IConsoleInterpreter.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(ConsoleGamestateInterpreter.class);
 		 install(new FactoryModuleBuilder()
-				.implement(IConsoleOverlayControlHandler.class, ConsoleIntegrationControlHandler.class)
-				.build(IConsoleOverlayControlHandlerFactory.class));
+				.implement(IConsoleIntegrationControlHandler.class, ConsoleIntegrationControlHandler.class)
+				.build(IConsoleIntegrationControlHandlerFactory.class));
 	    
 		 
 	    bind(IPlayerRendererFactory.class).to(PlayerRenderer.PlayerRendererFactory.class);

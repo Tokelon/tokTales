@@ -1,9 +1,8 @@
-package com.tokelon.toktales.extens.def.core.game.states.consover;
+package com.tokelon.toktales.extens.def.core.game.states.integration;
 
 import com.tokelon.toktales.core.game.states.IControlHandler;
-import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 
-public interface IConsoleOverlayControlHandler extends IControlHandler {
+public interface IConsoleIntegrationControlHandler extends IControlHandler {
 
 	public static final String CONSOLE_ENTER = "console_overlay_enter";
 	public static final String CONSOLE_DELETE = "console_overlay_delete";
@@ -26,13 +25,13 @@ public interface IConsoleOverlayControlHandler extends IControlHandler {
 	
 	
 
-	public interface IConsoleOverlayControlHandlerFactory {
+	public interface IConsoleIntegrationControlHandlerFactory {
 		
-		public IConsoleOverlayControlHandler create(IConsoleIntegration consoleIntegration);
+		public IConsoleIntegrationControlHandler create(IConsoleIntegration consoleIntegration);
 	}
 
 	
-	public class EmptyConsoleOverlayControlHandler implements IConsoleOverlayControlHandler {
+	public class EmptyConsoleOverlayControlHandler implements IConsoleIntegrationControlHandler {
 		@Override
 		public boolean isConsoleOpen() { return false; }
 

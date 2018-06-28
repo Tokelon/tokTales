@@ -7,9 +7,9 @@ import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
-import com.tokelon.toktales.extens.def.desktop.game.states.consover.DesktopConsoleOverlayInputHandler;
+import com.tokelon.toktales.extens.def.desktop.game.states.integration.DesktopConsoleIntegrationInputHandler;
 
-public class DesktopLocalMapInputHandler extends DesktopConsoleOverlayInputHandler implements ILocalMapInputHandler {
+public class DesktopLocalMapInputHandler extends DesktopConsoleIntegrationInputHandler implements ILocalMapInputHandler {
 
 	public static final String TAG = "DesktopLocalMapInputHandler";
 	

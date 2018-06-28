@@ -5,9 +5,8 @@ import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler.IConsoleOverlayControlHandlerFactory;
 
 public class ConsoleIntegration implements IConsoleIntegration {
 
@@ -23,9 +22,9 @@ public class ConsoleIntegration implements IConsoleIntegration {
 	
 	private final IGameState gamestate;
 	private final IConsoleController consoleController;
-	private final IConsoleOverlayControlHandler controlHandler;
+	private final IConsoleIntegrationControlHandler controlHandler;
 	
-	public ConsoleIntegration(IGameState gamestate, IConsoleController consoleController, IConsoleOverlayControlHandlerFactory controlHandlerFactory) {
+	public ConsoleIntegration(IGameState gamestate, IConsoleController consoleController, IConsoleIntegrationControlHandlerFactory controlHandlerFactory) {
 		this.gamestate = gamestate;
 		this.consoleController = consoleController;
 		this.controlHandler = controlHandlerFactory.create(this);
@@ -54,7 +53,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 	}
 
 	@Override
-	public IConsoleOverlayControlHandler getConsoleOverlayControlHandler() {
+	public IConsoleIntegrationControlHandler getConsoleControlHandler() {
 		return controlHandler;
 	}
 	

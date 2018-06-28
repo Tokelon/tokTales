@@ -3,9 +3,9 @@ package com.tokelon.toktales.extens.def.desktop.game.states.localmap;
 import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlScheme;
-import com.tokelon.toktales.extens.def.desktop.game.states.consover.DesktopConsoleOverlayControlScheme;
+import com.tokelon.toktales.extens.def.desktop.game.states.integration.DesktopConsoleIntegrationControlScheme;
 
-public class DesktopLocalMapControlScheme extends DesktopConsoleOverlayControlScheme implements ILocalMapControlScheme {
+public class DesktopLocalMapControlScheme extends DesktopConsoleIntegrationControlScheme implements ILocalMapControlScheme {
 
 	
 	@Override

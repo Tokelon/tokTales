@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.desktop.game.states.consover;
+package com.tokelon.toktales.extens.def.desktop.game.states.integration;
 
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
@@ -6,15 +6,15 @@ import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
 import com.tokelon.toktales.desktop.input.TInput;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 
-public class DesktopConsoleOverlayInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
+public class DesktopConsoleIntegrationInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
 
 	
 	private final Supplier<IConsoleIntegration> consoleIntegrationSupplier;
 
-	public DesktopConsoleOverlayInputHandler(Supplier<IConsoleIntegration> consoleIntegrationSupplier) {
+	public DesktopConsoleIntegrationInputHandler(Supplier<IConsoleIntegration> consoleIntegrationSupplier) {
 		this.consoleIntegrationSupplier = consoleIntegrationSupplier;
 	}
 	
@@ -22,20 +22,20 @@ public class DesktopConsoleOverlayInputHandler implements IGameStateInputHandler
 	@Override
 	public boolean invokeKeyInput(int vk, int action) {
 		IControlScheme controlScheme = consoleIntegrationSupplier.get().getGamestate().getStateControlScheme();
-		IConsoleOverlayControlHandler controlHandler = consoleIntegrationSupplier.get().getConsoleOverlayControlHandler();
+		IConsoleIntegrationControlHandler controlHandler = consoleIntegrationSupplier.get().getConsoleControlHandler();
 		
 		String ca = controlScheme.map(vk);
 		
 		boolean handled = true;
 		if(action == TInput.KEY_PRESS) {
 			switch (ca) {
-			case IConsoleOverlayControlHandler.CONSOLE_ENTER:
+			case IConsoleIntegrationControlHandler.CONSOLE_ENTER:
 				controlHandler.handleConsoleEnter();
 				break;
-			case IConsoleOverlayControlHandler.CONSOLE_DELETE:
+			case IConsoleIntegrationControlHandler.CONSOLE_DELETE:
 				controlHandler.handleConsoleDelete();
 				break;
-			case IConsoleOverlayControlHandler.CONSOLE_CLEAR:
+			case IConsoleIntegrationControlHandler.CONSOLE_CLEAR:
 				controlHandler.handleConsoleClear();
 				break;
 			default:
@@ -45,7 +45,7 @@ public class DesktopConsoleOverlayInputHandler implements IGameStateInputHandler
 		}
 		else if(action == TInput.KEY_RELEASE) {
 			switch (ca) {
-			case IConsoleOverlayControlHandler.CONSOLE_TOGGLE:
+			case IConsoleIntegrationControlHandler.CONSOLE_TOGGLE:
 				controlHandler.handleConsoleToggle();
 				break;
 			default:
@@ -68,7 +68,7 @@ public class DesktopConsoleOverlayInputHandler implements IGameStateInputHandler
 
 	@Override
 	public boolean invokeCharInput(int codepoint) {
-		return consoleIntegrationSupplier.get().getConsoleOverlayControlHandler().handleConsoleInput(codepoint);
+		return consoleIntegrationSupplier.get().getConsoleControlHandler().handleConsoleInput(codepoint);
 	}
 	
 }

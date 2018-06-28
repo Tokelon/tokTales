@@ -27,9 +27,9 @@ import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultConsoleController;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.model.Console;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler.IConsoleOverlayControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.integration.ConsoleIntegration;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
@@ -65,7 +65,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	private ILocalMapControlHandler customControlHandler;
 	
 	
-	private IConsoleOverlayControlHandlerFactory consoleOverlayControlHandlerFactory;
+	private IConsoleIntegrationControlHandlerFactory consoleOverlayControlHandlerFactory;
 	
 	private final ILocalMapStateRendererFactory stateRendererFactory;
 	private final ILocalMapInputHandlerFactory inputHandlerFactory;
@@ -90,7 +90,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	
 	@Inject
 	protected void injectLocalMapStateDependencies(
-			IConsoleOverlayControlHandlerFactory consoleOverlayControlHandlerFactory
+			IConsoleIntegrationControlHandlerFactory consoleOverlayControlHandlerFactory
 	) {
 		this.consoleOverlayControlHandlerFactory = consoleOverlayControlHandlerFactory;
 	}

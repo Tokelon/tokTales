@@ -8,8 +8,8 @@ import com.tokelon.toktales.extens.def.android.game.screen.AndroidConsoleRenderi
 import com.tokelon.toktales.extens.def.android.game.screen.AndroidLocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.android.states.integration.AndroidConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.ConsoleGamestate;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler.IConsoleOverlayControlHandlerFactory;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
 
@@ -20,8 +20,8 @@ public class AndroidDefExtensOverrideInjectModule extends AbstractInjectModule {
 	protected void configure() {
 		// LocalMapGamestate
 		install(new FactoryModuleBuilder()
-				.implement(IConsoleOverlayControlHandler.class, AndroidConsoleIntegrationControlHandler.class)
-				.build(IConsoleOverlayControlHandlerFactory.class));
+				.implement(IConsoleIntegrationControlHandler.class, AndroidConsoleIntegrationControlHandler.class)
+				.build(IConsoleIntegrationControlHandlerFactory.class));
 		install(new FactoryModuleBuilder()
 				.implement(ILocalMapStateRenderer.class, AndroidLocalMapStateRenderer.class)
 				.build(ILocalMapStateRendererFactory.class));

@@ -3,9 +3,8 @@ package com.tokelon.toktales.extens.def.core.game.states.integration;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
 
-public class ConsoleIntegrationControlHandler implements IConsoleOverlayControlHandler {
+public class ConsoleIntegrationControlHandler implements IConsoleIntegrationControlHandler {
 
 
 	private IConsoleIntegration consoleIntegration;

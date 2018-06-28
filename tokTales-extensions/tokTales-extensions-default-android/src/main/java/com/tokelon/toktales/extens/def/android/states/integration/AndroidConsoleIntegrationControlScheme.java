@@ -2,7 +2,7 @@ package com.tokelon.toktales.extens.def.android.states.integration;
 
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.core.game.states.IControlScheme;
-import com.tokelon.toktales.extens.def.core.game.states.consover.IConsoleOverlayControlHandler;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 
 public class AndroidConsoleIntegrationControlScheme implements IControlScheme {
 
@@ -11,7 +11,7 @@ public class AndroidConsoleIntegrationControlScheme implements IControlScheme {
 	public String map(int vk) {
 		switch(vk) {
 		case TokelonTypeAInputs.VB_SP1:
-			return IConsoleOverlayControlHandler.CONSOLE_TOGGLE;
+			return IConsoleIntegrationControlHandler.CONSOLE_TOGGLE;
 		}
 		
 		return UNMAPPED;
