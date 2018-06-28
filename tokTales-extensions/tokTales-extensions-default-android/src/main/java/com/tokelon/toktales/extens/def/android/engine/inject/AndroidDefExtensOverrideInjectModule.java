@@ -2,12 +2,8 @@ package com.tokelon.toktales.extens.def.android.engine.inject;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.For;
-import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
-import com.tokelon.toktales.extens.def.android.states.console.AndroidConsoleRenderingStrategy;
 import com.tokelon.toktales.extens.def.android.states.integration.AndroidConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.android.states.localmap.AndroidLocalMapStateRenderer;
-import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
@@ -26,10 +22,6 @@ public class AndroidDefExtensOverrideInjectModule extends AbstractInjectModule {
 				.implement(ILocalMapStateRenderer.class, AndroidLocalMapStateRenderer.class)
 				.build(ILocalMapStateRendererFactory.class));
 		
-		
-		// ConsoleGamestate
-	    bind(IRenderingStrategy.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(AndroidConsoleRenderingStrategy.class);
-	    
 	}
 
 }

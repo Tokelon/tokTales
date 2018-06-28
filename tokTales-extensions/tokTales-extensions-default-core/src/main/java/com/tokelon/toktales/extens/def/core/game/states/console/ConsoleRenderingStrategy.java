@@ -1,5 +1,7 @@
 package com.tokelon.toktales.extens.def.core.game.states.console;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.IModularStateRender;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
@@ -8,14 +10,25 @@ import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
 
 public class ConsoleRenderingStrategy implements IRenderingStrategy {
+	// Implement conditional clear or limit to 30 fps since we don't need the performance?
 
+	
 	public static final String RENDER_LAYER_MAIN = "console_rendering_stategy";
 	private static final String RENDER_DESCRIPTION = "ConsoleRenderingStrategy";
+
 	
 	private final NamedOptionsImpl mNamedOptions = new NamedOptionsImpl();
+	
+	private final IGL11 gl11;
+	
+	@Inject
+	public ConsoleRenderingStrategy(IGL11 gl11) {
+		this.gl11 = gl11;
+	}
 	
 	
 	@Override
@@ -35,8 +48,12 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	
 	@Override
 	public void renderFrame(IModularStateRender baseRenderer) {
-		IGameState gamestate = baseRenderer.getGamestate();
+		// Clear render canvas
+		gl11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl11.glClear(IGL11.GL_COLOR_BUFFER_BIT | IGL11.GL_DEPTH_BUFFER_BIT);
 		
+		
+		IGameState gamestate = baseRenderer.getGamestate();
 		long gameTimeMillis = gamestate.getGame().getTimeManager().getGameTimeMillis();
 		
 		
