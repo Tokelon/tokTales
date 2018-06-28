@@ -24,12 +24,14 @@ import com.tokelon.toktales.extens.def.core.game.states.console.IConsoleGamestat
 import com.tokelon.toktales.extens.def.core.game.states.integration.ConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapConsoleIntepreter;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamescene;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapStateRenderer;
@@ -57,6 +59,7 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 				 .implement(ILocalMapControlHandler.class, LocalMapControlHandler.class)
 				 .build(ILocalMapControlHandlerFactory.class));
     	bind(ILocalMapGamescene.class).to(LocalMapGamestate.EmptyLocalMapGamescene.class);
+    	bind(ILocalMapConsoleIntepreter.class).to(LocalMapConsoleInterpreter.class);
 		 
 	    // ConsoleGamestate
 		bind(IConsoleGamestate.class).to(ConsoleGamestate.class);

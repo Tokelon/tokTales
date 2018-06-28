@@ -34,7 +34,6 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapContro
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler.ILocalMapControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
-import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 
 public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> implements ILocalMapGamestate {
 
@@ -71,13 +70,15 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	private final ILocalMapInputHandlerFactory inputHandlerFactory;
 	private final IControlScheme controlScheme;
 	private final ILocalMapControlHandlerFactory controlHandlerFactory;
+	private final ILocalMapConsoleIntepreter consoleInterpreter;
 	
 	@Inject
 	public LocalMapGamestate(
 			ILocalMapStateRendererFactory stateRendererFactory,
 			ILocalMapInputHandlerFactory inputHandlerFactory,
 			ILocalMapControlScheme controlScheme,
-			ILocalMapControlHandlerFactory controlHandlerFactory
+			ILocalMapControlHandlerFactory controlHandlerFactory,
+			ILocalMapConsoleIntepreter consoleInterpreter
 	) {
 		super(ILocalMapGamescene.class);
 		
@@ -85,6 +86,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		this.inputHandlerFactory = inputHandlerFactory;
 		this.controlScheme = controlScheme;
 		this.controlHandlerFactory = controlHandlerFactory;
+		this.consoleInterpreter = consoleInterpreter;
 	}
 
 	
@@ -116,6 +118,13 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		super.initStateDependencies(stateRenderer, stateInputHandler, controlScheme, stateControlHandler);
 	}
 	
+	
+	@Override
+	protected void afterInjectDependencies() {
+		super.afterInjectDependencies();
+		
+		getGamestateInjector().injectInto(consoleInterpreter);
+	}
 	
 	
 	/** Use instead of {@link #setStateRender(IStateRender)}.
@@ -175,7 +184,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		}
 		
 		
-		IConsole console = new Console(new ConsoleInterpreter());
+		IConsole console = new Console(consoleInterpreter);
 		console.setPrompt(CONSOLE_PROMPT);
 		
 		IConsoleController consoleController = new DefaultConsoleController(console);
@@ -275,79 +284,6 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 	
 
-	
-	private class ConsoleInterpreter implements IConsoleInterpreter {
-
-		@Override
-		public boolean interpret(IConsole console, String input) {
-			
-			IConsoleInterpreter sceneConsInter = getActiveScene().getSceneConsoleInterpreter();
-			if(sceneConsInter != null && sceneConsInter.interpret(console, input)) {
-				return true;
-			}
-			
-			
-			String response = "";
-			
-			if(input.contains("Hello")) {
-				response = "Hello!";
-			}
-			else if(input.equals("td") || input.equals("debug toggle")) {
-				//Game.getEventHub().getGlobalBus().send("debug.toggle");	// Event bus?
-				
-				getStateRenderCustom().setDebugRendering(!getStateRenderCustom().isDebugRenderingEnabled());
-			}
-			else if(input.startsWith("camera size")) {
-				String[] inputWords = input.split(" ");
-				if(inputWords.length >= 4) {
-					try {
-						int xval = Integer.parseInt(inputWords[2]);
-						int yval = Integer.parseInt(inputWords[3]);
-						
-						getActiveScene().getSceneCamera().setSize(xval, yval);
-					}
-					catch(NumberFormatException nfe) {
-						response = "Bad x y values";
-					}
-				}
-				else {
-					response = "Bad syntax. Use: camera size x y";
-				}
-			}
-			else if(input.startsWith("camera zoom")) {
-				String[] inputWords = input.split(" ");
-				if(inputWords.length >= 3) {
-					try {
-						float zoom = Float.parseFloat(inputWords[2]);
-						
-						getActiveScene().getSceneCamera().setZoom(zoom, false);
-					}
-					catch(NumberFormatException nfe) {
-						response = "Bad zoom value";
-					}
-				}
-				else {
-					response = "Bad syntax. Use: camera zoom z";
-				}
-			}
-			else if(input.equals("exit")) {
-				// TODO: Implement state history and switch to the previous state
-				if(getGame().getStateControl().hasState(GameStateExtensionsValues.STATE_CONSOLE)) {
-					getGame().getStateControl().changeState(GameStateExtensionsValues.STATE_CONSOLE);
-					response = "Exiting...";
-				}
-			}
-			else {
-				response = "I did not understand that.";
-				return false;
-			}
-			
-			console.print(response);
-			return true;
-		}
-	}
-
-	
 	public static class EmptyLocalMapGamescene extends ExtendedGamescene implements ILocalMapGamescene {
 		private final EmptyLocalMapControlHandler emptyControlHandler = new EmptyLocalMapControlHandler();
 		

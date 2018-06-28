@@ -65,9 +65,10 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		this.consoleInterpreter = consoleInterpreter;
 	}
 	
+	
 	@Override
-	protected void afterInitStateDependencies() {
-		super.afterInitStateDependencies();
+	protected void afterInjectDependencies() {
+		super.afterInjectDependencies();
 		
 		getGamestateInjector().injectInto(consoleInterpreter);
 	}

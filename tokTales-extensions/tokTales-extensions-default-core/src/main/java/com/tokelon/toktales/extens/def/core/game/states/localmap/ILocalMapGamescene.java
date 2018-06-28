@@ -18,6 +18,6 @@ public interface ILocalMapGamescene extends IExtendedGameScene {
 	/**
 	 * @return The scene console interpreter, or null if there is none.
 	 */
-	public IConsoleInterpreter getSceneConsoleInterpreter();
+	public IConsoleInterpreter getSceneConsoleInterpreter(); // Change to ILocalMapConsoleInterpreter?
 	
 }
