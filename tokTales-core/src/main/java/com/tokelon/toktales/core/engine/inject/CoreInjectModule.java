@@ -76,6 +76,8 @@ import com.tokelon.toktales.core.game.states.IGameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.game.states.integration.GamestateIntegrator;
+import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
 import com.tokelon.toktales.core.game.world.DefaultCollisionStrategy;
 import com.tokelon.toktales.core.game.world.ICollisionStrategy;
 import com.tokelon.toktales.core.game.world.IWorld;
@@ -177,6 +179,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		bindGameSceneControlTypes();
 		
+		bind(IGameStateIntegratorFactory.class).to(GamestateIntegrator.GamestateIntegratorFactory.class);
 		bind(IRenderOrder.class).to(RenderOrder.class);
 		bind(IStateRender.class).to(EmptyStateRender.class);
 		 bind(ITextureCoordinator.class).to(DefaultTextureCoordinator.class);
