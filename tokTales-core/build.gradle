@@ -23,7 +23,7 @@ sourceSets {
 	test {
 		java {
 			srcDir 'src/test/java'
-			srcDir 'tools/test/java'			
+			srcDir 'tools/test/java'
 		}
 	}
 }
@@ -58,9 +58,19 @@ dependencies {
     	transitive = false
     }
     
-    // JOML
-    api "org.joml:joml:1.8.0"
-    
+    /* JOML
+	 * Updating to >= v1.8.0 is problematic for two reasons:
+     * 1. Compatibility with Android (> v1.8.6) is questionable - it works,
+     * but compiles with lots of warnings / other versions do not compile at all
+     * 2. On Desktop it always crashes immediately because of STBTruetype.stbtt_GetCodepointBitmap,
+     * this will have to be fixed anyway but not right now.
+     *
+     * This version might be preferable anyways,
+     * no natives, no weird backporting for Java 1.2/1.3 etc.
+     */
+	//api "org.joml:joml:1.8.0"
+	api "org.joml:joml:1.8.6"
+	
 }
 
 
