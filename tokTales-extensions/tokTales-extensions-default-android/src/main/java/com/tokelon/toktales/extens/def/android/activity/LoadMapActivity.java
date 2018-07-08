@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.activity;
+package com.tokelon.toktales.extens.def.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.tokelon.toktales.android.R;
+import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;

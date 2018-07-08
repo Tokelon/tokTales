@@ -22,9 +22,6 @@
             android:theme="@style/FullscreenTheme">
         </activity>
 
-        <activity android:name="com.tokelon.toktales.android.activity.LoadMapActivity"></activity>
-        <activity android:name="com.tokelon.toktales.android.activity.CreateMapActivity"></activity>
-
         <activity
             android:name="com.tokelon.toktales.android.activity.GameActivity"
             android:screenOrientation="portrait"
