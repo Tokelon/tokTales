@@ -15,6 +15,7 @@ import com.tokelon.toktales.android.activity.integration.GameIntegration;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration;
 import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -24,6 +25,7 @@ import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -55,7 +57,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "TaleActivity_Integration_SurfaceView";
 	public static final String ACTIVITY_INTEGRATION_GAME = "TaleActivity_Integration_Game";
-
+	public static final String ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS = "TaleActivity_Integration_RequestPermissions";
 	
 	
 	private AlertDialog.Builder backDialogBuilder;
@@ -70,6 +72,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 
 	
 	private SurfaceViewIntegration surfaceViewIntegration;
+	private SimpleRequestPermissionsIntegration requestPermissionsIntegration;
 
 	private IEngineContext engineContext;
 	private ITaleLoader taleLoader;
@@ -91,6 +94,9 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
 		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		
+		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLog(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		integrations.put(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
 		return integrations;
 	}
@@ -213,6 +219,15 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		});
 	}
 	
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		
+		if(requestPermissionsIntegration != null) {
+			requestPermissionsIntegration.onActivityRequestPermissionsResult(this, requestCode, permissions, grantResults);
+		}
+	}
 	
 	
 	@Override
