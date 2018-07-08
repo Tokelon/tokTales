@@ -46,7 +46,7 @@ public class ParameterInjectorSingleParameterTest {
 	@Test(expected = NullPointerException.class)
 	public void parameterInjector_CreationWithNullArray_ShouldThrowException() {
 		@SuppressWarnings("unused")
-		ParameterInjector injector = new ParameterInjector(InjectParams.forKey(Object.class), null);
+		ParameterInjector injector = new ParameterInjector(InjectParams.forKey(Object.class), (Object[]) null);
 	}
 	
 	

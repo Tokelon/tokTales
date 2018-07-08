@@ -17,7 +17,7 @@ public interface IEngineSetup {
 	
 	/** Runs any logic to setup the engine and game.
 	 * <p>
-	 * Called after {@link #create()}, so the engine context is available at this point.
+	 * Called after {@link #create}, so the engine context is available at this point.
 	 * 
 	 * @param context The engine context.
 	 */

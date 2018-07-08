@@ -68,7 +68,7 @@ public class LoadMainConfigSetupScript implements ISetupScript {
 
 
 		if(mainConfig == null) {
-			logger.w(TAG, "No main config will be loaded.");
+			logger.w(TAG, "No main config was loaded. The default will be used");
 			mainConfig = new CiniMainConfig();
 		}
 
