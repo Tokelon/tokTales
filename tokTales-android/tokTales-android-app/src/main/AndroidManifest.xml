@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.tokelon.toktales.tokteller"
-    android:versionCode="001021017"
-    android:versionName="0.0.1">
+    package="com.tokelon.toktales.tokteller">
 
     <application
         android:allowBackup="true"
@@ -13,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="com.tokelon.toktales.tokteller.TokTellerApp" tools:replace="android:name" >
+
         <activity
             android:name="com.tokelon.toktales.android.activity.RenderActivity"
             android:label="@string/title_activity_main" tools:replace="android:label" >

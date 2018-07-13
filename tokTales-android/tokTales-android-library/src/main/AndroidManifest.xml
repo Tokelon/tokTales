@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tokelon.toktales.android"
-    android:versionCode="001011017"
-    android:versionName="0.0.6" >
+    package="com.tokelon.toktales.android" >
 
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
@@ -23,7 +21,7 @@
             android:name="com.tokelon.toktales.android.activity.RenderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/FullscreenTheme" >
         </activity>
 
         <activity android:name="com.tokelon.toktales.android.activity.SettingsActivity"></activity>
