@@ -1,15 +1,8 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
-import android.Manifest;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration;
@@ -19,9 +12,16 @@ import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
+import com.tokelon.toktales.extens.def.android.R;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.Manifest;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class LoadTaleActivity extends AbstractIntegratedActivity {
 

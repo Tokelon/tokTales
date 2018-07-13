@@ -17,11 +17,6 @@
     <string name="menu_game_editor_map_new">New</string>
     <string name="menu_game_editor_map_edit">Edit</string>
     <string name="menu_game_editor_settings">Settings</string>
-    <string name="textViewCreateMapTitle">Create Map</string>
-    <string name="textViewCreateMapName">Name</string>
-    <string name="textViewCreateMapWidth">Width</string>
-    <string name="textViewCreateMapHeight">Height</string>
-    <string name="button_create_map_create">Create</string>
     
     <string name="pref_screen_about_text">About</string>
     <string name="pref_category_debug_display_text">Display</string>
@@ -39,16 +34,9 @@
     <string name="pref_about_version_text">Version</string>
     <string name="pref_about_version_summary">0.0.3</string>
     <string name="pref_about_author_text">Author</string>
-    <string name="pref_about_author_summary">Elias Paralikes</string>
+    <string name="pref_about_author_summary">Tokelon</string>
 
-
-    <string name="menu_tale_orientation">Orientation</string>
-    <string name="menu_tale_orientation_portrait">Portrait</string>
-    <string name="menu_tale_orientation_landscape">Landscape</string>
-    <string name="menu_tale_settings">Settings</string>
-    
     <string name="menu_game_orientation">Orientation</string>
     <string name="menu_game_orientation_portrait">Portrait</string>
     <string name="menu_game_orientation_landscape">Landscape</string>
-    
 </resources>

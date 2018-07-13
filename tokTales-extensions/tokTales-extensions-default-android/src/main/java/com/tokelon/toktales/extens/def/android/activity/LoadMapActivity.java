@@ -1,5 +1,11 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
+import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
+import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.storage.StorageException;
+import com.tokelon.toktales.core.values.LocationsAndPlaces;
+import com.tokelon.toktales.extens.def.android.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,12 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.values.LocationsAndPlaces;
 
 public class LoadMapActivity extends AbstractIntegratedActivity {
 	//StartGameActivity

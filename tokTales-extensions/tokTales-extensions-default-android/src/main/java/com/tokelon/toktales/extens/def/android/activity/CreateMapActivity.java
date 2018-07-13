@@ -1,5 +1,8 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
+import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.extens.def.android.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.core.engine.TokTales;
 
 public class CreateMapActivity extends Activity {
 	

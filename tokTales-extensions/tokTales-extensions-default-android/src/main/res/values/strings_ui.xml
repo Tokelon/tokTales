@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="textViewCreateMapTitle">Create Map</string>
+    <string name="textViewCreateMapName">Name</string>
+    <string name="textViewCreateMapWidth">Width</string>
+    <string name="textViewCreateMapHeight">Height</string>
+    <string name="button_create_map_create">Create</string>
+
+    <string name="menu_tale_orientation">Orientation</string>
+    <string name="menu_tale_orientation_portrait">Portrait</string>
+    <string name="menu_tale_orientation_landscape">Landscape</string>
+    <string name="menu_tale_settings">Settings</string>
+</resources>
