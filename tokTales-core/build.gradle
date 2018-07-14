@@ -91,3 +91,9 @@ eclipse.classpath.file.withXml { xml ->
 		con.@exported = 'true'
 	}
 }
+
+task wrapper(type: Wrapper) {
+	group 'build setup'
+	gradleVersion = '4.4'
+	distributionType = Wrapper.DistributionType.ALL
+}
