@@ -42,8 +42,8 @@ dependencies {
 
 
 	// LuaJ
-	implementation files('libs/Luaj/luaj-jse-3.0.1.jar')
-
+	implementation 'org.luaj:luaj-jse:3.0.1'
+	
 	// XStream
 	implementation ('com.thoughtworks.xstream:xstream:1.4.8') {
 		/* We need to exclude these because of duplicate class XmlPullParserException that Android includes in various configurations
@@ -56,8 +56,8 @@ dependencies {
 		exclude group: 'xpp3', module: 'xpp3_min'
 	}
 	
-
-    // Guice
+	
+	// Guice
     api 'com.google.inject:guice:4.1.0:no_aop'
     // extensions require aop version, disable with transitive false
     api ('com.google.inject.extensions:guice-assistedinject:4.1.0') {
