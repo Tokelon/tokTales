@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule;
-import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
+import com.tokelon.toktales.test.core.engine.inject.InjectionTestHelper;
 
 public class TestCoreInjection {
 
@@ -24,7 +24,7 @@ public class TestCoreInjection {
 	public void injectorCreation_ShouldOnlyFailOnExpectedBindings() {
 		CoreInjectConfig injectConfig = new CoreInjectConfig();
 
-		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, TestInjectionHelper.CORE_EXPECTED_BINDING_TYPES, TestInjectionHelper.CORE_EXPECTED_BINDING_ANNOTATIONS);
+		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, InjectionTestHelper.CORE_EXPECTED_BINDING_TYPES, InjectionTestHelper.CORE_EXPECTED_BINDING_ANNOTATIONS);
 	}
 	
 	

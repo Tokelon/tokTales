@@ -11,9 +11,9 @@ import com.google.inject.Injector;
 import com.google.inject.spi.Message;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 
-public final class TestInjectionHelper {
+public final class InjectionTestHelper {
 
-	private TestInjectionHelper() {}
+	private InjectionTestHelper() {}
 
 
 	public static final String[] CORE_EXPECTED_BINDING_TYPES =

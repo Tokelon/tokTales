@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectConfig;
 import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule;
-import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
+import com.tokelon.toktales.test.core.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.test.extens.def.core.engine.inject.CoreDefExtensMockPlatformInjectModule;
 
 public class TestCoreDefExtensInjection {
@@ -29,10 +29,10 @@ public class TestCoreDefExtensInjection {
 	};
 	
 	public static final String[] ALL_EXPECTED_BINDING_TYPES = 
-			TestInjectionHelper.combineExpectedBindingTypes(TestInjectionHelper.CORE_EXPECTED_BINDING_TYPES, CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES);
+			InjectionTestHelper.combineExpectedBindingTypes(InjectionTestHelper.CORE_EXPECTED_BINDING_TYPES, CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES);
 	
 	public static final String[][] ALL_EXPECTED_BINDING_ANNOTATIONS = 
-			TestInjectionHelper.combineExpectedBindingAnnotations(TestInjectionHelper.CORE_EXPECTED_BINDING_ANNOTATIONS, CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS);
+			InjectionTestHelper.combineExpectedBindingAnnotations(InjectionTestHelper.CORE_EXPECTED_BINDING_ANNOTATIONS, CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS);
 	
 	
 	@Test(expected = CreationException.class)
@@ -46,7 +46,7 @@ public class TestCoreDefExtensInjection {
 	public void injectorCreation_ShouldOnlyFailOnExpectedBindings() {
 		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
 		
-		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ALL_EXPECTED_BINDING_TYPES, ALL_EXPECTED_BINDING_ANNOTATIONS);
+		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ALL_EXPECTED_BINDING_TYPES, ALL_EXPECTED_BINDING_ANNOTATIONS);
 	}
 	
 

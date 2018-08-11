@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.test.android.engine.inject.AndroidMockPlatformInjectModule;
-import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
+import com.tokelon.toktales.test.core.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 
 import android.content.Context;
@@ -27,7 +27,7 @@ public class TestAndroidInjection {
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
 		
-		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new String[0][0]);
+		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new String[0][0]);
 	}
 	
 	@Test

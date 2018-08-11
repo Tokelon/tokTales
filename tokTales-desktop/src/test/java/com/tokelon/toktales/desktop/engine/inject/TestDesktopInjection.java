@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
-import com.tokelon.toktales.test.core.engine.inject.TestInjectionHelper;
+import com.tokelon.toktales.test.core.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 import com.tokelon.toktales.test.desktop.engine.inject.DesktopMockPlatformInjectModule;
 
@@ -20,7 +20,7 @@ public class TestDesktopInjection {
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
 		
-		TestInjectionHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new String[0][0]);
+		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new String[0][0]);
 	}
 	
 	
