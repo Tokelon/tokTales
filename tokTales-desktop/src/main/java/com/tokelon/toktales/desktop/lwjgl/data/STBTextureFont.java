@@ -17,15 +17,6 @@ import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.ITexture;
 
 public class STBTextureFont implements ITextureFont {
-
-	/* WARNING:
-	 * 
-	 * Do not call any of stbtt_ methods in a big amount (like a long loop).
-	 * The native execution seems unsafe and causes crashes
-	 * 
-	 * >> Could be because we memory allocations
-	 */
-	
 	/* A few possible optimizations, improvements
 	 * 
 	 * - Use glyphs for improved performance
@@ -36,8 +27,15 @@ public class STBTextureFont implements ITextureFont {
 	 * 
 	 */
 	
-	private Map<Integer, CodepointInfo> codepointCache;
 	
+	// THIS IS IT!!! This is the cause of the font bug that caused crashes!
+	// We have to keep a reference to this because STBTruetype only saves the pointer to it,
+	// so if it gets garbage collected it will crash!
+	// http://forum.lwjgl.org/index.php?topic=6241.msg33357#msg33357
+	private ByteBuffer fontDataBuffer;
+
+	
+	private Map<Integer, CodepointInfo> codepointCache;
 	
 	private STBTTFontinfo fontInfo;
 	
@@ -58,6 +56,11 @@ public class STBTextureFont implements ITextureFont {
 	
 	
 	public void initializeFont(ByteBuffer fontData) {
+		if(fontDataBuffer != null) {
+			throw new IllegalStateException("Font was already initialized");
+		}
+		fontDataBuffer = fontData;
+
 		
 		fontInfo = STBTTFontinfo.create();
 		
