@@ -3,7 +3,10 @@ package com.tokelon.toktales.android.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tokelon.toktales.core.content.IDisposable;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
+import com.tokelon.toktales.core.content.text.ICodepointAsset;
+import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
@@ -17,7 +20,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 
 public class AndroidTextureFont implements ITextureFont {
-
+	// TODO: Implement correct codepoint metrics
 	
 	private Map<Integer, CodepointInfo> codepointCache;
 	
@@ -80,7 +83,17 @@ public class AndroidTextureFont implements ITextureFont {
 		//paint.getTextBounds(text, index, count, bounds)
 		//paint.
 	}
+
 	
+	private CodepointInfo getCodepointInfo(int codepoint) {
+		CodepointInfo ci = codepointCache.get(codepoint);
+		if(ci == null) {
+			ci = new CodepointInfo();
+			codepointCache.put(codepoint, ci);
+		}
+		
+		return ci;
+	}
 	
 	
 	@Override
@@ -102,15 +115,25 @@ public class AndroidTextureFont implements ITextureFont {
 	public int getFontPixelLineGap() {
 		return fontLineGap;
 	}
+	
 
 	@Override
+	public ICodepointAsset getCodepointAsset(int codepoint) {
+		ICodepointTexture texture = getOrCreateCodepointTexture(codepoint);
+		IRectangle2i bitmapBox = getCodepointBitmapBox(codepoint);
+		
+		return new AndroidCodepointAsset(texture, bitmapBox);
+	}
+
+	
+	@Override
 	public ITexture getTextureForCodepoint(int codepoint) {
-		return codepointTexture(codepoint);
+		return getOrCreateCodepointTexture(codepoint);
 	}
 	
 	
-	private CodepointTexture codepointTexture(int codepoint) {
-		CodepointInfo cpInfo = codepointInfo(codepoint);
+	private CodepointTexture getOrCreateCodepointTexture(int codepoint) {
+		CodepointInfo cpInfo = getCodepointInfo(codepoint);
 		if(cpInfo.texture == null) {
 			cpInfo.texture = makeCodepointTexture(codepoint);
 		}
@@ -147,7 +170,7 @@ public class AndroidTextureFont implements ITextureFont {
 	@Override
 	public IRectangle2i getCodepointBitmapBox(int codepoint) {
 		
-		CodepointInfo cpInfo = codepointInfo(codepoint);
+		CodepointInfo cpInfo = getCodepointInfo(codepoint);
 		if(cpInfo.bounds == null) {
 			cpInfo.bounds = new Rectangle2iImpl();
 			makeCodepointBitmapBox(codepoint, cpInfo.bounds);
@@ -174,7 +197,6 @@ public class AndroidTextureFont implements ITextureFont {
 
 	@Override
 	public int getCodepointPixelHeight(int codepoint) {
-		
 		IRectangle2i rect = getCodepointBitmapBox(codepoint);
 		return Math.abs(rect.top() - rect.bottom());
 	}
@@ -186,9 +208,12 @@ public class AndroidTextureFont implements ITextureFont {
 
 	@Override
 	public int getCodepointBitmapOffsetY(int codepoint) {
-		
-		IRectangle2i bounds = getCodepointBitmapBox(codepoint);
-		return Math.abs(fontTop) + getCodepointBitmapBox(codepoint).bottom() - getCodepointPixelHeight(codepoint);
+		return getBitmapOffsetYFromBitmapBox(getCodepointBitmapBox(codepoint));
+	}
+	
+	private int getBitmapOffsetYFromBitmapBox(IRectangle2i bitmapBox) {
+		int codepointPixelHeight = Math.abs(bitmapBox.top() - bitmapBox.bottom());
+		return Math.abs(fontTop) + bitmapBox.bottom() - codepointPixelHeight;
 		//return fontHeight - Math.abs(bounds.top);// - getCodepointBitmapBox(codepoint).bottom;
 		//return 0;
 		//return fontHeight - ((fontBottom - getCodepointBitmapBox(codepoint).bottom) + getCodepointPixelHeight(codepoint));
@@ -211,15 +236,70 @@ public class AndroidTextureFont implements ITextureFont {
 		return 0;
 	}
 
+	@Override
+	public int getCodepointLeftSideBearing(int codepoint) {
+		return 0;
+	}
+
 	
-	private CodepointInfo codepointInfo(int codepoint) {
-		CodepointInfo ci = codepointCache.get(codepoint);
-		if(ci == null) {
-			ci = new CodepointInfo();
-			codepointCache.put(codepoint, ci);
+	
+	public class AndroidCodepointAsset implements ICodepointAsset, IDisposable {
+
+		private final ICodepointTexture texture;
+		private final IRectangle2i bitmapBox;
+
+		public AndroidCodepointAsset(ICodepointTexture texture, IRectangle2i bitmapBox) {
+			this.texture = texture;
+			this.bitmapBox = bitmapBox;
+		}
+
+		
+		@Override
+		public ITexture getTexture() {
+			return texture;
+		}
+
+		@Override
+		public IRectangle2i getBitmapBox() {
+			return bitmapBox;
+		}
+
+		@Override
+		public int getPixelWidth() {
+			return Math.abs(bitmapBox.right() - bitmapBox.left());
+		}
+
+		@Override
+		public int getPixelHeight() {
+			return Math.abs(bitmapBox.top() - bitmapBox.bottom());
+		}
+
+		@Override
+		public int getBitmapOffsetX() {
+			return bitmapBox.left();
+		}
+
+		@Override
+		public int getBitmapOffsetY() {
+			return getBitmapOffsetYFromBitmapBox(bitmapBox);
+		}
+
+		@Override
+		public int getAdvanceWidth() {
+			// TODO: use logic from getCodepointAdvanceWidth
+			return 0;
+		}
+
+		@Override
+		public int getLeftSideBearing() {
+			// TODO: Implement (see getCodepointAdvanceWidth())
+			return 0;
 		}
 		
-		return ci;
+		@Override
+		public void dispose() {
+			texture.getBitmap().dispose();
+		}
 	}
 
 	
@@ -229,5 +309,4 @@ public class AndroidTextureFont implements ITextureFont {
 		private Rectangle2iImpl bounds;
 	}
 
-	
 }

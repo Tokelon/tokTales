@@ -9,7 +9,10 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
+import com.tokelon.toktales.core.content.IDisposable;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
+import com.tokelon.toktales.core.content.text.ICodepointAsset;
+import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.IRectangle2i.IMutableRectangle2i;
@@ -89,6 +92,29 @@ public class STBTextureFont implements ITextureFont {
 	}
 	
 	
+	private CodepointInfo getCodepointInfo(int codepoint) {
+		CodepointInfo ci = codepointCache.get(codepoint);
+		if(ci == null) {
+			ci = new CodepointInfo();
+			codepointCache.put(codepoint, ci);
+		}
+		
+		return ci;
+	}
+
+	
+	public void clearCodepointCache() {
+		for(CodepointInfo cp: codepointCache.values()) {
+			STBTruetype.stbtt_FreeBitmap(cp.texture.getBitmap().getData()); // Needs user data?
+		}
+		
+		codepointCache.clear();
+	}
+	
+	public void free() {
+		clearCodepointCache();
+	}
+	
 
 	@Override
 	public int getFontPixelHeight() {
@@ -112,13 +138,24 @@ public class STBTextureFont implements ITextureFont {
 	
 	
 	@Override
+	public ICodepointAsset getCodepointAsset(int codepoint) {
+		ICodepointTexture texture = makeCodepointTexture(codepoint);
+		IRectangle2i bitmapBox = new Rectangle2iImpl().set(getCodepointBitmapBox(codepoint)); 
+		
+		int advanceWidth = getCodepointAdvanceWidth(codepoint);
+		int leftSideBearing = getCodepointLeftSideBearing(codepoint);
+		
+		return new STBCodepointAsset(texture, bitmapBox, advanceWidth, leftSideBearing);
+	}
+	
+	@Override
 	public ITexture getTextureForCodepoint(int codepoint) {
-		return codepointTexture(codepoint);
+		return getOrCreateCodepointTexture(codepoint);
 	}
 	
 	
-	private CodepointTexture codepointTexture(int codepoint) {
-		CodepointInfo cpInfo = codepointInfo(codepoint);
+	private CodepointTexture getOrCreateCodepointTexture(int codepoint) {
+		CodepointInfo cpInfo = getCodepointInfo(codepoint);
 		if(cpInfo.texture != null) {
 			return cpInfo.texture;
 		}
@@ -146,7 +183,7 @@ public class STBTextureFont implements ITextureFont {
 
 	@Override
 	public IRectangle2i getCodepointBitmapBox(int codepoint) {
-		CodepointInfo cpInfo = codepointInfo(codepoint);
+		CodepointInfo cpInfo = getCodepointInfo(codepoint);
 		
 		if(cpInfo.codepointBox == null) {
 			cpInfo.codepointBox = new Rectangle2iImpl();
@@ -186,27 +223,36 @@ public class STBTextureFont implements ITextureFont {
 	@Override
 	public int getCodepointPixelHeight(int codepoint) {
 		IRectangle2i rect = getCodepointBitmapBox(codepoint);
-		return rect.top() - rect.bottom();
+		return -rect.height(); // We count from top to bottom
 	}
 	
 
 	@Override
 	public int getCodepointBitmapOffsetX(int codepoint) {
-		return codepointTexture(codepoint).getOriginOffsetX();
+		return getOrCreateCodepointTexture(codepoint).getOriginOffsetX();
 	}
 	
 	@Override
 	public int getCodepointBitmapOffsetY(int codepoint) {
-		return codepointTexture(codepoint).getOriginOffsetY() + fontPixelAscent;	// Add the font ascend so it counts from the top instead of the origin
+		return getOrCreateCodepointTexture(codepoint).getOriginOffsetY() + getFontPixelAscent(); // Add the font ascend so it counts from the top instead of the origin
 	}
-	
 	
 
 	@Override
 	public int getCodepointAdvanceWidth(int codepoint) {
-		CodepointInfo ci = codepointInfo(codepoint);
-		if(ci.advanceWidth != -1) {//&& ci.leftSideBearing != -1) {
-			return ci.advanceWidth;
+		return getCodepointMetrics(codepoint).advanceWidth;
+	}
+	
+	@Override
+	public int getCodepointLeftSideBearing(int codepoint) {
+		return getCodepointMetrics(codepoint).leftSideBearing;
+	}
+	
+	
+	private CodepointInfo getCodepointMetrics(int codepoint) {
+		CodepointInfo ci = getCodepointInfo(codepoint);
+		if(ci.advanceWidth != -1 && ci.leftSideBearing != -1) {
+			return ci;
 		}
 		
 		
@@ -219,7 +265,7 @@ public class STBTextureFont implements ITextureFont {
 		ci.advanceWidth = advanceWidthBuffer.get(0);
 		ci.leftSideBearing = leftSideBearingBuffer.get(0);
 		
-		return ci.advanceWidth;
+		return ci;
 	}
 	
 
@@ -233,48 +279,80 @@ public class STBTextureFont implements ITextureFont {
 	}
 	
 	
-
 	
 	// Any of these useful ?
 	
 	private void getFontBoundingBox() {
 		//STBTruetype.stbtt_GetFontBoundingBox(info, x0, y0, x1, y1)
 	}
-
 	
 	/*
 	 *  "If stbtt_FindGlyphIndex returns 0, then there that character codepoint is not defined in the font."
 	 * 
 	 */
 	
-
 	
-	private CodepointInfo codepointInfo(int codepoint) {
-		CodepointInfo ci = codepointCache.get(codepoint);
-		if(ci == null) {
-			ci = new CodepointInfo();
-			codepointCache.put(codepoint, ci);
+	public class STBCodepointAsset implements ICodepointAsset, IDisposable {
+
+		private final ICodepointTexture texture;
+		private final IRectangle2i bitmapBox;
+		private final int advanceWidth;
+		private final int leftSideBearing;
+
+		public STBCodepointAsset(ICodepointTexture texture, IRectangle2i bitmapBox, int advanceWidth, int leftSideBearing) {
+			this.texture = texture;
+			this.bitmapBox = bitmapBox;
+			this.advanceWidth = advanceWidth;
+			this.leftSideBearing = leftSideBearing;
 		}
 		
-		return ci;
-	}
-	
+		
+		@Override
+		public ITexture getTexture() {
+			return texture;
+		}
 
-	
-	public void clearCodepointCache() {
-		for(CodepointInfo cp: codepointCache.values()) {
-			STBTruetype.stbtt_FreeBitmap(cp.texture.getBitmap().getData()); // Needs user data?
+		@Override
+		public IRectangle2i getBitmapBox() {
+			return bitmapBox;
+		}
+
+		@Override
+		public int getPixelWidth() {
+			return bitmapBox.width();
+		}
+
+		@Override
+		public int getPixelHeight() {
+			return -bitmapBox.height(); // We count from top to bottom
+		}
+
+		@Override
+		public int getBitmapOffsetX() {
+			return texture.getOriginOffsetX();
+		}
+
+		@Override
+		public int getBitmapOffsetY() {
+			return texture.getOriginOffsetY() + getFontPixelAscent(); // Add the font ascend so it counts from the top instead of the origin;
+		}
+
+		@Override
+		public int getAdvanceWidth() {
+			return advanceWidth;
+		}
+
+		@Override
+		public int getLeftSideBearing() {
+			return leftSideBearing;
 		}
 		
-		codepointCache.clear();
+		@Override
+		public void dispose() {
+			STBTruetype.stbtt_FreeBitmap(texture.getBitmap().getData()); // Needs user data?
+		}
 	}
-	
-	
-	public void free() {
-		
-		clearCodepointCache();
-	}
-	
+
 	
 	private class CodepointInfo {
 		
@@ -284,7 +362,6 @@ public class STBTextureFont implements ITextureFont {
 		
 		private int advanceWidth = -1;
 		private int leftSideBearing = -1;
-		
 	}
 	
 }
