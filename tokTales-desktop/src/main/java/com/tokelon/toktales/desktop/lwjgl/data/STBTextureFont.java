@@ -149,7 +149,7 @@ public class STBTextureFont implements ITextureFont {
 	}
 	
 	@Override
-	public ITexture getTextureForCodepoint(int codepoint) {
+	public ITexture getCodepointTexture(int codepoint) {
 		return getOrCreateCodepointTexture(codepoint);
 	}
 	

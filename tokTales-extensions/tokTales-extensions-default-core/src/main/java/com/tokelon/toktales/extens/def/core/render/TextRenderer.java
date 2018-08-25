@@ -162,7 +162,7 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 							}
 
 							
-							ITexture texture = font.getTextureForCodepoint(codepoint);
+							ITexture texture = font.getCodepointTexture(codepoint);
 							// Has texture for codepoint?
 
 							

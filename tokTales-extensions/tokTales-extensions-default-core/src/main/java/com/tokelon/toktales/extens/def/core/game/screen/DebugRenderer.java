@@ -410,13 +410,6 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 			logger.e(TAG, "Unable to read font file: " + e.getMessage());
 		}
 		
-
-		// Create textures for ascii codepoints
-		for(int i = 0; i < 255; i++) {
-			font.getTextureForCodepoint(i);
-			font.getCodepointBitmapBox(i);
-		}
-
 		return font;
 	}
 	

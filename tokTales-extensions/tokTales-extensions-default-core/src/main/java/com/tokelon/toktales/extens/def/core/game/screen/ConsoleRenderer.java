@@ -256,7 +256,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 				}
 
 				
-				ITexture texture = font.getTextureForCodepoint(targetCodepoint);
+				ITexture texture = font.getCodepointTexture(targetCodepoint);
 				
 				
 				
