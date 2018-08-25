@@ -31,6 +31,8 @@ public class DesktopConsoleGamestateInterpreter extends ConsoleGamestateInterpre
 	@InjectGameState
 	@Override
 	protected void injectGamestate(IConsoleGamestate gamestate) {
+		super.injectGamestate(gamestate);
+		
 		this.consoleGamestate = gamestate;
 	}
 	
