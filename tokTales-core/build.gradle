@@ -77,8 +77,14 @@ dependencies {
      * This version might be preferable anyways,
      * no natives, no weird backporting for Java 1.2/1.3 etc.
      */
-	//api "org.joml:joml:1.8.0"
-	api "org.joml:joml:1.8.6"
+	//api 'org.joml:joml:1.8.0'
+	api 'org.joml:joml:1.8.6'
+	
+	// Streamsupport
+	api 'net.sourceforge.streamsupport:android-retrostreams:1.6.3'
+	api 'net.sourceforge.streamsupport:android-retrofuture:1.6.3'
+	//api 'net.sourceforge.streamsupport:android-retroatomic:1.6.3'
+	//api 'net.sourceforge.streamsupport:android-retroflow:1.6.3'
 	
 }
 
