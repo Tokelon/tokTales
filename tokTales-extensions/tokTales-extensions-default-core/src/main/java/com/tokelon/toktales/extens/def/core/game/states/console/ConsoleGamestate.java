@@ -210,7 +210,8 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	public void onEnter() {
 		super.onEnter();
 		
-		//interpreter.interpret(console, "load chunk_test");
+		//consoleInterpreter.interpret(console, "load chunk_test");
+		//consoleInterpreter.interpret(console, "load font_test");
 	}
 	
 	

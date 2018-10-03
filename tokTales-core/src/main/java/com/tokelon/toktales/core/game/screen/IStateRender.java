@@ -30,7 +30,8 @@ public interface IStateRender extends ISurfaceCallback, IRenderCallback {
 	/**
 	 * @return The current surface, or null if there is none.
 	 */
-	public ISurface getSurface();
+	public ISurface getSurface(); // Get currentSurface?
+	//public ISurfaceHandler getSurfaceHandler(); Useful?
 
 	
 	
@@ -55,7 +56,7 @@ public interface IStateRender extends ISurfaceCallback, IRenderCallback {
 	
 	
 	// TODO: Implement with abstract class
-	public void addManagedRenderer(String name, IRenderer renderer);
+	public void addManagedRenderer(String name, IRenderer renderer); // what if the name is taken?
 	public IRenderer getManagedRenderer(String name);
 	public IRenderer removeManagedRenderer(String name); // better pass IRenderer instead of name?
 	public boolean hasManagedRenderer(String name);

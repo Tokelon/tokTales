@@ -11,7 +11,7 @@ public class UserInterface implements IUserInterface {
 	
 	private final Set<IUserInterfaceListener> listeners;
 	
-	private IIntegratedActivity currentActivity;
+	private IIntegratedActivity currentActivity; // TODO: Use WeakReference here to allow activities to be recycled even if they're not removed from here?
 
 	
 	public UserInterface() {

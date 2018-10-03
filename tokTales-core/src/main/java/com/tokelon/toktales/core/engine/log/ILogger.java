@@ -11,6 +11,7 @@ public interface ILogger {
 
 	public void d(String message);
 	public void d(String tag, String message);
+	//public void d(String tag, String message, Object... args); // TODO: implement string.format here and replace all current usages
 	
 	public void e(String message);
 	public void e(String tag, String message);

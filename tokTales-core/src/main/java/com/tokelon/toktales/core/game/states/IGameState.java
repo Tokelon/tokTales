@@ -127,17 +127,24 @@ public interface IGameState {
 	public IEngineContext getEngineContext();
 	
 	
-	/**
+	/** Returns the integrator for this state.
 	 * 
-	 * @return The render order.
+	 * @return A gamestate integrator.
+	 */
+	//public IGameStateIntegrator getIntegrator(); // TODO: To expose this we need to implement belated callback support 
+	
+	
+	/** Returns the render order for this state.
+	 * 
+	 * @return A render order.
 	 */
 	public IRenderOrder getRenderOrder();
 	
-	/**
+	/** Returns the state renderer for this state.
 	 * 
-	 * @return The state render.
+	 * @return A state render.
 	 */
-	public IStateRender getStateRender();
+	public IStateRender getStateRender(); // getRenderModule or getStateRenderModule?
 
 	
 	/** The state input is a manager that collects input handlers,

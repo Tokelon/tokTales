@@ -17,6 +17,7 @@ import com.tokelon.toktales.test.core.game.DummyGameAdapter;
 import android.content.Context;
 
 public class TestAndroidInjection {
+	// TODO: Fix this not working in manual Eclipse run
 
 	public static final String[] ANDROID_EXPECTED_BINDING_TYPES = { "android.content.Context", "IGameAdapter" };
 	

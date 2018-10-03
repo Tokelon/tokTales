@@ -1,15 +1,8 @@
 package com.tokelon.toktales.android.activity.integration;
 
 public interface IActivityIntegrator {
-	// Implement add, remove, to use after creation?
+	// Implement add, remove, to use after creation? - Maybe like IGameStateIntegrator
 	
-	
-	public interface IActivityIntegratorFactory {
-		
-		public IActivityIntegrator create(IIntegratedActivity activity, Iterable<IActivityIntegration> integrations);
-	}
-	
-
 	
 	public Iterable<IActivityIntegration> getAllIntegrations();
 
@@ -30,5 +23,11 @@ public interface IActivityIntegrator {
 
 	public void onDestroy();
 	
+	
+
+	public interface IActivityIntegratorFactory {
+		
+		public IActivityIntegrator create(IIntegratedActivity activity, Iterable<IActivityIntegration> integrations);
+	}
 	
 }
