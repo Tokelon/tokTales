@@ -6,12 +6,11 @@ version "0.0.6"
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "0.0.6"
 
@@ -33,15 +32,15 @@ android {
 
 
 dependencies {
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
     testImplementation project(':tokTales-test-android')
 
 
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
 
     api project(':tokTales-core')
 }
@@ -73,7 +72,9 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
+			
 			srcDir '/build/generated/source/r/debug'
+			srcDir '/build/generated/not_namespaced_r_class_sources/debug/generateDebugRFile/out'
 		}
 	}
 	test {

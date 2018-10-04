@@ -31,6 +31,7 @@ sourceSets {
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
+
 dependencies {
 	/* This causes cyclic dependency errors in Eclipse.
 	 * Eclipse, as opposed to Gradle, does not understand that the dependency is only for the tests.
@@ -109,6 +110,6 @@ eclipse.classpath.file.withXml { xml ->
 
 task wrapper(type: Wrapper) {
 	group 'build setup'
-	gradleVersion = '4.4'
+	gradleVersion = '4.6'
 	distributionType = Wrapper.DistributionType.ALL
 }
