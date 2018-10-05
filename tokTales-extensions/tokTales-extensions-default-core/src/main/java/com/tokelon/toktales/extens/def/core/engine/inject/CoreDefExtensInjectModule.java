@@ -1,12 +1,14 @@
 package com.tokelon.toktales.extens.def.core.engine.inject;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
-import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.logic.DefaultConsoleInterpreterManager;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreterManager;
+import com.tokelon.toktales.extens.def.core.game.logic.TaleConsoleInterpreter;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleOverlayRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.DebugRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.EntityRenderer;
@@ -64,11 +66,11 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 				 .build(ILocalMapControlHandlerFactory.class));
     	bind(ILocalMapGamescene.class).to(LocalMapGamestate.EmptyLocalMapGamescene.class);
     	bind(ILocalMapConsoleIntepreter.class).to(LocalMapConsoleInterpreter.class);
-		 
+		
 	    // ConsoleGamestate
 		bind(IConsoleGamestate.class).to(ConsoleGamestate.class);
 	    bind(IRenderingStrategy.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(ConsoleRenderingStrategy.class);
-	    bind(IConsoleInterpreter.class).annotatedWith(For.forClass(ConsoleGamestate.class)).to(ConsoleGamestateInterpreter.class);
+	    bind(IConsoleInterpreterManager.class).annotatedWith(For.forClass(ConsoleGamestate.class)).toProvider(ConsoleInterpreterManagerProvider.class);
 		 install(new FactoryModuleBuilder()
 				.implement(IConsoleIntegrationControlHandler.class, ConsoleIntegrationControlHandler.class)
 				.build(IConsoleIntegrationControlHandlerFactory.class));
@@ -84,5 +86,31 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 	    
 	    bind(ITaleLoader.class).to(TaleLoader.class);
     }
+    
+    
+	protected static class ConsoleInterpreterManagerProvider implements Provider<IConsoleInterpreterManager> {
+
+		private final IConsoleInterpreterManager consoleInterpreterManager;
+		private final ConsoleGamestateInterpreter consoleGamestateInterpreter;
+		private final TaleConsoleInterpreter taleConsoleInterpreter;
+
+		@Inject
+		public ConsoleInterpreterManagerProvider(
+				IConsoleInterpreterManager consoleInterpreterManager,
+				ConsoleGamestateInterpreter consoleGamestateInterpreter,
+				TaleConsoleInterpreter taleConsoleInterpreter
+		) {
+			this.consoleInterpreterManager = consoleInterpreterManager;
+			this.consoleGamestateInterpreter = consoleGamestateInterpreter;
+			this.taleConsoleInterpreter = taleConsoleInterpreter;
+		}
+		
+		@Override
+		public IConsoleInterpreterManager get() {
+			consoleInterpreterManager.add(consoleGamestateInterpreter);
+			consoleInterpreterManager.add(taleConsoleInterpreter);
+			return consoleInterpreterManager;
+		}
+	}
 
 }

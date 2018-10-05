@@ -24,6 +24,7 @@ import com.tokelon.toktales.extens.def.core.game.controller.DefaultConsoleContro
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultTextBoxController;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
+import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreterManager;
 import com.tokelon.toktales.extens.def.core.game.model.Console;
 import com.tokelon.toktales.extens.def.core.game.model.ScreenDialog;
 import com.tokelon.toktales.extens.def.core.game.model.TextBox;
@@ -47,22 +48,23 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	private static final String CONSOLE_PROMPT = ">"; //"> ";
 	
 	
-	private DefaultConsoleController mConsoleController;
+	private DefaultConsoleController consoleController;
 	private Console console;
 	
-	private final IRenderingStrategy mRenderingStrategy;
-	private final IConsoleInterpreter consoleInterpreter;
+	
+	private final IRenderingStrategy renderingStrategy;
+	private final IConsoleInterpreterManager consoleInterpreterManager;
 	
 	@Inject
 	public ConsoleGamestate(
 			@ForClass(ConsoleGamestate.class) IGameStateInputHandler inputHandler,
 			@ForClass(ConsoleGamestate.class) IRenderingStrategy renderingStrategy,
-			@ForClass(ConsoleGamestate.class) IConsoleInterpreter consoleInterpreter
+			@ForClass(ConsoleGamestate.class) IConsoleInterpreterManager consoleInterpreterManager
 	) {
 		super(IGameScene.class, null, inputHandler, null, null);
 		
-		this.mRenderingStrategy = renderingStrategy;
-		this.consoleInterpreter = consoleInterpreter;
+		this.renderingStrategy = renderingStrategy;
+		this.consoleInterpreterManager = consoleInterpreterManager;
 	}
 	
 	
@@ -70,7 +72,12 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	protected void afterInjectDependencies() {
 		super.afterInjectDependencies();
 		
-		getGamestateInjector().injectInto(consoleInterpreter);
+		getGamestateInjector().injectInto(renderingStrategy);
+
+		getGamestateInjector().injectInto(consoleInterpreterManager);
+		for(IConsoleInterpreter interpreter: consoleInterpreterManager.getInterpreterList()) {
+			getGamestateInjector().injectInto(interpreter);
+		}
 	}
 
 	
@@ -86,11 +93,11 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 		
 		// Console
-		console = new Console(consoleInterpreter);
+		console = new Console(consoleInterpreterManager);
 		console.setPrompt(CONSOLE_PROMPT);
 		
-		mConsoleController = new DefaultConsoleController(console);
-		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_CONSOLE, mConsoleController);
+		consoleController = new DefaultConsoleController(console);
+		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_CONSOLE, consoleController);
 		
 		ConsoleRenderer consoleSegmentRenderer = new ConsoleRendererFactory().createForGamestate(this);
 		
@@ -120,7 +127,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 
 		// State renderer
-		DefaultModularStateRender baseStateRenderer = new DefaultModularStateRender(mRenderingStrategy, this);
+		DefaultModularStateRender baseStateRenderer = new DefaultModularStateRender(renderingStrategy, this);
 		
 		baseStateRenderer.addSegmentRenderer(RENDERER_CONSOLE_NAME, consoleSegmentRenderer);
 		baseStateRenderer.addSegmentRenderer(RENDERER_DIALOG_NAME, dialogSegmentRenderer);
@@ -193,7 +200,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 			
 			font = getEngine().getContentService().loadFontFromFile(fontFile);
 			
-			mConsoleController.setFont(font);
+			consoleController.setFont(font);
 			textBox.setFont(font);
 			dialog.setFont(font);
 		} catch (ContentException e) {
@@ -201,17 +208,26 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		} catch (StorageException e) {
 			TokTales.getLog().e(TAG, "Unable to read font file: " + e.getMessage());
 		}
-
 		
 	}
 	
 	
+
 	@Override
-	public void onEnter() {
-		super.onEnter();
-		
-		//consoleInterpreter.interpret(console, "load chunk_test");
-		//consoleInterpreter.interpret(console, "load font_test");
+	public IConsoleInterpreterManager getInterpreterManager() {
+		return consoleInterpreterManager;
+	}
+
+	@Override
+	public void addInterpreterAndInjectState(IConsoleInterpreter interpreter) {
+		consoleInterpreterManager.add(interpreter);
+		getGamestateInjector().injectInto(interpreter);
+	}
+
+	@Override
+	public void addInterpreterAndInjectState(IConsoleInterpreter interpreter, int index) {
+		consoleInterpreterManager.addAtIndex(interpreter, index);
+		getGamestateInjector().injectInto(interpreter);
 	}
 	
 	
@@ -221,7 +237,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	 */
 	@Override
 	public IConsoleController getConsoleController() {
-		return mConsoleController;
+		return consoleController;
 	}
 	
 }
