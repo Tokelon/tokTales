@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
@@ -48,7 +47,7 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	
 
 	@Inject
-	public SpriteManager(ILogger logger, IContentService contentService, IStorageService storageService, @Assisted IResourceManager resourceManager) {
+	public SpriteManager(ILogger logger, IContentService contentService, IStorageService storageService, IResourceManager resourceManager) {
 		if(logger == null || contentService == null || storageService == null || resourceManager == null) {
 			throw new NullPointerException();
 		}
@@ -463,6 +462,24 @@ public class SpriteManager implements ISpriteManager, ISpriteLoaderReceiver {
 	public boolean assetIsSpecial(ISpriteAsset asset) {
 		return asset == specials.get(SPECIAL_SPRITE_NOT_FOUND) || asset == specials.get(SPECIAL_SPRITE_LOAD_ERROR);
 	}
+	
+	
+	public static class SpriteManagerFactory implements ISpriteManagerFactory {
+		private final ILogger logger;
+		private final IContentService contentService;
+		private final IStorageService storageService;
 
+		@Inject
+		public SpriteManagerFactory(ILogger logger, IContentService contentService, IStorageService storageService) {
+			this.logger = logger;
+			this.contentService = contentService;
+			this.storageService = storageService;
+		}
+		
+		@Override
+		public ISpriteManager create(IResourceManager resourceManager) {
+			return new SpriteManager(logger, contentService, storageService, resourceManager);
+		}
+	}
 
 }

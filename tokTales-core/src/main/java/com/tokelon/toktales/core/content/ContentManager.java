@@ -21,12 +21,12 @@ public class ContentManager implements IContentManager {
 	public ContentManager(
 			ILogger logger,
 			IResourceManager resourceManager,
-			ISpriteManagerFactory spriteManagerFactory,
+			ISpriteManager spriteManager,
 			ITextureManager textureManager
 	) {
 		this.logger = logger;
 		this.managerResource = resourceManager;
-		this.managerSprite = spriteManagerFactory.create(resourceManager);
+		this.managerSprite = spriteManager;
 		this.textureManager = textureManager;
 	}
 

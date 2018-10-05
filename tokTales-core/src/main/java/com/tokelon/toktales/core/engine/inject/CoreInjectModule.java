@@ -160,10 +160,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		  bindInGameScopeAndForNotScoped(IConfigManager.class, ConfigManager.class);
 		  bindInGameScopeAndForNotScoped(IEditorManager.class, EditorManager.class);
 		  bindInGameScopeAndForNotScoped(IContentManager.class, ContentManager.class);
-		   bind(IResourceManager.class).to(ResourceManager.class);
-		   install(new FactoryModuleBuilder()
-				   .implement(ISpriteManager.class, SpriteManager.class)
-				   .build(ISpriteManagerFactory.class));
+		   bindInGameScopeAndForNotScoped(IResourceManager.class, ResourceManager.class);
+		   bindInGameScopeAndForNotScoped(ISpriteManager.class, SpriteManager.class);
+		   bind(ISpriteManagerFactory.class).to(SpriteManager.SpriteManagerFactory.class);
 		   bindInGameScopeAndForNotScoped(ITextureManager.class, DefaultTextureManager.class);
 		  bindInGameScopeAndForNotScoped(IWorld.class, World.class);
 		   bind(Float.class).annotatedWith(GridTileSize.class).toInstance(DEFAULT_GRID_TILE_SIZE);
