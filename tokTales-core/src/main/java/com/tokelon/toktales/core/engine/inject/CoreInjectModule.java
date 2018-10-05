@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.util.Types;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -12,9 +11,21 @@ import com.tokelon.toktales.core.content.ContentManager;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
+import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
+import com.tokelon.toktales.core.content.manage.DefaultAssetStore;
+import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.IAssetLoader;
+import com.tokelon.toktales.core.content.manage.IAssetManager;
+import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
 import com.tokelon.toktales.core.content.sprite.SpriteManager;
+import com.tokelon.toktales.core.content.text.CodepointDecoder;
+import com.tokelon.toktales.core.content.text.CodepointLoader;
+import com.tokelon.toktales.core.content.text.CodepointManager;
+import com.tokelon.toktales.core.content.text.ICodepointAsset;
+import com.tokelon.toktales.core.content.text.ICodepointKey;
+import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
 import com.tokelon.toktales.core.engine.Engine;
@@ -101,6 +112,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.facade.GLShader;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLProgram;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLShader;
+import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 
@@ -214,6 +226,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IParameterInjectorFactory.class).to(ParameterInjectorFactory.class);
 		
 		
+		// Asset Management
+		bindAssetManagers();
+		
+		
 		// Other inject modules
 		install(new CoreDebugInjectModule());
 	}
@@ -268,5 +284,22 @@ public class CoreInjectModule extends AbstractInjectModule {
 	protected IModifiableGameSceneControl<? extends IGameScene> provideModifiableGameSceneControl(ILogger logger) {
 		return new GameSceneControl<IGameScene>(logger);
 	}*/
+	
+	
+	private void bindAssetManagers() {
+		/*
+		//bind(IAssetManager.class) // Cannot bind this in a generic way
+		install(new FactoryModuleBuilder() // If we do this we have to bind store, loader etc.
+				.implement(IAssetManager.class, DefaultAssetManager.class)
+				.build(IAssetManagerFactory.class));
+		*/
+		
+		bindInGameScopeAndForNotScoped(ICodepointManager.class, CodepointManager.class);
+		
+		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ICodepointAsset, ICodepointKey, INamedOptions>>() {});
+		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointKey>>() {});
+		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(CodepointLoader.class);
+		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(CodepointDecoder.class);
+	}
 
 }
