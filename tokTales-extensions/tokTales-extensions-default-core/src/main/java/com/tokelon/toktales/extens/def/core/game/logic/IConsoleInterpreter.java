@@ -4,7 +4,13 @@ import com.tokelon.toktales.core.game.model.IConsole;
 
 public interface IConsoleInterpreter {
 	
-	// TODO: Return boolean for extension purposes or even string?
+	
+	/** Attempt to interpret the given input.
+	 * 
+	 * @param console
+	 * @param input
+	 * @return True if the input was consumed, false if not.
+	 */
 	public boolean interpret(IConsole console, String input);
 	
 }

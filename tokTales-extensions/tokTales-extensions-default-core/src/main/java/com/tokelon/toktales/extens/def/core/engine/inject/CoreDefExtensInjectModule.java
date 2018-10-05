@@ -5,6 +5,8 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
+import com.tokelon.toktales.extens.def.core.game.logic.DefaultConsoleInterpreterManager;
+import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreterManager;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleOverlayRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.DebugRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.EntityRenderer;
@@ -49,6 +51,8 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
     protected void configure() {
     	bind(ITaleGamestate.class).to(TaleGamestate.class);
 		bind(ITaleGamescene.class).to(TaleGamescene.class);
+		
+		bind(IConsoleInterpreterManager.class).to(DefaultConsoleInterpreterManager.class);
 		
     	// LocalMapGamestate
     	bind(ILocalMapGamestate.class).to(LocalMapGamestate.class);
