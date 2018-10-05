@@ -9,6 +9,7 @@ import org.joml.Matrix4f;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
@@ -25,16 +26,16 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer;
-import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer;
-import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer;
-import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer;
-import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer;
-import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer.IEntityRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IMapRenderer.IMapRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
+import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
 
 public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 
@@ -86,6 +87,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 			IObjectRendererFactory objecRendererFactory,
 			IDebugRendererFactory debugRendererFactory,
 			ITextureCoordinator textureCoordinator,
+			ICodepointManager codepointManager,
 			@DebugRenderingEnabled boolean debugRenderingEnabled,
 			@Assisted ILocalMapGamestate gamestate
 	) {
@@ -98,7 +100,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		this.mapRenderer = mapRendererFactory.createForTypedGamestate(gamestate);
 		this.playerRenderer = playerRendererFactory.createForTypedGamestate(gamestate);
 		this.entityRenderer = entityRendererFactory.createForTypedGamestate(gamestate);
-		this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate);
+		this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate, codepointManager);
 		this.objectRenderer = objecRendererFactory.createForTypedGamestate(gamestate);
 		
 		this.defaultViewTransformer = new DefaultViewTransformer();

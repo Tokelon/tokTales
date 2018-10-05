@@ -1,10 +1,13 @@
 package com.tokelon.toktales.core.render;
 
+import javax.inject.Inject;
+
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.text.ICodepointAsset;
+import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
@@ -14,14 +17,14 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 	public static final String TAG = "CharRenderer";
 	
+	
 	private ITextureFont font;
-	private IRGBAColor color;
+	//private IRGBAColor color;
 	
 	private float positionX;
 	private float positionY;
 	private float width;
 	private float height;
-	
 	
 
 	private final TextureFontModel fontModel = new TextureFontModel();
@@ -36,9 +39,12 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	private IRenderDriver fontDriver;
 	
 	private final IRenderAccess renderAccess;
+	private final ICodepointManager codepointManager;
 	
-	public CharRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator) {
+	@Inject
+	public CharRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator, ICodepointManager codepointManager) {
 		this.renderAccess = renderAccess;
+		this.codepointManager = codepointManager;
 		
 		fontModel.setTextureCoordinator(textureCoordinator);
 		fontModel.setInvertYAxis(true);
@@ -47,7 +53,6 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 	@Override
 	protected void onContextCreated() {
-
 		fontDriver = renderAccess.requestDriver(ITextureFontModel.class.getName());
 		if(fontDriver == null) {
 			throw new RenderException("No render driver found for: " +ITextureFontModel.class.getName());
@@ -98,19 +103,24 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		}
 		
 		if(font == null) {
-			TokTales.getLog().e(TAG, "Cannot draw: no font");
+			//logger.e(TAG, "Cannot draw: no font"); // TODO: Only log this once per font?
 			return;
 		}
-		
+
+		ICodepointAsset asset = codepointManager.getCodepointAsset(font, codepoint);
+		if(asset == null) {
+			return;
+		}
+
 		
 		float textSize = height > width ? height : width;
 		
 		
-		ITexture texture = font.getCodepointTexture(codepoint);
+		ITexture texture = asset.getTexture();
 		// Has texture for codepoint?
 		
-		int textureOffsetX = font.getCodepointBitmapOffsetX(codepoint);
-		int textureOffsetY = font.getCodepointBitmapOffsetY(codepoint);
+		int textureOffsetX = asset.getBitmapOffsetX();
+		int textureOffsetY = asset.getBitmapOffsetY();
 		
 		
 		float texScale = textSize / font.getFontPixelHeight();
@@ -127,8 +137,8 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		float scale = textSize / (float) font.getFontPixelHeight();
 		
 		
-		float worldCharWidth = font.getCodepointPixelWidth(codepoint) * scale;
-		float worldCharHeight = font.getCodepointPixelHeight(codepoint) * scale;
+		float worldCharWidth = asset.getPixelWidth() * scale;
+		float worldCharHeight = asset.getPixelHeight() * scale;
 		
 		float pixelCharWidth = getViewTransformer().cameraToScreenX(worldCharWidth);
 		float pixelCharHeight = getViewTransformer().cameraToScreenY(worldCharHeight);
@@ -153,7 +163,6 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 	@Override
 	public void setColor(IRGBAColor color) {
-		this.color = color;
 		this.colorVector.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 		this.fontModel.setTargetColor(colorVector);
 	}
@@ -171,5 +180,4 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		this.height = wHeight;
 	}
 	
-
 }

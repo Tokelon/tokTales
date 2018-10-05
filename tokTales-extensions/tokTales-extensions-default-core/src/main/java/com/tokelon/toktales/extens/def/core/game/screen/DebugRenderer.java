@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -87,12 +88,14 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private final ILogger logger;
 	private final IEngine engine;
 	private final IGame game;
+	private final ICodepointManager codepointManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IPlayerController> playerControllerSupplier;
 	private final Supplier<IWorldspace> worlspaceSupplier;
 	
 	public DebugRenderer(
 			IEngineContext engineContext,
+			ICodepointManager codepointManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IPlayerController> playerControllerSupplier,
 			Supplier<IWorldspace> worlspaceSupplier
@@ -100,6 +103,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		this.logger = engineContext.getLog();
 		this.engine = engineContext.getEngine();
 		this.game = engineContext.getGame();
+		this.codepointManager = codepointManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.playerControllerSupplier = playerControllerSupplier;
 		this.worlspaceSupplier = worlspaceSupplier;
@@ -119,7 +123,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		shapeRenderer = new ShapeRenderer(renderAccess);
 		shapeRenderer.contextCreated();
 		
-		charRenderer = new CharRenderer(renderAccess, textureCoordinatorSupplier.get());
+		charRenderer = new CharRenderer(renderAccess, textureCoordinatorSupplier.get(), codepointManager);
 		charRenderer.contextCreated();
 		
 		charRenderer.setFont(textureFont);
@@ -419,18 +423,20 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		@Override
 		public DebugRenderer create(
 				IEngineContext engineContext,
+				ICodepointManager codepointManager,
 				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 				Supplier<IPlayerController> playerControllerSupplier,
 				Supplier<IWorldspace> worlspaceSupplier
 		) {
-			return new DebugRenderer(engineContext, textureCoordinatorSupplier, playerControllerSupplier, worlspaceSupplier);
+			return new DebugRenderer(engineContext, codepointManager, textureCoordinatorSupplier, playerControllerSupplier, worlspaceSupplier);
 		}
 
 
 		@Override
-		public DebugRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worlspaceSupplier) {
+		public DebugRenderer createForGamestate(IGameState gamestate, ICodepointManager codepointManager, Supplier<IWorldspace> worlspaceSupplier) {
 			return new DebugRenderer(
 					gamestate.getEngineContext(),
+					codepointManager,
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(gamestate),
 					worlspaceSupplier
@@ -438,9 +444,10 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		}
 
 		@Override
-		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
+		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate, ICodepointManager codepointManager) {
 			return new DebugRenderer(
 					typedGamestate.getEngineContext(),
+					codepointManager,
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)

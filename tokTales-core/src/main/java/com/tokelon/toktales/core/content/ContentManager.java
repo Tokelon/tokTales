@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.content;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
+import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.ITextureManager;
 
@@ -12,35 +12,40 @@ public class ContentManager implements IContentManager {
 	private static final String TAG = ContentManager.class.getSimpleName();
 	
 
-	private ILogger logger;
-	private IResourceManager managerResource;
-	private ISpriteManager managerSprite;
-	private ITextureManager textureManager;
+	private final ILogger logger;
+	private final IResourceManager managerResource;
+	private final ISpriteManager managerSprite;
+	private final ITextureManager textureManager;
+	private final ICodepointManager codepointManager;
 	
 	@Inject
 	public ContentManager(
 			ILogger logger,
 			IResourceManager resourceManager,
 			ISpriteManager spriteManager,
-			ITextureManager textureManager
+			ITextureManager textureManager,
+			ICodepointManager codepointManager
 	) {
 		this.logger = logger;
 		this.managerResource = resourceManager;
 		this.managerSprite = spriteManager;
 		this.textureManager = textureManager;
+		this.codepointManager = codepointManager;
 	}
 
 	
 	@Override
 	public void startLoaders() {
 		logger.i(TAG, "Starting content loaders");
-		managerSprite.startLoading();		
+		managerSprite.startLoading();
+		codepointManager.getLoader().start();
 	}
 	
 	@Override
 	public void stopLoaders() {
 		logger.i(TAG, "Stopping content loaders");
-		managerSprite.stopLoading();		
+		managerSprite.stopLoading();
+		codepointManager.getLoader().stop();
 	}
 
 	
@@ -59,5 +64,9 @@ public class ContentManager implements IContentManager {
 		return textureManager;
 	}
 	
+	@Override
+	public ICodepointManager getCodepointManager() {
+		return codepointManager;
+	}
 
 }

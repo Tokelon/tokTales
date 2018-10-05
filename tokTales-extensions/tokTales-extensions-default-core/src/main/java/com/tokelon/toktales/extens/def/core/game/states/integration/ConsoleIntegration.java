@@ -1,12 +1,13 @@
 package com.tokelon.toktales.extens.def.core.game.states.integration;
 
+import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.extens.def.core.game.screen.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
-import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IConsoleOverlayRenderer;
+import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 
 public class ConsoleIntegration implements IConsoleIntegration {
 
@@ -24,12 +25,12 @@ public class ConsoleIntegration implements IConsoleIntegration {
 	private final IConsoleController consoleController;
 	private final IConsoleIntegrationControlHandler controlHandler;
 	
-	public ConsoleIntegration(IGameState gamestate, IConsoleController consoleController, IConsoleIntegrationControlHandlerFactory controlHandlerFactory) {
+	public ConsoleIntegration(ICodepointManager codepointManager, IGameState gamestate, IConsoleController consoleController, IConsoleIntegrationControlHandlerFactory controlHandlerFactory) {
 		this.gamestate = gamestate;
 		this.consoleController = consoleController;
 		this.controlHandler = controlHandlerFactory.create(this);
 		
-		this.consoleRenderCallback = new ConsoleRenderCallback(gamestate, consoleController);
+		this.consoleRenderCallback = new ConsoleRenderCallback(codepointManager, gamestate, consoleController);
 	}
 	
 	
@@ -73,20 +74,20 @@ public class ConsoleIntegration implements IConsoleIntegration {
 
 	private static class ConsoleRenderCallback implements IRenderCallback {
 		
-		private final IConsoleOverlayRenderer coRenderer;
+		private final IConsoleOverlayRenderer renderer;
 		
-		private IGameState gamestate;
-		private final IConsoleController coController;
+		private final IGameState gamestate;
+		private final IConsoleController controller;
 		
-		public ConsoleRenderCallback(IGameState gamestate, IConsoleController consoleController) {
+		public ConsoleRenderCallback(ICodepointManager codepointManager, IGameState gamestate, IConsoleController consoleController) {
 			this.gamestate = gamestate;
-			coController = consoleController;
+			this.controller = consoleController;
 			
-			coRenderer = new ConsoleOverlayRendererFactory().createForGamestate(gamestate, () -> consoleController);
+			renderer = new ConsoleOverlayRendererFactory().createForGamestate(gamestate, codepointManager, () -> consoleController);
 		}
 		
 		public void register() {
-			gamestate.getStateRender().addManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME, coRenderer);
+			gamestate.getStateRender().addManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME, renderer);
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
 		}
 		
@@ -97,7 +98,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		
 		@Override
 		public void renderCall(String layerName, double stackPosition) {
-			coRenderer.drawConsoleOverlay(coController);
+			renderer.drawConsoleOverlay(controller);
 		}
 
 		@Override
