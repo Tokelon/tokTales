@@ -6,3 +6,6 @@ include ':tokTales-android-app', ':tokTales-android-library'
 
 
 includeFlat 'tokTales-core'
+
+include ':tokTales-core-library'
+project(':tokTales-core-library').projectDir = new File('../tokTales-core/tokTales-core-library')

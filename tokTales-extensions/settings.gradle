@@ -10,6 +10,9 @@ includeFlat 'tokTales-desktop'
 includeFlat 'tokTales-android'
 
 
+include ':tokTales-core-library'
+project(':tokTales-core-library').projectDir = new File('../tokTales-core/tokTales-core-library')
+
 include ':tokTales-desktop-library'
 project(':tokTales-desktop-library').projectDir = new File('../tokTales-desktop/tokTales-desktop-library')
 

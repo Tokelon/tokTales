@@ -51,12 +51,12 @@ dependencies {
 	testImplementation project(':tokTales-test-desktop')
 	
 	/* Project dependencies */
-	api project(':tokTales-core')
+	api project(':tokTales-core-library')
 	
 	
 	/* Lib dependencies */
 	
-	// XStream - Declare here again to include transitive dependencies xmlpull and xpp3, that were excluded in tokTales-core
+	// XStream - Declare here again to include transitive dependencies xmlpull and xpp3, that were excluded in tokTales-core-library
 	implementation ('com.thoughtworks.xstream:xstream:1.4.8')
 	
 	// LWJGL

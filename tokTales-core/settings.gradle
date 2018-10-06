@@ -1,3 +1,5 @@
 // tokTales-core settings.gradle
 
 rootProject.name = 'tokTales-core'
+
+include ':tokTales-core-library'

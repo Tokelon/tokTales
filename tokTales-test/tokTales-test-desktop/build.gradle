@@ -7,8 +7,8 @@ apply plugin: 'java-library'
 
 dependencies {
     api project(':tokTales-test-core')
-    
-    // Cyclic dependency, see toktales-core build.gradle
+	
+	// Cyclic dependency, see tokTales-core-library build.gradle
     implementation project(':tokTales-extensions-default-desktop')
 }
 

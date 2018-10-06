@@ -8,7 +8,7 @@ apply plugin: 'java-library'
 dependencies {
     testImplementation project(':tokTales-test-core')
 
-    api project(':tokTales-core')
+    api project(':tokTales-core-library')
 }
 
 sourceCompatibility = "1.8"

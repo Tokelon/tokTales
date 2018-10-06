@@ -42,7 +42,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
 
-    api project(':tokTales-core')
+    api project(':tokTales-core-library')
 }
 
 
@@ -54,7 +54,7 @@ eclipse.classpath.file.withXml { xml ->
     node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-test-android' ])
 
     
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core' ])
+    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core-library' ])
     
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])

@@ -12,6 +12,9 @@ def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
 if (tokTalesCore.exists()) {
     include ':tokTales-core'
     project(':tokTales-core').projectDir = tokTalesCore
+    
+    include ':tokTales-core-library'
+    project(':tokTales-core-library').projectDir = new File(tokTalesCore, 'tokTales-core-library')
 }
 
 

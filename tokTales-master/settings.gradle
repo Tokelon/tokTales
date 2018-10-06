@@ -10,6 +10,9 @@ def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
 include ':tokTales-core'
 project(':tokTales-core').projectDir = tokTalesCore
 
+include ':tokTales-core-library'
+project(':tokTales-core-library').projectDir = new File(tokTalesCore, 'tokTales-core-library')
+
 
 def tokTalesAndroid = new File(rootProject.projectDir, '../tokTales-android')
 include ':tokTales-android'

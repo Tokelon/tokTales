@@ -12,7 +12,7 @@ dependencies {
     api 'org.mockito:mockito-core:2.13.0'
 
 
-	// Cyclic dependency, see toktales-core build.gradle
+	// Cyclic dependency, see tokTales-core-library build.gradle
     implementation project(':tokTales-extensions-default-core')
 }
 
