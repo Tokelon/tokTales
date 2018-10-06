@@ -1,13 +1,8 @@
 // tokTales-android settings.gradle
 
+rootProject.name = 'tokTales-android'
+
 include ':tokTales-android-app', ':tokTales-android-library'
 
+
 includeFlat 'tokTales-core'
-
-
-// Next line should be commented out if you want to include tokTales-desktop in this project (for Android Studio)
-/*
-if (new File(settingsDir.parentFile, "./tokTales-desktop").exists()) {
-    includeFlat 'tokTales-desktop'
-}
-//*/

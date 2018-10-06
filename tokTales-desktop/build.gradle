@@ -1,84 +1,20 @@
 // tokTales-desktop build.gradle
+// settings in this file will only apply to subprojects if this is the root project
 group "com.tokelon.toktales"
-version "0.0.6"
+version "0.0.1"
 
 
-// Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
-
-apply plugin: 'eclipse'
-
-sourceSets {
-	main {
-		java {
-			srcDir 'src/main/java'
-		}
-		resources {
-			srcDir 'src/main/resources'
-		}
+allprojects {
+	repositories {
+		jcenter()
 	}
-	test {
-		java {
-			srcDir 'src/test/java'
-		}
-	}
-}
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
-
-
-repositories {
-	//jcenter()
-	mavenCentral()
-}
-
-
-// LWJGL configuration
-project.ext.lwjglVersion = "3.1.6"
-
-import org.gradle.internal.os.OperatingSystem
-
-switch ( OperatingSystem.current() ) {
-	case OperatingSystem.WINDOWS:
-		project.ext.lwjglNatives = "natives-windows"
-		break
-	case OperatingSystem.LINUX:
-		project.ext.lwjglNatives = "natives-linux"
-		break
-	case OperatingSystem.MAC_OS:
-		project.ext.lwjglNatives = "natives-macos"
-		break
-}
-
-
-dependencies {
-	/* Test dependencies */
-	testImplementation project(':tokTales-test-desktop')
-
-	/* Project dependencies */
-	api project(':tokTales-core')
-
-
-	/* Lib dependencies */
 	
-	// XStream - Declare here again to include transitive dependencies xmlpull and xpp3, that were excluded in tokTales-core
-	implementation ('com.thoughtworks.xstream:xstream:1.4.8')
-	
-	// LWJGL
-	api "org.lwjgl:lwjgl:$lwjglVersion"
-	api "org.lwjgl:lwjgl-assimp:$lwjglVersion" // Include assimp?
-	api "org.lwjgl:lwjgl-glfw:$lwjglVersion"
-	api "org.lwjgl:lwjgl-openal:$lwjglVersion"
-	api "org.lwjgl:lwjgl-opengl:$lwjglVersion"
-	api "org.lwjgl:lwjgl-stb:$lwjglVersion"
-	api "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-assimp:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+	apply plugin: 'eclipse'
+}
 
+
+task clean(type: Delete) {
+	delete rootProject.buildDir
 }
 
 task wrapper(type: Wrapper) {

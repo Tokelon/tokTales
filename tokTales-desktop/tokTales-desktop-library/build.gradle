@@ -1,0 +1,76 @@
+// tokTales-desktop-library build.gradle
+group "com.tokelon.toktales"
+version "0.0.6"
+
+
+// Apply the java-library plugin to add support for Java Library
+apply plugin: 'java-library'
+
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+		}
+		resources {
+			srcDir 'src/main/resources'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+		}
+	}
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+
+// LWJGL configuration
+project.ext.lwjglVersion = "3.1.6"
+
+import org.gradle.internal.os.OperatingSystem
+
+switch ( OperatingSystem.current() ) {
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		break
+	case OperatingSystem.MAC_OS:
+		project.ext.lwjglNatives = "natives-macos"
+		break
+}
+
+
+dependencies {
+	/* Test dependencies */
+	testImplementation project(':tokTales-test-desktop')
+	
+	/* Project dependencies */
+	api project(':tokTales-core')
+	
+	
+	/* Lib dependencies */
+	
+	// XStream - Declare here again to include transitive dependencies xmlpull and xpp3, that were excluded in tokTales-core
+	implementation ('com.thoughtworks.xstream:xstream:1.4.8')
+	
+	// LWJGL
+	api "org.lwjgl:lwjgl:$lwjglVersion"
+	api "org.lwjgl:lwjgl-assimp:$lwjglVersion" // Include assimp?
+	api "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+	api "org.lwjgl:lwjgl-openal:$lwjglVersion"
+	api "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+	api "org.lwjgl:lwjgl-stb:$lwjglVersion"
+	api "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+	api "org.lwjgl:lwjgl-assimp:$lwjglVersion:$lwjglNatives"
+	api "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+	api "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
+	api "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+	api "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+	
+}

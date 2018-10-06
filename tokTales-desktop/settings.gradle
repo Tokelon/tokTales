@@ -2,4 +2,7 @@
 
 rootProject.name = 'tokTales-desktop'
 
+include ':tokTales-desktop-library'
+
+
 includeFlat 'tokTales-core'

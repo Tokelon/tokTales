@@ -26,9 +26,6 @@ allprojects {
     apply plugin: 'eclipse'
 }
 
-subprojects {
-
-}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
