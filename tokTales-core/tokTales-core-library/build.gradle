@@ -38,7 +38,7 @@ dependencies {
 	 * The current workaround is to change the error to a warning, as described here:
 	 * https://github.com/eclipse/buildship/issues/460
 	 */
-	testImplementation project(':tokTales-test-core')
+	testImplementation project(':tokTales-core-test')
 	
 	
 	// LuaJ

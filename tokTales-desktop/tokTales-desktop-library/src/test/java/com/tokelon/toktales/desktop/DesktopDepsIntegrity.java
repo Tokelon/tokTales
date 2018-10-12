@@ -1,13 +1,13 @@
 package com.tokelon.toktales.desktop;
 
-import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.test.core.CoreTestDepsIntegrity;
-import com.tokelon.toktales.test.desktop.DesktopTestDepsIntegrity;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.test.CoreTestDepsIntegrity;
+import com.tokelon.toktales.desktop.test.DesktopTestDepsIntegrity;
 
 public class DesktopDepsIntegrity {
 	

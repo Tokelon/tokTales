@@ -32,22 +32,16 @@ android {
 
 
 dependencies {
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    // Mockito for Android instrumentation tests
-    api "org.mockito:mockito-android:2.15.0" //androidTestApi
-
-
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
-
-    api project(':tokTales-test-core')
+    
+    
+    api project(':tokTales-extensions-android-test')
     
     // Cyclic dependency, see tokTales-core-library build.gradle
     implementation project(':tokTales-extensions-default-android')
+    
+    api project(':tokTales-test-core')
 }
 
 
@@ -56,6 +50,7 @@ eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
 
     node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-test-core' ])
+    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-android-test' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-default-android' ]) // Cyclic dependency
 
 

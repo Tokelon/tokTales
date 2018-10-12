@@ -5,11 +5,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.desktop.engine.inject.DesktopInjectConfig;
+import com.tokelon.toktales.desktop.test.engine.inject.DesktopMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.game.states.CoreTestStatesInjectModule;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestate.IEngineGamestateType;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateInputHandler;
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
-import com.tokelon.toktales.test.desktop.engine.inject.DesktopMockPlatformInjectModule;
 import com.tokelon.toktales.test.desktop.game.states.enginestate.DesktopEngineGamestateControlScheme;
 import com.tokelon.toktales.test.desktop.game.states.enginestate.DesktopEngineGamestateInputHandler;
 

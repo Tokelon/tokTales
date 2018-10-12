@@ -2,4 +2,4 @@
 
 rootProject.name = 'tokTales-core'
 
-include ':tokTales-core-library'
+include ':tokTales-core-library', ':tokTales-core-test'

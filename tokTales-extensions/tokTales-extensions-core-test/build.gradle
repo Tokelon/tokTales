@@ -1,0 +1,27 @@
+// tokTales-extensions-core-test build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+	api project(':tokTales-core-test')
+	
+	// Cyclic dependency, see tokTales-core-library build.gradle
+	implementation project(':tokTales-extensions-default-core')
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+// Export project and dependencies for Android
+eclipse.classpath.file.withXml { xml ->
+	def node = xml.asNode()
+	
+	def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+	if(con) {
+		con.@exported = 'true'
+	}
+}

@@ -48,7 +48,7 @@ switch ( OperatingSystem.current() ) {
 
 dependencies {
 	/* Test dependencies */
-	testImplementation project(':tokTales-test-desktop')
+	testImplementation project(':tokTales-desktop-test')
 	
 	/* Project dependencies */
 	api project(':tokTales-core-library')

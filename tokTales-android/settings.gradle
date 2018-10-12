@@ -2,10 +2,12 @@
 
 rootProject.name = 'tokTales-android'
 
-include ':tokTales-android-app', ':tokTales-android-library'
+include ':tokTales-android-app', ':tokTales-android-library', ':tokTales-android-test'
 
 
 includeFlat 'tokTales-core'
 
 include ':tokTales-core-library'
 project(':tokTales-core-library').projectDir = new File('../tokTales-core/tokTales-core-library')
+include ':tokTales-core-test'
+project(':tokTales-core-test').projectDir = new File('../tokTales-core/tokTales-core-test')

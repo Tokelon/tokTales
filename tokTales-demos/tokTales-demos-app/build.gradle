@@ -35,10 +35,8 @@ android {
 apply plugin: "net.swisstech.elasticdependencies"
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+	testImplementation project(':tokTales-extensions-android-test')
+	androidTestImplementation project(':tokTales-extensions-android-test')
 	
 	
 	implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -52,9 +50,12 @@ dependencies {
 // Eclipse stuff
 eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
+	
+	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android-test' ])
+	
+	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-default-android' ])
     
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-default-android' ])
-    
+	
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-classes.jar' ])

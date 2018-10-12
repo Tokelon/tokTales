@@ -6,7 +6,7 @@ version "0.0.1"
 apply plugin: 'java-library'
 
 dependencies {
-    testImplementation project(':tokTales-test-desktop')
+    testImplementation project(':tokTales-extensions-desktop-test')
 
     api project(':tokTales-desktop-library')
     api project(':tokTales-extensions-default-core')

@@ -9,7 +9,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.game.states.IControlScheme;
-import com.tokelon.toktales.test.core.engine.inject.CoreMockPlatformInjectModule;
+import com.tokelon.toktales.core.test.engine.inject.CoreMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamescene;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamestateControlHandler;

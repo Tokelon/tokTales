@@ -1,13 +1,13 @@
 package com.tokelon.toktales.tokteller;
 
-import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.test.android.AndroidTestDepsIntegrity;
-import com.tokelon.toktales.test.core.CoreTestDepsIntegrity;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import com.tokelon.toktales.android.test.AndroidTestDepsIntegrity;
+import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.core.test.CoreTestDepsIntegrity;
 
 public class AndroidAppDepsIntegrity {
 	

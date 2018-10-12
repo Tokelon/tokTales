@@ -6,12 +6,8 @@ version "0.0.1"
 apply plugin: 'java-library'
 
 dependencies {
-    // Use JUnit test framework
-    api 'junit:junit:4.12'
-    // Mockito
-    api 'org.mockito:mockito-core:2.13.0'
-
-
+	api project(':tokTales-extensions-core-test')
+	
 	// Cyclic dependency, see tokTales-core-library build.gradle
     implementation project(':tokTales-extensions-default-core')
 }

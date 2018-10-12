@@ -6,13 +6,13 @@ import org.junit.Test;
 
 import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
+import com.tokelon.toktales.android.test.engine.inject.AndroidMockPlatformInjectModule;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
-import com.tokelon.toktales.test.android.engine.inject.AndroidMockPlatformInjectModule;
-import com.tokelon.toktales.test.core.engine.inject.InjectionTestHelper;
-import com.tokelon.toktales.test.core.game.DummyGameAdapter;
+import com.tokelon.toktales.core.test.engine.inject.InjectionTestHelper;
+import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 
 import android.content.Context;
 

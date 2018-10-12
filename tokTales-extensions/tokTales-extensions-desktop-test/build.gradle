@@ -1,0 +1,18 @@
+// tokTales-extensions-desktop-test build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+	api project(':tokTales-desktop-test')
+	
+	// Cyclic dependency, see tokTales-core-library build.gradle
+	implementation project(':tokTales-extensions-default-desktop')
+	
+	api project(':tokTales-extensions-core-test')
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
