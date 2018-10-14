@@ -7,16 +7,13 @@ import java.nio.ShortBuffer;
 
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
-import android.annotation.TargetApi;
 import android.opengl.GLES20;
-import android.os.Build;
 
 /** Android OGL2 v2.0 implementation of OpenGL CompatWrapper.
  * <p>
  * Note that for Android, values of large size types (double, long), may be cast down for specific functions.
  */
 public class AndroidGL20 implements IGL20 {
-	// TODO: Document Android version restrictions (> API Level 17 methods)
 	
 
 	@Override
@@ -223,15 +220,9 @@ public class AndroidGL20 implements IGL20 {
 		return GLES20.glGetUniformLocation(program, name.toString());
 	}
 	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	@Override
 	public String glGetActiveUniform(int program, int index, IntBuffer size, IntBuffer type) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			return GLES20.glGetActiveUniform(program, index, size, type);
-		}
-		else {
-			return null;
-		}
+		return GLES20.glGetActiveUniform(program, index, size, type);
 	}
 
 	@Override
@@ -258,14 +249,9 @@ public class AndroidGL20 implements IGL20 {
 		return params[0];
 	}
 	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	@Override
 	public String glGetShaderSource(int shader) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			return GLES20.glGetShaderSource(shader);
-		} else {
-			return null;
-		}
+		return GLES20.glGetShaderSource(shader);
 	}
 
 	@Override
@@ -344,14 +330,9 @@ public class AndroidGL20 implements IGL20 {
 		GLES20.glBindAttribLocation(program, index, name.toString());
 	}
 	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	@Override
 	public String glGetActiveAttrib(int program, int index, IntBuffer size, IntBuffer type) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			return GLES20.glGetActiveAttrib(program, index, size, type);
-		} else {
-			return null;
-		}
+		return GLES20.glGetActiveAttrib(program, index, size, type);
 	}
 
 	@Override
