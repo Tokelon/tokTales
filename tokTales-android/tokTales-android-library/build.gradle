@@ -46,7 +46,12 @@ dependencies {
 	    // Exclude these because of duplicate class XmlPullParserException that Android includes
 	    exclude group: 'xmlpull', module: 'xmlpull'
 	    exclude group: 'xpp3', module: 'xpp3_min'
+	    exclude group: 'com.google.inject', module: 'guice'
     }
+	api ('com.google.inject:guice:4.1.0:no_aop') {
+		// Replace (see above) Guice dependency with no_aop version
+		force = true
+	}
 }
 
 

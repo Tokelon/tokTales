@@ -40,6 +40,10 @@ dependencies {
 	api (project(':tokTales-extensions-core-test')) {
 		exclude group: 'xmlpull', module: 'xmlpull'
 		exclude group: 'xpp3', module: 'xpp3_min'
+		exclude group: 'com.google.inject', module: 'guice'
+	}
+	api ('com.google.inject:guice:4.1.0:no_aop') {
+		force = true
 	}
 }
 

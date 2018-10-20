@@ -39,9 +39,14 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
 
     api project(':tokTales-android-library')
+	
 	api (project(':tokTales-extensions-default-core')) {
 		exclude group: 'xmlpull', module: 'xmlpull'
 		exclude group: 'xpp3', module: 'xpp3_min'
+		exclude group: 'com.google.inject', module: 'guice'
+	}
+	api ('com.google.inject:guice:4.1.0:no_aop') {
+		force = true
 	}
 }
 
