@@ -37,11 +37,16 @@ public class TokTalesApp extends Application {
 		try {
 			ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
 
-			Log.d(APP_TAG, "Looking for game adapter entry...");
-			metaGameAdapterClass = loadClassFromApplicationInfo(IGameAdapter.class, META_DATA_KEY_GAME_ADAPTER_CLASS, ai);
-			
-			Log.d(APP_TAG, "Looking for inject config entry...");
-			metaInjectConfigClass = loadClassFromApplicationInfo(IHierarchicalInjectConfig.class, META_DATA_KEY_INJECT_CONFIG_CLASS, ai);
+			if(ai.metaData == null) {
+				Log.e(TAG, "Failed to get meta-data from application info: meta-data was null");
+			}
+			else {
+				Log.d(APP_TAG, "Looking for game adapter entry...");
+				metaGameAdapterClass = loadClassFromApplicationInfo(IGameAdapter.class, META_DATA_KEY_GAME_ADAPTER_CLASS, ai);
+				
+				Log.d(APP_TAG, "Looking for inject config entry...");
+				metaInjectConfigClass = loadClassFromApplicationInfo(IHierarchicalInjectConfig.class, META_DATA_KEY_INJECT_CONFIG_CLASS, ai);
+			}
 		} catch (NameNotFoundException e) {
 			Log.e(TAG, "Failed to get meta-data from application info: " + e);
 		}
@@ -158,6 +163,5 @@ public class TokTalesApp extends Application {
 	
 	// Default
 	private static class EmptyGameAdapter implements IGameAdapter { }
-	
 	
 }
