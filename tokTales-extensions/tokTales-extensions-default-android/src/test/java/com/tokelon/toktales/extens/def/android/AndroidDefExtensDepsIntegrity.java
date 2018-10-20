@@ -5,23 +5,21 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import com.tokelon.toktales.android.test.AndroidTestDepsIntegrity;
+import com.tokelon.toktales.android.test.AndroidTestLib;
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.test.CoreTestDepsIntegrity;
+import com.tokelon.toktales.core.test.CoreTestLib;
 
 public class AndroidDefExtensDepsIntegrity {
-	
-	public static final String TAG = AndroidDefExtensDepsIntegrity.class.getSimpleName();
 	
 	
 	@Test
 	public void testInherited_TestCore() {
-		String tag = CoreTestDepsIntegrity.TAG;
+		String tag = CoreTestLib.TAG;
 	}
 	
 	@Test
 	public void testImplementation_TestAndroid() {
-		String tag = AndroidTestDepsIntegrity.TAG;
+		String tag = AndroidTestLib.TAG;
 	}
 	
 	

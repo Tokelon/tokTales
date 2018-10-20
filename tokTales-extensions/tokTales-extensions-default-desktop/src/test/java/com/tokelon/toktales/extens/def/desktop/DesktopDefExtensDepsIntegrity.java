@@ -6,22 +6,20 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.test.CoreTestDepsIntegrity;
-import com.tokelon.toktales.desktop.test.DesktopTestDepsIntegrity;
+import com.tokelon.toktales.core.test.CoreTestLib;
+import com.tokelon.toktales.desktop.test.DesktopTestLib;
 
 public class DesktopDefExtensDepsIntegrity {
-	
-	public static final String TAG = DesktopDefExtensDepsIntegrity.class.getSimpleName();
 	
 	
 	@Test
 	public void testInherited_TestCore() {
-		String tag = CoreTestDepsIntegrity.TAG;
+		String tag = CoreTestLib.TAG;
 	}
 	
 	@Test
 	public void testImplementation_TestDesktop() {
-		String tag = DesktopTestDepsIntegrity.TAG;
+		String tag = DesktopTestLib.TAG;
 	}
 	
 	

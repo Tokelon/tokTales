@@ -6,16 +6,14 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.test.CoreTestDepsIntegrity;
+import com.tokelon.toktales.core.test.CoreTestLib;
 
 public class CoreDepsIntegrity {
-	
-	public static final String TAG = CoreDepsIntegrity.class.getSimpleName();
 	
 	
 	@Test
 	public void testImplementation_TestCore() {
-		String tag = CoreTestDepsIntegrity.TAG;
+		String tag = CoreTestLib.TAG;
 	}
 	
 	

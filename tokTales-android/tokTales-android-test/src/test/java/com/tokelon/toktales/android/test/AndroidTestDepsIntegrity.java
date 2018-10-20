@@ -1,27 +1,25 @@
-package com.tokelon.toktales.desktop.test;
+package com.tokelon.toktales.android.test;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
+import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.test.CoreTestDepsIntegrity;
-import com.tokelon.toktales.desktop.input.IDesktopInputService;
+import com.tokelon.toktales.core.test.CoreTestLib;
 
-public class DesktopTestDepsIntegrity {
-	
-	public static final String TAG = DesktopTestDepsIntegrity.class.getSimpleName();
+public class AndroidTestDepsIntegrity {
 	
 	
 	@Test
 	public void api_TestCore() {
-		String tag = CoreTestDepsIntegrity.TAG;
+		String tag = CoreTestLib.TAG;
 	}
 	
 	@Test
-	public void implementation_Desktop() {
-		IDesktopInputService inputService;
+	public void implementation_Android() {
+		IAndroidInputService inputService;
 	}
 	
 	

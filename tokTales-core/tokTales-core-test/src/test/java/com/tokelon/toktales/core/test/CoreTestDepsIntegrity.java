@@ -9,8 +9,6 @@ import com.tokelon.toktales.core.engine.IEngine;
 
 public class CoreTestDepsIntegrity {
 	
-	public static final String TAG = CoreTestDepsIntegrity.class.getSimpleName();
-	
 	
 	@Test
 	public void apiCore() {
