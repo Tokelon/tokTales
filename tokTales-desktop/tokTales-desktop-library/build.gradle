@@ -56,9 +56,6 @@ dependencies {
 	
 	/* Lib dependencies */
 	
-	// XStream - Declare here again to include transitive dependencies xmlpull and xpp3, that were excluded in tokTales-core-library
-	implementation ('com.thoughtworks.xstream:xstream:1.4.8')
-	
 	// LWJGL
 	api "org.lwjgl:lwjgl:$lwjglVersion"
 	api "org.lwjgl:lwjgl-assimp:$lwjglVersion" // Include assimp?
@@ -72,5 +69,4 @@ dependencies {
 	api "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
 	api "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
 	api "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
-	
 }

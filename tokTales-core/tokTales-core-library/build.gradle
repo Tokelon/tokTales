@@ -45,17 +45,7 @@ dependencies {
 	implementation 'org.luaj:luaj-jse:3.0.1'
 	
 	// XStream
-	implementation ('com.thoughtworks.xstream:xstream:1.4.8') {
-		/* We need to exclude these because of duplicate class XmlPullParserException that Android includes in various configurations
-		 * The only way to fix it for Android is to include the following in ALL Android projects, and we're not doing that
-		 configurations {
-           //all*.exclude group: 'xmlpull', module:'xmlpull'
-           //all*.exclude group: 'xpp3', module:'xpp3_min'
-         } */
-		exclude group: 'xmlpull', module: 'xmlpull'
-		exclude group: 'xpp3', module: 'xpp3_min'
-	}
-	
+	implementation 'com.thoughtworks.xstream:xstream:1.4.8'
 	
 	// Guice
 	api 'com.google.inject:guice:4.1.0:no_aop'

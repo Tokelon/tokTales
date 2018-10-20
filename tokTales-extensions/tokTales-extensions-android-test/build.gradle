@@ -37,7 +37,10 @@ dependencies {
 	// Cyclic dependency, see tokTales-core-library build.gradle
 	implementation project(':tokTales-extensions-default-android')
 	
-	api project(':tokTales-extensions-core-test')
+	api (project(':tokTales-extensions-core-test')) {
+		exclude group: 'xmlpull', module: 'xmlpull'
+		exclude group: 'xpp3', module: 'xpp3_min'
+	}
 }
 
 

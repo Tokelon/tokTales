@@ -34,15 +34,19 @@ android {
 	}
 }
 
-
 dependencies {
     testImplementation project(':tokTales-android-test')
 	androidTestImplementation project(':tokTales-android-test')
 
+	
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
 
-    api project(':tokTales-core-library')
+    api (project(':tokTales-core-library')) {
+	    // Exclude these because of duplicate class XmlPullParserException that Android includes
+	    exclude group: 'xmlpull', module: 'xmlpull'
+	    exclude group: 'xpp3', module: 'xpp3_min'
+    }
 }
 
 
