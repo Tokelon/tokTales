@@ -48,9 +48,8 @@ dependencies {
 	implementation 'com.thoughtworks.xstream:xstream:1.4.8'
 	
 	// Guice
-	api 'com.google.inject:guice:4.1.0'
-	api 'com.google.inject.extensions:guice-assistedinject:4.1.0'
-	api 'com.google.inject.extensions:guice-multibindings:4.1.0'
+	api 'com.google.inject:guice:4.2.1'
+	api 'com.google.inject.extensions:guice-assistedinject:4.2.1'
 	
 	/* JOML
 	 * Updating to >= v1.8.0 is problematic for two reasons:
