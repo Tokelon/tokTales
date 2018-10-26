@@ -46,9 +46,13 @@ dependencies {
 		exclude group: 'xmlpull', module: 'xmlpull'
 		exclude group: 'xpp3', module: 'xpp3_min'
 		exclude group: 'com.google.inject', module: 'guice'
+		exclude group: 'com.google.guava', module: 'guava'
 	}
 	api ('com.google.inject:guice:4.2.1:no_aop') {
 		force = true
+	}
+	api ('com.google.guava:guava:26.0-android') {
+		force true
 	}
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle

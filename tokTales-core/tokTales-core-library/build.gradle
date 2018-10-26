@@ -51,6 +51,13 @@ dependencies {
 	api 'com.google.inject:guice:4.2.1'
 	api 'com.google.inject.extensions:guice-assistedinject:4.2.1'
 	
+	/* Guava
+	 * Do NOT update to v27.0, it does NOT work with the Android plugin right now at all, not even when jre dependencies are overridden.
+	 * There are duplicate class errors and the lint task gets stuck and never finishes.
+	 */
+	api 'com.google.guava:guava:26.0-jre' // This will override the version provided by Guice
+	
+	
 	/* JOML
 	 * Updating to >= v1.8.0 is problematic for two reasons:
 	 * 1. Compatibility with Android (> v1.8.6) is questionable - it works,

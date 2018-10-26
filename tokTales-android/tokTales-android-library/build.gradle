@@ -34,6 +34,7 @@ android {
 	}
 }
 
+
 dependencies {
     testImplementation project(':tokTales-android-test')
 	androidTestImplementation project(':tokTales-android-test')
@@ -46,11 +47,19 @@ dependencies {
 	    // Exclude these because of duplicate class XmlPullParserException that Android includes
 	    exclude group: 'xmlpull', module: 'xmlpull'
 	    exclude group: 'xpp3', module: 'xpp3_min'
+	    // We need to exclude the Guice AOP version here because forcing alone (below) does not override the dependency classifier
 	    exclude group: 'com.google.inject', module: 'guice'
+	    // This is necessary because otherwise projects depending on this, still get the jre version
+	    exclude group: 'com.google.guava', module: 'guava'
     }
 	api ('com.google.inject:guice:4.2.1:no_aop') {
 		// Replace (see above) Guice dependency with no_aop version
 		force = true
+	}
+	api ('com.google.guava:guava:26.0-android') {
+		// Force override transient depdencies from Guice and tokTales-core-library with the version we want
+		// We have to exclude, declare and force, for this to work; there is no other way
+		force true
 	}
 }
 
