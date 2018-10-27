@@ -50,8 +50,17 @@ dependencies {
 	/* Test dependencies */
 	testImplementation project(':tokTales-desktop-test')
 	
+	
 	/* Project dependencies */
-	api project(':tokTales-core-library')
+	api (project(':tokTales-core-library')) {
+		// This is necessary because otherwise projects depending on this, might get the android version (if the version is newer)
+		exclude group: 'com.google.guava', module: 'guava'
+	}
+	api ('com.google.guava:guava:26.0-jre') {
+		// Force override transient depdencies from Guice and tokTales-core-library with the version we want
+		// Whether we have to exclude and force depends on whether the overridden version is newer
+		force true
+	}
 	
 	
 	/* Lib dependencies */

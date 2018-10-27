@@ -55,7 +55,7 @@ dependencies {
 	 * Do NOT update to v27.0, it does NOT work with the Android plugin right now at all, not even when jre dependencies are overridden.
 	 * There are duplicate class errors and the lint task gets stuck and never finishes.
 	 */
-	api 'com.google.guava:guava:26.0-jre' // This will override the version provided by Guice
+	api 'com.google.guava:guava:26.0-android' // This will override the version provided by Guice
 	
 	
 	/* JOML

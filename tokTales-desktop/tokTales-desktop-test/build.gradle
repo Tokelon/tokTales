@@ -6,7 +6,12 @@ version "0.0.1"
 apply plugin: 'java-library'
 
 dependencies {
-	api project(':tokTales-core-test')
+	api (project(':tokTales-core-test')) {
+		exclude group: 'com.google.guava', module: 'guava'
+	}
+	api ('com.google.guava:guava:26.0-jre') {
+		force true
+	}
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle
 	implementation project(':tokTales-desktop-library')

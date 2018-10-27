@@ -8,10 +8,16 @@ apply plugin: 'java-library'
 dependencies {
     testImplementation project(':tokTales-extensions-desktop-test')
 
+    
     api project(':tokTales-desktop-library')
-    api project(':tokTales-extensions-default-core')
+    
+    api (project(':tokTales-extensions-default-core')) {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    api ('com.google.guava:guava:26.0-jre') {
+        force true
+    }
 }
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
-
