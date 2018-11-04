@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.engine.inject;
 
 import java.lang.reflect.Type;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.util.Types;
@@ -72,10 +73,12 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.screen.order.RenderOrder;
 import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
+import com.tokelon.toktales.core.game.states.BaseGamestateProvider;
 import com.tokelon.toktales.core.game.states.DefaultGamestate;
 import com.tokelon.toktales.core.game.states.GameSceneControl;
 import com.tokelon.toktales.core.game.states.GameSceneControl.GameSceneControlFactory;
 import com.tokelon.toktales.core.game.states.GameStateControl;
+import com.tokelon.toktales.core.game.states.IBaseGamestateFactory;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameScene;
@@ -121,6 +124,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 	public static final float DEFAULT_GRID_TILE_SIZE = 32.0f;
 	
 	
+	@SuppressWarnings("serial")
 	@Override
 	protected void configure() {
 		// you can use untargeted bindings so that the injector may prepare dependencies eagerly
@@ -184,6 +188,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameState.class).to(DefaultGamestate.class);
 		bind(IGameScene.class).to(BaseGamescene.class);
 		bind(new TypeLiteral<ITypedGameState<IGameScene>>() {}).to(new TypeLiteral<BaseGamestate<IGameScene>>() {});
+		bind(new TypeLiteral<BaseGamestate<IGameScene>>() {}).toProvider(new BaseGamestateProvider<IGameScene>(new TypeToken<IGameScene>() {}));
+		bind(IBaseGamestateFactory.class).to(IBaseGamestateFactory.BaseGamestateFactory.class);
+		bind(BaseGamestate.class);
 		bind(InitialGamestate.class);
 		
 		bindGameSceneControlTypes();
