@@ -184,8 +184,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IGameState.class).to(DefaultGamestate.class);
 		bind(IGameScene.class).to(BaseGamescene.class);
 		bind(new TypeLiteral<ITypedGameState<IGameScene>>() {}).to(new TypeLiteral<BaseGamestate<IGameScene>>() {});
-		bind(new TypeLiteral<BaseGamestate<IGameScene>>() {}).toProvider(() -> new BaseGamestate<>(IGameScene.class));
-		bind(BaseGamestate.class).toProvider(() -> new BaseGamestate<>(IGameScene.class));
 		bind(InitialGamestate.class);
 		
 		bindGameSceneControlTypes();

@@ -1,8 +1,12 @@
 package com.tokelon.toktales.core.game.states;
 
+import java.lang.reflect.TypeVariable;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.google.common.reflect.TypeToken;
+import com.google.inject.Key;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
@@ -68,26 +72,108 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	private IControlScheme stateControlScheme;
 	private IControlHandler stateControlHandler;
 	
-
-	/* The sceneType must be the class of T.
+	
+	/* The sceneType must be of T.
 	 * 
-	 * It's possible to use Class<? extends T> however then it would not be possible to assign any T,
+	 * It's possible to use TypeToken<? extends T> however then it would not be possible to assign any T,
 	 * it would have to be an instance of sceneType. This would be confusing.
-	 * There also is no real advantage in using it. You can still use it for the Provider.  
-	 * 
+	 * There also is no real advantage in using it. You can still use it for the Provider.
 	 */
-	private final Class<T> sceneType;
+	private final TypeToken<T> sceneType;
 	
 	/** Default constructor.
+	 * <p>
+	 * The scene type will be resolved from this state's type.
+	 * <p>
+	 * For example the state below will have the scene type <code>ICustomGamescene</code>.<br>
+	 * {@code public CustomGamestate extends BaseGamestate<ICustomGamescene>}
+	 * <p>
+	 * You can also create instances of generic states with the use of anonymous subclasses (note the curly braces a the end).<br>
+	 * <code>BaseGamestate{@literal<}ICustomGamescene{@literal>} gamestate = new BaseGamestate{@literal<}ICustomGamescene{@literal>}() { };</code>
+	 * <p>
+	 * Be aware that the scene type must be fully resolved for this to work.<br>
+	 * The following will not work because the actual type of T (T is a type variable) will not be known at runtime.<br>
+	 * <code>BaseGamestate{@literal<}T{@literal>} gamestate = new BaseGamestate{@literal<}T{@literal>}() { };</code>
 	 * 
-	 * @param sceneType The type of this state's scenes.
+	 * @throws IllegalArgumentException If the scene type cannot be fully resolved.
 	 */
-	public BaseGamestate(Class<T> sceneType) {
-		if(sceneType == null) {
-			throw new NullPointerException("sceneType must not be null");
+	@Inject
+	protected BaseGamestate() {
+		sceneType = resolveSceneTypeFromStateContext();
+		checkSceneTypeValidity(sceneType, "The scene type that was resolved from this state's type is not valid. You must use a subclass or provide a valid scene type. Invalid type variable of name " + sceneType.getType().getTypeName());
+	}
+	
+	/** Public constructor with a scene type token.
+	 * <p>
+	 * Use this to create instances of generic states dynamically and without the use of an anonymous subclass for the state.<br>
+	 * Instead of the scene type being resolved from the context, it will be stored in the TypeToken that was given.
+	 * <p>
+	 * For example below we instantiate a state directly by passing it a new TypeToken. We don't have to create the TypeToken right there, it could have come from somewhere else too.<br>
+	 * <code>BaseGamestate{@literal<}ICustomGamescene{@literal>} gamestate = new BaseGamestate{@literal<}ICustomGamescene{@literal>}(new TypeToken{@literal<}ICustomGamescene{@literal>}() { });</code> 
+	 * <p>
+	 * Be aware that the scene type must be fully resolved for this to work.<br>
+	 * The following will not work because the actual type of T (T is a type variable) will not be known at runtime.<br>
+	 * <code>BaseGamestate{@literal<}T{@literal>} gamestate = new BaseGamestate{@literal<}T{@literal>}(new TypeToken{@literal<}T{@literal>}() { });</code>
+	 * 
+	 * @param sceneTypeToken The type token that should be used for the scene type.
+	 * @throws IllegalArgumentException If the scene type cannot be fully resolved.
+	 */
+	public BaseGamestate(TypeToken<T> sceneTypeToken) {
+		if(sceneTypeToken == null) {
+			throw new NullPointerException("sceneTypeToken must not be null");
 		}
 		
-		this.sceneType = sceneType;
+		sceneType = sceneTypeToken;
+		checkSceneTypeValidity(sceneType, "The scene type token you provided is not valid. Invalid type variable of name " + sceneTypeToken.getType().getTypeName());
+	}
+	
+	/** Public constructor with a scene type class.
+	 * <p>
+	 * Use this to create instances of generic gamestate types.
+	 * 
+	 * @param sceneTypeClass The class that should be used for the scene type.
+	 * @throws IllegalArgumentException If the scene type cannot be fully resolved.
+	 */
+	public BaseGamestate(Class<T> sceneTypeClass) {
+		if(sceneTypeClass == null) {
+			throw new NullPointerException("sceneTypeClass must not be null");
+		}
+		
+		sceneType = TypeToken.of(sceneTypeClass);
+		checkSceneTypeValidity(sceneType, "The scene type class you provided is not valid. Invalid type variable of name " + sceneTypeClass.getTypeName());
+	}
+	
+	
+	/**
+	 * @return A type token for the type of this state's scenes.
+	 */
+	@SuppressWarnings("serial")
+	protected TypeToken<T> resolveSceneTypeFromStateContext() {
+		return new TypeToken<T>(getClass()) {};
+	}
+	
+	/** Checks if the type of the given scene type token is valid as a scene type.
+	 * <br>
+	 * Throws an exception with the given error message if the scene type is not valid.
+	 * 
+	 * @param sceneTypeToken
+	 * @param errorMessage
+	 * @throws IllegalArgumentException If the type is not valid.
+	 */
+	protected void checkSceneTypeValidity(TypeToken<T> sceneTypeToken, String errorMessage) {
+		if(!isTypeValidForInjection(sceneTypeToken)) {
+			throw new IllegalArgumentException(errorMessage);
+		}
+	}
+	
+	/** Returns whether the type of the given type token can be injected. 
+	 * 
+	 * @param token The type token for the type.
+	 * @return True if the type can be injected, false if not.
+	 */
+	protected boolean isTypeValidForInjection(TypeToken<T> token) {
+		// TODO: Are Wildcard types valid?
+		return !(token.getType() instanceof TypeVariable);
 	}
 	
 	
@@ -103,13 +189,12 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			Class<T> sceneType,
 			IStateRender defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		this(sceneType, null, null, defaultRender, defaultInputHandler, defaultControlScheme, defaultControlHandler);
+		this(null, null, defaultRender, defaultInputHandler, defaultControlScheme, defaultControlHandler);
 	}
 	
 	
@@ -122,11 +207,10 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			Class<T> sceneType,
 			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl
 	) {
-		this(sceneType, defaultSceneProvider, defaultSceneControl, null, null, null, null);
+		this(defaultSceneProvider, defaultSceneControl, null, null, null, null);
 	}
 	
 
@@ -139,7 +223,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			Class<T> sceneType,
 			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl,
 			IStateRender defaultRender,
@@ -147,7 +230,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		this(sceneType);
+		this();
 		
 		// Any of these can be null
 		this.stateSceneProvider = defaultSceneProvider;
@@ -219,8 +302,13 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @param context the engine context
 	 * @return A scene provider for this state's scene type.
 	 */
+	@SuppressWarnings("unchecked")
 	protected Provider<? extends T> createDefaultSceneProvider(IEngineContext context) {
-		return context.getInjector().getProvider(getSceneType());
+		TypeToken<T> sceneTypeToken = getSceneTypeToken();
+		checkSceneTypeValidity(sceneTypeToken, "The scene type is not valid. Invalid type variable of name " + sceneTypeToken.getType().getTypeName());
+		
+		Key<T> sceneKey = (Key<T>) Key.get(sceneTypeToken.getType());
+		return context.getInjector().getProvider(sceneKey);
 	}
 	
 	/** Creates the default scene control for this state.
@@ -439,7 +527,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 
 	/* Other methods */
-
+	
 	
 	@Override
 	public boolean assignScene(String name, IGameScene scene) {
@@ -448,19 +536,55 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		}
 
 		boolean assigned;
-		if(getSceneType().isInstance(scene)) {
+		if(getSceneTypeToken().getRawType().isInstance(scene)) {
 			// Cast and assign like normal
 			@SuppressWarnings("unchecked") T typedScene = (T) scene;
 			assigned = assignSceneTyped(name, typedScene);
 		}
 		else {
-			getLog().e(getTag(), String.format("Failed to assign scene. Type [%s] is not an instance of scene type [%s]", scene.getClass(), getSceneType()));
+			getLog().e(getTag(), String.format("Failed to assign scene with name '%s'. Type [%s] is not a subtype of scene type [%s]", name, scene.getClass(), getSceneTypeToken()));
 			assigned = false;
 		}
 		
 		return assigned;
 	}
 	
+
+	@Override
+	public boolean assignSceneWithGenericType(String name, IGameSceneAssignment sceneAssignment) {
+		if(name == null || sceneAssignment == null) {
+			throw new NullPointerException("name and scene must not be null");
+		}
+		
+		boolean assigned;
+		if(sceneAssignment.isSceneOfType(getSceneTypeToken().getType())) {
+			// TODO: Have an extra check that might not know all the type information but is safer?
+			//if(getSceneTypeToken().isSupertypeOf(sceneAssignment.getSceneType()))
+			
+			T typedScene;
+			try {
+				@SuppressWarnings("unchecked") T sceneCast = (T) sceneAssignment.getScene();
+				typedScene = sceneCast;
+			}
+			catch(ClassCastException cce) {
+				throw new IllegalArgumentException("Scene assignment failed due to invalid scene type", cce);
+			}
+			
+			if(typedScene == null) {
+				assigned = false;
+			}
+			else {
+				assigned = assignSceneTyped(name, typedScene);
+			}
+		}
+		else {
+			getLog().e(getTag(), String.format("Failed to assign scene with name '%s'. Type [%s] is not a subtype of scene type [%s]", name, sceneAssignment.getSceneType(), getSceneTypeToken()));
+			assigned = false;
+		}
+		
+		return assigned;
+	}
+
 	
 	@Override
 	public boolean assignSceneTyped(String name, T scene) {
@@ -589,14 +713,23 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 	
 
-	/** Returns this state's scene type.
-	 * <p>
-	 * This type must be the generic type of this state's scene control.
+
+	/** Returns the type token for this state's scene type.
 	 * 
-	 * @return The scene type of this state.
+	 * @return The TypeToken used for the scene type.
 	 */
-	protected Class<T> getSceneType() {
+	protected TypeToken<T> getSceneTypeToken() {
 		return sceneType;
+	}
+	
+	/** Returns a class representing the raw type of this state's scenes.
+	 * <p>
+	 * Use this if this state does not have a generic scene type or you don't care about the generic part.
+	 * 
+	 * @return The raw type of this state's scenes.
+	 */
+	protected Class<? super T> getSceneTypeClass() {
+		return sceneType.getRawType();
 	}
 	
 	

@@ -14,11 +14,6 @@ public class UserGamestate extends BaseGamestate<IGameScene> {
 	/* Could also create ctor with needed state objects and pass them in the subclasses
 	 */
 	
-	public UserGamestate() {
-		super(IGameScene.class);
-	}
-
-	
 	@Override
 	protected void initStateDependencies(
 			IStateRender defaultRender,

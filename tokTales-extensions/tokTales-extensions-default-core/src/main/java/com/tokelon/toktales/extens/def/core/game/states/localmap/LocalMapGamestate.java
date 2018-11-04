@@ -80,8 +80,6 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 			ILocalMapControlHandlerFactory controlHandlerFactory,
 			ILocalMapConsoleIntepreter consoleInterpreter
 	) {
-		super(ILocalMapGamescene.class);
-		
 		this.stateRendererFactory = stateRendererFactory;
 		this.inputHandlerFactory = inputHandlerFactory;
 		this.controlScheme = controlScheme;

@@ -61,7 +61,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 			@ForClass(ConsoleGamestate.class) IRenderingStrategy renderingStrategy,
 			@ForClass(ConsoleGamestate.class) IConsoleInterpreterManager consoleInterpreterManager
 	) {
-		super(IGameScene.class, null, inputHandler, null, null);
+		super(null, inputHandler, null, null);
 		
 		this.renderingStrategy = renderingStrategy;
 		this.consoleInterpreterManager = consoleInterpreterManager;

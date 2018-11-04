@@ -20,7 +20,7 @@ public class SubEngineGamestate extends EngineGamestate<ISubEngineGamescene> imp
 			@IEngineGamestateType IControlScheme controlScheme,
 			IEngineGamestateControlHandlerFactory controlHandlerFactory
 	) {
-		super(ISubEngineGamescene.class, renderFactory, inputHandlerFactory, controlScheme, controlHandlerFactory);
+		super(renderFactory, inputHandlerFactory, controlScheme, controlHandlerFactory);
 	}
 
 
@@ -33,7 +33,7 @@ public class SubEngineGamestate extends EngineGamestate<ISubEngineGamescene> imp
 			@IEngineGamestateType IControlScheme controlScheme,
 			IEngineGamestateControlHandlerFactory controlHandlerFactory
 	) {
-		super(ISubEngineGamescene.class, defaultSceneProvider, defaultSceneControl, renderFactory, inputHandlerFactory, controlScheme, controlHandlerFactory);
+		super(defaultSceneProvider, defaultSceneControl, renderFactory, inputHandlerFactory, controlScheme, controlHandlerFactory);
 	}
 	
 }

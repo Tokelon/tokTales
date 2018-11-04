@@ -3,6 +3,7 @@ package com.tokelon.toktales.test.core.game.states.enginestate;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.google.common.reflect.TypeToken;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IControlHandler;
@@ -22,21 +23,6 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 	private final IEngineGamestateControlHandlerFactory stateControlHandlerFactory;
 	private final IEngineGamestateInputHandlerFactory stateInputHandlerFactory;
 	
-	
-	public EngineGamestate(
-			Class<T> sceneType,
-			IEngineGamestateRenderFactory renderFactory,
-			IEngineGamestateInputHandlerFactory inputHandlerFactory,
-			@IEngineGamestateType IControlScheme controlScheme,
-			IEngineGamestateControlHandlerFactory controlHandlerFactory
-	) {
-		super(sceneType, null, null, controlScheme, null);
-		
-		this.stateRenderFactory = renderFactory;
-		this.stateControlHandlerFactory = controlHandlerFactory;
-		this.stateInputHandlerFactory = inputHandlerFactory;
-	}
-	
 	@Inject
 	protected EngineGamestate(
 			IEngineGamestateRenderFactory renderFactory,
@@ -44,13 +30,17 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 			@IEngineGamestateType IControlScheme controlScheme,
 			IEngineGamestateControlHandlerFactory controlHandlerFactory
 	) {
-		this(getSceneClass(), renderFactory, inputHandlerFactory, controlScheme, controlHandlerFactory);
+		super(null, null, controlScheme, null);
+		
+		this.stateRenderFactory = renderFactory;
+		this.stateControlHandlerFactory = controlHandlerFactory;
+		this.stateInputHandlerFactory = inputHandlerFactory;
+		
+		System.out.println(String.format("EngineGamestate of type [%s] has parameter T of type [%s, %s]", this.getClass(), getSceneTypeToken().getType(), getSceneTypeToken().getRawType()));
 	}
-	
 	
 	// Testing
 	protected EngineGamestate(
-			Class<T> sceneType,
 			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl,
 			IEngineGamestateRenderFactory renderFactory,
@@ -58,18 +48,13 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 			@IEngineGamestateType IControlScheme controlScheme,
 			IEngineGamestateControlHandlerFactory controlHandlerFactory
 	) {
-		super(sceneType, defaultSceneProvider, defaultSceneControl, null, null, controlScheme, null);
+		super(defaultSceneProvider, defaultSceneControl, null, null, controlScheme, null);
 		
 		this.stateRenderFactory = renderFactory;
 		this.stateControlHandlerFactory = controlHandlerFactory;
 		this.stateInputHandlerFactory = inputHandlerFactory;
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	private static <S extends IEngineGamescene> Class<S> getSceneClass() {
-		// For some reason the compiler does not understand that the class of IEngineGamescene is valid without cast
-		return (Class<S>) IEngineGamescene.class;
+		
+		System.out.println(String.format("EngineGamestate of type [%s] has parameter T of type [%s, %s]", this.getClass(), getSceneTypeToken().getType(), getSceneTypeToken().getRawType()));
 	}
 	
 	
@@ -97,11 +82,16 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 	}
 
 	
-	/* For testing purposes only */
+	/* Expose for testing purposes only */
 	
 	@Override
-	public Class<T> getSceneType() {
-		return super.getSceneType();
+	public TypeToken<T> getSceneTypeToken() {
+		return super.getSceneTypeToken();
+	}
+	
+	@Override
+	public Class<? super T> getSceneTypeClass() {
+		return super.getSceneTypeClass();
 	}
 	
 	@Override

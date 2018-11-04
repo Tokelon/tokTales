@@ -11,7 +11,7 @@ public class InitialGamestate extends BaseGamestate<IGameScene> {
 	
     @Inject
 	public InitialGamestate(@ForClass(InitialGamestate.class) IGameStateInputHandler inputHandler) {
-    	super(IGameScene.class, null, inputHandler, null, null);
+    	super(null, inputHandler, null, null);
 	}
     
     
