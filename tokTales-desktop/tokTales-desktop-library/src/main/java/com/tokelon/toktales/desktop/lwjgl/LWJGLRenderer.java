@@ -5,13 +5,16 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
+import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
-import com.tokelon.toktales.desktop.render.DesktopSurface;
 import com.tokelon.toktales.desktop.render.IDesktopOpenGLRenderer;
 
 public class LWJGLRenderer implements IDesktopOpenGLRenderer {
 	
+	
+	// TODO: Use window name for surface and make settable
+	public static final String DEFAULT_SURFACE_NAME = "LWJGLRenderer_Surface";
 	
 	private final IGame mGame;
 	
@@ -66,8 +69,8 @@ public class LWJGLRenderer implements IDesktopOpenGLRenderer {
 				
 				0.0f, 50.0f
 				);
-				
-		ISurface surface = new DesktopSurface(newMasterViewport, projMatrix);
+		
+		ISurface surface = new Surface(DEFAULT_SURFACE_NAME, newMasterViewport, projMatrix);
 		
 		return surface;
 	}
@@ -80,7 +83,6 @@ public class LWJGLRenderer implements IDesktopOpenGLRenderer {
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while (!mWindow.shouldClose()) {
-			
 			
 			// Draw the actual stuff
 			onDrawFrame();
@@ -100,6 +102,5 @@ public class LWJGLRenderer implements IDesktopOpenGLRenderer {
 		
 		mGame.getGameControl().renderGame();
 	}
-	
 	
 }

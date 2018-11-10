@@ -21,9 +21,15 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	@Inject
 	public SurfaceViewIntegration(ILogger logger, IEngine engine, IGame game) {
 		this.logger = logger;
+		
 		renderer = new OpenGLRenderer(logger, engine, game);
 	}
 	
+	
+	@Override
+	public void setRenderSurfaceName(String surfaceName) {
+		renderer.setSurfaceName(surfaceName);
+	}
 	
 	@Override
 	public void integrateRenderView(IGLRenderView renderView) {

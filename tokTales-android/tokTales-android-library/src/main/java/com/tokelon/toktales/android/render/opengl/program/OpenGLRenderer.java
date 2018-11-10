@@ -1,11 +1,12 @@
 package com.tokelon.toktales.android.render.opengl.program;
 
+import javax.inject.Inject;
+
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.android.game.screen.UIRenderer;
 import com.tokelon.toktales.android.input.AndroidInputDriver;
 import com.tokelon.toktales.android.input.IAndroidInputService;
-import com.tokelon.toktales.android.render.opengl.AndroidGLSurface;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.android.render.tools.IUIOverlay;
 import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
@@ -14,6 +15,7 @@ import com.tokelon.toktales.android.render.tools.UIControl;
 import com.tokelon.toktales.android.render.tools.UIOverlay;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
@@ -26,13 +28,14 @@ import android.opengl.GLES20;
 import android.view.MotionEvent;
 
 public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
-
-	/* TODO: Maybe pack all the GL viewport functionality into a separate class like GLViewport or MasterViewport
-	 * 
-	 */
+	// TODO: Refactor all this!
+	// TODO: Maybe pack all the GL viewport functionality into a separate class like GLViewport or MasterViewport
 
 	
+	public static final String DEFAULT_SURFACE_NAME = "OpenGLRenderer_Surface";
+	
 	private static final int CLEAR_COLOR = Color.BLACK;
+	
 	
 	private boolean checkGL = true;
 	
@@ -40,6 +43,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	
 	private final NamedOptionsImpl drawOptions = new NamedOptionsImpl();
 
+	private String surfaceName = DEFAULT_SURFACE_NAME;
 
 	private boolean shouldProvideUI = true;
 	
@@ -47,7 +51,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	private AccurateViewport mUIOverlayViewport;
 
 	
-	private AndroidGLSurface currentSurface;
+	private Surface currentSurface;
 	
 	private IScreenViewport currentMasterViewport;
 	
@@ -65,8 +69,9 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	private final IGame mGame;
 	private final IEngine mEngine;
 
+	@Inject
 	public OpenGLRenderer(ILogger logger, IEngine engine, IGame game) {
-		if(game == null || engine == null) {
+		if(logger == null || game == null || engine == null) {
 			throw new NullPointerException();
 		}
 		
@@ -88,6 +93,19 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	}
 	
 	
+	/** Sets the name that will be used for the surface.
+	 * <p>
+	 * Only has an effect if called before {@link #onSurfaceCreated()}.
+	 * 
+	 * @param name
+	 */
+	public void setSurfaceName(String name) {
+		if(name == null) {
+			throw new NullPointerException();
+		}
+		
+		this.surfaceName = name;
+	}
 	
 	
 	@Override
@@ -100,7 +118,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 			
 			
 			// Surface Callbacks
-			currentSurface = new AndroidGLSurface();
+			currentSurface = new Surface(surfaceName, new AccurateViewport(), new Matrix4f());
 			mEngine.getRenderService().getSurfaceHandler().publishSurface(currentSurface);
 			
 			
@@ -270,7 +288,6 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	
 	@Override
 	public void onDrawFrame() {
-		
 		mGame.getGameControl().updateGame();
 		
 		mGame.getGameControl().renderGame();
