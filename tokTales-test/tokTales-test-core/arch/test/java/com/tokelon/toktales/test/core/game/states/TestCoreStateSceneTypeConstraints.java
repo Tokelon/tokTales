@@ -21,7 +21,7 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.DefaultGamestate;
-import com.tokelon.toktales.core.game.states.GameSceneAssignment;
+import com.tokelon.toktales.core.game.states.GenericGamesceneAssignment;
 import com.tokelon.toktales.core.game.states.GenericSceneGamestateProvider;
 import com.tokelon.toktales.core.game.states.GenericSceneGamestateProvider.IGenericSceneGamestateFactory;
 import com.tokelon.toktales.core.game.states.IGameScene;
@@ -224,9 +224,9 @@ public class TestCoreStateSceneTypeConstraints {
 		TestGamestate<ITestGamescene<String>> gamestate = injector.getInstance(new Key<TestGamestate<ITestGamescene<String>>>() {});
 
 		
-		assertTrue(gamestate.assignSceneWithGenericType("1", new GameSceneAssignment<TestGamescene<String>>(new TestGamescene<String>()) { }));
-		assertFalse(gamestate.assignSceneWithGenericType("2", new GameSceneAssignment<TestGamescene<Object>>(new TestGamescene<Object>()) { }));
-		assertFalse(gamestate.assignSceneWithGenericType("3", new GameSceneAssignment<TestGamescene<IGameScene>>(new TestGamescene<IGameScene>()) { }));
+		assertTrue(gamestate.assignSceneWithGenericType("1", new GenericGamesceneAssignment<TestGamescene<String>>(new TestGamescene<String>()) { }));
+		assertFalse(gamestate.assignSceneWithGenericType("2", new GenericGamesceneAssignment<TestGamescene<Object>>(new TestGamescene<Object>()) { }));
+		assertFalse(gamestate.assignSceneWithGenericType("3", new GenericGamesceneAssignment<TestGamescene<IGameScene>>(new TestGamescene<IGameScene>()) { }));
 		
 		assertEquals(new TypeToken<ITestGamescene<String>>() {}, gamestate.getSceneTypeToken());
 		assertEquals(new TypeToken<ITestGamescene<String>>() {}.getType(), gamestate.getSceneTypeToken().getType());

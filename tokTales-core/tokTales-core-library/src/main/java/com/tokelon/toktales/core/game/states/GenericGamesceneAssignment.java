@@ -14,18 +14,18 @@ import com.google.common.reflect.TypeToken;
  * 
  * @param <T> The scene type.
  */
-public class GameSceneAssignment<T extends IGameScene> implements IGameSceneAssignment {
+public class GenericGamesceneAssignment<T extends IGameScene> implements IGameSceneAssignment {
 	
 	
 	private final TypeToken<T> typeToken;
 	private final T gamescene;
 
-	protected GameSceneAssignment(T gamescene) {
+	protected GenericGamesceneAssignment(T gamescene) {
 		this.typeToken = createTypeToken();
 		this.gamescene = gamescene;
 	}
 	
-	private GameSceneAssignment(T gamescene, TypeToken<T> sceneTypeToken) {
+	private GenericGamesceneAssignment(T gamescene, TypeToken<T> sceneTypeToken) {
 		this.typeToken = sceneTypeToken;
 		this.gamescene = gamescene;
 	}
@@ -63,8 +63,8 @@ public class GameSceneAssignment<T extends IGameScene> implements IGameSceneAssi
 	 * @param sceneTypeToken
 	 * @return A new scene assignment of the given parameters.
 	 */
-	public static <T extends IGameScene> GameSceneAssignment<T> of(T gamescene, TypeToken<T> sceneTypeToken) {
-		return new GameSceneAssignment<T>(gamescene, sceneTypeToken);
+	public static <T extends IGameScene> GenericGamesceneAssignment<T> of(T gamescene, TypeToken<T> sceneTypeToken) {
+		return new GenericGamesceneAssignment<T>(gamescene, sceneTypeToken);
 	}
 
 }
