@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.IStateRender;
@@ -48,6 +49,9 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	/* Base objects */
 	private RenderRunner renderRunner;
+	
+	private StateSurfaceCallback currentSurfaceCallback;
+	private ISurface currentSurface;
 
 
 	/* Injected base objects */
@@ -463,7 +467,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 	@Override
 	public void onEngage() {
-		getEngine().getRenderService().getSurfaceHandler().addCallback(getStateRender());
+		getEngine().getRenderService().getSurfaceHandler().addCallback(currentSurfaceCallback = new StateSurfaceCallback());
 		
 		
 		getIntegrator().onEngage();
@@ -501,7 +505,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	@Override
 	public void onDisengage() {
-		getEngine().getRenderService().getSurfaceHandler().removeCallback(getStateRender());
+		getEngine().getRenderService().getSurfaceHandler().removeCallback(currentSurfaceCallback);
 		
 		
 		getIntegrator().onDisengage();
@@ -524,11 +528,66 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		getIntegrator().onRender();
 	}
 	
-
+	
+	// Add these to IGameState? Where would they be called from?
+	
+	/** Called when a surface is created.
+	 * <p>
+	 * The default implementation will save the first surface that is created and set it as current.
+	 * The surface will remain the current as long as it is not destroyed.
+	 * <br>
+	 * It will also pass the event to the state render using {@link IStateRender#surfaceCreated(ISurface)}. 
+	 * <p>
+	 * You can override this method to choose the surface you want to use.
+	 * 
+	 * @param surface
+	 * @see {@link ISurfaceCallback#surfaceCreated(ISurface)}
+	 */
+	protected void onSurfaceCreated(ISurface surface) {
+		if(currentSurface == null) {
+			getStateRender().surfaceCreated(currentSurface = surface);
+		}
+	}
+	
+	/** Called when a surface is changed.
+	 * <p>
+	 * The default implementation will only consider the surface if it is current.<br>
+	 * If the surface is the current surface it will pass the event to the state render using {@link IStateRender#surfaceChanged(ISurface)}.
+	 * 
+	 * @param surface
+	 * @see {@link ISurfaceCallback#surfaceChanged(ISurface)}
+	 */
+	protected void onSurfaceChanged(ISurface surface) {
+		if(surface.equals(currentSurface)) {
+			getStateRender().surfaceChanged(currentSurface);
+		}
+	}
+	
+	/** Called when a surface is destroyed.
+	 * <p>
+	 * The default implementation will only consider the surface if it is current.<br>
+	 * If the surface is the current surface, it will pass the event to the state render using {@link IStateRender#surfaceDestroyed(ISurface)}.
+	 * 
+	 * @param surface
+	 * @see {@link ISurfaceCallback#surfaceDestroyed(ISurface)}
+	 */
+	protected void onSurfaceDestroyed(ISurface surface) {
+		if(surface.equals(currentSurface)) {
+			getStateRender().surfaceDestroyed(currentSurface);
+			currentSurface = null;
+		}
+	}
+	
+	
 
 	/* Other methods */
 	
-	
+	/** {@inheritDoc}
+	 * <p>
+	 * The default implementation checks if the scene is an instance of this state's scene type,
+	 * and if yes calls {@link #assignSceneTyped(String, IGameScene)}.<br>
+	 * Note that the type check will not consider any generic parts, if you need that use {@link #assignSceneCustom(String, IGameSceneAssignment)}. 
+	 */
 	@Override
 	public boolean assignScene(String name, IGameScene scene) {
 		if(name == null || scene == null) {
@@ -550,6 +609,15 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 	
 
+	/** {@inheritDoc}
+	 * <p>
+	 * The default implementation checks if the assignment scene is of type of this state's scene type,
+	 * and if yes calls {@link #assignSceneTyped(String, IGameScene)}.<br>
+	 * Note that if the scene assignment returns true for the type check, it will try to cast the scene to this state's scene type.
+	 * If the cast fails it will throw an {@link IllegalArgumentException}.
+	 * <p>
+	 * You can use this method to make type checks that respect generic types, using something like {@link GenericGamesceneAssignment}.
+	 */
 	@Override
 	public boolean assignSceneCustom(String name, IGameSceneAssignment sceneAssignment) {
 		if(name == null || sceneAssignment == null) {
@@ -558,9 +626,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		
 		boolean assigned;
 		if(sceneAssignment.isSceneOfType(getSceneTypeToken().getType())) {
-			// TODO: Have an extra check that might not know all the type information but is safer?
-			//if(getSceneTypeToken().isSupertypeOf(sceneAssignment.getSceneType()))
-			
 			T typedScene;
 			try {
 				@SuppressWarnings("unchecked") T sceneCast = (T) sceneAssignment.getScene();
@@ -713,7 +778,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 	
 
-
 	/** Returns the type token for this state's scene type.
 	 * 
 	 * @return The TypeToken used for the scene type.
@@ -758,6 +822,15 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	protected String getTag() {
 		return BASE_TAG;
 	}
+	
+
+	/**
+	 * @return The current surface, or null if there is none.
+	 */
+	protected ISurface getCurrentSurface() {
+		return currentSurface;
+	}
+
 	
 	
 	
@@ -879,6 +952,26 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 		gamestateInjector.injectInto(controlHandler);
 		this.stateControlHandler = controlHandler;
+	}
+	
+	
+	/** Callback wrapper for surface events. 
+	 */
+	protected class StateSurfaceCallback implements ISurfaceCallback {
+		@Override
+		public void surfaceCreated(ISurface surface) {
+			onSurfaceCreated(surface);
+		}
+
+		@Override
+		public void surfaceChanged(ISurface surface) {
+			onSurfaceChanged(surface);
+		}
+
+		@Override
+		public void surfaceDestroyed(ISurface surface) {
+			onSurfaceDestroyed(surface);
+		}
 	}
 
 }

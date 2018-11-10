@@ -8,19 +8,8 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 
 public interface IGameState {
-	
-	// TODO: Add those?
-	//public void onSurfaceCreated(ISurface surface);
-	//public void onSurfaceChanged(ISurface surface);
-	//public void onSurfaceDestroyed(ISurface surface);
 
 
-	/* The problem with these is that they would have to be called manually which is very error prone.
-	public void onCreate();
-	public void onDestroy();
-	*/
-	
-	
 	/** Called when the state is added to the state control.
 	 */
 	public void onEngage();
@@ -57,7 +46,12 @@ public interface IGameState {
 	/** Called to render the state.
 	 */
 	public void onRender();
+
 	
+	/* The problem with these is that they would have to be called manually which is very error prone.
+	public void onCreate();
+	public void onDestroy();
+	*/
 	
 	
 	/** Assigns a scene to this state with the given name.
@@ -136,14 +130,11 @@ public interface IGameState {
 	/**
 	 * @return The engine context.
 	 */
-	public IEngineContext getEngineContext();
+	public IEngineContext getEngineContext(); // Maybe remove and use the methods above?
 	
 	
-	/** Returns the integrator for this state.
-	 * 
-	 * @return A gamestate integrator.
-	 */
-	//public IGameStateIntegrator getIntegrator(); // TODO: To expose this we need to implement belated callback support 
+	// TODO: To expose this we need to implement belated callback support
+	//public IGameStateIntegrator getIntegrator();
 	
 	
 	/** Returns the render order for this state.
