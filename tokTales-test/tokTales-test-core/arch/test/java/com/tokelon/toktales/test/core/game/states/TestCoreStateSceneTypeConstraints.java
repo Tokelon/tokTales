@@ -36,7 +36,7 @@ import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.Sub
 import com.tokelon.toktales.test.core.game.states.enginestate.subenginestate.SubEngineGamestate;
 
 @SuppressWarnings("serial")
-public class TestCoreStateSceneTypeConstrains {
+public class TestCoreStateSceneTypeConstraints {
 
 	@SuppressWarnings("unused")
 	private static class TestGamestate<T extends IGameScene> extends BaseGamestate<T> {
