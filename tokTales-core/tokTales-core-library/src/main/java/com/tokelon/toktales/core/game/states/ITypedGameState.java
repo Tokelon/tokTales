@@ -3,6 +3,7 @@ package com.tokelon.toktales.core.game.states;
 public interface ITypedGameState<T extends IGameScene> extends IGameState {
 
 	
+	/*
 	/** Assigns a scene using a scene assignment parameter which respects generic types.
 	 * <p>
 	 * You only really need to use this if your scene type is generic.
@@ -15,8 +16,9 @@ public interface ITypedGameState<T extends IGameScene> extends IGameState {
 	 * @return True if the given scene was assigned successfully, false if not.
 	 * @throws NullPointerException If name or sceneAssignment is null.
 	 */
-	public boolean assignSceneWithGenericType(String name, IGameSceneAssignment sceneAssignment);
-	
+	//public boolean assignSceneWithGenericType(String name, ITypedGameSceneAssignment<T> sceneAssignment);
+
+
 	/** Assigns a scene in a type safe matter, since the scene's type must match this state's scene type.
 	 * <p>
 	 * Returns whether the scene was actually assigned or not.

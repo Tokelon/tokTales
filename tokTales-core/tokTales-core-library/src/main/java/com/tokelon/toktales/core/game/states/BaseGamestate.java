@@ -551,7 +551,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 
 	@Override
-	public boolean assignSceneWithGenericType(String name, IGameSceneAssignment sceneAssignment) {
+	public boolean assignSceneCustom(String name, IGameSceneAssignment sceneAssignment) {
 		if(name == null || sceneAssignment == null) {
 			throw new NullPointerException("name and scene must not be null");
 		}

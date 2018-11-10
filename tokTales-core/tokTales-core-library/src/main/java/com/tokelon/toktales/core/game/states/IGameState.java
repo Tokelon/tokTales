@@ -60,7 +60,7 @@ public interface IGameState {
 	
 	
 	
-	/** Assigns a scene to this gamestate with the given name.
+	/** Assigns a scene to this state with the given name.
 	 * <p>
 	 * The scene must be compatible with this state, in that it must match the type this state expects.
 	 * 
@@ -70,6 +70,18 @@ public interface IGameState {
 	 * @throws NullPointerException If name or scene is null.
 	 */
 	public boolean assignScene(String name, IGameScene scene);
+	
+	/** Assigns a scene using a scene assignment parameter.
+	 * <p>
+	 * Returns whether the scene was actually assigned or not.
+	 * 
+	 * @param name
+	 * @param sceneAssignment
+	 * @return True if the given scene was successfully assigned, false if not.
+	 * @throws NullPointerException If name or sceneAssignment is null.
+	 */
+	public boolean assignSceneCustom(String name, IGameSceneAssignment sceneAssignment);
+	
 	
 	/** Changes to active scene to the on with the given name.
 	 * 
