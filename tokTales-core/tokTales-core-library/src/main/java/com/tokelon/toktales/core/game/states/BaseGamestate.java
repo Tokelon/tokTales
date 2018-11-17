@@ -545,7 +545,8 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 */
 	protected void onSurfaceCreated(ISurface surface) {
 		if(currentSurface == null) {
-			getStateRender().surfaceCreated(currentSurface = surface);
+			currentSurface = surface;
+			getStateRender().surfaceCreated(currentSurface);
 		}
 	}
 	

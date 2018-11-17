@@ -243,7 +243,8 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 
 
 	protected static Provider<ExecutorService> defaultExecutorServiceProvider() {
-		 // Pass thread factory to create daemon threads?
+		// TODO: Use Guava executor ?
+		//MoreExecutors.getExitingExecutorService(new ThreadPoolExecutor(1, 1, keepAliveTime, unit, workQueue), 0, TimeUnit.MILLISECONDS);
 		return () -> Executors.newSingleThreadExecutor(new ExecutorServiceDaemonThreadFactory());
 	}
 	
