@@ -17,23 +17,23 @@ public class AndroidInputService extends AbstractEngineService implements IAndro
 	private final MasterScreenPointerCallback masterScreenPointerCallback = new MasterScreenPointerCallback();
 
 	
-	private final AndroidInputPoster inputPoster;
-	private final AndroidInputDispatcher inputDispatcher;
+	private final AndroidInputProducer inputPoster;
+	private final AndroidInputConsumer inputDispatcher;
 	
 	public AndroidInputService() {
-		this.inputPoster = new AndroidInputPoster();
-		this.inputDispatcher = new AndroidInputDispatcher();
+		this.inputPoster = new AndroidInputProducer();
+		this.inputDispatcher = new AndroidInputConsumer();
 	}
 	
 	
 	
 	@Override
-	public IAndroidInputPoster getInputPoster() {
+	public IAndroidInputProducer getInputPoster() {
 		return inputPoster;
 	}
 
 	@Override
-	public IAndroidInputDispatcher getInputDispatcher() {
+	public IAndroidInputConsumer getInputDispatcher() {
 		return inputDispatcher;
 	}
 
@@ -97,7 +97,7 @@ public class AndroidInputService extends AbstractEngineService implements IAndro
 	
 	
 	
-	private class AndroidInputPoster implements IAndroidInputPoster {
+	private class AndroidInputProducer implements IAndroidInputProducer {
 
 		@Override
 		public InputScreenButtonCallback getScreenButtonInput() {
@@ -116,7 +116,7 @@ public class AndroidInputService extends AbstractEngineService implements IAndro
 	}
 	
 	
-	private class AndroidInputDispatcher extends AndroidInputRegistration implements IAndroidInputDispatcher {
+	private class AndroidInputConsumer extends AndroidInputRegistration implements IAndroidInputConsumer {
 		
 	}
 	

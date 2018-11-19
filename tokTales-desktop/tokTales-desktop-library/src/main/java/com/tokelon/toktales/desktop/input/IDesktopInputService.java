@@ -5,10 +5,10 @@ import com.tokelon.toktales.core.engine.input.IInputService;
 public interface IDesktopInputService extends IInputService {
 
 	@Override
-	public IDesktopInputPoster getInputPoster();
+	public IDesktopInputProducer getInputPoster();
 	
 	@Override
-	public IDesktopInputDispatcher getInputDispatcher();
+	public IDesktopInputConsumer getInputDispatcher();
 	
 
 	// registerInputDriver

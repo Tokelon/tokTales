@@ -20,25 +20,25 @@ public class DesktopInputService extends AbstractEngineService implements IDeskt
 	private final MasterCharCallback masterCharCallback = new MasterCharCallback();
 	
 	
-	private final DesktopInputPoster inputPoster;
-	private final DesktopInputDispatcher inputDispatcher;
+	private final DesktopInputProducer inputPoster;
+	private final DesktopInputConsumer inputDispatcher;
 	
 	private IDesktopInputDriver inputDriver;
 
 	public DesktopInputService() {
-		inputPoster = new DesktopInputPoster();
-		inputDispatcher = new DesktopInputDispatcher();
+		inputPoster = new DesktopInputProducer();
+		inputDispatcher = new DesktopInputConsumer();
 	}
 	
 
 	
 	@Override
-	public IDesktopInputPoster getInputPoster() {
+	public IDesktopInputProducer getInputPoster() {
 		return inputPoster;
 	}
 
 	@Override
-	public IDesktopInputDispatcher getInputDispatcher() {
+	public IDesktopInputConsumer getInputDispatcher() {
 		return inputDispatcher;
 	}
 
@@ -120,7 +120,7 @@ public class DesktopInputService extends AbstractEngineService implements IDeskt
 	
 	
 	
-	private class DesktopInputPoster implements IDesktopInputPoster {
+	private class DesktopInputProducer implements IDesktopInputProducer {
 
 		@Override
 		public InputMouseButtonCallback getMouseInput() {
@@ -144,7 +144,7 @@ public class DesktopInputService extends AbstractEngineService implements IDeskt
 	}
 	
 
-	private class DesktopInputDispatcher extends DesktopInputRegistration implements IDesktopInputDispatcher {
+	private class DesktopInputConsumer extends DesktopInputRegistration implements IDesktopInputConsumer {
 
 		@Override
 		public int getKeyState(int vk) {

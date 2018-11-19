@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.engine.input;
 /** Register your input callbacks here.
  *
  */
-public interface IInputDispatcher extends IInputRegistration {
+public interface IInputConsumer extends IInputRegistration {
 	
 	/*Posible generic version
 	 * 

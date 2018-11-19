@@ -2,11 +2,11 @@ package com.tokelon.toktales.core.engine.input;
 
 /** Post your input here.
  * <br>
- * Usually contains the master input handlers which forward the input to the {@link IInputDispatcher}.
+ * Usually contains the master input handlers which forward the input to the {@link IInputConsumer}.
  *
  */
-public interface IInputPoster {
-
+public interface IInputProducer {
+	
 	/* generic version
 	 * 
 	 */

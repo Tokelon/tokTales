@@ -1,12 +1,12 @@
 package com.tokelon.toktales.desktop.input;
 
-import com.tokelon.toktales.core.engine.input.IInputPoster;
+import com.tokelon.toktales.core.engine.input.IInputProducer;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver.InputCharCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver.InputCursorMoveCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver.InputKeyCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver.InputMouseButtonCallback;
 
-public interface IDesktopInputPoster extends IInputPoster {
+public interface IDesktopInputProducer extends IInputProducer {
 	
 	/* TODO:
 	 * Move actions KEY_PRESS etc. into here?
