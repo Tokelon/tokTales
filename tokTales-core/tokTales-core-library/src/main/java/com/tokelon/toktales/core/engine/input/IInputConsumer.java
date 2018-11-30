@@ -1,14 +1,14 @@
 package com.tokelon.toktales.core.engine.input;
 
-/** Register your input callbacks here.
- *
+/** Consumes input events by passing them to registered callbacks.
  */
-public interface IInputConsumer extends IInputRegistration {
+public interface IInputConsumer extends IInputCallback, IInputRegistration {
+	// Could have a system where consumers are registered differently, so the actual callbacks get executed first
+
 	
-	/*Posible generic version
-	 * 
-	 */
-	//public String getInputState(String input); // Similar to getKeyState() UP, DOWN etc.
-	
+	public interface IInputConsumerFactory {
+		
+		public IInputConsumer create(IInputDispatch dispatch);
+	}
 	
 }

@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.states;
 
-import com.tokelon.toktales.core.engine.input.IInputRegistration;
+import com.tokelon.toktales.core.engine.input.IInputConsumer;
 
 
 /** Convenience way of gamestate input handing.
@@ -13,7 +13,6 @@ import com.tokelon.toktales.core.engine.input.IInputRegistration;
  * 
  * 
  */
-public interface IGameStateInput extends IInputRegistration {
-	
+public interface IGameStateInput extends IInputConsumer {
 	
 }
