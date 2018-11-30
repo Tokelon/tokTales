@@ -10,6 +10,7 @@ import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
 
@@ -17,12 +18,14 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	// TODO: Additional window properties, like visible resisable etc.
 	// Better: Make window object available through a solid interface
 
+	public static final String TAG = "LWJGLEngineLauncher";
 	
 	private int windowWidth = 1280;
 	private int windowHeight = 720;
 	private String windowTitle = "";
 
 	private LWJGLRenderer renderer;
+	private GLFWInputDriver inputDriver;
 	
 	
 	public LWJGLEngineLauncher(IHierarchicalInjectConfig injectConfig) {
@@ -45,18 +48,18 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 					lwMainWindow.setSwapInterval(1);	// Enable Vsync
 					lwMainWindow.show();
 
-					GLFWInputDriver inputControl = new GLFWInputDriver(lwMainWindow);
-
-					// TODO: Refactor if possible
+					
 					IInputService inputService = engineContext.getEngine().getInputService();
 					if(inputService instanceof IDesktopInputService) {
-						((IDesktopInputService) inputService).setInputDriver(inputControl);
+						IDesktopInputService desktopInputService = (IDesktopInputService) inputService;
+						IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
+						inputDriver = new GLFWInputDriver(lwMainWindow, mainInputProducer);
 					}
 					else {
-						throw new EngineException("Input service must be of type " + IDesktopInputService.class);
+						engineContext.getLog().e(TAG, "Input driver could not be created: Input service is not compatible with input driver. Input service must be of type " + IDesktopInputService.class);
+						//throw new EngineException("Input service must be of type " + IDesktopInputService.class);
 					}
-
-
+					
 					renderer = new LWJGLRenderer(engineContext.getGame());
 					ISurface surface = renderer.onWindowCreated(lwMainWindow);
 
@@ -108,6 +111,8 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		
 		//GLFW.glfwGetPrimaryMonitor()
 		LWJGLWindow mainWindow = mainWindowFactory.create(windowWidth, windowHeight, windowTitle, MemoryUtil.NULL, MemoryUtil.NULL);
+		//LWJGLWindow mainWindow = mainWindowFactory.create(windowWidth, windowHeight, windowTitle, GLFW.glfwGetPrimaryMonitor(), MemoryUtil.NULL);
+
 		
 		return mainWindow;
 	}

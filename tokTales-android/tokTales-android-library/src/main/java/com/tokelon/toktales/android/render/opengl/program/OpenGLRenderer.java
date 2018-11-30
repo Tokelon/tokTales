@@ -80,16 +80,16 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 		
 		
 		mUIGLRenderer = new UIRenderer(this);
-		mUIControl = new UIControl(this);
 
 		glErrorUtils = new GLErrorUtils(logger, new AndroidGL11(), checkGL);
 		
-		
-		inputDriver = new AndroidInputDriver(mUIControl);
-		
+
 		// TODO: Important - Refactor! Do somewhere else! Check for cast! And fix the UIControl and buttons logic!
-		IAndroidInputService androidInputMaster = (IAndroidInputService) engine.getInputService();
-		androidInputMaster.setInputDriver(inputDriver);
+		IAndroidInputService androidInputService = (IAndroidInputService) engine.getInputService();
+		mUIControl = new UIControl(this, androidInputService.getMainInputDispatch().getInputProducer());
+
+		// TODO: Extract this
+		inputDriver = new AndroidInputDriver(mUIControl);
 	}
 	
 	

@@ -3,15 +3,16 @@ package com.tokelon.toktales.android.render.tools;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import android.support.v4.view.MotionEventCompat;
-import android.view.MotionEvent;
-
-import com.tokelon.toktales.android.input.IAndroidInputDriver.InputScreenButtonCallback;
-import com.tokelon.toktales.android.input.IAndroidInputDriver.InputScreenPointerCallback;
-import com.tokelon.toktales.android.input.IAndroidInputDriver.InputScreenPressCallback;
+import com.tokelon.toktales.android.input.AndroidScreenButtonInputProducer;
+import com.tokelon.toktales.android.input.AndroidScreenPointerInputProducer;
+import com.tokelon.toktales.android.input.AndroidScreenPressInputProducer;
+import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
-import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+
+import android.support.v4.view.MotionEventCompat;
+import android.view.MotionEvent;
 
 public class UIControl implements Runnable {		// Make interface for this ?
 
@@ -25,7 +26,6 @@ public class UIControl implements Runnable {		// Make interface for this ?
 	
 	
 	
-	private final IUIOverlayProvider mOverlayProvider;
 	
 	
 	private volatile boolean running = false;
@@ -38,35 +38,26 @@ public class UIControl implements Runnable {		// Make interface for this ?
 	private final PointerControl pointerControl = new PointerControl();
 	
 	
-	private InputScreenButtonCallback inputScreenButtonCallback;
-	private InputScreenPressCallback inputScreenPressCallback;
-	private InputScreenPointerCallback inputScreenPointerCallback;
+	private final AndroidScreenButtonInputProducer androidScreenButtonInputProducer;
+	private final AndroidScreenPressInputProducer androidScreenPressInputProducer;
+	private final AndroidScreenPointerInputProducer androidScreenPointerInputProducer;
 	
-	private IScreenViewport uiViewport;
+	private IScreenViewport uiViewport; // TODO: Extract this, the UIControl should not care about the viewport
+
+	private final IUIOverlayProvider mOverlayProvider;
 	
-	
-	
-	public UIControl(IUIOverlayProvider overlayProvider) {
-		if(overlayProvider == null) {
+	public UIControl(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer) {
+		if(overlayProvider == null || inputProducer == null) {
 			throw new NullPointerException();
 		}
 		
 		this.mOverlayProvider = overlayProvider;
-	}
-	
-	
-	
-	public void setScreenButtonInputCallback(InputScreenButtonCallback callback) {
-		this.inputScreenButtonCallback = callback;
+		
+		this.androidScreenButtonInputProducer = new AndroidScreenButtonInputProducer(inputProducer);
+		this.androidScreenPressInputProducer = new AndroidScreenPressInputProducer(inputProducer);
+		this.androidScreenPointerInputProducer = new AndroidScreenPointerInputProducer(inputProducer);
 	}
 
-	public void setScreenPressInputCallback(InputScreenPressCallback callback) {
-		this.inputScreenPressCallback = callback;
-	}
-	
-	public void setScreenPointerInputCallback(InputScreenPointerCallback callback) {
-		this.inputScreenPointerCallback = callback;
-	}
 	
 	public void setViewport(IScreenViewport viewport) {
 		this.uiViewport = viewport;
@@ -202,7 +193,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 			int intx = (int)event.getX();
 			int inty = (int)event.getY();
 
-			inputScreenPressCallback.invoke(intx, inty);	// TODO: Pass float values instead of int
+			androidScreenPressInputProducer.invoke(intx, inty);	// TODO: Pass float values instead of int
 		}
 		
 		return true;
@@ -272,12 +263,6 @@ public class UIControl implements Runnable {		// Make interface for this ?
 
 		
 		public void onTouch(MotionEvent event) {
-			InputScreenPointerCallback callback = inputScreenPointerCallback;
-			if(callback == null) {
-				return;
-			}
-
-			
 			int actionMasked = MotionEventCompat.getActionMasked(event);
 			int actionTok = actionFromAndroidToTok(actionMasked);
 			
@@ -298,7 +283,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 
 						if(logDebug) TokTales.getLog().d(TAG, String.format("MULTI MOVE [actionIndex=%d, pointerId=%d, x=%d, y=%d", i, moveId, moveX, moveY));
 
-						callback.invoke(moveId, actionTok, moveX, moveY);
+						androidScreenPointerInputProducer.invoke(moveId, actionTok, moveX, moveY);
 					}
 				}
 				else {
@@ -313,7 +298,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 					
 					if(logDebug) TokTales.getLog().d(TAG, String.format("MULTI TOUCH Event [action=%d, actionIndex=%d, pointerId=%d, x=%d, y=%d]", actionMasked, actionIndex, pointerId, screenx, screeny));
 					
-					callback.invoke(pointerId, actionTok, screenx, screeny);
+					androidScreenPointerInputProducer.invoke(pointerId, actionTok, screenx, screeny);
 				}
 			}
 			else {
@@ -326,7 +311,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 				
 				if(logDebug) TokTales.getLog().d(TAG, String.format("SINGLE TOUCH Event [action=%d, pointerIndex=%d, pointerId=%d, x=%d, y=%d]", actionMasked, pointerIndex, pointerId, screenx, screeny));
 
-				callback.invoke(pointerId, actionTok, screenx, screeny);
+				androidScreenPointerInputProducer.invoke(pointerId, actionTok, screenx, screeny);
 			}
 			
 		}
@@ -440,11 +425,9 @@ public class UIControl implements Runnable {		// Make interface for this ?
 		
 		
 		protected void callDown(int controlDown) {
-			
 			int controlCodeDown = getVB(controlDown);
-			if(inputScreenButtonCallback != null) {
-				inputScreenButtonCallback.invoke(controlCodeDown, TokelonTypeAInputs.BUTTON_PRESS);
-			}
+			androidScreenButtonInputProducer.invoke(controlCodeDown, TokelonTypeAInputs.BUTTON_PRESS);
+			
 			mCallButtonDown = false;
 			
 			mLastCallControlDown = controlDown;
@@ -452,9 +435,8 @@ public class UIControl implements Runnable {		// Make interface for this ?
 		
 		protected void callUp(int controlUp) {
 			int controlCodeUp = getVB(controlUp);
-			if(inputScreenButtonCallback != null) {
-				inputScreenButtonCallback.invoke(controlCodeUp, TokelonTypeAInputs.BUTTON_RELEASE);
-			}
+			androidScreenButtonInputProducer.invoke(controlCodeUp, TokelonTypeAInputs.BUTTON_RELEASE);
+			
 			mCallButtonUp = false;
 			
 			mLastCallControlUp = controlUp;
@@ -514,8 +496,6 @@ public class UIControl implements Runnable {		// Make interface for this ?
 			// Always return false
 			return false;
 		}
-		
-		
 	}
 	
 	
@@ -836,8 +816,6 @@ public class UIControl implements Runnable {		// Make interface for this ?
 			
 			return true;
 		}
-		
-		
 	}
 	
 
@@ -1190,15 +1168,11 @@ public class UIControl implements Runnable {		// Make interface for this ?
 				}
 				
 			}
-
+			
 			
 			return true;
 		}
-
 		
 	}
-
-	
-	
 	
 }
