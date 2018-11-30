@@ -1,69 +1,66 @@
 package com.tokelon.toktales.desktop.input;
 
+import com.tokelon.toktales.core.engine.input.ICustomInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputRegistration;
+import com.tokelon.toktales.desktop.input.events.ICharInputEvent;
+import com.tokelon.toktales.desktop.input.events.ICursorEnterInputEvent;
+import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent;
+import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
+import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent;
 
 public interface IDesktopInputRegistration extends IInputRegistration {
 
 	
-	public interface IMouseButtonCallback extends IInputCallback {
-	
-		/** 
-		 * @param vb
-		 * @param action
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeMouseButton(int vb, int action);
+	public interface IMouseButtonCallback extends ICustomInputCallback {
 		
-		// TODO: Implement mods
-		//public void invoke(int vb, int action, int mods);
+		public boolean handleMouseButtonInput(IMouseButtonInputEvent event);
+	}
+	
+	public interface ICursorEnterCallback extends ICustomInputCallback {
+		
+		public boolean handleCursorEnterInput(ICursorEnterInputEvent event);
+	}
+	
+	public interface ICursorPosCallback extends ICustomInputCallback {
 
-		
-		/* Use these ?
-		public void onButtonRelease(int vb);
-		public void onButtonPress(int vb);
-		public void onButtonRepeat(int vb);
-		*/
+		public boolean handleCursorPosInput(ICursorPosInputEvent event);
 	}
 	
-	public interface ICursorMoveCallback extends IInputCallback {
-
-		/**
-		 * @param xpos
-		 * @param ypos
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeCursorMove(double xpos, double ypos);
+	public interface IKeyInputCallback extends ICustomInputCallback {
 		
+		public boolean handleKeyInput(IKeyInputEvent event);
 	}
 	
-	
-	public interface IKeyInputCallback extends IInputCallback {
+	public interface ICharInputCallback extends ICustomInputCallback {
 		
-		/**
-		 * @param vk
-		 * @param action
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeKeyInput(int vk, int action);
-		
-		//public void invoke(int vk, int action, int scancode, int mods);
-		
-	}
-	
-	
-	public interface ICharInputCallback extends IInputCallback {
-		
-		/**
-		 * 
-		 * @param codepoint
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeCharInput(int codepoint);
+		public boolean handleCharInput(ICharInputEvent event);
 	}
 	
 	
 
+	
+	/** Registers the given callback for general events.
+	 * If the callback is already registered it won't be registered again.
+	 * 
+	 * @param callback
+	 */
+	public void registerGeneralCallback(IInputCallback callback);
+	
+	/** Unregisters the given callback.
+	 * 
+	 * @param callback
+	 * @return True if the callback was registered before, false if not.
+	 */
+	public boolean unregisterGeneralCallback(IInputCallback callback);
+	
+	/** Returns whether the given callback is registered or not.
+	 * 
+	 * @param callback
+	 * @return True if the callback is registered, false if not.
+	 */
+	public boolean hasGeneralCallback(IInputCallback callback);
+	
 	
 	/** Registers the given callback for mouse button events.
 	 * If the callback is already registered it won't be registered again.
@@ -86,6 +83,27 @@ public interface IDesktopInputRegistration extends IInputRegistration {
 	 */
 	public boolean hasMouseButtonCallback(IMouseButtonCallback callback);
 	
+
+	/** Registers the given callback for cursor move enter.
+	 * If the callback is already registered it won't be registered again.
+	 * 
+	 * @param callback
+	 */
+	public void registerCursorEnterCallback(ICursorEnterCallback callback);
+	
+	/** Unregisters the given callback.
+	 * 
+	 * @param callback
+	 * @return True if the callback was registered before, false if not.
+	 */
+	public boolean unregisterCursorEnterCallback(ICursorEnterCallback callback);
+	
+	/** Returns whether the given callback is registered or not.
+	 * 
+	 * @param callback
+	 * @return True if the callback is registered, false if not.
+	 */
+	public boolean hasCursorEnterCallback(ICursorEnterCallback callback);
 	
 	
 	/** Registers the given callback for cursor move events.
@@ -93,21 +111,21 @@ public interface IDesktopInputRegistration extends IInputRegistration {
 	 * 
 	 * @param callback
 	 */
-	public void registerCursorMoveCallback(ICursorMoveCallback callback);
+	public void registerCursorPosCallback(ICursorPosCallback callback);
 	
 	/** Unregisters the given callback.
 	 * 
 	 * @param callback
 	 * @return True if the callback was registered before, false if not.
 	 */
-	public boolean unregisterCursorMoveCallback(ICursorMoveCallback callback);
+	public boolean unregisterCursorPosCallback(ICursorPosCallback callback);
 	
 	/** Returns whether the given callback is registered or not.
 	 * 
 	 * @param callback
 	 * @return True if the callback is registered, false if not.
 	 */
-	public boolean hasCursorMoveCallback(ICursorMoveCallback callback);
+	public boolean hasCursorPosCallback(ICursorPosCallback callback);
 	
 	
 	
@@ -154,6 +172,5 @@ public interface IDesktopInputRegistration extends IInputRegistration {
 	 * @return True if the callback is registered, false if not.
 	 */
 	public boolean hasCharInputCallback(ICharInputCallback callback);
-	
 	
 }

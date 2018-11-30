@@ -8,19 +8,35 @@ import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.InputCallbackException;
 
 public class DesktopInputRegistration implements IDesktopInputRegistration {
+	// TODO: Always register for generic type?
+	// TODO: Replace sets with lists to guarantee some sort of calling order?
+	//only register/unregister if not custom registered?
 
+	
+	private final Set<IInputCallback> generalInputCallbackSet;
 	private final Set<IMouseButtonCallback> mouseButtonCallbackSet;
-	private final Set<ICursorMoveCallback> cursorMoveCallbackSet;
+	private final Set<ICursorEnterCallback> cursorEnterCallbackSet;
+	private final Set<ICursorPosCallback> cursorPosCallbackSet;
 	private final Set<IKeyInputCallback> keyInputCallbackSet;
 	private final Set<ICharInputCallback> charInputCallbackSet;
 	
 	public DesktopInputRegistration() {
+		generalInputCallbackSet = Collections.synchronizedSet(new HashSet<IInputCallback>());
 		mouseButtonCallbackSet = Collections.synchronizedSet(new HashSet<IMouseButtonCallback>());
-		cursorMoveCallbackSet = Collections.synchronizedSet(new HashSet<ICursorMoveCallback>());
+		cursorEnterCallbackSet = Collections.synchronizedSet(new HashSet<ICursorEnterCallback>());
+		cursorPosCallbackSet = Collections.synchronizedSet(new HashSet<ICursorPosCallback>());
 		keyInputCallbackSet = Collections.synchronizedSet(new HashSet<IKeyInputCallback>());
 		charInputCallbackSet = Collections.synchronizedSet(new HashSet<ICharInputCallback>());
 	}
 
+	
+	/** Remember to synchronize when iterating over the returned set.
+	 * 
+	 * @return The general input callback set.
+	 */
+	protected Set<IInputCallback> getGeneralInputCallbackSet() {
+		return generalInputCallbackSet;
+	}
 
 	/** Remember to synchronize when iterating over the returned set.
 	 * 
@@ -29,13 +45,21 @@ public class DesktopInputRegistration implements IDesktopInputRegistration {
 	protected Set<IMouseButtonCallback> getMouseButtonCallbackSet() {
 		return mouseButtonCallbackSet;
 	}
+	
+	/** Remember to synchronize when iterating over the returned set.
+	 * 
+	 * @return The cursor move callback set.
+	 */
+	protected Set<ICursorEnterCallback> getCursorEnterCallbackSet() {
+		return cursorEnterCallbackSet;
+	}
 
 	/** Remember to synchronize when iterating over the returned set.
 	 * 
 	 * @return The cursor move callback set.
 	 */
-	protected Set<ICursorMoveCallback> getCursorMoveCallbackSet() {
-		return cursorMoveCallbackSet;
+	protected Set<ICursorPosCallback> getCursorPosCallbackSet() {
+		return cursorPosCallbackSet;
 	}
 	
 	/** Remember to synchronize when iterating over the returned set.
@@ -74,26 +98,39 @@ public class DesktopInputRegistration implements IDesktopInputRegistration {
 	}
 
 	private boolean internalRegisterInputCallback(IInputCallback callback, Class<? extends IInputCallback> callbackType) {
-		boolean registered = false;
+		boolean registeredCustom = false;
+		
+		if(IInputCallback.class.equals(callbackType)) {
+			registerGeneralCallback(callback);
+			return true;
+		}
 		
 		if(IMouseButtonCallback.class.isAssignableFrom(callbackType)) {
 			registerMouseButtonCallback((IMouseButtonCallback) callback);
-			registered = true;
+			registeredCustom = true;
 		}
-		if(ICursorMoveCallback.class.isAssignableFrom(callbackType)) {
-			registerCursorMoveCallback((ICursorMoveCallback) callback);
-			registered = true;
+		if(ICursorEnterCallback.class.isAssignableFrom(callbackType)) {
+			registerCursorEnterCallback((ICursorEnterCallback) callback);
+			registeredCustom = true;
+		}
+		if(ICursorPosCallback.class.isAssignableFrom(callbackType)) {
+			registerCursorPosCallback((ICursorPosCallback) callback);
+			registeredCustom = true;
 		}
 		if(IKeyInputCallback.class.isAssignableFrom(callbackType)) {
 			registerKeyInputCallback((IKeyInputCallback) callback);
-			registered = true;
+			registeredCustom = true;
 		}
 		if(ICharInputCallback.class.isAssignableFrom(callbackType)) {
 			registerCharInputCallback((ICharInputCallback) callback);
-			registered = true;
+			registeredCustom = true;
 		}
 		
-		return registered;
+		if(!registeredCustom) {
+			registerGeneralCallback(callback);
+		}
+		
+		return registeredCustom;
 	}
 
 	
@@ -108,22 +145,33 @@ public class DesktopInputRegistration implements IDesktopInputRegistration {
 	}
 
 	private boolean internalUnregisterInputCallback(IInputCallback callback, Class<? extends IInputCallback> callbackType) {
-		boolean unregistered = false;
+		boolean unregisteredCustom = false;
+		
+		if(IInputCallback.class.equals(callbackType)) {
+			return unregisterGeneralCallback(callback);
+		}
 		
 		if(IMouseButtonCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterMouseButtonCallback((IMouseButtonCallback) callback) || unregistered;
+			unregisteredCustom = unregisterMouseButtonCallback((IMouseButtonCallback) callback) || unregisteredCustom;
 		}
-		if(ICursorMoveCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterCursorMoveCallback((ICursorMoveCallback) callback) || unregistered;
+		if(ICursorEnterCallback.class.isAssignableFrom(callbackType)) {
+			unregisteredCustom = unregisterCursorEnterCallback((ICursorEnterCallback) callback) || unregisteredCustom;
+		}
+		if(ICursorPosCallback.class.isAssignableFrom(callbackType)) {
+			unregisteredCustom = unregisterCursorPosCallback((ICursorPosCallback) callback) || unregisteredCustom;
 		}
 		if(IKeyInputCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterKeyInputCallback((IKeyInputCallback) callback) || unregistered;
+			unregisteredCustom = unregisterKeyInputCallback((IKeyInputCallback) callback) || unregisteredCustom;
 		}
 		if(ICharInputCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterCharInputCallback((ICharInputCallback) callback) || unregistered;
+			unregisteredCustom = unregisterCharInputCallback((ICharInputCallback) callback) || unregisteredCustom;
 		}
 		
-		return unregistered;
+		if(!unregisteredCustom) {
+			unregisterGeneralCallback(callback);
+		}
+		
+		return unregisteredCustom;
 	}
 	
 	
@@ -138,24 +186,47 @@ public class DesktopInputRegistration implements IDesktopInputRegistration {
 	}
 	
 	private boolean internalHasInputCallback(IInputCallback callback, Class<? extends IInputCallback> callbackType) {
-		boolean isRegistered = false;
+		boolean isCustomRegistered = false;
+		
+		if(IInputCallback.class.equals(callbackType)) {
+			return hasGeneralCallback(callback);
+		}
 		
 		if(IMouseButtonCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasMouseButtonCallback((IMouseButtonCallback) callback) || isRegistered;
+			isCustomRegistered = hasMouseButtonCallback((IMouseButtonCallback) callback) || isCustomRegistered;
 		}
-		if(ICursorMoveCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasCursorMoveCallback((ICursorMoveCallback) callback) || isRegistered;
+		if(ICursorEnterCallback.class.isAssignableFrom(callbackType)) {
+			isCustomRegistered = hasCursorEnterCallback((ICursorEnterCallback) callback) || isCustomRegistered;
+		}
+		if(ICursorPosCallback.class.isAssignableFrom(callbackType)) {
+			isCustomRegistered = hasCursorPosCallback((ICursorPosCallback) callback) || isCustomRegistered;
 		}
 		if(IKeyInputCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasKeyInputCallback((IKeyInputCallback) callback) || isRegistered;
+			isCustomRegistered = hasKeyInputCallback((IKeyInputCallback) callback) || isCustomRegistered;
 		}
 		if(ICharInputCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasCharInputCallback((ICharInputCallback) callback) || isRegistered;
+			isCustomRegistered = hasCharInputCallback((ICharInputCallback) callback) || isCustomRegistered;
 		}
 		
-		return isRegistered;
+		return isCustomRegistered;
 	}
 	
+	
+	
+	@Override
+	public void registerGeneralCallback(IInputCallback callback) {
+		generalInputCallbackSet.add(callback);
+	}
+	
+	@Override
+	public boolean unregisterGeneralCallback(IInputCallback callback) {
+		return generalInputCallbackSet.remove(callback);
+	}
+	
+	@Override
+	public boolean hasGeneralCallback(IInputCallback callback) {
+		return generalInputCallbackSet.contains(callback);
+	}
 	
 	
 	@Override
@@ -173,20 +244,36 @@ public class DesktopInputRegistration implements IDesktopInputRegistration {
 		return mouseButtonCallbackSet.contains(callback);
 	}
 
+
+	@Override
+	public void registerCursorEnterCallback(ICursorEnterCallback callback) {
+		cursorEnterCallbackSet.add(callback);
+	}
+
+	@Override
+	public boolean unregisterCursorEnterCallback(ICursorEnterCallback callback) {
+		return cursorEnterCallbackSet.remove(callback);
+	}
+
+	@Override
+	public boolean hasCursorEnterCallback(ICursorEnterCallback callback) {
+		return cursorEnterCallbackSet.contains(callback);
+	}
+	
 	
 	@Override
-	public void registerCursorMoveCallback(ICursorMoveCallback callback) {
-		cursorMoveCallbackSet.add(callback);
+	public void registerCursorPosCallback(ICursorPosCallback callback) {
+		cursorPosCallbackSet.add(callback);
 	}
 
 	@Override
-	public boolean unregisterCursorMoveCallback(ICursorMoveCallback callback) {
-		return cursorMoveCallbackSet.remove(callback);
+	public boolean unregisterCursorPosCallback(ICursorPosCallback callback) {
+		return cursorPosCallbackSet.remove(callback);
 	}
 
 	@Override
-	public boolean hasCursorMoveCallback(ICursorMoveCallback callback) {
-		return cursorMoveCallbackSet.contains(callback);
+	public boolean hasCursorPosCallback(ICursorPosCallback callback) {
+		return cursorPosCallbackSet.contains(callback);
 	}
 	
 
@@ -220,6 +307,5 @@ public class DesktopInputRegistration implements IDesktopInputRegistration {
 	public boolean hasCharInputCallback(ICharInputCallback callback) {
 		return charInputCallbackSet.contains(callback);
 	}
-
 
 }
