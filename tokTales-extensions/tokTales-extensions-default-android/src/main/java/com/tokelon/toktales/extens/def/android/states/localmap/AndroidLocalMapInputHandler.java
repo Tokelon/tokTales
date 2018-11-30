@@ -5,6 +5,8 @@ import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
+import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.extens.def.android.states.integration.AndroidConsoleIntegrationInputHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
@@ -23,18 +25,20 @@ public class AndroidLocalMapInputHandler extends AndroidConsoleIntegrationInputH
 		this.gamestate = gamestate;
 	}
 
-	
 
 	@Override
-	public boolean invokeScreenButton(int vb, int action) {
-		boolean handled = super.invokeScreenButton(vb, action);
+	public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
+		boolean handled = super.handleScreenButtonInput(event);
 		if(handled) {
 			return true;
 		}
 		
+		int button = event.getButton();
+		int action = event.getAction();
+		
 		ILocalMapControlHandler controlHandler = gamestate.getStateControlHandler();
 		
-		String ca = gamestate.getStateControlScheme().map(vb);
+		String ca = gamestate.getStateControlScheme().map(button);
 		if(ILocalMapControlHandler.JUMP.equals(ca) && action == TokelonTypeAInputs.BUTTON_PRESS) {
 			controlHandler.handleJump();
 		}
@@ -67,7 +71,7 @@ public class AndroidLocalMapInputHandler extends AndroidConsoleIntegrationInputH
 	
 	
 	@Override
-	public boolean invokeScreenPress(double xpos, double ypos) {
+	public boolean handleScreenPressInput(IScreenPressInputEvent event) {
 		// Old screenPositionPressed()
 		// TODO: Redo this whole logic
 		

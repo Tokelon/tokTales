@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.desktop.input.TInput;
+import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
@@ -27,14 +28,16 @@ public class DesktopLocalMapInputHandler extends DesktopConsoleIntegrationInputH
 	}
 	
 	
-	
 	@Override
-	public boolean invokeKeyInput(int vk, int action) {
-		boolean handled = super.invokeKeyInput(vk, action);
+	public boolean handleKeyInput(IKeyInputEvent event) {
+		boolean handled = super.handleKeyInput(event);
 		if(handled) {
 			return true;
 		}
-
+		
+		int action = event.getAction();
+		int vk = event.getKey();
+		
 		ILocalMapControlHandler controlHandler = gamestate.getStateControlHandler();
 
 		String ca = gamestate.getStateControlScheme().map(vk);

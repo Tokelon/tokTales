@@ -2,6 +2,7 @@ package com.tokelon.toktales.extens.def.android.states.console;
 
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
@@ -22,14 +23,14 @@ public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScre
 	protected void passGamestate(IConsoleGamestate gamestate) {
 		this.consoleGamestate = gamestate;
 	}
-	
+
 	
 	@Override
-	public boolean invokeScreenButton(int vb, int action) {
+	public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
 		boolean handled = true;
 		
-		if(action == TokelonTypeAInputs.BUTTON_PRESS) {
-			switch (vb) {
+		if(event.getAction() == TokelonTypeAInputs.BUTTON_PRESS) {
+			switch (event.getButton()) {
 			case TokelonTypeAInputs.VB_SP1:
 				buttonSP1Pressed();
 				break;
@@ -41,7 +42,7 @@ public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScre
 				break;
 			}
 		}
-		else if(action == TokelonTypeAInputs.BUTTON_RELEASE) {
+		else if(event.getAction() == TokelonTypeAInputs.BUTTON_RELEASE) {
 			// Nothing yet
 		}
 		else {

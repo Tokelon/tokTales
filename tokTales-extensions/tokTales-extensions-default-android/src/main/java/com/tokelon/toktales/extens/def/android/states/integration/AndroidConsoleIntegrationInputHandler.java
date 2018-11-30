@@ -2,6 +2,7 @@ package com.tokelon.toktales.extens.def.android.states.integration;
 
 import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
@@ -19,14 +20,14 @@ public class AndroidConsoleIntegrationInputHandler implements ILocalMapInputHand
 
 	
 	@Override
-	public boolean invokeScreenButton(int vb, int action) {
+	public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
 		IControlScheme controlScheme = consoleIntegrationSupplier.get().getGamestate().getStateControlScheme();
 		IConsoleIntegrationControlHandler controlHandler = consoleIntegrationSupplier.get().getConsoleControlHandler();
 		
-		String ca = controlScheme.map(vb);
+		String ca = controlScheme.map(event.getButton());
 		
 		boolean handled = true;
-		if(IConsoleIntegrationControlHandler.CONSOLE_TOGGLE.equals(ca) && action == TokelonTypeAInputs.BUTTON_PRESS) {
+		if(IConsoleIntegrationControlHandler.CONSOLE_TOGGLE.equals(ca) && event.getAction() == TokelonTypeAInputs.BUTTON_PRESS) {
 			controlHandler.handleConsoleToggle(); // TODO: Does not work for some reason -> does it still not?
 		}
 		else {

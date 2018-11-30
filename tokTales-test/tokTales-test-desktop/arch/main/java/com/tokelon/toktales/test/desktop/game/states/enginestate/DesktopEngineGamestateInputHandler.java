@@ -18,33 +18,9 @@ public class DesktopEngineGamestateInputHandler implements IEngineGamestateInput
 	}
 	
 	
+	// For testing purposes only
 	public IEngineGamestate getGamestate() {
 		return gamestate;
-	}
-	
-	
-	@Override
-	public boolean invokeMouseButton(int vb, int action) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean invokeCursorMove(double xpos, double ypos) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean invokeKeyInput(int vk, int action) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean invokeCharInput(int codepoint) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

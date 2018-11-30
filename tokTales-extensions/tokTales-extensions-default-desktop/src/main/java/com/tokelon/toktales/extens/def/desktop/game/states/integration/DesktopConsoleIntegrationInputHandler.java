@@ -6,6 +6,8 @@ import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
 import com.tokelon.toktales.desktop.input.TInput;
+import com.tokelon.toktales.desktop.input.events.ICharInputEvent;
+import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 
@@ -17,17 +19,17 @@ public class DesktopConsoleIntegrationInputHandler implements IGameStateInputHan
 	public DesktopConsoleIntegrationInputHandler(Supplier<IConsoleIntegration> consoleIntegrationSupplier) {
 		this.consoleIntegrationSupplier = consoleIntegrationSupplier;
 	}
-	
-	
+
+
 	@Override
-	public boolean invokeKeyInput(int vk, int action) {
+	public boolean handleKeyInput(IKeyInputEvent event) {
 		IControlScheme controlScheme = consoleIntegrationSupplier.get().getGamestate().getStateControlScheme();
 		IConsoleIntegrationControlHandler controlHandler = consoleIntegrationSupplier.get().getConsoleControlHandler();
 		
-		String ca = controlScheme.map(vk);
+		String ca = controlScheme.map(event.getKey());
 		
 		boolean handled = true;
-		if(action == TInput.KEY_PRESS) {
+		if(event.getAction() == TInput.KEY_PRESS) {
 			switch (ca) {
 			case IConsoleIntegrationControlHandler.CONSOLE_ENTER:
 				controlHandler.handleConsoleEnter();
@@ -43,7 +45,7 @@ public class DesktopConsoleIntegrationInputHandler implements IGameStateInputHan
 				break;
 			}
 		}
-		else if(action == TInput.KEY_RELEASE) {
+		else if(event.getAction() == TInput.KEY_RELEASE) {
 			switch (ca) {
 			case IConsoleIntegrationControlHandler.CONSOLE_TOGGLE:
 				controlHandler.handleConsoleToggle();
@@ -66,9 +68,10 @@ public class DesktopConsoleIntegrationInputHandler implements IGameStateInputHan
 		return handled;
 	}
 
+
 	@Override
-	public boolean invokeCharInput(int codepoint) {
-		return consoleIntegrationSupplier.get().getConsoleControlHandler().handleConsoleInput(codepoint);
+	public boolean handleCharInput(ICharInputEvent event) {
+		return consoleIntegrationSupplier.get().getConsoleControlHandler().handleConsoleInput(event.getCodepoint());
 	}
 	
 }

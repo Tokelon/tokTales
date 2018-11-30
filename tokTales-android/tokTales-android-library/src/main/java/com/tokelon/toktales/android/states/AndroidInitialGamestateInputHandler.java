@@ -3,6 +3,7 @@ package com.tokelon.toktales.android.states;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
@@ -25,14 +26,17 @@ public class AndroidInitialGamestateInputHandler implements IAndroidGameStateInp
 
 	
 	@Override
-	public boolean invokeScreenButton(int vb, int action) {
+	public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
 		boolean handled = true;
+		
+		int button = event.getButton();
+		int action = event.getAction();
 
 		if(action == TokelonTypeAInputs.BUTTON_PRESS) {
-			if(vb == TokelonTypeAInputs.VB_A) {
+			if(button == TokelonTypeAInputs.VB_A) {
 				buttonAPressed();
 			}
-			else if(vb == TokelonTypeAInputs.VB_B) {
+			else if(button == TokelonTypeAInputs.VB_B) {
 				buttonBPressed();
 			}
 			else {
@@ -62,6 +66,5 @@ public class AndroidInitialGamestateInputHandler implements IAndroidGameStateInp
 			logger.e(TAG, "Error opening context menu: " + e.getMessage());
 		}
 	}
-
 
 }

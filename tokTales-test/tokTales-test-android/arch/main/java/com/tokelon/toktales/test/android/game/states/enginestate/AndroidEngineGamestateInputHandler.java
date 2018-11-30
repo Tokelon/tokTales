@@ -17,27 +17,9 @@ public class AndroidEngineGamestateInputHandler implements IEngineGamestateInput
 	}
 	
 	
+	// For testing purposes only
 	public IEngineGamestate getGamestate() {
 		return gamestate;
 	}
 	
-	
-	@Override
-	public boolean invokeScreenButton(int vb, int action) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean invokeScreenPress(double xpos, double ypos) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean invokeScreenPointer(int pointerId, int action, double xpos, double ypos) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }
