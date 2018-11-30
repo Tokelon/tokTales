@@ -1,67 +1,53 @@
 package com.tokelon.toktales.android.input;
 
+import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
+import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent;
+import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;
+import com.tokelon.toktales.core.engine.input.ICustomInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputRegistration;
 
 public interface IAndroidInputRegistration extends IInputRegistration {
 
 	
-	public interface IScreenButtonCallback extends IInputCallback {
+	public interface IScreenButtonCallback extends ICustomInputCallback {
 		
-		/**
-		 * @param vb
-		 * @param action
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeScreenButton(int vb, int action);
+		public boolean handleScreenButtonInput(IScreenButtonInputEvent event);
 	}
 	
-	
-	public interface IScreenPressCallback extends IInputCallback {
+	public interface IScreenPressCallback extends ICustomInputCallback {
 		
-		/**
-		 * @param xpos
-		 * @param ypos
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeScreenPress(double xpos, double ypos);
+		public boolean handleScreenPressInput(IScreenPressInputEvent event);
 	}
 	
-	
-	public interface IScreenPointerCallback extends IInputCallback {
+	public interface IScreenPointerCallback extends ICustomInputCallback {
 		
-		/**
-		 * 
-		 * @param pointerId
-		 * @param action
-		 * @param xpos
-		 * @param ypos
-		 * @return True if the event was handled, false if not.
-		 */
-		public boolean invokeScreenPointer(int pointerId, int action, double xpos, double ypos);
+		public boolean handleScreenPointerInput(IScreenPointerInputEvent event);
 	}
 
 	
-	/*
-	public interface ICharInputCallback extends IInputCallback {
-		// TODO: Implement
-		// Any activities that want to support this (send events to these listener), would have to call the actual trigger
-		
-		public boolean invokeCharInput(int codepoint);
-	}
-	*/
-	
-	/*
-	public interface ITouchInputCallback {
-		// TODO: Implement a full touch event interface
-	}
-	
-	public interface IKeyInputCallback {
-		// TODO: Implement for actual hardware keys
-	}
-	*/
 	
 	
+	/** Registers the given callback for general events.
+	 * If the callback is already registered it won't be registered again.
+	 * 
+	 * @param callback
+	 */
+	public void registerGeneralCallback(IInputCallback callback);
+	
+	/** Unregisters the given callback.
+	 * 
+	 * @param callback
+	 * @return True if the callback was registered before, false if not.
+	 */
+	public boolean unregisterGeneralCallback(IInputCallback callback);
+	
+	/** Returns whether the given callback is registered or not.
+	 * 
+	 * @param callback
+	 * @return True if the callback is registered, false if not.
+	 */
+	public boolean hasGeneralCallback(IInputCallback callback);
 	
 
 	/** Registers the given callback for screen button events.

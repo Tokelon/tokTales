@@ -18,6 +18,12 @@ import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
 import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
+import com.tokelon.toktales.android.input.dispatch.AndroidInputConsumer;
+import com.tokelon.toktales.android.input.dispatch.AndroidInputDispatch;
+import com.tokelon.toktales.android.input.dispatch.AndroidInputProducer;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputConsumer.IAndroidInputConsumerFactory;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputDispatch;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer.IAndroidInputProducerFactory;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit.AndroidRenderToolkitFactory;
@@ -43,6 +49,7 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
+import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -85,6 +92,10 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IInputService.class).to(IAndroidInputService.class);
 		 bind(IAndroidInputService.class).to(AndroidInputService.class);
 		 bindInEngineScope(AndroidInputService.class); // Bind to scope via the implementation!
+		 bind(IInputDispatch.class).to(IAndroidInputDispatch.class);
+		 bind(IAndroidInputDispatch.class).to(AndroidInputDispatch.class);
+		  bind(IAndroidInputProducerFactory.class).to(AndroidInputProducer.AndroidInputProducerFactory.class);
+		  bind(IAndroidInputConsumerFactory.class).to(AndroidInputConsumer.AndroidInputConsumerFactory.class);
 		
 		
 		/* Other bindings */

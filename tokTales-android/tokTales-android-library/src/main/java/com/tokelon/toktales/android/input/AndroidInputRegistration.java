@@ -8,17 +8,29 @@ import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.InputCallbackException;
 
 public class AndroidInputRegistration implements IAndroidInputRegistration {
-
+	// TODO: Always register for generic type?
+	
+	
+	private final Set<IInputCallback> generalInputCallbackSet;
 	private final Set<IScreenButtonCallback> screenButtonCallbackSet;
 	private final Set<IScreenPressCallback> screenPressCallbackSet;
 	private final Set<IScreenPointerCallback> screenPointerCallbackSet;
 	
 	public AndroidInputRegistration() {
+		generalInputCallbackSet = Collections.synchronizedSet(new HashSet<IInputCallback>());
 		screenButtonCallbackSet = Collections.synchronizedSet(new HashSet<IScreenButtonCallback>());
 		screenPressCallbackSet = Collections.synchronizedSet(new HashSet<IScreenPressCallback>());
 		screenPointerCallbackSet = Collections.synchronizedSet(new HashSet<IScreenPointerCallback>());
 	}
 	
+	
+	/** Remember to synchronize when iterating over the returned set.
+	 * 
+	 * @return The general input callback set.
+	 */
+	protected Set<IInputCallback> getGeneralInputCallbackSet() {
+		return generalInputCallbackSet;
+	}
 	
 	/** Remember to synchronize when iterating over the returned set.
 	 * 
@@ -64,22 +76,31 @@ public class AndroidInputRegistration implements IAndroidInputRegistration {
 	}
 
 	private boolean internalRegisterInputCallback(IInputCallback callback, Class<? extends IInputCallback> callbackType) {
-		boolean registered = false;
+		boolean registeredCustom = false;
+		
+		if(IInputCallback.class.equals(callbackType)) {
+			registerGeneralCallback(callback);
+			return true;
+		}
 
 		if(IScreenButtonCallback.class.isAssignableFrom(callbackType)) {
 			registerScreenButtonCallback((IScreenButtonCallback) callback);
-			registered = true;
+			registeredCustom = true;
 		}
 		if(IScreenPressCallback.class.isAssignableFrom(callbackType)) {
 			registerScreenPressCallback((IScreenPressCallback) callback);
-			registered = true;
+			registeredCustom = true;
 		}
 		if(IScreenPointerCallback.class.isAssignableFrom(callbackType)) {
 			registerScreenPointerCallback((IScreenPointerCallback) callback);
-			registered = true;
+			registeredCustom = true;
 		}
 		
-		return registered;
+		if(!registeredCustom) {
+			registerGeneralCallback(callback);
+		}
+		
+		return registeredCustom;
 	}
 	
 	
@@ -94,19 +115,27 @@ public class AndroidInputRegistration implements IAndroidInputRegistration {
 	}
 	
 	private boolean internalUnregisterInputCallback(IInputCallback callback, Class<? extends IInputCallback> callbackType) {
-		boolean unregistered = false;
+		boolean unregisteredCustom = false;
+		
+		if(IInputCallback.class.equals(callbackType)) {
+			return unregisterGeneralCallback(callback);
+		}
 		
 		if(IScreenButtonCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterScreenButtonCallback((IScreenButtonCallback) callback) || unregistered;
+			unregisteredCustom = unregisterScreenButtonCallback((IScreenButtonCallback) callback) || unregisteredCustom;
 		}
 		if(IScreenPressCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterScreenPressCallback((IScreenPressCallback) callback) || unregistered;
+			unregisteredCustom = unregisterScreenPressCallback((IScreenPressCallback) callback) || unregisteredCustom;
 		}
 		if(IScreenPointerCallback.class.isAssignableFrom(callbackType)) {
-			unregistered = unregisterScreenPointerCallback((IScreenPointerCallback) callback) || unregistered;
+			unregisteredCustom = unregisterScreenPointerCallback((IScreenPointerCallback) callback) || unregisteredCustom;
 		}
 		
-		return unregistered;
+		if(!unregisteredCustom) {
+			unregisterGeneralCallback(callback);
+		}
+		
+		return unregisteredCustom;
 	}
 	
 	
@@ -121,22 +150,42 @@ public class AndroidInputRegistration implements IAndroidInputRegistration {
 	}
 	
 	private boolean internalHasInputCallback(IInputCallback callback, Class<? extends IInputCallback> callbackType) {
-		boolean isRegistered = false;
+		boolean isCustomRegistered = false;
+		
+		if(IInputCallback.class.equals(callbackType)) {
+			return hasGeneralCallback(callback);
+		}
 		
 		if(IScreenButtonCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasScreenButtonCallback((IScreenButtonCallback) callback) || isRegistered;
+			isCustomRegistered = hasScreenButtonCallback((IScreenButtonCallback) callback) || isCustomRegistered;
 		}
 		if(IScreenPressCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasScreenPressCallback((IScreenPressCallback) callback) || isRegistered;
+			isCustomRegistered = hasScreenPressCallback((IScreenPressCallback) callback) || isCustomRegistered;
 		}
 		if(IScreenPointerCallback.class.isAssignableFrom(callbackType)) {
-			isRegistered = hasScreenPointerCallback((IScreenPointerCallback) callback) || isRegistered;
+			isCustomRegistered = hasScreenPointerCallback((IScreenPointerCallback) callback) || isCustomRegistered;
 		}
 		
-		return isRegistered;
+		return isCustomRegistered;
 	}
 	
 	
+	
+
+	@Override
+	public void registerGeneralCallback(IInputCallback callback) {
+		generalInputCallbackSet.add(callback);
+	}
+	
+	@Override
+	public boolean unregisterGeneralCallback(IInputCallback callback) {
+		return generalInputCallbackSet.remove(callback);
+	}
+	
+	@Override
+	public boolean hasGeneralCallback(IInputCallback callback) {
+		return generalInputCallbackSet.contains(callback);
+	}
 	
 	@Override
 	public void registerScreenButtonCallback(IScreenButtonCallback callback) {
@@ -184,6 +233,5 @@ public class AndroidInputRegistration implements IAndroidInputRegistration {
 	public boolean hasScreenPointerCallback(IScreenPointerCallback callback) {
 		return screenPointerCallbackSet.contains(callback);
 	}
-
 
 }
