@@ -104,7 +104,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	@Inject
 	protected BaseGamestate() {
 		sceneType = resolveSceneTypeFromStateContext();
-		checkSceneTypeValidity(sceneType, "The scene type that was resolved from this state's type is not valid. You must use a subclass or provide a valid scene type. Invalid type variable of name " + sceneType.getType().getTypeName());
+		checkSceneTypeValidity(sceneType, "The scene type that was resolved from this state's type is not valid. You must use a subclass or provide a valid scene type. Invalid type variable: " + sceneType.getType());
 	}
 	
 	/** Public constructor with a scene type token.
@@ -128,7 +128,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		}
 		
 		sceneType = sceneTypeToken;
-		checkSceneTypeValidity(sceneType, "The scene type token you provided is not valid. Invalid type variable of name " + sceneTypeToken.getType().getTypeName());
+		checkSceneTypeValidity(sceneType, "The scene type token you provided is not valid. Invalid type variable: " + sceneTypeToken.getType());
 	}
 	
 	/** Public constructor with a scene type class.
@@ -144,7 +144,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		}
 		
 		sceneType = TypeToken.of(sceneTypeClass);
-		checkSceneTypeValidity(sceneType, "The scene type class you provided is not valid. Invalid type variable of name " + sceneTypeClass.getTypeName());
+		checkSceneTypeValidity(sceneType, "The scene type class you provided is not valid. Invalid type variable: " + sceneTypeClass);
 	}
 	
 	
@@ -309,7 +309,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	@SuppressWarnings("unchecked")
 	protected Provider<? extends T> createDefaultSceneProvider(IEngineContext context) {
 		TypeToken<T> sceneTypeToken = getSceneTypeToken();
-		checkSceneTypeValidity(sceneTypeToken, "The scene type is not valid. Invalid type variable of name " + sceneTypeToken.getType().getTypeName());
+		checkSceneTypeValidity(sceneTypeToken, "The scene type is not valid. Invalid type variable: " + sceneTypeToken.getType());
 		
 		Key<T> sceneKey = (Key<T>) Key.get(sceneTypeToken.getType());
 		return context.getInjector().getProvider(sceneKey);
