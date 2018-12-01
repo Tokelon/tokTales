@@ -2,8 +2,8 @@ package com.tokelon.toktales.desktop.lwjgl.input;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
+import com.tokelon.toktales.core.util.IObjectPool;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
-import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent;
 import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent.CursorPosInputEvent;
 
 /**
@@ -17,10 +17,12 @@ public class GLFWCursorPosInputProducer extends GLFWCursorPosCallback {
 	private boolean cursorInWindow = true;
 	
 	
-	private IDesktopInputProducer inputProducer;
+	private final IDesktopInputProducer inputProducer;
+	private final IObjectPool<CursorPosInputEvent> eventPool;
 	
-	public GLFWCursorPosInputProducer(IDesktopInputProducer inputProducer) {
+	public GLFWCursorPosInputProducer(IDesktopInputProducer inputProducer, IObjectPool<CursorPosInputEvent> eventPool) {
 		this.inputProducer = inputProducer;
+		this.eventPool = eventPool;
 	}
 	
 
@@ -35,13 +37,13 @@ public class GLFWCursorPosInputProducer extends GLFWCursorPosCallback {
 		//logger.d(TAG, String.format("Cursor move to (x=%.2f, y=%.2f)", xpos, ypos));
 		
 		
-		inputProducer.postCursorPosInput(geCursorPosInputEvent(window, xpos, ypos));
-	}
-	
-	
-	protected ICursorPosInputEvent geCursorPosInputEvent(long window, double xpos, double ypos) {
-		CursorPosInputEvent cursorPosInputEvent = new ICursorPosInputEvent.CursorPosInputEvent();
-		return cursorPosInputEvent.set(window, xpos, ypos);
+		CursorPosInputEvent event = eventPool.getObject();
+		try {
+			inputProducer.postCursorPosInput(event.set(window, xpos, ypos));	
+		}
+		finally {
+			eventPool.returnObject(event);
+		}
 	}
 	
 }

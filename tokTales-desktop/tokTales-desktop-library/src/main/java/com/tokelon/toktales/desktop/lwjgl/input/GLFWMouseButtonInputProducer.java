@@ -2,8 +2,8 @@ package com.tokelon.toktales.desktop.lwjgl.input;
 
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
+import com.tokelon.toktales.core.util.IObjectPool;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
-import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent;
 import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent.MouseButtonInputEvent;
 
 /**
@@ -17,10 +17,12 @@ public class GLFWMouseButtonInputProducer extends GLFWMouseButtonCallback {
 	private boolean cursorInWindow = true;
 
 	
-	private IDesktopInputProducer inputProducer;
+	private final IDesktopInputProducer inputProducer;
+	private final IObjectPool<MouseButtonInputEvent> eventPool;
 	
-	public GLFWMouseButtonInputProducer(IDesktopInputProducer inputProducer) {
+	public GLFWMouseButtonInputProducer(IDesktopInputProducer inputProducer, IObjectPool<MouseButtonInputEvent> eventPool) {
 		this.inputProducer = inputProducer;
+		this.eventPool = eventPool;
 	}
 	
 	
@@ -39,13 +41,13 @@ public class GLFWMouseButtonInputProducer extends GLFWMouseButtonCallback {
 		int vbAction = GLFWInput.stateGlfwToInput(action);
 		int vbMods = GLFWInput.modGlfwToInput(mods);
 
-		inputProducer.postMouseButtonInput(getMouseButtonInputEvent(window, vb, vbAction, vbMods));
-	}
-	
-	
-	protected IMouseButtonInputEvent getMouseButtonInputEvent(long window, int button, int action, int mods) {
-		MouseButtonInputEvent mouseButtonInputEvent = new IMouseButtonInputEvent.MouseButtonInputEvent();
-		return mouseButtonInputEvent.set(window, button, action, mods);
+		MouseButtonInputEvent event = eventPool.getObject();
+		try {
+			inputProducer.postMouseButtonInput(event.set(window, vb, vbAction, vbMods));	
+		}
+		finally {
+			eventPool.returnObject(event);
+		}
 	}
 	
 }

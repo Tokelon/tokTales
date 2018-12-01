@@ -2,8 +2,8 @@ package com.tokelon.toktales.desktop.lwjgl.input;
 
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 
+import com.tokelon.toktales.core.util.IObjectPool;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
-import com.tokelon.toktales.desktop.input.events.ICursorEnterInputEvent;
 import com.tokelon.toktales.desktop.input.events.ICursorEnterInputEvent.CursorEnterInputEvent;
 
 /**
@@ -12,10 +12,12 @@ import com.tokelon.toktales.desktop.input.events.ICursorEnterInputEvent.CursorEn
 public class GLFWCursorEnterInputProducer extends GLFWCursorEnterCallback {
 
 	
-	private IDesktopInputProducer inputProducer;
+	private final IDesktopInputProducer inputProducer;
+	private final IObjectPool<CursorEnterInputEvent> eventPool;
 	
-	public GLFWCursorEnterInputProducer(IDesktopInputProducer inputProducer) {
+	public GLFWCursorEnterInputProducer(IDesktopInputProducer inputProducer, IObjectPool<CursorEnterInputEvent> eventPool) {
 		this.inputProducer = inputProducer;
+		this.eventPool = eventPool;
 	}
 	
 
@@ -23,13 +25,13 @@ public class GLFWCursorEnterInputProducer extends GLFWCursorEnterCallback {
 	public void invoke(long window, boolean entered) {
 		//logger.d(TAG, String.format("Cursor: %s", entered ? "entered" : "left"));
 		
-		inputProducer.postCursorEnterInput(getCursorEnterInputEvent(window, entered));
-	}
-
-	
-	protected ICursorEnterInputEvent getCursorEnterInputEvent(long window, boolean entered) {
-		CursorEnterInputEvent cursorEnterInputEvent = new ICursorEnterInputEvent.CursorEnterInputEvent();
-		return cursorEnterInputEvent.set(window, entered);
+		CursorEnterInputEvent event = eventPool.getObject();
+		try {
+			inputProducer.postCursorEnterInput(event.set(window, entered));	
+		}
+		finally {
+			eventPool.returnObject(event);
+		}
 	}
 	
 }

@@ -20,6 +20,7 @@ import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.extens.def.android.R;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
@@ -89,7 +90,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		// injectDependencies has not run at this point
 		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
 		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		
 		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());

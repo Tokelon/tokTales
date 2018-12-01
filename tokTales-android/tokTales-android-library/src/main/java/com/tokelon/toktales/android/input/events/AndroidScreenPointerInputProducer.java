@@ -2,25 +2,28 @@ package com.tokelon.toktales.android.input.events;
 
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent.ScreenPointerInputEvent;
+import com.tokelon.toktales.core.util.IObjectPool;
 
 public class AndroidScreenPointerInputProducer {
 
 	
 	private final IAndroidInputProducer inputProducer;
+	private final IObjectPool<ScreenPointerInputEvent> eventPool;
 
-	public AndroidScreenPointerInputProducer(IAndroidInputProducer inputProducer) {
+	public AndroidScreenPointerInputProducer(IAndroidInputProducer inputProducer, IObjectPool<ScreenPointerInputEvent> eventPool) {
 		this.inputProducer = inputProducer;
+		this.eventPool = eventPool;
 	}
 	
 	
 	public void invoke(int pointerId, int action, double xpos, double ypos) {
-		inputProducer.postScreenPointerInput(getScreenPointerInputEvent(pointerId, action, xpos, ypos));
-	}
-	
-	
-	protected IScreenPointerInputEvent getScreenPointerInputEvent(int pointerId, int action, double xpos, double ypos) {
-		ScreenPointerInputEvent screenPointerInputEvent = new IScreenPointerInputEvent.ScreenPointerInputEvent();
-		return screenPointerInputEvent.set(pointerId, action, xpos, ypos);
+		ScreenPointerInputEvent event = eventPool.getObject();
+		try {
+			inputProducer.postScreenPointerInput(event.set(pointerId, action, xpos, ypos));			
+		}
+		finally {
+			eventPool.returnObject(event);
+		}
 	}
 	
 }

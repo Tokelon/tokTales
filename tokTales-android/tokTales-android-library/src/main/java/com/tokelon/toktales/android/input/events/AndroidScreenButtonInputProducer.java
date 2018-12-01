@@ -2,27 +2,36 @@ package com.tokelon.toktales.android.input.events;
 
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent.ScreenButtonInputEvent;
+import com.tokelon.toktales.core.util.IObjectPool;
 
 public class AndroidScreenButtonInputProducer {
 
 	
 	private final IAndroidInputProducer inputProducer;
+	private final IObjectPool<ScreenButtonInputEvent> eventPool;
 
-	public AndroidScreenButtonInputProducer(IAndroidInputProducer inputProducer) {
+	public AndroidScreenButtonInputProducer(IAndroidInputProducer inputProducer, IObjectPool<ScreenButtonInputEvent> eventPool) {
 		this.inputProducer = inputProducer;
+		this.eventPool = eventPool;
 	}
 	
 	
 	public void invoke(int button, int action) {
 		//logger.d(TAG, String.format("Button %s went down", TokelonTypeAInputs.inputToString(buttonCode)));
 
-		inputProducer.postScreenButtonInput(getScreenButtonInputEvent(button, action));
-	}
-	
-	
-	protected IScreenButtonInputEvent getScreenButtonInputEvent(int button, int action) {
-		ScreenButtonInputEvent screenButtonInputEvent = new IScreenButtonInputEvent.ScreenButtonInputEvent();
-		return screenButtonInputEvent.set(button, action);
+		/*
+		try(IObjectLease<ScreenButtonInputEvent> lease = eventPool.getObject()) {
+			inputProducer.postScreenButtonInput(lease.getProperty().set(button, action));
+		} catch (Exception e) { }
+		*/
+		
+		ScreenButtonInputEvent event = eventPool.getObject();
+		try {
+			inputProducer.postScreenButtonInput(event.set(button, action));
+		}
+		finally {
+			eventPool.returnObject(event);
+		}
 	}
 	
 	

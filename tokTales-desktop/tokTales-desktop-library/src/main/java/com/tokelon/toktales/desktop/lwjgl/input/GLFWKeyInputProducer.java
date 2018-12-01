@@ -2,8 +2,8 @@ package com.tokelon.toktales.desktop.lwjgl.input;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 
+import com.tokelon.toktales.core.util.IObjectPool;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
-import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.desktop.input.events.IKeyInputEvent.KeyInputEvent;
 
 /**
@@ -12,10 +12,12 @@ import com.tokelon.toktales.desktop.input.events.IKeyInputEvent.KeyInputEvent;
 public class GLFWKeyInputProducer extends GLFWKeyCallback {
 
 	
-	private IDesktopInputProducer inputProducer;
+	private final IDesktopInputProducer inputProducer;
+	private final IObjectPool<KeyInputEvent> eventPool;
 	
-	public GLFWKeyInputProducer(IDesktopInputProducer inputProducer) {
+	public GLFWKeyInputProducer(IDesktopInputProducer inputProducer, IObjectPool<KeyInputEvent> eventPool) {
 		this.inputProducer = inputProducer;
+		this.eventPool = eventPool;
 	}
 
 	
@@ -29,13 +31,13 @@ public class GLFWKeyInputProducer extends GLFWKeyCallback {
 		int vbMods = GLFWInput.modGlfwToInput(mods);
 		int vbScanCode = scancode; // scancodeGlfwToInput not needed because there is no known scancodes
 		
-		inputProducer.postKeyInput(getKeyInputEvent(window, vk, vbScanCode, vkAction, vbMods));
-	}
-	
-	
-	protected IKeyInputEvent getKeyInputEvent(long window, int key, int scancode, int action, int mods) {
-		KeyInputEvent keyInputEvent = new IKeyInputEvent.KeyInputEvent();
-		return keyInputEvent.set(window, key, scancode, action, mods);
+		KeyInputEvent event = eventPool.getObject();
+		try {
+			inputProducer.postKeyInput(event.set(window, vk, vbScanCode, vkAction, vbMods));	
+		}
+		finally {
+			eventPool.returnObject(event);
+		}
 	}
 	
 }

@@ -8,6 +8,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.ISurface;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
@@ -53,7 +54,7 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 					if(inputService instanceof IDesktopInputService) {
 						IDesktopInputService desktopInputService = (IDesktopInputService) inputService;
 						IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
-						inputDriver = new GLFWInputDriver(lwMainWindow, mainInputProducer);
+						inputDriver = new GLFWInputDriver(lwMainWindow, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
 					}
 					else {
 						engineContext.getLog().e(TAG, "Input driver could not be created: Input service is not compatible with input driver. Input service must be of type " + IDesktopInputService.class);

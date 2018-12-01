@@ -10,6 +10,7 @@ import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegr
 import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -56,7 +57,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	protected Map<String, IActivityIntegration> createActivityIntegrations() {
 		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame());
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
 		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		
 		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());

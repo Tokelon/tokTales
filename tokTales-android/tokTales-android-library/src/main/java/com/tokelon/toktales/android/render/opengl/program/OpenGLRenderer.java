@@ -21,6 +21,7 @@ import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
 
 import android.graphics.Color;
@@ -70,7 +71,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	private final IEngine mEngine;
 
 	@Inject
-	public OpenGLRenderer(ILogger logger, IEngine engine, IGame game) {
+	public OpenGLRenderer(ILogger logger, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
 		if(logger == null || game == null || engine == null) {
 			throw new NullPointerException();
 		}
@@ -86,7 +87,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 
 		// TODO: Important - Refactor! Do somewhere else! Check for cast! And fix the UIControl and buttons logic!
 		IAndroidInputService androidInputService = (IAndroidInputService) engine.getInputService();
-		mUIControl = new UIControl(this, androidInputService.getMainInputDispatch().getInputProducer());
+		mUIControl = new UIControl(this, androidInputService.getMainInputDispatch().getInputProducer(), eventPoolFactory);
 
 		// TODO: Extract this
 		inputDriver = new AndroidInputDriver(mUIControl);

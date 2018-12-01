@@ -8,8 +8,12 @@ import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.android.input.events.AndroidScreenButtonInputProducer;
 import com.tokelon.toktales.android.input.events.AndroidScreenPointerInputProducer;
 import com.tokelon.toktales.android.input.events.AndroidScreenPressInputProducer;
+import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent.ScreenButtonInputEvent;
+import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent.ScreenPointerInputEvent;
+import com.tokelon.toktales.android.input.events.IScreenPressInputEvent.ScreenPressInputEvent;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
@@ -18,6 +22,14 @@ public class UIControl implements Runnable {		// Make interface for this ?
 
 	public static final String TAG = "UIControl";
 
+
+	private static final int EVENT_POOL_CAPACITY_SCREEN_BUTTON_INPUT = 10;
+	private static final int EVENT_POOL_INITIAL_SIZE_SCREEN_BUTTON_INPUT = 2;
+	private static final int EVENT_POOL_CAPACITY_SCREEN_PRESS_INPUT = 10;
+	private static final int EVENT_POOL_INITIAL_SIZE_SCREEN_PRESS_INPUT = 2;
+	private static final int EVENT_POOL_CAPACITY_SCREEN_POINTER_INPUT = 100;
+	private static final int EVENT_POOL_INITIAL_SIZE_SCREEN_POINTER_INPUT = 20;
+	
 	
 	private static final int DELAY_TIME_MILLIS = 16;
 	
@@ -46,16 +58,16 @@ public class UIControl implements Runnable {		// Make interface for this ?
 
 	private final IUIOverlayProvider mOverlayProvider;
 	
-	public UIControl(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer) {
+	public UIControl(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
 		if(overlayProvider == null || inputProducer == null) {
 			throw new NullPointerException();
 		}
 		
 		this.mOverlayProvider = overlayProvider;
 		
-		this.androidScreenButtonInputProducer = new AndroidScreenButtonInputProducer(inputProducer);
-		this.androidScreenPressInputProducer = new AndroidScreenPressInputProducer(inputProducer);
-		this.androidScreenPointerInputProducer = new AndroidScreenPointerInputProducer(inputProducer);
+		this.androidScreenButtonInputProducer = new AndroidScreenButtonInputProducer(inputProducer, eventPoolFactory.create(() -> new ScreenButtonInputEvent(), EVENT_POOL_CAPACITY_SCREEN_BUTTON_INPUT, EVENT_POOL_INITIAL_SIZE_SCREEN_BUTTON_INPUT));
+		this.androidScreenPressInputProducer = new AndroidScreenPressInputProducer(inputProducer, eventPoolFactory.create(() -> new ScreenPressInputEvent(), EVENT_POOL_CAPACITY_SCREEN_PRESS_INPUT, EVENT_POOL_INITIAL_SIZE_SCREEN_PRESS_INPUT));
+		this.androidScreenPointerInputProducer = new AndroidScreenPointerInputProducer(inputProducer, eventPoolFactory.create(() -> new ScreenPointerInputEvent(), EVENT_POOL_CAPACITY_SCREEN_POINTER_INPUT, EVENT_POOL_INITIAL_SIZE_SCREEN_POINTER_INPUT));
 	}
 
 	

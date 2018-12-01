@@ -7,6 +7,7 @@ import com.tokelon.toktales.android.render.opengl.program.OpenGLRenderer;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.IGame;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	
@@ -19,10 +20,10 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	private final OpenGLRenderer renderer;
 	
 	@Inject
-	public SurfaceViewIntegration(ILogger logger, IEngine engine, IGame game) {
+	public SurfaceViewIntegration(ILogger logger, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
 		this.logger = logger;
 		
-		renderer = new OpenGLRenderer(logger, engine, game);
+		renderer = new OpenGLRenderer(logger, engine, game, eventPoolFactory);
 	}
 	
 	

@@ -115,7 +115,9 @@ import com.tokelon.toktales.core.render.opengl.gl20.facade.GLShader;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLProgram;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLShader;
+import com.tokelon.toktales.core.util.DefaultObjectPool;
 import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 
@@ -229,6 +231,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		// Tools
 		bind(IParameterInjectorFactory.class).to(ParameterInjectorFactory.class);
+		bind(IObjectPoolFactory.class).to(DefaultObjectPool.DefaultObjectPoolFactory.class);
 		
 		
 		// Asset Management
