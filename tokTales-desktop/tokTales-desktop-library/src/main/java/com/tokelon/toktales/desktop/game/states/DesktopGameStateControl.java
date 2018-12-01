@@ -19,13 +19,13 @@ import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent;
 import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent;
 
-public class DesktopGameStateManager extends GameStateControl { //TODO: Rename to DesktopGameStateControl
+public class DesktopGameStateControl extends GameStateControl {
 
 	
 	private final DesktopGamestateInputForwarder inputForwarder;
 	
 	@Inject
-	public DesktopGameStateManager(ILogger logger, IDesktopInputService inputService) {
+	public DesktopGameStateControl(ILogger logger, IDesktopInputService inputService) {
 		super(logger);
 	
 		this.inputForwarder = new DesktopGamestateInputForwarder();

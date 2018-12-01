@@ -15,13 +15,13 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.states.GameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 
-public class AndroidGameStateManager extends GameStateControl { //TODO: Rename to AndroidGameStateControl
+public class AndroidGameStateControl extends GameStateControl {
 	
 	
 	private final AndroidGamestateInputForwarder inputForwarder;
 	
 	@Inject
-	public AndroidGameStateManager(ILogger logger, IAndroidInputService inputService) {
+	public AndroidGameStateControl(ILogger logger, IAndroidInputService inputService) {
 		super(logger);
 		
 		this.inputForwarder = new AndroidGamestateInputForwarder();
