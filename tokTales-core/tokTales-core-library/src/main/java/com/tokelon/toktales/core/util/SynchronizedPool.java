@@ -8,7 +8,9 @@ import java.util.List;
  * @param <T>
  */
 public class SynchronizedPool<T> {
-
+	// TODO: Refactor this to implement IObjectPool
+	
+	
 	private final List<T> freeObjects;
 	private final PoolObjectFactory<T> factory;
 	private final int maxSize;
