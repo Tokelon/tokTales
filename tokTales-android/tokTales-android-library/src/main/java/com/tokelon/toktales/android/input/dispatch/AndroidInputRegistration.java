@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.input;
+package com.tokelon.toktales.android.input.dispatch;
 
 import java.util.Collections;
 import java.util.HashSet;

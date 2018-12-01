@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
-import com.tokelon.toktales.desktop.input.DesktopInputRegistration;
 import com.tokelon.toktales.desktop.input.events.ICharInputEvent;
 import com.tokelon.toktales.desktop.input.events.ICursorEnterInputEvent;
 import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent;

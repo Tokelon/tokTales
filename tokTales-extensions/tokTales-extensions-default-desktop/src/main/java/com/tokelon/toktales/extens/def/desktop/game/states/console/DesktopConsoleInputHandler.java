@@ -2,9 +2,9 @@ package com.tokelon.toktales.extens.def.desktop.game.states.console;
 
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InjectGameState;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
 import com.tokelon.toktales.desktop.input.TInput;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.ICharInputCallback;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.IKeyInputCallback;
 import com.tokelon.toktales.desktop.input.events.ICharInputEvent;
 import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.extens.def.core.game.states.console.IConsoleGamestate;

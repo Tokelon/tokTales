@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.input;
+package com.tokelon.toktales.desktop.input.dispatch;
 
 import com.tokelon.toktales.core.engine.input.ICustomInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputCallback;

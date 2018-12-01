@@ -2,9 +2,9 @@ package com.tokelon.toktales.extens.def.android.states.localmap;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
-import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenButtonCallback;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;
 import com.tokelon.toktales.core.game.world.ICrossDirection;

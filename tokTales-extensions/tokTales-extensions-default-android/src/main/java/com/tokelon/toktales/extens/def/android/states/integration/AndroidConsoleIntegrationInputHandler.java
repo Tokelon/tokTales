@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extens.def.android.states.integration;
 
-import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.util.function.Supplier;

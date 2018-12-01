@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.input;
+package com.tokelon.toktales.desktop.input.dispatch;
 
 import java.util.Collections;
 import java.util.HashSet;

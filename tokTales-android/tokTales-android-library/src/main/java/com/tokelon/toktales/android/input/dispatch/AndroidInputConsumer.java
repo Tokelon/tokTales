@@ -2,7 +2,6 @@ package com.tokelon.toktales.android.input.dispatch;
 
 import java.util.Set;
 
-import com.tokelon.toktales.android.input.AndroidInputRegistration;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;

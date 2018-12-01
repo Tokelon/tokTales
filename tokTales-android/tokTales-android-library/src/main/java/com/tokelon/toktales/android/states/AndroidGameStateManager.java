@@ -2,10 +2,10 @@ package com.tokelon.toktales.android.states;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenButtonCallback;
-import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPointerCallback;
-import com.tokelon.toktales.android.input.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.IAndroidInputService;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenButtonCallback;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenPointerCallback;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.input;
+package com.tokelon.toktales.android.input.dispatch;
 
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent;

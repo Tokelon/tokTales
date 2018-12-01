@@ -2,11 +2,11 @@ package com.tokelon.toktales.desktop.game.states;
 
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICharInputCallback;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICursorEnterCallback;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.ICursorPosCallback;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IKeyInputCallback;
-import com.tokelon.toktales.desktop.input.IDesktopInputRegistration.IMouseButtonCallback;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.ICharInputCallback;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.ICursorEnterCallback;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.ICursorPosCallback;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.IKeyInputCallback;
+import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.IMouseButtonCallback;
 import com.tokelon.toktales.desktop.input.events.ICharInputEvent;
 import com.tokelon.toktales.desktop.input.events.ICursorEnterInputEvent;
 import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent;
