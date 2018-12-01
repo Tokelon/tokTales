@@ -1,5 +1,6 @@
 package com.tokelon.toktales.android.input.events;
 
+import com.tokelon.toktales.core.engine.input.BaseInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 
 public interface IScreenPointerInputEvent extends IInputEvent {
@@ -11,7 +12,7 @@ public interface IScreenPointerInputEvent extends IInputEvent {
 	public double getYPos();
 	
 	
-	public static class ScreenPointerInputEvent implements IScreenPointerInputEvent {
+	public static class ScreenPointerInputEvent extends BaseInputEvent implements IScreenPointerInputEvent {
 		private int pointerId;
 		private int action;
 		private double xpos;
@@ -23,6 +24,7 @@ public interface IScreenPointerInputEvent extends IInputEvent {
 			this.xpos = xpos;
 			this.ypos = ypos;
 			
+			resetHandled();
 			return this;
 		}
 		

@@ -1,5 +1,6 @@
 package com.tokelon.toktales.desktop.input.events;
 
+import com.tokelon.toktales.core.engine.input.BaseInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 
 public interface IKeyInputEvent extends IInputEvent {
@@ -12,7 +13,7 @@ public interface IKeyInputEvent extends IInputEvent {
 	public int getMods();
 	
 	
-	public static class KeyInputEvent implements IKeyInputEvent {
+	public static class KeyInputEvent extends BaseInputEvent implements IKeyInputEvent {
 		private long window;
 		private int key;
 		private int scancode;
@@ -25,7 +26,8 @@ public interface IKeyInputEvent extends IInputEvent {
 			this.scancode = scancode;
 			this.action = action;
 			this.mods = mods;
-			
+
+			resetHandled();
 			return this;
 		}
 

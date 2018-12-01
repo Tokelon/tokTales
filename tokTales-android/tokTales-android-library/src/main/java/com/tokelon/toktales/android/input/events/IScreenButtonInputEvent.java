@@ -1,5 +1,6 @@
 package com.tokelon.toktales.android.input.events;
 
+import com.tokelon.toktales.core.engine.input.BaseInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 
 public interface IScreenButtonInputEvent extends IInputEvent {
@@ -9,7 +10,7 @@ public interface IScreenButtonInputEvent extends IInputEvent {
 	public int getAction();
 
 	
-	public static class ScreenButtonInputEvent implements IScreenButtonInputEvent {
+	public static class ScreenButtonInputEvent extends BaseInputEvent implements IScreenButtonInputEvent {
 		private int button;
 		private int action;
 		
@@ -17,6 +18,7 @@ public interface IScreenButtonInputEvent extends IInputEvent {
 			this.button = button;
 			this.action = action;
 			
+			resetHandled();
 			return this;
 		}
 		

@@ -13,59 +13,67 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 	
 	@Override
 	public boolean handle(IInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<IInputCallback> generalCallbackSet = getGeneralInputCallbackSet(); 
 		synchronized (generalCallbackSet) {
 			for(IInputCallback callback: generalCallbackSet) {
-				wasHandled = callback.handle(event) || wasHandled;
+				boolean callbackHandled = callback.handle(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 	@Override
 	public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<IScreenButtonCallback> screenButtonCallbackSet = getScreenButtonCallbackSet(); 
 		synchronized (screenButtonCallbackSet) {
 			for(IScreenButtonCallback callback: screenButtonCallbackSet) {
-				wasHandled = callback.handleScreenButtonInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleScreenButtonInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 
 	@Override
 	public boolean handleScreenPressInput(IScreenPressInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<IScreenPressCallback> screenPressCallbackSet = getScreenPressCallbackSet();
 		synchronized (screenPressCallbackSet) {
 			for(IScreenPressCallback callback: screenPressCallbackSet) {
-				wasHandled = callback.handleScreenPressInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleScreenPressInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 	
 	@Override
 	public boolean handleScreenPointerInput(IScreenPointerInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<IScreenPointerCallback> screenPointerCallbackSet = getScreenPointerCallbackSet();
 		synchronized (screenPointerCallbackSet) {
 			for(IScreenPointerCallback callback: screenPointerCallbackSet) {
-				wasHandled = callback.handleScreenPointerInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleScreenPointerInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 	
 	

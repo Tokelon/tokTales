@@ -3,8 +3,31 @@ package com.tokelon.toktales.core.engine.input;
 public interface IInputEvent {
 
 	
-	//public boolean setHandled(boolean handled);
-	//public boolean isHandled();
+	/** Marks this event as handled, but only if the given condition is true.
+	 * 
+	 * @param condition
+	 * @return The previous value of handled.
+	 */
+	public boolean markHandledIf(boolean condition);
+	
+	/** Marks this event as handled.
+	 * 
+	 * @return The previous value of handled.
+	 */
+	public boolean markHandled();
+	
+	/** Resets this event's handled value to false.
+	 * 
+	 * @return The previous value of handled.
+	 */
+	public boolean resetHandled();
+	
+	/** Returns whether this event has been marked as handled and has not been reset since then.
+	 * 
+	 * @return True if the event is handled, false if not.
+	 */
+	public boolean isHandled();
+
 	
 	//public String getEventType(); // Maybe even return a class here?
 

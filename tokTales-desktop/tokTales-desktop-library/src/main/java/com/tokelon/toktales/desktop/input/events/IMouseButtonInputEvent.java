@@ -1,5 +1,6 @@
 package com.tokelon.toktales.desktop.input.events;
 
+import com.tokelon.toktales.core.engine.input.BaseInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 
 public interface IMouseButtonInputEvent extends IInputEvent {
@@ -11,7 +12,7 @@ public interface IMouseButtonInputEvent extends IInputEvent {
 	public int getMods();
 	
 	
-	public static class MouseButtonInputEvent implements IMouseButtonInputEvent {
+	public static class MouseButtonInputEvent extends BaseInputEvent implements IMouseButtonInputEvent {
 		private long window;
 		private int button;
 		private int action;
@@ -22,7 +23,8 @@ public interface IMouseButtonInputEvent extends IInputEvent {
 			this.button = button;
 			this.action = action;
 			this.mods = mods;
-			
+
+			resetHandled();
 			return this;
 		}
 		

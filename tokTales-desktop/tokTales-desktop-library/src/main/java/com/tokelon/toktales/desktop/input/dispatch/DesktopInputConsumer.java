@@ -11,91 +11,102 @@ import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent;
 
 public class DesktopInputConsumer extends DesktopInputRegistration implements IDesktopInputConsumer {
-	// TODO: Set event handle = true if any handle() call returns true ?
 	
 	
 	@Override
 	public boolean handle(IInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 
 		Set<IInputCallback> generalCallbackSet = getGeneralInputCallbackSet();
 		synchronized (generalCallbackSet) {
 			for(IInputCallback callback: generalCallbackSet) {
-				wasHandled = callback.handle(event) || wasHandled;
+				boolean callbackHandled = callback.handle(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 	@Override
 	public boolean handleCursorEnterInput(ICursorEnterInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<ICursorEnterCallback> cursorEnterCallbackSet = getCursorEnterCallbackSet();
 		synchronized (cursorEnterCallbackSet) {
 			for(ICursorEnterCallback callback: cursorEnterCallbackSet) {
-				wasHandled = callback.handleCursorEnterInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleCursorEnterInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 	@Override
 	public boolean handleCharInput(ICharInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<ICharInputCallback> charInputCallbackSet = getCharInputCallbackSet();
 		synchronized (charInputCallbackSet) {
 			for(ICharInputCallback callback: charInputCallbackSet) {
-				wasHandled = callback.handleCharInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleCharInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 	@Override
 	public boolean handleKeyInput(IKeyInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<IKeyInputCallback> keyInputCallbackSet = getKeyInputCallbackSet();
 		synchronized (keyInputCallbackSet) {
 			for(IKeyInputCallback callback: keyInputCallbackSet) {
-				wasHandled = callback.handleKeyInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleKeyInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 	@Override
 	public boolean handleCursorPosInput(ICursorPosInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<ICursorPosCallback> cursorPosCallbackSet = getCursorPosCallbackSet();
 		synchronized (cursorPosCallbackSet) {
 			for(ICursorPosCallback callback: cursorPosCallbackSet) {
-				wasHandled = callback.handleCursorPosInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleCursorPosInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 
 	@Override
 	public boolean handleMouseButtonInput(IMouseButtonInputEvent event) {
-		boolean wasHandled = false;
+		boolean handledHere = false;
 		
 		Set<IMouseButtonCallback> mouseButtonCallbackSet = getMouseButtonCallbackSet();
 		synchronized (mouseButtonCallbackSet) {
 			for(IMouseButtonCallback callback: mouseButtonCallbackSet) {
-				wasHandled = callback.handleMouseButtonInput(event) || wasHandled;
+				boolean callbackHandled = callback.handleMouseButtonInput(event);
+				handledHere = callbackHandled || handledHere;
+				event.markHandledIf(callbackHandled);
 			}
 		}
 		
-		return wasHandled;
+		return handledHere;
 	}
 	
 	

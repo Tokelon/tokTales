@@ -1,5 +1,6 @@
 package com.tokelon.toktales.desktop.input.events;
 
+import com.tokelon.toktales.core.engine.input.BaseInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 
 public interface ICursorPosInputEvent extends IInputEvent {
@@ -10,7 +11,7 @@ public interface ICursorPosInputEvent extends IInputEvent {
 	public double getYPos();
 	
 	
-	public static class CursorPosInputEvent implements ICursorPosInputEvent {
+	public static class CursorPosInputEvent extends BaseInputEvent implements ICursorPosInputEvent {
 		private long window;
 		private double xpos;
 		private double ypos;
@@ -19,7 +20,8 @@ public interface ICursorPosInputEvent extends IInputEvent {
 			this.window = window;
 			this.xpos = xpos;
 			this.ypos = ypos;
-			
+
+			resetHandled();
 			return this;
 		}
 		
