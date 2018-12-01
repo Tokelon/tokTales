@@ -3,11 +3,11 @@ package com.tokelon.toktales.android.render.tools;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.tokelon.toktales.android.input.AndroidScreenButtonInputProducer;
-import com.tokelon.toktales.android.input.AndroidScreenPointerInputProducer;
-import com.tokelon.toktales.android.input.AndroidScreenPressInputProducer;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
+import com.tokelon.toktales.android.input.events.AndroidScreenButtonInputProducer;
+import com.tokelon.toktales.android.input.events.AndroidScreenPointerInputProducer;
+import com.tokelon.toktales.android.input.events.AndroidScreenPressInputProducer;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 

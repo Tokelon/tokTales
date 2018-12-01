@@ -1,7 +1,6 @@
-package com.tokelon.toktales.android.input;
+package com.tokelon.toktales.android.input.events;
 
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
-import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent.ScreenPressInputEvent;
 
 public class AndroidScreenPressInputProducer {
