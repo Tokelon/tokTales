@@ -15,7 +15,6 @@ import com.tokelon.toktales.core.game.model.map.MapLayerImpl;
 import com.tokelon.toktales.core.game.world.IObjectContainer;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.ObjectContainer;
-import com.tokelon.toktales.core.prog.annotation.ProgRequiresLog;
 import com.tokelon.toktales.core.resources.IResourceSet;
 import com.tokelon.toktales.core.resources.ResourceSet;
 import com.tokelon.toktales.tools.tiledmap.model.ITMXObject;
@@ -27,7 +26,6 @@ import com.tokelon.toktales.tools.tiledmap.model.ITiledMapLayer;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapObjectgroup;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapProperties;
 
-@ProgRequiresLog
 public class TiledWrapperMap implements IBlockMap {
 
 	private static final int STARTING_LEVEL = 1;
@@ -36,6 +34,7 @@ public class TiledWrapperMap implements IBlockMap {
 	private static final String ADDITIONAL_NAME_1 = "top1";
 	private static final String ADDITIONAL_NAME_2 = "top2";
 	private static final String ADDITIONAL_NAME_3 = "top3";
+
 	
 	private final ITiledMap mTiledMap;
 	private final ITiledMapConfig mConfig;
@@ -324,6 +323,5 @@ public class TiledWrapperMap implements IBlockMap {
 	public int getLevelForLayer(String name) {
 		return layerLevelMap.get(name);
 	}
-	
 	
 }

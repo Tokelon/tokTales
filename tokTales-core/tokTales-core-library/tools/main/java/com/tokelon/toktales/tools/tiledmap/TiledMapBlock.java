@@ -5,6 +5,7 @@ import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 
 public class TiledMapBlock implements IBlock {
 
+	
 	private final int mLevelCount;
 	
 	private final IMapElement[] elementArray;
@@ -17,8 +18,6 @@ public class TiledMapBlock implements IBlock {
 		
 		elementArray = new IMapElement[levelCount];
 	}
-	
-	
 	
 
 	private void checkLevel(int l) {
@@ -133,6 +132,5 @@ public class TiledMapBlock implements IBlock {
 		
 		return builder.toString();
 	}
-	
 
 }

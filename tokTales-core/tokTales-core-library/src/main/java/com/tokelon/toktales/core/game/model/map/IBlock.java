@@ -30,19 +30,4 @@ public interface IBlock {
 	
 	public boolean isWalkableForPlayer();
 
-	
-	/*
-	public void getRead();
-
-	public void endRead();
-
-	public void getEdit();
-
-	public void endEdit();
-	*/
-	
-	//public void hasEdit();
-
-	//public void hasRead();
-	
 }

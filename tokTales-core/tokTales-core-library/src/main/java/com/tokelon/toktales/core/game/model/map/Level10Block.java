@@ -72,29 +72,4 @@ public class Level10Block implements IBlock {
 		return true;
 	}
 	
-
-
-	/*
-	@Override
-	public void getRead() {
-		lock.lock();
-	}
-
-	@Override
-	public void endRead() {
-		lock.unlock();
-	}
-
-
-	@Override
-	public void getEdit() {
-		lock.lock();
-	}
-
-	@Override
-	public void endEdit() {
-		lock.unlock();
-	}
-	*/
-	
 }
