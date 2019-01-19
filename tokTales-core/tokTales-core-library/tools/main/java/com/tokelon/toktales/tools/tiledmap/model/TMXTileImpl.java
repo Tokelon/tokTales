@@ -37,6 +37,8 @@ public class TMXTileImpl implements ITMXTile {
 	@XStreamAlias(XMLValuesTiledMap.NODE_NAME_MAP_TILESET_TILE_OBJECTGROUP)
 	private TiledMapObjectgroupImpl mElemObjectgroup;
 
+	@XStreamAlias(XMLValuesTiledMap.NODE_NAME_MAP_TILESET_TILE_ANIMATION)
+	private TMXTileAnimationImpl mElemAnimation;
 	
 	public TMXTileImpl() {
 		// Default Ctor
@@ -126,6 +128,15 @@ public class TMXTileImpl implements ITMXTile {
 		return mElemObjectgroup;
 	}
 
+	@Override
+	public boolean hasAnimation() {
+		return mElemAnimation != null;
+	}
+	
+	@Override
+	public ITMXTileAnimation getAnimation() {
+		return mElemAnimation;
+	}
 
 	@Override
 	public void setParentTileset(ITiledMapTileset parent) {

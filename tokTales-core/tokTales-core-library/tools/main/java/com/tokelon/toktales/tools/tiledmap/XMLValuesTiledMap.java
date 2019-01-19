@@ -99,6 +99,11 @@ public class XMLValuesTiledMap {
 	
 	public static final String NODE_NAME_MAP_TILESET_TILE_PROPERTIES = "properties";
 	public static final String NODE_NAME_MAP_TILESET_TILE_IMAGE = "image";
+	public static final String NODE_NAME_MAP_TILESET_TILE_ANIMATION = "animation";
+	
+	public static final String NODE_NAME_MAP_TILESET_TILE_ANIMATION_FRAME = "frame";
+	public static final String NODE_NAME_MAP_TILESET_TILE_ANIMATION_FRAME_TILE_ID = "tileid";
+	public static final String NODE_NAME_MAP_TILESET_TILE_ANIMATION_FRAME_DURATION = "duration";
 	
 	
 	public static final String NODE_NAME_MAP_TILESET_TILE_OBJECTGROUP = "objectgroup";
@@ -171,7 +176,5 @@ public class XMLValuesTiledMap {
 	
 	public static final String NODE_NAME_MAP_MULT_OBJECTGROUP_OBJECT_POLYLINE = "polyline";
 	public static final String ATTR_NAME_MAP_MULT_OBJECTGROUP_OBJECT_POLYLINE_POINTS = "points";
-	
-	
 	
 }

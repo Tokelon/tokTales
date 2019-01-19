@@ -2,6 +2,7 @@ package com.tokelon.toktales.tools.tiledmap.marshal;
 
 import com.tokelon.toktales.tools.tiledmap.model.ITMXImage;
 import com.tokelon.toktales.tools.tiledmap.model.ITMXTile;
+import com.tokelon.toktales.tools.tiledmap.model.ITMXTileAnimation;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapObjectgroup;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapProperties;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
@@ -64,6 +65,15 @@ public class TMXTileImageRef implements ITMXTile {
 		return null;
 	}
 
+	@Override
+	public boolean hasAnimation() {
+		return false;
+	}
+	
+	@Override
+	public ITMXTileAnimation getAnimation() {
+		return null;
+	}
 	
 
 	@Override

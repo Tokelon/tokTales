@@ -20,6 +20,9 @@ public interface ITMXTile {
 	
 	public ITiledMapObjectgroup getObjectgroup();
 	
+	public boolean hasAnimation();
+	public ITMXTileAnimation getAnimation();
+	
 	
 	public void setParentTileset(ITiledMapTileset parent);
 	public ITiledMapTileset getParentTileset();
