@@ -30,7 +30,7 @@ public interface IControlScheme { // TODO: Move to control package?
 	// Way to put more logic into here | let this do the logic instead of the input handler?
 	// TODO: Really have this?
 	/**
-	 * Will return {@link #UNRESOLVED} if there is this implementation does not support interpreting.
+	 * Will return {@link #UNRESOLVED} if this implementation does not support interpreting.
 	 * <br>
 	 * Will return {@link #UNMAPPED} if there is no mapping for the given key and action.
 	 * 

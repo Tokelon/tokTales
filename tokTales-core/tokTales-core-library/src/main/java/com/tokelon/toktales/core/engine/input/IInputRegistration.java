@@ -1,7 +1,9 @@
 package com.tokelon.toktales.core.engine.input;
 
 public interface IInputRegistration {
-
+	// TODO: Update documentation with logic for general callback
+	//@return True if the callback was registered for a platform type, false if was only registered for the general type.
+	
 	// Add *Fail version to other methods?
 	
 
