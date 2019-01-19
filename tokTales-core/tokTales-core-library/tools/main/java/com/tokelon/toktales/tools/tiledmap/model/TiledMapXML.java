@@ -149,10 +149,11 @@ public class TiledMapXML implements ITiledMap {
 	
 	
 	private void processUnmarshal() throws TiledMapFormatException {
-		
-		if(!XMLValuesTiledMap.ATTR_VALUE_MAP_VERSION.equals(mAttrVersion)) {
+		/*
+		if(!J8Arrays.stream(XMLValuesTiledMap.ATTR_VALUE_MAP_VERSIONS).anyMatch(v -> v.equalsIgnoreCase(mAttrVersion))) {
 			throw new TiledMapFormatException("Unsupported map version: " +mAttrVersion);
 		}
+		*/
 		
 		
 		mOrientation = parseOrientation(mAttrOrientation);

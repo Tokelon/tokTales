@@ -2,7 +2,7 @@ package com.tokelon.toktales.tools.tiledmap;
 
 public class XMLValuesTiledMap {
 	
-	public static final String ATTR_VALUE_MAP_VERSION = "1.0";
+	public static final String[] ATTR_VALUE_MAP_VERSIONS = new String[] { "1.0", "1.2" };
 	
 	public static final String ATTR_VALUE_MAP_ORIENTATION_ORTHOGONAL = "orthogonal";
 	public static final String ATTR_VALUE_MAP_ORIENTATION_ISOMETRIC = "isometric";
