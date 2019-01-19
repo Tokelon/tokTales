@@ -68,6 +68,9 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private final LineShape gridLine = new LineShape();
 	
 	
+	// Flashes the screen red if the update delta is high
+	private boolean highUpdateDeltaFlashEnabled = false;
+	
 	private DefaultViewGridTransformer gridTransformer;
 
 	private final FrameTool frameTool = new FrameTool();
@@ -226,19 +229,22 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		y += fontSize + lineDistance;
 		drawText("GM DT: " + gameDeltaDraw, x, y, fontSize, charDistance);
 		
-		if(delta > 20) {
-			flashCountdown = 15;
-		}
 		
-		if(flashCountdown > 0) {
-			float width = getViewTransformer().getCurrentViewport().getWidth();
-			float height = getViewTransformer().getCurrentViewport().getHeight();
+		if(highUpdateDeltaFlashEnabled) {
+			if(delta > 20) {
+				flashCountdown = 15;
+			}
+			
+			if(flashCountdown > 0) {
+				float width = getViewTransformer().getCurrentViewport().getWidth();
+				float height = getViewTransformer().getCurrentViewport().getHeight();
 
-			shapeRenderer.setColor(flashColor);
-			shapeRenderer.setFill(true);
-			shapeRenderer.drawRectangle(0f, 0f, width, height);
-			shapeRenderer.setFill(false);
-			flashCountdown--;
+				shapeRenderer.setColor(flashColor);
+				shapeRenderer.setFill(true);
+				shapeRenderer.drawRectangle(0f, 0f, width, height);
+				shapeRenderer.setFill(false);
+				flashCountdown--;
+			}
 		}
 		
 	}
