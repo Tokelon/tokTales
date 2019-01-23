@@ -53,6 +53,7 @@ eclipse.classpath.file.withXml { xml ->
     node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-android-test' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-default-android' ]) // Cyclic dependency
 
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-test-android/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
 
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])
@@ -71,9 +72,6 @@ sourceSets {
             srcDir 'arch/main/java'
             
             srcDir 'exp/main/java'
-            
-            srcDir '/build/generated/source/r/debug'
-            srcDir '/build/generated/not_namespaced_r_class_sources/debug/generateDebugRFile/out'
         }
     }
     test {

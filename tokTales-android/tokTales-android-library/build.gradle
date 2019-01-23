@@ -67,11 +67,13 @@ dependencies {
 // Tell Gradle eclipse plugin to add dependencies to classpath
 eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
-    
+
     node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-android-test' ])
     
     node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core-library' ])
     
+    // Export for dependent projects?
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android-library/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
 	
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])
@@ -89,9 +91,6 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
-			
-			srcDir '/build/generated/source/r/debug'
-			srcDir '/build/generated/not_namespaced_r_class_sources/debug/generateDebugRFile/out'
 		}
 	}
 	test {
