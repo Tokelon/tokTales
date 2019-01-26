@@ -17,9 +17,9 @@ public class Camera extends CameraStateDecorator implements ICamera {
 	private final Point2fImpl calculatedVelocityRe = new Point2fImpl();
 	
 	
-	private final Participation<ICamera, ICameraObserver, ICameraParticipant> participation;
-	
 	private long currentUpdateTime = 0L;
+
+	private final Participation<ICamera, ICameraObserver, ICameraParticipant> participation;
 
 	
 	@Inject
@@ -29,7 +29,8 @@ public class Camera extends CameraStateDecorator implements ICamera {
 	
 	public Camera(ICameraModel model) {
 		super(model);
-		participation = new Participation<ICamera, ICameraObserver, ICameraParticipant>(this, new ParticipationHook());
+		
+		participation = new Participation<ICamera, ICameraObserver, ICameraParticipant>(this, new CameraParticipationHook());
 	}
 	
 
@@ -231,29 +232,29 @@ public class Camera extends CameraStateDecorator implements ICamera {
 	}
 	
 	
-	
 
 	// Normally observation and participation would be in a separate class...
 	//private class ParticipationHook implements IParticipationHook<IObserver<ICamera>, IParticipant<ICamera>> { }
 	// Probably just remove it all - it's so complicated that it's not worth it
 	// This implementation for ICamera in particular does not allow generic obervers and participators
-	
+
+
 	@Override
 	public IObservation<ICamera, ICameraObserver> getObservation() {
 		return participation;
 	}
-	
+
 	@Override
 	public IParticipation<ICamera, ICameraObserver, ICameraParticipant> getParticipation() {
 		return participation;
 	}
-	
 
-	private class ParticipationHook implements IParticipationHook<ICameraObserver, ICameraParticipant> {
 
+	protected class CameraParticipationHook implements IParticipationHook<ICameraObserver, ICameraParticipant> {
+		
 		@Override
 		public boolean skipObservationNotificationHook(String change) {
-			return participation.getObservers().isEmpty() && participation.getParticipants().isEmpty();
+			return getParticipation().getObservers().isEmpty() && getParticipation().getParticipants().isEmpty();
 		}
 
 		@Override
@@ -262,14 +263,35 @@ public class Camera extends CameraStateDecorator implements ICamera {
 				return false;
 			}
 			else {
-				return CHANGE_LIST_CAMERA_SET.contains(change);
+				return ICamera.CHANGE_LIST_CAMERA_SET.contains(change);
 			}
 		}
 
 		@Override
 		public void notifyObserverHook(String change, ICameraObserver observer) {
 			switch (change) {
-			case CHANGE_CAMERA_ADJUST_STATE:
+			case ICamera.CHANGE_CAMERA_ASPECT_RATIO:
+				observer.cameraAspectRatioChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_COORDINATES:
+				observer.cameraCoordinatesChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_ORIENTATION:
+				observer.cameraOrientationChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_ORIGIN:
+				observer.cameraOriginChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_SIZE:
+				observer.cameraSizeChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_ZOOM:
+				observer.cameraZoomChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_VELOCITY:
+				observer.cameraVelocityChanged(Camera.this);
+				break;
+			case ICamera.CHANGE_CAMERA_ADJUST_STATE:
 				observer.cameraStateWasAdjusted(Camera.this);
 				break;
 			default:
@@ -280,7 +302,7 @@ public class Camera extends CameraStateDecorator implements ICamera {
 
 		@Override
 		public boolean skipParticipationNotificationHook(String change) {
-			return participation.getParticipants().isEmpty();
+			return getParticipation().getParticipants().isEmpty();
 		}
 
 		@Override
@@ -289,19 +311,33 @@ public class Camera extends CameraStateDecorator implements ICamera {
 				return false;
 			}
 			else {
-				return CHANGE_LIST_CAMERA_SET.contains(change);
+				return ICamera.CHANGE_LIST_CAMERA_SET.contains(change);
 			}
 		}
 
 		@Override
 		public boolean notifyParticipantHook(String change, ICameraParticipant participant) {
 			switch (change) {
-			case CHANGE_CAMERA_ADJUST_STATE:
+			case ICamera.CHANGE_CAMERA_ASPECT_RATIO:
+				return participant.onCameraAspectRatioChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_COORDINATES:
+				return participant.onCameraCoordinatesChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_ORIENTATION:
+				return participant.onCameraOrientationChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_ORIGIN:
+				return participant.onCameraOriginChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_SIZE:
+				return participant.onCameraSizeChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_ZOOM:
+				return participant.onCameraZoomChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_VELOCITY:
+				return participant.onCameraVelocityChange(Camera.this);
+			case ICamera.CHANGE_CAMERA_ADJUST_STATE:
 				return participant.onCameraStateAdjust(Camera.this);
 			default:
 				return false;
 			}
 		}
 	}
-
+	
 }

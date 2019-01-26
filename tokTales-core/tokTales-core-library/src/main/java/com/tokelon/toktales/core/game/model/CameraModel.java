@@ -2,10 +2,6 @@ package com.tokelon.toktales.core.game.model;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
-import com.tokelon.toktales.core.game.logic.observers.IObservation;
-import com.tokelon.toktales.core.game.logic.observers.IParticipation;
-import com.tokelon.toktales.core.game.logic.observers.Participation;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
@@ -30,13 +26,10 @@ public class CameraModel implements ICameraModel {
 
 	private final Rectangle2fImpl cameraBounds = new Rectangle2fImpl();
 
-	private final Participation<ICameraModel, ICameraModelObserver, ICameraModelParticipant> participation;
 
 	
 	@Inject
-	public CameraModel() {
-		participation = new Participation<ICameraModel, ICameraModelObserver, ICameraModelParticipant>(this, new ParticipationHook());
-	}
+	public CameraModel() { }
 
 	
 
@@ -152,12 +145,7 @@ public class CameraModel implements ICameraModel {
 
 	
 
-	@Override
-	public void setSize(float width, float height) {
-		setSize(width, height, 1.0f);
-	}
-	
-	private void setSize(float width, float height, float zoom) {
+	private void setGeometry(float width, float height, float zoom) {
 		this.cameraWidth = width;
 		this.cameraHeight = height;
 		this.cameraZoom = zoom;
@@ -165,21 +153,17 @@ public class CameraModel implements ICameraModel {
 		this.cameraOrigin.x = width / 2.0f;
 		this.cameraOrigin.y = height / 2.0f;
 		
-		this.cameraAspectRatio = calcAspectRatio(width, height);
+		this.cameraAspectRatio = calculateAspectRatio(width, height);
 		
 		this.cameraBounds.setWidth(width);
 		this.cameraBounds.setHeight(height);
 
 		// Re-center camera by correcting the camera bounds
 		this.cameraBounds.moveTo(cameraCoordinates.x - cameraOrigin.x, cameraCoordinates.y - cameraOrigin.y);
-
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_SIZE);
-		getParticipation().notifyOfChange(CHANGE_CAMERA_ORIGIN);
-		getParticipation().notifyOfChange(CHANGE_CAMERA_ASPECT_RATIO);
 	}
 	
-	private float calcAspectRatio(float width, float height) {
+
+	private float calculateAspectRatio(float width, float height) {
 		float res;
 		if(hasPortraitOrientation()) {	// TODO: Fix: width or height could be 0
 			res = height / width;
@@ -193,11 +177,14 @@ public class CameraModel implements ICameraModel {
 	
 	
 	@Override
+	public void setSize(float width, float height) {
+		setGeometry(width, height, 1.0f);
+	}
+	
+	@Override
 	public void setPortraitOrientation(boolean portrait) {
 		if(portrait != hasPortraitOrientation()) {
-			setSize(cameraHeight, cameraWidth, cameraZoom);
-			
-			getParticipation().notifyOfChange(CHANGE_CAMERA_ORIENTATION);
+			setGeometry(cameraHeight, cameraWidth, cameraZoom);
 		}
 	}
 	
@@ -206,11 +193,11 @@ public class CameraModel implements ICameraModel {
 		
 		if(hasPortraitOrientation()) {
 			// Portrait
-			setSize(cameraWidth, ratio * cameraWidth, cameraZoom);
+			setGeometry(cameraWidth, ratio * cameraWidth, cameraZoom);
 		}
 		else {
 			// Landscape
-			setSize(ratio * cameraHeight, cameraHeight, cameraZoom);
+			setGeometry(ratio * cameraHeight, cameraHeight, cameraZoom);
 		}
 	}
 	
@@ -231,9 +218,7 @@ public class CameraModel implements ICameraModel {
 		}
 		*/
 		
-		setSize(newWidth, newHeight, zoom);
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_ZOOM);
+		setGeometry(newWidth, newHeight, zoom);
 	}
 	
 
@@ -241,44 +226,32 @@ public class CameraModel implements ICameraModel {
 	public void setSpeed(float sx, float sy) {
 		cameraSpeedX = sx;
 		cameraSpeedY = sy;
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_SPEED);
 	}
 	
 	@Override
 	public void setSpeedX(float sx) {
 		cameraSpeedX = sx;
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_SPEED);
 	}
 	
 	@Override
 	public void setSpeedY(float sy) {
 		cameraSpeedY = sy;
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_SPEED);
 	}
 
 
 	@Override
 	public void setVelocityX(float vx) {
 		cameraVelocity.setX(vx);
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_VELOCITY);
 	}
 	
 	@Override
 	public void setVelocityY(float vy) {
 		cameraVelocity.setY(vy);
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_VELOCITY);
 	}
 	
 	@Override
 	public void setVelocity(float vx, float vy) {
 		cameraVelocity.set(vx, vy);
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_VELOCITY);
 	}
 	
 	
@@ -293,107 +266,6 @@ public class CameraModel implements ICameraModel {
 		cameraCoordinates.set(worldX, worldY);
 		
 		cameraBounds.moveTo(cameraCoordinates.x - cameraOrigin.x, cameraCoordinates.y - cameraOrigin.y);
-		
-		getParticipation().notifyOfChange(CHANGE_CAMERA_COORDINATES);
-	}
-	
-	
-
-	
-	@Override
-	public IObservation<ICameraModel, ICameraModelObserver> getObservation() {
-		return participation;
-	}
-	
-	@Override
-	public IParticipation<ICameraModel, ICameraModelObserver, ICameraModelParticipant> getParticipation() {
-		return participation;
-	}
-	
-	
-	private class ParticipationHook implements IParticipationHook<ICameraModelObserver, ICameraModelParticipant> {
-
-		@Override
-		public boolean skipObservationNotificationHook(String change) {
-			return participation.getObservers().isEmpty() && participation.getParticipants().isEmpty();
-		}
-
-		@Override
-		public boolean handleObserverHook(String change, ICameraModelObserver observer) {
-			if(observer.isGeneric()) {
-				return false;
-			}
-			else {
-				return CHANGE_LIST_CAMERA_MODEL_SET.contains(change);
-			}
-		}
-
-		@Override
-		public void notifyObserverHook(String change, ICameraModelObserver observer) {
-			switch (change) {
-			case CHANGE_CAMERA_ASPECT_RATIO:
-				observer.cameraAspectRatioChanged(CameraModel.this);
-				break;
-			case CHANGE_CAMERA_COORDINATES:
-				observer.cameraCoordinatesChanged(CameraModel.this);
-				break;
-			case CHANGE_CAMERA_ORIENTATION:
-				observer.cameraOrientationChanged(CameraModel.this);
-				break;
-			case CHANGE_CAMERA_ORIGIN:
-				observer.cameraOriginChanged(CameraModel.this);
-				break;
-			case CHANGE_CAMERA_SIZE:
-				observer.cameraSizeChanged(CameraModel.this);
-				break;
-			case CHANGE_CAMERA_ZOOM:
-				observer.cameraZoomChanged(CameraModel.this);
-				break;
-			case CHANGE_CAMERA_VELOCITY:
-				observer.cameraVelocityChanged(CameraModel.this);
-				break;
-			default:
-				// Nothing
-			}
-		}
-
-
-		@Override
-		public boolean skipParticipationNotificationHook(String change) {
-			return participation.getParticipants().isEmpty();
-		}
-
-		@Override
-		public boolean handleParticipantHook(String change, ICameraModelParticipant participant) {
-			if(participant.isGeneric()) {
-				return false;
-			}
-			else {
-				return CHANGE_LIST_CAMERA_MODEL_SET.contains(change);
-			}
-		}
-
-		@Override
-		public boolean notifyParticipantHook(String change, ICameraModelParticipant participant) {
-			switch (change) {
-			case CHANGE_CAMERA_ASPECT_RATIO:
-				return participant.onCameraAspectRatioChange(CameraModel.this);
-			case CHANGE_CAMERA_COORDINATES:
-				return participant.onCameraCoordinatesChange(CameraModel.this);
-			case CHANGE_CAMERA_ORIENTATION:
-				return participant.onCameraOrientationChange(CameraModel.this);
-			case CHANGE_CAMERA_ORIGIN:
-				return participant.onCameraOriginChange(CameraModel.this);
-			case CHANGE_CAMERA_SIZE:
-				return participant.onCameraSizeChange(CameraModel.this);
-			case CHANGE_CAMERA_ZOOM:
-				return participant.onCameraZoomChange(CameraModel.this);
-			case CHANGE_CAMERA_VELOCITY:
-				return participant.onCameraVelocityChange(CameraModel.this);
-			default:
-				return false;
-			}
-		}
 	}
 
 }

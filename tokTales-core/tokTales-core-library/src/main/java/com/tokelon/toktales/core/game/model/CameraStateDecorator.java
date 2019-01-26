@@ -1,14 +1,19 @@
 package com.tokelon.toktales.core.game.model;
 
+import com.tokelon.toktales.core.game.logic.observers.IParticipable;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
-public class CameraStateDecorator implements ICameraState {
+public abstract class CameraStateDecorator implements ICameraState, IParticipable<ICamera> {
 
 	
 	private ICameraModel cameraModel;
 	
 	public CameraStateDecorator(ICameraModel model) {
+		if(model == null) {
+			throw new NullPointerException();
+		}
+		
 		this.cameraModel = model;
 	}
 	
@@ -18,34 +23,17 @@ public class CameraStateDecorator implements ICameraState {
 	}
 	
 	public void setModel(ICameraModel model) {
+		if(model == null) {
+			throw new NullPointerException();
+		}
+		
 		this.cameraModel = model;
 	}
 	
-	
-
-	@Override
-	public void setSize(float width, float height) {
-		cameraModel.setSize(width, height);
-	}
 
 	@Override
 	public float getAspectRatio() {
 		return cameraModel.getAspectRatio();
-	}
-
-	@Override
-	public void setPortraitOrientation(boolean portrait) {
-		cameraModel.setPortraitOrientation(portrait);
-	}
-
-	@Override
-	public void setAspectRatio(float ratio) {
-		cameraModel.setAspectRatio(ratio);
-	}
-
-	@Override
-	public void setZoom(float zoom, boolean center) {
-		cameraModel.setZoom(zoom, center);
 	}
 
 	@Override
@@ -54,23 +42,8 @@ public class CameraStateDecorator implements ICameraState {
 	}
 
 	@Override
-	public void setSpeedX(float sx) {
-		cameraModel.setSpeedX(sx);
-	}
-
-	@Override
 	public boolean hasPortraitOrientation() {
 		return cameraModel.hasPortraitOrientation();
-	}
-
-	@Override
-	public void setSpeedY(float sy) {
-		cameraModel.setSpeedY(sy);
-	}
-
-	@Override
-	public void setSpeed(float sx, float sy) {
-		cameraModel.setSpeed(sx, sy);
 	}
 
 	@Override
@@ -82,10 +55,10 @@ public class CameraStateDecorator implements ICameraState {
 	public float getHeight() {
 		return cameraModel.getHeight();
 	}
-
+	
 	@Override
-	public void setVelocityX(float vx) {
-		cameraModel.setVelocityX(vx);
+	public IMutablePoint2f getOrigin(IMutablePoint2f result) {
+		return cameraModel.getOrigin(result);
 	}
 
 	@Override
@@ -94,18 +67,8 @@ public class CameraStateDecorator implements ICameraState {
 	}
 
 	@Override
-	public void setVelocityY(float vy) {
-		cameraModel.setVelocityY(vy);
-	}
-
-	@Override
 	public float getSpeedY() {
 		return cameraModel.getSpeedY();
-	}
-
-	@Override
-	public void setVelocity(float vx, float vy) {
-		cameraModel.setVelocity(vx, vy);
 	}
 
 	@Override
@@ -116,21 +79,6 @@ public class CameraStateDecorator implements ICameraState {
 	@Override
 	public float getOriginY() {
 		return cameraModel.getOriginY();
-	}
-
-	@Override
-	public void setWorldCoordinates(float worldX, float worldY) {
-		cameraModel.setWorldCoordinates(worldX, worldY);
-	}
-
-	@Override
-	public IMutablePoint2f getOrigin(IMutablePoint2f result) {
-		return cameraModel.getOrigin(result);
-	}
-
-	@Override
-	public void setWorldCoordinates(IPoint2f worldCoords) {
-		cameraModel.setWorldCoordinates(worldCoords);
 	}
 
 	@Override
@@ -186,6 +134,106 @@ public class CameraStateDecorator implements ICameraState {
 	@Override
 	public IRectangle2f getWorldBoundsBack() {
 		return cameraModel.getWorldBoundsBack();
+	}
+	
+
+	@Override
+	public void setSize(float width, float height) {
+		cameraModel.setSize(width, height);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SIZE);
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ORIGIN);
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ASPECT_RATIO);
+	}
+
+	@Override
+	public void setPortraitOrientation(boolean portrait) {
+		boolean changed = hasPortraitOrientation() != portrait;
+		cameraModel.setPortraitOrientation(portrait);
+		
+		if(changed) {
+			getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ORIENTATION);
+			
+			getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SIZE);
+			getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ORIGIN);
+			getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ASPECT_RATIO);
+		}
+	}
+
+	@Override
+	public void setAspectRatio(float ratio) {
+		cameraModel.setAspectRatio(ratio);
+
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SIZE);
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ORIGIN);
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ASPECT_RATIO);
+	}
+
+	@Override
+	public void setZoom(float zoom, boolean center) {
+		cameraModel.setZoom(zoom, center);
+
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ZOOM);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SIZE);
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ORIGIN);
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_ASPECT_RATIO);
+	}
+
+	@Override
+	public void setSpeedX(float sx) {
+		cameraModel.setSpeedX(sx);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SPEED);
+	}
+
+	@Override
+	public void setSpeedY(float sy) {
+		cameraModel.setSpeedY(sy);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SPEED);
+	}
+
+	@Override
+	public void setSpeed(float sx, float sy) {
+		cameraModel.setSpeed(sx, sy);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_SPEED);
+	}
+
+	@Override
+	public void setVelocityX(float vx) {
+		cameraModel.setVelocityX(vx);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_VELOCITY);
+	}
+
+	@Override
+	public void setVelocityY(float vy) {
+		cameraModel.setVelocityY(vy);
+
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_VELOCITY);
+	}
+
+	@Override
+	public void setVelocity(float vx, float vy) {
+		cameraModel.setVelocity(vx, vy);
+
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_VELOCITY);
+	}
+
+	@Override
+	public void setWorldCoordinates(float worldX, float worldY) {
+		cameraModel.setWorldCoordinates(worldX, worldY);
+
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_COORDINATES);
+	}
+
+	@Override
+	public void setWorldCoordinates(IPoint2f worldCoords) {
+		cameraModel.setWorldCoordinates(worldCoords);
+		
+		getParticipation().notifyOfChange(ICamera.CHANGE_CAMERA_COORDINATES);
 	}
 
 }
