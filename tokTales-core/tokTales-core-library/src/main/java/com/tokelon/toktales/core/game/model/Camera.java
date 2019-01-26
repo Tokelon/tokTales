@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.game.logic.observers.Participation;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
-public class Camera extends CameraStateDecorator implements ICamera {
+public class Camera extends AbstractCameraStateDecorator implements ICamera {
 	// Maybe have the parameter ctor be the injected
 	
 	

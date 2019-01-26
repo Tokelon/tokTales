@@ -4,12 +4,12 @@ import com.tokelon.toktales.core.game.logic.observers.IParticipable;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
-public abstract class CameraStateDecorator implements ICameraState, IParticipable<ICamera> {
+public abstract class AbstractCameraStateDecorator implements ICameraState, IParticipable<ICamera> {
 
 	
 	private ICameraModel cameraModel;
 	
-	public CameraStateDecorator(ICameraModel model) {
+	public AbstractCameraStateDecorator(ICameraModel model) {
 		if(model == null) {
 			throw new NullPointerException();
 		}
