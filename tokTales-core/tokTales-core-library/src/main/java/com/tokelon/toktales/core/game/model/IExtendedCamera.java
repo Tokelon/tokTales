@@ -35,13 +35,12 @@ public interface IExtendedCamera extends ICamera {
 	
 	
 
-	public void getStaticCoordinates(IMutablePoint2f result);
+	public IMutablePoint2f getStaticCoordinates(IMutablePoint2f result);
 	
 	//public IMapPosition getPosition();
 
 
 	/**
-	 * 
 	 * @return The current motion, or null if there is no motion.
 	 */
 	public IGameMotion getMotion();
@@ -65,87 +64,38 @@ public interface IExtendedCamera extends ICamera {
 	public void startMotion(IGameMotion motion, long timeMillis, IMotionCallback<IGameMotion> callback);
 	
 	
-	
-	
+	// TODO: Use the extended types here if possible
+	//public IObservation<IExtendedCamera, IObserver<IExtendedCamera>> getExtendedCameraObservation();
 	public IObservation<ICamera, IObserver<ICamera>> getExtendedCameraObservation();
-	
+
 	public interface IExtendedCameraObserver extends ICameraObserver {
-		
+
 		public boolean hasExtendedCameraInterest(IExtendedCamera subject, String change);
-		
-		public IExtendedCameraObserver getExtendedCameraObservationInterest(IExtendedCamera subject, String change);
-		
-		public void subjectChangedExtendedCamera(IExtendedCamera subject, String change);
-		
 
-		public void extendedCameraMotionChanged(IExtendedCamera camera);
-		public void extendedCameraCoordinateStateChanged(IExtendedCamera camera);
-		public void extendedCameraStaticCoordinatesChanged(IExtendedCamera camera);
+		public default IExtendedCameraObserver getExtendedCameraObservationInterest(IExtendedCamera subject, String change) { return this; }
+
+		public default void subjectChangedExtendedCamera(IExtendedCamera subject, String change) { }
+
+
+		public default void extendedCameraMotionChanged(IExtendedCamera camera) { }
+		public default void extendedCameraCoordinateStateChanged(IExtendedCamera camera) { }
+		public default void extendedCameraStaticCoordinatesChanged(IExtendedCamera camera) { }
 	}
-	
-	
-	public abstract class ExtendedCameraObserver extends CameraObserver implements IExtendedCameraObserver {
-		
-		@Override
-		public IExtendedCameraObserver getExtendedCameraObservationInterest(IExtendedCamera subject, String change) {
-			return this;
-		}
-		
-		@Override
-		public void subjectChangedExtendedCamera(IExtendedCamera subject, String change) {
-			// Nothing
-		}
 
-		
-		@Override
-		public void extendedCameraMotionChanged(IExtendedCamera camera) { }
-		
-		@Override
-		public void extendedCameraCoordinateStateChanged(IExtendedCamera camera) { }
 
-		@Override
-		public void extendedCameraStaticCoordinatesChanged(IExtendedCamera camera) { }
-	}
-	
-	
-	
+	//public IParticipation<IExtendedCamera, IObserver<IExtendedCamera>, IParticipant<IExtendedCamera>> getExtendedCameraParticipation();
 	public IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> getExtendedCameraParticipation();
-	
+
 	public interface IExtendedCameraParticipant extends ICameraParticipant, IExtendedCameraObserver {
-		
-		public IExtendedCameraParticipant getExtendedCameraParticipationInterest(IExtendedCamera subject, String change);
-		
-		public boolean onSubjectChangeExtendedCamera(IExtendedCamera subject, String change);
-		
 
-		public boolean onExtendedCameraMotionChange(IExtendedCamera camera);
-		public boolean onExtendedCameraCoordinateStateChange(IExtendedCamera camera);
-		public boolean onExtendedCameraStaticCoordinatesChange(IExtendedCamera camera);
+		public default IExtendedCameraParticipant getExtendedCameraParticipationInterest(IExtendedCamera subject, String change) { return this; }
+
+		public default boolean onSubjectChangeExtendedCamera(IExtendedCamera subject, String change) { return false; }
+
+
+		public default boolean onExtendedCameraMotionChange(IExtendedCamera camera) { return false; }
+		public default boolean onExtendedCameraCoordinateStateChange(IExtendedCamera camera) { return false; }
+		public default boolean onExtendedCameraStaticCoordinatesChange(IExtendedCamera camera) { return false; }
 	}
-	
-	
-	public abstract class ExtendedCameraParticipant extends CameraParticipant implements IExtendedCameraParticipant {
-		
-		@Override
-		public IExtendedCameraParticipant getExtendedCameraParticipationInterest(IExtendedCamera subject, String change) {
-			return this;
-		}
-		
-		@Override
-		public boolean onSubjectChangeExtendedCamera(IExtendedCamera subject, String change) {
-			return false;
-		}
-		
-
-		@Override
-		public boolean onExtendedCameraMotionChange(IExtendedCamera camera) { return false; }
-		
-		@Override
-		public boolean onExtendedCameraCoordinateStateChange(IExtendedCamera camera) { return false; }
-
-		@Override
-		public boolean onExtendedCameraStaticCoordinatesChange(IExtendedCamera camera) { return false; }
-	}
-	
 	
 }

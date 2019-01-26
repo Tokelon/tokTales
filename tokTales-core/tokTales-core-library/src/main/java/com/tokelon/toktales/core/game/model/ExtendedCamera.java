@@ -1,25 +1,24 @@
 package com.tokelon.toktales.core.game.model;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.logic.ITimeTrackerTool;
 import com.tokelon.toktales.core.game.logic.TimeTrackerTool;
 import com.tokelon.toktales.core.game.logic.motion.IGameMotion;
 import com.tokelon.toktales.core.game.logic.motion.IMotionCallback;
+import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.logic.observers.IObservation;
 import com.tokelon.toktales.core.game.logic.observers.IObserver;
 import com.tokelon.toktales.core.game.logic.observers.IParticipant;
 import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.logic.observers.Participation;
-import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 
 public class ExtendedCamera extends Camera implements IExtendedCamera {
 
-	private final IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> mParticipation;
-
 
 	private int mCoordinateState = STATE_COORDINATE_STILL;
 	private int mCoordinateStatePrevious = STATE_COORDINATE_NONE;
-	
 
 	
 	private IGameMotion setMotion;
@@ -35,29 +34,35 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 	private final TimeTrackerTool motionTimer = new TimeTrackerTool();
 
 
-	private final Point2fImpl coordsStill = new Point2fImpl();
+	private final Point2fImpl coordsStatic = new Point2fImpl();
 	private final Point2fImpl coordsMotion = new Point2fImpl();
 
 	private final Point2fImpl newCoords = new Point2fImpl();
 
 	private final Point2fImpl entityCoordsRe = new Point2fImpl();
 
+	private final IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> mParticipation;
+
 	
+	@Inject
 	public ExtendedCamera() {
 		mParticipation = new Participation<ICamera, IObserver<ICamera>, IParticipant<ICamera>>(this, new ParticipationHook());
 	}
 	
+	public ExtendedCamera(ICameraModel model) {
+		super(model);
+		mParticipation = new Participation<ICamera, IObserver<ICamera>, IParticipant<ICamera>>(this, new ParticipationHook());
+	}
 	
 	
 	@Override
 	public void setWorldCoordinates(float worldX, float worldY) {
-		coordsStill.set(worldX - coordsMotion.x, worldY - coordsMotion.y);
+		coordsStatic.set(worldX - coordsMotion.x, worldY - coordsMotion.y);
 
 		super.setWorldCoordinates(worldX, worldY);
 		
 		getParticipation().notifyOfChange(CHANGE_EXTENDED_CAMERA_STATIC_COORDINATES);
 	}
-	
 	
 	
 	@Override
@@ -77,7 +82,7 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 		}
 		else {
 			notify = true;
-			super.setWorldCoordinates(newCoords);	// call super to not modify still coords
+			super.setWorldCoordinates(newCoords); // Call super to avoid changing static coordinates
 		}
 		
 		
@@ -114,19 +119,20 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 			notify = notify || !newCoords.equals(entityCoordsRe);
 			
 			if(!newCoords.equals(entityCoordsRe)) {
-				super.setWorldCoordinates(newCoords);	// call super to not modify still coords
+				super.setWorldCoordinates(newCoords); // Call super to avoid changing static coordinates
 			}
 		}
 
 		
 		if(notify) {
-			getParticipation().notifyOfChange(CHANGE_CAMERA_COORDINATES);
+			// TODO: not needed anymore since setWorldCoordinates will call notify?
+			//getParticipation().notifyOfChange(CHANGE_CAMERA_COORDINATES);
 		}
 	}
 	
 	
 	private void finishMotion() {
-		getWorldCoordinates(coordsStill); // Set the still coords to the current ones
+		getWorldCoordinates(coordsStatic); // Set the static coords to the current ones
 		setCoordinateState(mCoordinateStatePrevious);
 
 		
@@ -167,12 +173,12 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 		
 		switch (mCoordinateState) {
 		case STATE_COORDINATE_STILL:
-			result.set(coordsStill);
+			result.set(coordsStatic);
 			break;
 		case STATE_COORDINATE_MOVING:
 			int dt = (int) motionTimer.timePassed(timeMillis);
 			currentMotion.getPosition(dt, coordsMotion);
-			result.set(coordsStill.x + coordsMotion.x, coordsStill.y + coordsMotion.y);
+			result.set(coordsStatic.x + coordsMotion.x, coordsStatic.y + coordsMotion.y);
 			break;
 		default:
 			break;
@@ -184,8 +190,8 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 	
 	
 	@Override
-	public void getStaticCoordinates(IMutablePoint2f result) {
-		result.set(coordsStill);
+	public IMutablePoint2f getStaticCoordinates(IMutablePoint2f result) {
+		return result.set(coordsStatic);
 	}
 
 	@Override
@@ -211,9 +217,9 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 
 	@Override
 	public synchronized void setStaticCoordinates(float staticX, float staticY) {
-		coordsStill.set(staticX, staticY);
+		coordsStatic.set(staticX, staticY);
 		
-		setWorldCoordinates(coordsStill.x + coordsMotion.x, coordsStill.y + coordsMotion.y);
+		setWorldCoordinates(coordsStatic.x + coordsMotion.x, coordsStatic.y + coordsMotion.y); // Call this on super?
 		
 		getParticipation().notifyOfChange(CHANGE_EXTENDED_CAMERA_STATIC_COORDINATES);
 	}
@@ -359,8 +365,6 @@ public class ExtendedCamera extends Camera implements IExtendedCamera {
 				return false;
 			}
 		}
-		
 	}
-	
 	
 }

@@ -3,7 +3,6 @@ package com.tokelon.toktales.core.game.controller;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.game.model.ICamera.CameraParticipant;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.GameEntityObserver;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.IGameEntityObserver;
@@ -15,17 +14,16 @@ public class CameraController extends AbstractController implements ICameraContr
 	
 	private IGameEntity followEntity;
 
-	private final FollowEntityObserver followEntityObserver;
 	
+	private final FollowEntityObserver followEntityObserver;
 	
 	private final ICamera camera;
 
 	@Inject
 	public CameraController(ICamera camera) {
 		this.camera = camera;
-		this.camera.getParticipation().addParticipant(new MyCameraParticipant());
-		
-		followEntityObserver = new FollowEntityObserver();
+
+		this.followEntityObserver = new FollowEntityObserver();
 		
 		setupCamera();
 	}
@@ -69,7 +67,6 @@ public class CameraController extends AbstractController implements ICameraContr
 	
 	@Override
 	public void disableCameraFollow() {
-		
 		if(followEntity != null) {
 			followEntity.getObservation().removeObserver(followEntityObserver);
 			followEntity = null;
@@ -86,44 +83,6 @@ public class CameraController extends AbstractController implements ICameraContr
 		return followEntity;
 	}
 	
-	
-	
-	private class MyCameraParticipant extends CameraParticipant {
-
-		@Override
-		public boolean hasInterest(ICamera subject, String change) {
-			return true;
-		}
-		
-		
-		@Override
-		public boolean isGeneric() {
-			return true;
-		}
-		
-		
-		@Override
-		public boolean onSubjectChange(ICamera subject, String change) {
-			
-			if(change.equals(IGameEntity.CHANGE_ENTITY_STATE_ADJUST)) {
-				//...
-				//return true;
-			}
-			
-			return false;
-		}
-		
-
-		@Override
-		public void subjectChanged(ICamera subject, String change) {
-			/*
-			if(!change.equals(ICamera.CHANGE_CAMERA_ADJUST_STATE)) {
-				TokTales.getLog().d("CameraController", "subjectChanged: " + change);	
-			}
-			*/
-		}
-		
-	}
 	
 	
 	private class FollowEntityObserver extends GameEntityObserver implements IGameEntityObserver {
