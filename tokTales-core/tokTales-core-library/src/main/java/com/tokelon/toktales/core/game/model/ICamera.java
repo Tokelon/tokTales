@@ -110,6 +110,9 @@ public interface ICamera extends ICameraState, IParticipable<ICamera> {
 	public interface ICameraObserver extends IObserver<ICamera> {
 		
 		@Override
+		public default boolean isGeneric() { return false; }
+		
+		@Override
 		public default ICameraObserver getObservationInterest(ICamera subject, String change) { return this; }
 		
 		@Override
