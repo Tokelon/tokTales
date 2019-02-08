@@ -4,12 +4,15 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.logic.observers.IObservation;
+import com.tokelon.toktales.core.game.logic.observers.IObserver;
+import com.tokelon.toktales.core.game.logic.observers.IParticipant;
 import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.logic.observers.Participation;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 
 public class Camera extends AbstractCameraStateDecorator implements ICamera {
+	// Use custom Participation/Observation and store non-generic types in separate sets to avoid type-check every call?  
 	// Maybe have the parameter ctor be the injected
 	
 	
@@ -19,7 +22,7 @@ public class Camera extends AbstractCameraStateDecorator implements ICamera {
 	
 	private long currentUpdateTime = 0L;
 
-	private final Participation<ICamera, ICameraObserver, ICameraParticipant> participation;
+	private final Participation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> participation;
 
 	
 	@Inject
@@ -30,7 +33,7 @@ public class Camera extends AbstractCameraStateDecorator implements ICamera {
 	public Camera(ICameraModel model) {
 		super(model);
 		
-		participation = new Participation<ICamera, ICameraObserver, ICameraParticipant>(this, new CameraParticipationHook());
+		participation = new Participation<ICamera, IObserver<ICamera>, IParticipant<ICamera>>(this, new CameraParticipationHook());
 	}
 	
 
@@ -240,59 +243,67 @@ public class Camera extends AbstractCameraStateDecorator implements ICamera {
 
 
 	@Override
-	public IObservation<ICamera, ICameraObserver> getObservation() {
+	public IObservation<ICamera, IObserver<ICamera>> getObservation() {
 		return participation;
 	}
 
 	@Override
-	public IParticipation<ICamera, ICameraObserver, ICameraParticipant> getParticipation() {
+	public IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> getParticipation() {
 		return participation;
 	}
 
 
-	protected class CameraParticipationHook implements IParticipationHook<ICameraObserver, ICameraParticipant> {
+	protected class CameraParticipationHook implements IParticipationHook<IObserver<ICamera>, IParticipant<ICamera>> {
 		
 		@Override
 		public boolean skipObservationNotificationHook(String change) {
-			return getParticipation().getObservers().isEmpty() && getParticipation().getParticipants().isEmpty();
+			return getObservation().getObservers().isEmpty()
+					&& getParticipation().getObservers().isEmpty()
+					&& getParticipation().getParticipants().isEmpty();
 		}
 
 		@Override
-		public boolean handleObserverHook(String change, ICameraObserver observer) {
+		public boolean handleObserverHook(String change, IObserver<ICamera> observer) {
 			if(observer.isGeneric()) {
 				return false;
 			}
 			else {
-				return ICamera.CHANGE_LIST_CAMERA_SET.contains(change);
+				return CHANGE_LIST_CAMERA_SET.contains(change);
 			}
 		}
 
 		@Override
-		public void notifyObserverHook(String change, ICameraObserver observer) {
+		public void notifyObserverHook(String change, IObserver<ICamera> observer) {
+			if(!(observer instanceof ICameraObserver)) {
+				observer.subjectChanged(Camera.this, change);
+				return;
+			}
+			ICameraObserver cameraObserver = (ICameraObserver) observer;
+			
 			switch (change) {
-			case ICamera.CHANGE_CAMERA_ASPECT_RATIO:
-				observer.cameraAspectRatioChanged(Camera.this);
+			case CHANGE_CAMERA_ASPECT_RATIO:
+				cameraObserver.cameraAspectRatioChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_COORDINATES:
-				observer.cameraCoordinatesChanged(Camera.this);
+			case CHANGE_CAMERA_COORDINATES:
+				cameraObserver.cameraCoordinatesChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_ORIENTATION:
-				observer.cameraOrientationChanged(Camera.this);
+			case CHANGE_CAMERA_ORIENTATION:
+				cameraObserver.cameraOrientationChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_ORIGIN:
-				observer.cameraOriginChanged(Camera.this);
+			case CHANGE_CAMERA_ORIGIN:
+				cameraObserver.cameraOriginChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_SIZE:
-				observer.cameraSizeChanged(Camera.this);
+			case CHANGE_CAMERA_SIZE:
+				cameraObserver.cameraSizeChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_ZOOM:
-				observer.cameraZoomChanged(Camera.this);
+			case CHANGE_CAMERA_ZOOM:
+				cameraObserver.cameraZoomChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_VELOCITY:
-				observer.cameraVelocityChanged(Camera.this);
+			case CHANGE_CAMERA_VELOCITY:
+				cameraObserver.cameraVelocityChanged(Camera.this);
 				break;
-			case ICamera.CHANGE_CAMERA_ADJUST_STATE:
-				observer.cameraStateWasAdjusted(Camera.this);
+			case CHANGE_CAMERA_ADJUST_STATE:
+				cameraObserver.cameraStateWasAdjusted(Camera.this);
 				break;
 			default:
 				// Nothing
@@ -306,34 +317,39 @@ public class Camera extends AbstractCameraStateDecorator implements ICamera {
 		}
 
 		@Override
-		public boolean handleParticipantHook(String change, ICameraParticipant participant) {
+		public boolean handleParticipantHook(String change, IParticipant<ICamera> participant) {
 			if(participant.isGeneric()) {
 				return false;
 			}
 			else {
-				return ICamera.CHANGE_LIST_CAMERA_SET.contains(change);
+				return CHANGE_LIST_CAMERA_SET.contains(change);
 			}
 		}
 
 		@Override
-		public boolean notifyParticipantHook(String change, ICameraParticipant participant) {
+		public boolean notifyParticipantHook(String change, IParticipant<ICamera> participant) {
+			if(!(participant instanceof ICameraParticipant)) {
+				return participant.onSubjectChange(Camera.this, change);
+			}
+			ICameraParticipant cameraParticipant = (ICameraParticipant) participant;
+			
 			switch (change) {
-			case ICamera.CHANGE_CAMERA_ASPECT_RATIO:
-				return participant.onCameraAspectRatioChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_COORDINATES:
-				return participant.onCameraCoordinatesChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_ORIENTATION:
-				return participant.onCameraOrientationChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_ORIGIN:
-				return participant.onCameraOriginChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_SIZE:
-				return participant.onCameraSizeChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_ZOOM:
-				return participant.onCameraZoomChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_VELOCITY:
-				return participant.onCameraVelocityChange(Camera.this);
-			case ICamera.CHANGE_CAMERA_ADJUST_STATE:
-				return participant.onCameraStateAdjust(Camera.this);
+			case CHANGE_CAMERA_ASPECT_RATIO:
+				return cameraParticipant.onCameraAspectRatioChange(Camera.this);
+			case CHANGE_CAMERA_COORDINATES:
+				return cameraParticipant.onCameraCoordinatesChange(Camera.this);
+			case CHANGE_CAMERA_ORIENTATION:
+				return cameraParticipant.onCameraOrientationChange(Camera.this);
+			case CHANGE_CAMERA_ORIGIN:
+				return cameraParticipant.onCameraOriginChange(Camera.this);
+			case CHANGE_CAMERA_SIZE:
+				return cameraParticipant.onCameraSizeChange(Camera.this);
+			case CHANGE_CAMERA_ZOOM:
+				return cameraParticipant.onCameraZoomChange(Camera.this);
+			case CHANGE_CAMERA_VELOCITY:
+				return cameraParticipant.onCameraVelocityChange(Camera.this);
+			case CHANGE_CAMERA_ADJUST_STATE:
+				return cameraParticipant.onCameraStateAdjust(Camera.this);
 			default:
 				return false;
 			}

@@ -101,10 +101,10 @@ public interface ICamera extends ICameraState, IParticipable<ICamera> {
 
 
 	@Override
-	public IObservation<ICamera, ICameraObserver> getObservation();
+	public IObservation<ICamera, IObserver<ICamera>> getObservation();
 
 	@Override
-	public IParticipation<ICamera, ICameraObserver, ICameraParticipant> getParticipation();
+	public IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> getParticipation();
 	
 	
 	public interface ICameraObserver extends IObserver<ICamera> {
