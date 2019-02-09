@@ -64,10 +64,18 @@ public interface IExtendedCamera extends ICamera {
 	public void startMotion(IGameMotion motion, long timeMillis, IMotionCallback<IGameMotion> callback);
 	
 	
-	// TODO: Use the extended types here if possible
+	
+	// TODO: Use the extended types here if possible -> NOT possible UNLESS
+	// we choose to not extend IExtendedCamera* from ICamera* and have them completely separate
+	// In that case you could not extend both IExtendedCameraObserver and ICameraObserver
+	
 	//public IObservation<IExtendedCamera, IObserver<IExtendedCamera>> getExtendedCameraObservation();
 	public IObservation<ICamera, IObserver<ICamera>> getExtendedCameraObservation();
 
+	//public IParticipation<IExtendedCamera, IObserver<IExtendedCamera>, IParticipant<IExtendedCamera>> getExtendedCameraParticipation();
+	public IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> getExtendedCameraParticipation();
+
+	
 	public interface IExtendedCameraObserver extends ICameraObserver {
 
 		public boolean hasExtendedCameraInterest(IExtendedCamera subject, String change);
@@ -82,10 +90,7 @@ public interface IExtendedCamera extends ICamera {
 		public default void extendedCameraStaticCoordinatesChanged(IExtendedCamera camera) { }
 	}
 
-
-	//public IParticipation<IExtendedCamera, IObserver<IExtendedCamera>, IParticipant<IExtendedCamera>> getExtendedCameraParticipation();
-	public IParticipation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> getExtendedCameraParticipation();
-
+	
 	public interface IExtendedCameraParticipant extends ICameraParticipant, IExtendedCameraObserver {
 
 		public default IExtendedCameraParticipant getExtendedCameraParticipationInterest(IExtendedCamera subject, String change) { return this; }

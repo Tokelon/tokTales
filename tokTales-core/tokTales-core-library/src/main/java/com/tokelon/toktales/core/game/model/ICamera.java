@@ -99,6 +99,8 @@ public interface ICamera extends ICameraState, IParticipable<ICamera> {
 	
 
 
+	
+	// These overrides are not technically needed but the return types make more sense this way
 
 	@Override
 	public IObservation<ICamera, IObserver<ICamera>> getObservation();
