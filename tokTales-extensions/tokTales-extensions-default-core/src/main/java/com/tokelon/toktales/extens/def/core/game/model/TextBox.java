@@ -33,6 +33,7 @@ public class TextBox implements ITextBox {
 	public TextBox(float worldWidth, float worldHeight, float textSize) {
 		
 		mEntity = new GameEntity(this);
+		mEntity.setVisible(false);
 		
 		mEntity.setSize(worldWidth, worldHeight);
 		

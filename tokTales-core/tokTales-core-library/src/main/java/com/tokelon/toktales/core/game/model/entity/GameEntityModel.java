@@ -10,9 +10,8 @@ import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 public class GameEntityModel implements IGameEntityModel {
 	
 	
-	// TODO: Default as true or false?
-	private boolean entityActive = false;
-	private boolean entityVisible = false;
+	private boolean entityActive = true;
+	private boolean entityVisible = true;
 
 	private float entityWidth = 0.0f;
 	private float entityHeight = 0.0f;

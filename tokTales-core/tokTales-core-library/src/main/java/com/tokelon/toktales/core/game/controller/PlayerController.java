@@ -44,9 +44,6 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		mPlayerParticipant = new PlayerParticipant();
 		//mPlayer.getParticipation().addParticipant(mPlayerParticipant);
 		
-		this.player.setActive(true);
-		this.player.setVisible(true);
-		
 		setupPlayer();
 	}
 	
@@ -55,9 +52,6 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		
 		this.player = new ActorPlayer(playerActor);
 		//mPlayer.getParticipation().addParticipant(mPlayerParticipant);
-		
-		this.player.setActive(true);
-		this.player.setVisible(true);
 	}
 	
 	
