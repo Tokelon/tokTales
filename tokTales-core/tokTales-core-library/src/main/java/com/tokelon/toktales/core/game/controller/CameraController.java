@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
-import com.tokelon.toktales.core.game.model.entity.IGameEntity.GameEntityObserver;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.IGameEntityObserver;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.core.values.CameraValues;
@@ -85,7 +84,7 @@ public class CameraController extends AbstractController implements ICameraContr
 	
 	
 	
-	private class FollowEntityObserver extends GameEntityObserver implements IGameEntityObserver {
+	private class FollowEntityObserver implements IGameEntityObserver {
 
 		@Override
 		public boolean hasInterest(IGameEntity subject, String change) {

@@ -19,7 +19,6 @@ import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 
 public interface IExtendedGameEntity extends IGameEntity {
 
-
 	/* TODO: Fix CHANGE_ENTITY_MOTION that is useless because it triggers when a new motion is set, but you cannot access the new motion
 	 * Same with CHANGE_ENTITY_ANIMATION
 	 * 
@@ -148,59 +147,19 @@ public interface IExtendedGameEntity extends IGameEntity {
 		
 		public boolean hasExtendedInterest(IExtendedGameEntity subject, String change);
 		
-		public IExtendedGameEntityObserver getExtendedObservationInterest(IExtendedGameEntity subject, String change);
+		public default IExtendedGameEntityObserver getExtendedObservationInterest(IExtendedGameEntity subject, String change) { return this; }
 		
-		public void subjectChangedExtended(IExtendedGameEntity subject, String change);
-		
-		
-
-		public void extendedEntityAnimationChanged(IExtendedGameEntity entity);
-		public void extendedEntityGraphicStateChanged(IExtendedGameEntity entity);
-		public void extendedEntityGraphicChanged(IExtendedGameEntity entity);
-		public void extendedEntityStaticGraphicChanged(IExtendedGameEntity entity);
-		
-		public void extendedEntityMotionChanged(IExtendedGameEntity entity);
-		public void extendedEntityCoordinateStateChanged(IExtendedGameEntity entity);
-		public void extendedEntityStaticCoordinatesChanged(IExtendedGameEntity entity);
+		public default void subjectChangedExtended(IExtendedGameEntity subject, String change) { }
 		
 		
-	}
-	
-	public abstract class ExtendedGameEntityObserver extends GameEntityObserver implements IExtendedGameEntityObserver {
+		public default void extendedEntityAnimationChanged(IExtendedGameEntity entity) { }
+		public default void extendedEntityGraphicStateChanged(IExtendedGameEntity entity) { }
+		public default void extendedEntityGraphicChanged(IExtendedGameEntity entity) { }
+		public default void extendedEntityStaticGraphicChanged(IExtendedGameEntity entity) { }
 		
-		@Override
-		public IExtendedGameEntityObserver getExtendedObservationInterest(IExtendedGameEntity subject, String change) {
-			return this;
-		}
-		
-		@Override
-		public void subjectChangedExtended(IExtendedGameEntity subject, String change) {
-			// Nothing
-		}
-		
-		
-		
-		@Override
-		public void extendedEntityAnimationChanged(IExtendedGameEntity entity) { }
-		
-		@Override
-		public void extendedEntityGraphicStateChanged(IExtendedGameEntity entity) { }
-		
-		@Override
-		public void extendedEntityGraphicChanged(IExtendedGameEntity entity) { }
-		
-		@Override
-		public void extendedEntityStaticGraphicChanged(IExtendedGameEntity entity) { }
-		
-		@Override
-		public void extendedEntityMotionChanged(IExtendedGameEntity entity) { }
-		
-		@Override
-		public void extendedEntityCoordinateStateChanged(IExtendedGameEntity entity) { }
-		
-		@Override
-		public void extendedEntityStaticCoordinatesChanged(IExtendedGameEntity extendedEntity) { }
-		
+		public default void extendedEntityMotionChanged(IExtendedGameEntity entity) { }
+		public default void extendedEntityCoordinateStateChanged(IExtendedGameEntity entity) { }
+		public default void extendedEntityStaticCoordinatesChanged(IExtendedGameEntity entity) { }
 	}
 	
 	
@@ -209,57 +168,19 @@ public interface IExtendedGameEntity extends IGameEntity {
 	
 	public interface IExtendedGameEntityParticipant extends IGameEntityParticipant, IExtendedGameEntityObserver {
 		
-		public IExtendedGameEntityParticipant getExtendedParticipationInterest(IExtendedGameEntity subject, String change);
+		public default IExtendedGameEntityParticipant getExtendedParticipationInterest(IExtendedGameEntity subject, String change) { return this; }
 		
-		public boolean onSubjectChangeExtended(IExtendedGameEntity subject, String change);
+		public default boolean onSubjectChangeExtended(IExtendedGameEntity subject, String change) { return false; }
 		
 
-		public boolean onExtendedEntityAnimationChange(IExtendedGameEntity entity);
-		public boolean onExtendedEntityGraphicStateChange(IExtendedGameEntity entity);
-		public boolean onExtendedEntityGraphicChange(IExtendedGameEntity entity);
-		public boolean onExtendedEntityStaticGraphicChange(IExtendedGameEntity entity);
+		public default boolean onExtendedEntityAnimationChange(IExtendedGameEntity entity) { return false; }
+		public default boolean onExtendedEntityGraphicStateChange(IExtendedGameEntity entity) { return false; }
+		public default boolean onExtendedEntityGraphicChange(IExtendedGameEntity entity) { return false; }
+		public default boolean onExtendedEntityStaticGraphicChange(IExtendedGameEntity entity) { return false; }
 		
-		public boolean onExtendedEntityMotionChange(IExtendedGameEntity entity);
-		public boolean onExtendedEntityCoordinateStateChange(IExtendedGameEntity entity);
-		public boolean onExtendedEntityStaticCoordinatesChange(IExtendedGameEntity entity);
-		
+		public default boolean onExtendedEntityMotionChange(IExtendedGameEntity entity) { return false; }
+		public default boolean onExtendedEntityCoordinateStateChange(IExtendedGameEntity entity) { return false; }
+		public default boolean onExtendedEntityStaticCoordinatesChange(IExtendedGameEntity entity) { return false; }
 	}
-	
-	public abstract class ExtendedGameEntityParticipant extends GameEntityParticipant implements IExtendedGameEntityParticipant {
-		
-		@Override
-		public IExtendedGameEntityParticipant getExtendedParticipationInterest(IExtendedGameEntity subject, String change) {
-			return this;
-		}
-		
-		@Override
-		public boolean onSubjectChangeExtended(IExtendedGameEntity subject, String change) {
-			return false;
-		}
-		
-
-		@Override
-		public boolean onExtendedEntityAnimationChange(IExtendedGameEntity entity) { return false; }
-
-		@Override
-		public boolean onExtendedEntityGraphicStateChange(IExtendedGameEntity entity) { return false; }
-
-		@Override
-		public boolean onExtendedEntityGraphicChange(IExtendedGameEntity entity) { return false; }
-
-		@Override
-		public boolean onExtendedEntityStaticGraphicChange(IExtendedGameEntity entity) { return false; }
-
-		@Override
-		public boolean onExtendedEntityMotionChange(IExtendedGameEntity entity) { return false; }
-
-		@Override
-		public boolean onExtendedEntityCoordinateStateChange(IExtendedGameEntity entity) { return false; }
-
-		@Override
-		public boolean onExtendedEntityStaticCoordinatesChange(IExtendedGameEntity entity) { return false; }
-
-	}
-	
 	
 }

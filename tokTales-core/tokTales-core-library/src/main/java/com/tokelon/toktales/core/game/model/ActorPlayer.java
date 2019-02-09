@@ -9,6 +9,7 @@ import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
+import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 
 public class ActorPlayer implements IPlayer {
@@ -22,6 +23,16 @@ public class ActorPlayer implements IPlayer {
 		this.mActor = actor;
 	}
 
+	
+	@Override
+	public IGameEntityModel getModel() {
+		return mActor.getModel();
+	}
+	
+	@Override
+	public void setModel(IGameEntityModel model) {
+		mActor.setModel(model);
+	}
 	
 
 	@Override

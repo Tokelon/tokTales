@@ -10,33 +10,28 @@ import com.tokelon.toktales.core.game.model.entity.GameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 
 /** See {@link GameEntity} for subclassing this class.
- * 
  *
  */
 public class Actor extends GameEntity implements IActor {
-
+	
+	
+	private String actorName;
 	
 	private final IParticipation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>> mParticipation;
 
-	
-	private String mName;
-	
-	
-	
 	public Actor() {
-		
 		mParticipation = new Participation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>>(this, new ParticipationHook());
 	}
 	
 	
 	@Override
 	public String getName() {
-		return mName;
+		return actorName;
 	}
 
 	@Override
 	public void setName(String name) {
-		this.mName = name;
+		this.actorName = name;
 		
 		getParticipation().notifyOfChange(CHANGE_ACTOR_NAME);
 	}
@@ -151,9 +146,6 @@ public class Actor extends GameEntity implements IActor {
 				return false;
 			}
 		}
-		
 	}
-	
-	
 	
 }

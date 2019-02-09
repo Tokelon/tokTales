@@ -17,7 +17,6 @@ import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
-import com.tokelon.toktales.core.game.model.entity.IGameEntity.GameEntityParticipant;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.IGameEntityParticipant;
 import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.InjectGameScene;
@@ -245,7 +244,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	}
 	
 	
-	private class PlayerParticipant extends GameEntityParticipant implements IGameEntityParticipant {
+	private class PlayerParticipant implements IGameEntityParticipant {
 
 		
 		private final float FALLING_SPEED_PER_SECOND = 300.0f;

@@ -1,20 +1,19 @@
 package com.tokelon.toktales.core.game.model.entity;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
 import com.tokelon.toktales.core.game.logic.entity.GraphicsImage;
 import com.tokelon.toktales.core.game.logic.entity.IGraphicsImage;
+import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.logic.observers.IObservation;
 import com.tokelon.toktales.core.game.logic.observers.IObserver;
 import com.tokelon.toktales.core.game.logic.observers.IParticipant;
 import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.logic.observers.Participation;
-import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.model.IPoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
-import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
-import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
-import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 
 /**
@@ -25,40 +24,24 @@ import com.tokelon.toktales.core.game.world.IWorldspace;
  * 
  *
  */
-public class GameEntity implements IGameEntity {
+public class GameEntity extends AbstractGameEntityStateDecorator implements IGameEntity {
 	/* IParticipationHook (or any similar function interface) should never be implemented directly by this class,
-	 * because it breaks it's subclasses. Rather make it a separate (private) class.
-	 * 
+	 * because it breaks it's subclasses. Instead make it a separate (private) class.
 	 */
 
-	
 	// TODO: Important - implement equals and hashCode
 
+	/* TODO: Next steps
+	 * 
+	 * - Remove all Motion methods - done
+	 * - Refactor and fix Animations - done
+	 * - Add physics support
+	 * 
+	 */
+	
 
 	private final Participation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>> mParticipation;
 	
-
-	// TODO: Default as true or false?
-	private boolean entityActive = false;
-	private boolean entityVisible = false;
-
-	private float entityWidth = 0.0f;
-	private float entityHeight = 0.0f;
-
-	private float entitySpeedX = 0.0f;
-	private float entitySpeedY = 0.0f;
-	
-	//private float mRotation = 0.0f;
-
-	
-	private final Point2fImpl entityOrigin = new Point2fImpl();
-	private final Point2fImpl entityCoordinates = new Point2fImpl();
-	private final Point2fImpl entityVelocity = new Point2fImpl();
-
-	private final Rectangle2fImpl entityBounds = new Rectangle2fImpl();	
-	private final Rectangle2fImpl entityCollisionBox = new Rectangle2fImpl();
-	private final Rectangle2fImpl entityCollisionBounds = new Rectangle2fImpl();
-
 	
 	private IBaseGraphic entityGraphic;
 	private IBaseGraphic entityGraphicBase;
@@ -83,11 +66,22 @@ public class GameEntity implements IGameEntity {
 	
 	
 	
+	@Inject
 	public GameEntity() {
-		this(null);
+		this(null, new GameEntityModel());
+	}
+	
+	public GameEntity(IGameEntityModel model) {
+		this(null, model);
 	}
 	
 	public GameEntity(Object payload) {
+		this(payload, new GameEntityModel());
+	}
+	
+	public GameEntity(Object payload, IGameEntityModel model) {
+		super(model);
+		
 		this.mPayload = payload;
 
 		mParticipation = new Participation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>>(this, new ParticipationHook());
@@ -96,15 +90,6 @@ public class GameEntity implements IGameEntity {
 	}
 	
 	
-	
-	
-	/* TODO: Next steps
-	 * 
-	 * - Remove all Motion methods - done
-	 * - Refactor and fix Animations - done
-	 * - Add physics support
-	 * 
-	 */
 	
 	
 	
@@ -274,6 +259,22 @@ public class GameEntity implements IGameEntity {
 		}
 	}
 	
+
+	@Override
+	public long getCurrentUpdateTime() {
+		return currentUpdateTime;
+	}
+	
+	@Override
+	public long getPreviousUpdateTime() {
+		return previousUpdateTime;
+	}
+	
+	@Override
+	public long getDeltaUpdateTime() {
+		return currentUpdateTime - previousUpdateTime;
+	}
+	
 	
 	/** Sets the graphic.
 	 * 
@@ -329,174 +330,6 @@ public class GameEntity implements IGameEntity {
 		}
 	}
 	
-	
-	@Override
-	public boolean isActive() {
-		return entityActive;
-	}
-
-	@Override
-	public boolean isVisible() {
-		return entityVisible;
-	}
-	
-	@Override
-	public float getHeight() {
-		return entityHeight;
-	}
-	
-	@Override
-	public float getWidth() {
-		return entityWidth;
-	}
-	
-		
-	@Override
-	public IMutableRectangle2f getBounds(IMutableRectangle2f result) {
-		return result.set(entityBounds);
-	}
-	
-	@Override
-	public IRectangle2f getBoundsBack() {
-		return entityBounds;
-	}
-
-	
-	@Override
-	public IMutableRectangle2f getCollisionBounds(IMutableRectangle2f result) {
-		return result.set(entityCollisionBounds);
-	}
-	
-	@Override
-	public IRectangle2f getCollisionBoundsBack() {
-		return entityCollisionBounds;
-	}
-	
-	
-	@Override
-	public IMutableRectangle2f getCollisionBox(IMutableRectangle2f result) {
-		return result.set(entityCollisionBox);
-	}
-	
-	@Override
-	public IRectangle2f getCollisionBoxBack() {
-		return entityCollisionBox;
-	}
-
-	
-	@Override
-	public float getOriginX() {
-		return entityOrigin.x;
-	}
-	
-	@Override
-	public float getOriginY() {
-		return entityOrigin.y;
-	}
-	
-	@Override
-	public IMutablePoint2f getOrigin(IMutablePoint2f result) {
-		return result.set(entityOrigin);
-	}
-	
-	
-	@Override
-	public float getRawWorldX() {
-		return entityCoordinates.x - entityOrigin.x;
-	}
-	
-	@Override
-	public float getRawWorldY() {
-		return entityCoordinates.y - entityOrigin.y;
-	}
-	
-	@Override
-	public IMutablePoint2f getRawWorldCoordinates(IMutablePoint2f result) {
-		return result.set(getRawWorldX(), getRawWorldY());
-	}
-	
-
-	@Override
-	public float getWorldX() {
-		return entityCoordinates.x;
-	}
-
-	@Override
-	public float getWorldY() {
-		return entityCoordinates.y;
-	}
-
-	@Override
-	public IMutablePoint2f getWorldCoordinates(IMutablePoint2f result) {
-		return result.set(entityCoordinates);
-	}
-
-	
-	
-	@Override
-	public float getSpeedX() {
-		return entitySpeedX;
-	}
-	
-	@Override
-	public float getSpeedY() {
-		return entitySpeedY;
-	}
-	
-	@Override
-	public long getCurrentUpdateTime() {
-		return currentUpdateTime;
-	}
-	
-	@Override
-	public long getPreviousUpdateTime() {
-		return previousUpdateTime;
-	}
-	
-	@Override
-	public long getDeltaUpdateTime() {
-		return currentUpdateTime - previousUpdateTime;
-	}
-	
-	
-	@Override
-	public float getVelocityX() {
-		return entityVelocity.x;
-	}
-	
-	@Override
-	public float getVelocityY() {
-		return entityVelocity.y;
-	}
-
-	@Override
-	public IMutablePoint2f getVelocity(IMutablePoint2f result) {
-		return result.set(entityVelocity);		
-	}
-	
-
-	@Override
-	public void setVelocityX(float vx) {
-		entityVelocity.setX(vx);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_VELOCITY);
-	}
-	
-	@Override
-	public void setVelocityY(float vy) {
-		entityVelocity.setY(vy);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_VELOCITY);
-	}
-	
-	@Override
-	public void setVelocity(float vx, float vy) {
-		entityVelocity.set(vx, vy);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_VELOCITY);
-	}
-	
-	
 
 	
 	@Override
@@ -529,148 +362,6 @@ public class GameEntity implements IGameEntity {
 	
 
 	
-	@Override
-	public void setActive(boolean isActive) {
-		boolean notify = this.entityActive != isActive;
-		this.entityActive = isActive;
-		
-		if(notify) {
-			getParticipation().notifyOfChange(CHANGE_ENTITY_ACTIVE_STATUS);
-		}
-	}
-	
-	@Override
-	public void setVisible(boolean isVisible) {
-		boolean notify = this.entityVisible != isVisible;
-		this.entityVisible = isVisible;
-		
-		if(notify) {
-			getParticipation().notifyOfChange(CHANGE_ENTITY_VISIBLE_STATUS);
-		}
-	}
-
-	
-	@Override
-	public void setWidth(float width) {
-		this.entityWidth = width;
-		entityBounds.setWidth(width);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_SIZE);
-	}
-	
-	@Override
-	public void setHeight(float height) {
-		this.entityHeight = height;
-		entityBounds.setHeight(height);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_SIZE);
-	}
-	
-	@Override
-	public void setSize(float width, float height) {
-		this.entityWidth = width;
-		this.entityHeight = height;
-		
-		entityBounds.setWidth(width);
-		entityBounds.setHeight(height);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_SIZE);
-	}
-
-	
-	@Override
-	public void setOrigin(float originx, float originy) {
-		this.entityOrigin.set(originx, originy);
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_ORIGIN);
-	}
-	
-	/*
-	@Override
-	public void setRotation(float rotation) {
-		this.mRotation = rotation % 360f;
-		
-		/*
-		// It does change your coordinates
-		float rotLeft = 
-		float rotX = mCoords.x - mOrigin.x Math.
-		
-		Math.toRadians(rotation);
-		Math.sin
-		mBounds.moveTo(mCoords.x - mOrigin.x, mCoords.y - mOrigin.y);
-		mCollisionBounds.set(mCollisionBox.left + mBounds.left, mCollisionBox.top + mBounds.top, mCollisionBox.right + mBounds.left, mCollisionBox.bottom + mBounds.top);
-		*//*
-		
-		//TODO: How to do rotation
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_ROTATION);
-		// WHat about bounds and collision bounds ? they need notifications too ?
-	}
-	*/
-	
-	
-	@Override
-	public void setCollisionBox(float left, float top, float right, float bottom) {
-		this.entityCollisionBox.set(left, top, right, bottom);
-		
-		entityCollisionBounds.set(entityCollisionBox.left() + entityBounds.left(), entityCollisionBox.top() + entityBounds.top(), entityCollisionBox.right() + entityBounds.left(), entityCollisionBox.bottom() + entityBounds.top());
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_COLLISION_BOX);
-	}
-	
-	@Override
-	public void setCollisionBox(IRectangle2f box) {
-		this.entityCollisionBox.set(box);
-		
-		entityCollisionBounds.set(entityCollisionBox.left() + entityBounds.left(), entityCollisionBox.top() + entityBounds.top(), entityCollisionBox.right() + entityBounds.left(), entityCollisionBox.bottom() + entityBounds.top());
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_COLLISION_BOX);
-	}
-	
-	
-	
-	
-	@Override
-	public void setWorldCoordinates(IPoint2f worldCoords) {
-		setWorldCoordinates(worldCoords.x(), worldCoords.y());
-	}
-	
-	@Override
-	public void setWorldCoordinates(float worldX, float worldY) {
-		entityCoordinates.set(worldX, worldY);
-		
-		
-		entityBounds.moveTo(entityCoordinates.x - entityOrigin.x, entityCoordinates.y - entityOrigin.y);
-		entityCollisionBounds.set(entityCollisionBox.left() + entityBounds.left(), entityCollisionBox.top() + entityBounds.top(), entityCollisionBox.right() + entityBounds.left(), entityCollisionBox.bottom() + entityBounds.top());
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_COORDINATES);
-	}
-	
-	
-	@Override
-	public void setSpeed(float sx, float sy) {
-		entitySpeedX = sx;
-		entitySpeedY = sy;
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_SPEED);
-	}
-	
-	@Override
-	public void setSpeedX(float sx) {
-		entitySpeedX = sx;
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_SPEED);
-	}
-	
-	@Override
-	public void setSpeedY(float sy) {
-		entitySpeedY = sy;
-		
-		getParticipation().notifyOfChange(CHANGE_ENTITY_SPEED);
-	}
-
-	
-
 	@Override
 	public IObservation<IGameEntity, IObserver<IGameEntity>> getObservation() {
 		return mParticipation;
@@ -706,7 +397,6 @@ public class GameEntity implements IGameEntity {
 	
 	
 	private class ParticipationHook implements IParticipationHook<IObserver<IGameEntity>, IParticipant<IGameEntity>> {
-		
 		
 		@Override
 		public boolean skipObservationNotificationHook(String change) {
@@ -802,11 +492,9 @@ public class GameEntity implements IGameEntity {
 		@Override
 		public boolean notifyParticipantHook(String change, IParticipant<IGameEntity> participant) {
 			if(!(participant instanceof IGameEntityParticipant)) {
-				
 				return participant.onSubjectChange(GameEntity.this, change);
 			}
 			IGameEntityParticipant entityParticipant = (IGameEntityParticipant) participant;
-			
 			
 			switch (change) {
 			case CHANGE_ENTITY_ACTIVE_STATUS:
@@ -835,10 +523,6 @@ public class GameEntity implements IGameEntity {
 				return false;
 			}
 		}
-		
-		
 	}
-	
-
 
 }
