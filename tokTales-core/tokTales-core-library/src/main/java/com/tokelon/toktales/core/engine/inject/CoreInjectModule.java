@@ -62,8 +62,16 @@ import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.controller.map.IMapController.IMapControllerFactory;
 import com.tokelon.toktales.core.game.controller.map.MapController;
 import com.tokelon.toktales.core.game.model.Player;
+import com.tokelon.toktales.core.game.model.entity.GameEntity;
+import com.tokelon.toktales.core.game.model.entity.GameEntityModel;
+import com.tokelon.toktales.core.game.model.entity.IGameEntity;
+import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
+import com.tokelon.toktales.core.game.model.Actor;
 import com.tokelon.toktales.core.game.model.Camera;
+import com.tokelon.toktales.core.game.model.CameraModel;
+import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.model.ICameraModel;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.map.EmptyBlockMap;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
@@ -219,7 +227,13 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IWorldspace.class).to(Worldspace.class);
 		bind(ICollisionStrategy.class).to(DefaultCollisionStrategy.class);
 		
+		bind(IActor.class).to(Actor.class);
+		bind(IGameEntity.class).to(GameEntity.class);
+		 bind(IGameEntityModel.class).to(GameEntityModel.class);
+		bind(ICamera.class).to(Camera.class);
+		 bind(ICameraModel.class).to(CameraModel.class);
 		
+		 
 		// GL Stuff
 		bind(IGLErrorUtils.class).to(GLErrorUtils.class); // Could bind this to no-op implementation
 		bind(IGLBufferUtils.class).to(GLBufferUtils.class).in(Scopes.SINGLETON);

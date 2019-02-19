@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game.model.entity;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.game.model.IPoint2f;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f;
@@ -30,7 +32,10 @@ public class GameEntityModel implements IGameEntityModel {
 	private final Rectangle2fImpl entityCollisionBox = new Rectangle2fImpl();
 	private final Rectangle2fImpl entityCollisionBounds = new Rectangle2fImpl();
 
-
+	
+	@Inject
+	public GameEntityModel() { }
+	
 	
 	@Override
 	public boolean isActive() {

@@ -10,6 +10,7 @@ import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.logic.observers.Participation;
 import com.tokelon.toktales.core.game.model.IPoint2f.IMutablePoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f.IMutableRectangle2f;
+import com.tokelon.toktales.core.prog.annotation.Scripting;
 
 public class Camera extends AbstractCameraStateDecorator implements ICamera {
 	// Use custom Participation/Observation and store non-generic types in separate sets to avoid type-check every call?  
@@ -25,11 +26,12 @@ public class Camera extends AbstractCameraStateDecorator implements ICamera {
 	private final Participation<ICamera, IObserver<ICamera>, IParticipant<ICamera>> participation;
 
 	
-	@Inject
+	@Scripting("uses default ctor")
 	public Camera() {
 		this(new CameraModel());
 	}
 	
+	@Inject
 	public Camera(ICameraModel model) {
 		super(model);
 		

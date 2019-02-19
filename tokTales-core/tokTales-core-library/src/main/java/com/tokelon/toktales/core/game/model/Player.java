@@ -2,20 +2,22 @@ package com.tokelon.toktales.core.game.model;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.prog.annotation.Scripting;
+
 public class Player implements IPlayer {
 	
 	
 	private IActor playerActor;
-
-	@Inject
+	
+	@Scripting("uses default ctor")
 	public Player() {
 		this(new Actor());
 	}
 	
+	@Inject
 	public Player(IActor actor) {
 		this.playerActor = actor;
 	}
-	
 	
 
 

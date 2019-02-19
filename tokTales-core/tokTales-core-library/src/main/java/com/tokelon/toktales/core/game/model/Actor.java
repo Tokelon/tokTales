@@ -1,13 +1,17 @@
 package com.tokelon.toktales.core.game.model;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.logic.observers.IObservation;
 import com.tokelon.toktales.core.game.logic.observers.IObserver;
 import com.tokelon.toktales.core.game.logic.observers.IParticipant;
 import com.tokelon.toktales.core.game.logic.observers.IParticipation;
 import com.tokelon.toktales.core.game.logic.observers.Participation;
-import com.tokelon.toktales.core.game.logic.observers.IBaseParticipation.IParticipationHook;
 import com.tokelon.toktales.core.game.model.entity.GameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
+import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
+import com.tokelon.toktales.core.prog.annotation.Scripting;
 
 /** See {@link GameEntity} for subclassing this class.
  *
@@ -17,9 +21,32 @@ public class Actor extends GameEntity implements IActor {
 	
 	private String actorName;
 	
-	private final IParticipation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>> mParticipation;
+	private IParticipation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>> mParticipation;
 
+	
+	@Scripting("uses default ctor")
 	public Actor() {
+		super();
+		initParticipation();
+	}
+
+	@Inject
+	public Actor(IGameEntityModel model) {
+		super(model);
+		initParticipation();
+	}
+	
+	public Actor(Object payload) {
+		super(payload);
+		initParticipation();
+	}
+	
+	public Actor(IGameEntityModel model, Object payload) {
+		super(model, payload);
+		initParticipation();
+	}
+	
+	private void initParticipation() {
 		mParticipation = new Participation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>>(this, new ParticipationHook());
 	}
 	

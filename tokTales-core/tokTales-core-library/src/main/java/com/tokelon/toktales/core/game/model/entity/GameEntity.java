@@ -15,6 +15,7 @@ import com.tokelon.toktales.core.game.model.IPoint2f;
 import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.world.IWorldspace;
+import com.tokelon.toktales.core.prog.annotation.Scripting;
 
 /**
  * How to subclass this class:<br>
@@ -65,21 +66,21 @@ public class GameEntity extends AbstractGameEntityStateDecorator implements IGam
 	private final Point2fImpl calculatedCollisionRe = new Point2fImpl();
 	
 	
-	
-	@Inject
+	@Scripting("uses default ctor")
 	public GameEntity() {
-		this(null, new GameEntityModel());
+		this(new GameEntityModel(), null);
 	}
 	
+	@Inject
 	public GameEntity(IGameEntityModel model) {
-		this(null, model);
+		this(model, null);
 	}
 	
 	public GameEntity(Object payload) {
-		this(payload, new GameEntityModel());
+		this(new GameEntityModel(), payload);
 	}
 	
-	public GameEntity(Object payload, IGameEntityModel model) {
+	public GameEntity(IGameEntityModel model, Object payload) {
 		super(model);
 		
 		this.mPayload = payload;
