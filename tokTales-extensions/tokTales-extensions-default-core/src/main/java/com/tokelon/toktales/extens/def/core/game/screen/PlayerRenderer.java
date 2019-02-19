@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
 import com.tokelon.toktales.core.game.graphic.ISpriteGraphic;
-import com.tokelon.toktales.core.game.model.IPlayer;
+import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
@@ -188,13 +188,13 @@ public class PlayerRenderer implements IPlayerRenderer {
 		}
 		
 		
-		IPlayer player = playerController.getPlayer();
+		IActor playerActor = playerController.getPlayer().getActor();
 		
-		if(!player.isActive() || !player.isVisible()) {
+		if(!playerActor.isActive() || !playerActor.isVisible()) {
 			return;
 		}
 		
-		IBaseGraphic playerGraphic = player.getGraphic();
+		IBaseGraphic playerGraphic = playerActor.getGraphic();
 		if(playerGraphic == null) {
 			// uhhh skip it I guess?
 			return;
@@ -202,7 +202,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		
 
 		
-		player.getRawWorldCoordinates(playerWorldCoordinates);
+		playerActor.getRawWorldCoordinates(playerWorldCoordinates);
 		
 		mViewTransformer.getCurrentCamera().worldToCamera(playerWorldCoordinates, playerCameraCoordinates);
 		
@@ -214,8 +214,8 @@ public class PlayerRenderer implements IPlayerRenderer {
 		playerDestinationBounds.set(
 				playerScreenCoordinates.x,
 				playerScreenCoordinates.y,
-				playerScreenCoordinates.x + mViewTransformer.cameraToViewportX(player.getWidth()),
-				playerScreenCoordinates.y + mViewTransformer.cameraToViewportY(player.getHeight())
+				playerScreenCoordinates.x + mViewTransformer.cameraToViewportX(playerActor.getWidth()),
+				playerScreenCoordinates.y + mViewTransformer.cameraToViewportY(playerActor.getHeight())
 				);
 		
 		

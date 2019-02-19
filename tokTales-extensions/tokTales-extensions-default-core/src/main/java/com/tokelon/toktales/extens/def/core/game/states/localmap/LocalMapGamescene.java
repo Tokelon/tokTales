@@ -70,7 +70,7 @@ public class LocalMapGamescene extends ExtendedGamescene implements ILocalMapGam
 		super.onAssign();
 		
 		/* Defaults for this scene */
-		getCameraController().enableCameraFollow(getPlayerController().getPlayer());
+		getCameraController().enableCameraFollow(getPlayerController().getPlayer().getActor());
 	}
 	
 

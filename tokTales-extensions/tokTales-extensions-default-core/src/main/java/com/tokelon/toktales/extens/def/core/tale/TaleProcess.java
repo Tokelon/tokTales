@@ -20,6 +20,7 @@ import com.tokelon.toktales.core.game.graphic.animation.GameAnimation;
 import com.tokelon.toktales.core.game.graphic.animation.IGameAnimation;
 import com.tokelon.toktales.core.game.logic.map.MapException;
 import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
+import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
@@ -335,6 +336,7 @@ class TaleProcess {
 		
 		IPlayerController playerController = taleScene.getPlayerController();
 		IPlayer player = playerController.getPlayer();
+		IActor playerActor = player.getActor();
 		
 		
 		// Values
@@ -345,8 +347,8 @@ class TaleProcess {
 		
 		float playerWalkSpeedUnits = taleConfig.getConfigPlayerWalkSpeedUnits();
 	
-		player.setSpeedX(playerWalkSpeedUnits);
-		player.setSpeedY(playerWalkSpeedUnits);
+		playerActor.setSpeedX(playerWalkSpeedUnits);
+		playerActor.setSpeedY(playerWalkSpeedUnits);
 
 		
 		
@@ -361,19 +363,19 @@ class TaleProcess {
 	
 		// Walk left
 		animFilename = taleConfig.getConfigPlayerAnimationWalkLeft();
-		loadAnimationIntoPlayer(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_LEFT, player);
+		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_LEFT, playerActor);
 		
 		// Walk Up
 		animFilename = taleConfig.getConfigPlayerAnimationWalkUp();
-		loadAnimationIntoPlayer(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_UP, player);
+		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_UP, playerActor);
 
 		// Walk right
 		animFilename = taleConfig.getConfigPlayerAnimationWalkRight();
-		loadAnimationIntoPlayer(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_RIGHT, player);
+		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_RIGHT, playerActor);
 
 		// Walk down
 		animFilename = taleConfig.getConfigPlayerAnimationWalkDown();
-		loadAnimationIntoPlayer(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_DOWN, player);
+		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_DOWN, playerActor);
 
 		
 
@@ -384,26 +386,26 @@ class TaleProcess {
 		
 		// Idle left
 		graphicName = taleConfig.getConfigPlayerGraphicIdleLeft();
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_LEFT, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
+		playerActor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_LEFT, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
 
 		// Idle up
 		graphicName = taleConfig.getConfigPlayerGraphicIdleUp();
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_UP, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
+		playerActor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_UP, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
 
 		// Idle right
 		graphicName = taleConfig.getConfigPlayerGraphicIdleRight();
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_RIGHT, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
+		playerActor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_RIGHT, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
 
 		// Idle down
 		graphicName = taleConfig.getConfigPlayerGraphicIdleDown();
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_DOWN, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
+		playerActor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_DOWN, new SpriteGraphicImpl(new SpriteImpl(graphicName)));
 		
 		
 		
 		playerController.playerLook(ICrossDirection.DOWN);
 	}
 	
-	private void loadAnimationIntoPlayer(IStorageService storageService, LocationImpl animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IPlayer player) {
+	private void loadAnimationIntoActor(IStorageService storageService, LocationImpl animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IActor actor) {
 		
 		
 		/* Default for if walk animations do not define their time
@@ -414,7 +416,7 @@ class TaleProcess {
 		// TODO: What to do here?
 		//int aniTime = 1;
 		float tileSize = game.getWorld().getGridTileSize();
-		int aniTime = (int) (1000.0f * tileSize / player.getSpeedX());
+		int aniTime = (int) (1000.0f * tileSize / actor.getSpeedX());
 
 		
 		
@@ -422,7 +424,7 @@ class TaleProcess {
 		if(animFilename.trim().isEmpty()) {
 			log.w(TAG, "No animation file for code: " +animCode);
 			
-			player.getGraphicsImage().assignAnimation(animCode, null);
+			actor.getGraphicsImage().assignAnimation(animCode, null);
 			return;
 		}
 		
@@ -431,7 +433,7 @@ class TaleProcess {
 		if(animIn == null) {
 			log.w(TAG, String.format("Failed to read animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
 			
-			player.getGraphicsImage().assignAnimation(animCode, null);
+			actor.getGraphicsImage().assignAnimation(animCode, null);
 			return;
 		}
 		
@@ -440,11 +442,11 @@ class TaleProcess {
 		if(animation == null) {
 			log.w(TAG, String.format("Failed to load animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
 
-			player.getGraphicsImage().assignAnimation(animCode, null);
+			actor.getGraphicsImage().assignAnimation(animCode, null);
 			return;
 		}
 
-		player.getGraphicsImage().assignAnimation(animCode, animation);
+		actor.getGraphicsImage().assignAnimation(animCode, animation);
 	}
 	
 	

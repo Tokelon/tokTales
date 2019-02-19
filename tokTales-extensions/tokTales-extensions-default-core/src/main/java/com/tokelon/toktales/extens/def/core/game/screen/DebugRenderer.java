@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
-import com.tokelon.toktales.core.game.model.IPlayer;
+import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.Rectangle2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
@@ -325,10 +325,10 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 			return;
 		}
 		
-		IPlayer player = playerController.getPlayer();
+		IActor playerActor = playerController.getPlayer().getActor();
 		
 		
-		getViewTransformer().getCurrentCamera().worldToCamera(player.getCollisionBounds(playerCollisionBounds), playerCollisionCameraBounds);
+		getViewTransformer().getCurrentCamera().worldToCamera(playerActor.getCollisionBounds(playerCollisionBounds), playerCollisionCameraBounds);
 		
 		shapeRenderer.setColor(playerCollisionBoxColor);
 		shapeRenderer.setFill(false);

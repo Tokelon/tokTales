@@ -55,7 +55,7 @@ public class DefaultSceneMapReceiver implements IMapReceiver {
 		//cworldy = IWorld.WORLD_GRID.gridIndexToWorld(4);
 
 		
-		gamescene.getPlayerController().getPlayer().setWorldCoordinates(pworldx, pworldy);
+		gamescene.getPlayerController().getPlayer().getActor().setWorldCoordinates(pworldx, pworldy);
 		gamescene.getCameraController().getCamera().setWorldCoordinates(pworldx, pworldy);
 	}
 	

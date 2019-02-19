@@ -15,6 +15,7 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderLayerStack;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.world.IWorldspace;
+import com.tokelon.toktales.core.prog.annotation.ScriptingAccess;
 import com.tokelon.toktales.core.values.ControllerValues;
 
 /** Use as an extended base for game scenes.
@@ -188,7 +189,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		super.onUpdate(timeMillis);
 
 		// Important - Adjust the camera first (in base), then the player (and everything else)
-		getPlayerController().getPlayer().adjustState(timeMillis);	// The player is an entity as well so it does not really need explicit updating ?
+		getPlayerController().getPlayer().getActor().adjustState(timeMillis);	// The player is an entity as well so it does not really need explicit updating ?
 
 		getWorldspace().adjustState(timeMillis);
 		
@@ -204,7 +205,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	
 	protected void onPlayerControllerChange(IPlayerController playerController) {
 		// Is this ok?
-		getWorldspace().putEntity("player", getPlayerController().getPlayer());
+		getWorldspace().putEntity("player", getPlayerController().getPlayer().getActor()); // TODO: How the f should this work?
 	}
 	
 	protected void onMapControllerChange(IMapController mapController) {
@@ -279,13 +280,15 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		return EXTENDED_TAG + "_" + BASE_TAG; //super.getTag()?
 	}
 	
+	
 
 	/** Sets the scene worldspace.
 	 * 
 	 * @param worldspace
 	 * @throws NullPointerException If worldspace is null.
 	 */
-	protected void setSceneWorldspace(IWorldspace worldspace) {
+	@ScriptingAccess
+	public void setSceneWorldspace(IWorldspace worldspace) {
 		if(worldspace == null) {
 			throw new NullPointerException();
 		}
@@ -295,13 +298,13 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	}
 	
 	
-	
 	/** Sets the scene player controller.
 	 * 
 	 * @param playerController
 	 * @throws NullPointerException If playerController is null.
 	 */
-	protected void setScenePlayerController(IPlayerController playerController) {
+	@ScriptingAccess
+	public void setScenePlayerController(IPlayerController playerController) {
 		if(playerController == null) {
 			throw new NullPointerException();
 		}
@@ -318,7 +321,8 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	 * @param cameraController
 	 * @throws NullPointerException If cameraController is null.
 	 */
-	protected void setSceneCameraController(ICameraController cameraController) {
+	@ScriptingAccess
+	public void setSceneCameraController(ICameraController cameraController) {
 		if(cameraController == null) {
 			throw new NullPointerException();
 		}
@@ -335,7 +339,8 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	 * @param mapController
 	 * @throws NullPointerException If mapController is null.
 	 */
-	protected void setSceneMapController(IMapController mapController) {
+	@ScriptingAccess
+	public void setSceneMapController(IMapController mapController) {
 		if(mapController == null) {
 			throw new NullPointerException();
 		}

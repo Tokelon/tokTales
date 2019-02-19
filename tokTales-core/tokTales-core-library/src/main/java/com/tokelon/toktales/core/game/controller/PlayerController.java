@@ -57,7 +57,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	
 	// TODO: Remove this and do it via script
 	private void setupPlayer() {
-		
+		IActor actor = player.getActor();
 		
 		//TODO: Initialize player values correctly
 		float tileSize = IWorld.GRID_TILE_SIZE;
@@ -65,14 +65,14 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		float playerWalkSpeedUnits = PlayerValues.PLAYER_WALK_SPEED_UNITS;
 		int playerMoveDuration = (int) (1000.0f * tileSize / playerWalkSpeedUnits);
 
-		player.setSpeedX(playerWalkSpeedUnits);
-		player.setSpeedY(playerWalkSpeedUnits);
+		actor.setSpeedX(playerWalkSpeedUnits);
+		actor.setSpeedY(playerWalkSpeedUnits);
 		
 		// TODO: Initialize player size correctly
-		player.setSize(tileSize, tileSize);
-		player.setOrigin(tileSize / 2.0f, tileSize / 2.0f);
+		actor.setSize(tileSize, tileSize);
+		actor.setOrigin(tileSize / 2.0f, tileSize / 2.0f);
 		
-		player.setCollisionBox(tileSize/4.0f, tileSize/4.0f, tileSize/4.0f + tileSize/2.0f, tileSize); //tileSize/4.0f + tileSize/2.0f);	// Small size
+		actor.setCollisionBox(tileSize/4.0f, tileSize/4.0f, tileSize/4.0f + tileSize/2.0f, tileSize); //tileSize/4.0f + tileSize/2.0f);	// Small size
 		//mPlayer.setCollisionBox(0.0f, 0.0f, tileSize, tileSize);	// Full size
 		
 		
@@ -81,12 +81,12 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		
 		
 		
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_LEFT, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_LEFT)));
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_UP, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_UP)));
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_RIGHT, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_RIGHT)));
-		player.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_DOWN, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_DOWN)));
+		actor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_LEFT, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_LEFT)));
+		actor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_UP, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_UP)));
+		actor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_RIGHT, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_RIGHT)));
+		actor.getGraphicsImage().assignGraphic(IPlayer.GRAPHIC_IDLE_DOWN, new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_STATIC_DOWN)));
 
-		player.setGraphicBase(player.getGraphicsImage().getAssignedGraphic(IPlayer.GRAPHIC_IDLE_DOWN));
+		actor.setGraphicBase(actor.getGraphicsImage().getAssignedGraphic(IPlayer.GRAPHIC_IDLE_DOWN));
 		
 		
 		GameAnimation playerAnimationLeft = new GameAnimation();
@@ -94,7 +94,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_LEFT_01)),
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_LEFT_02)));
 		playerAnimationLeft.setupFramesWithOneDuration(2, playerMoveDuration/2);
-		player.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_LEFT, playerAnimationLeft);
+		actor.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_LEFT, playerAnimationLeft);
 		
 		
 		GameAnimation playerAnimationUp = new GameAnimation();
@@ -102,7 +102,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_UP_01)),
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_UP_02)));
 		playerAnimationUp.setupFramesWithOneDuration(2, playerMoveDuration/2);
-		player.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_UP, playerAnimationUp);
+		actor.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_UP, playerAnimationUp);
 
 		
 		GameAnimation playerAnimationRight = new GameAnimation();
@@ -110,7 +110,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_RIGHT_01)),
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_RIGHT_02)));
 		playerAnimationRight.setupFramesWithOneDuration(2, playerMoveDuration/2);
-		player.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_RIGHT, playerAnimationRight);
+		actor.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_RIGHT, playerAnimationRight);
 
 		
 		GameAnimation playerAnimationDown = new GameAnimation();
@@ -118,7 +118,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_DOWN_01)),
 				new SpriteGraphicImpl(new SpriteImpl(PlayerValues.PLAYER_SPRITE_ANIMATION_DOWN_02)));
 		playerAnimationDown.setupFramesWithOneDuration(2, playerMoveDuration/2);
-		player.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_DOWN, playerAnimationDown);
+		actor.getGraphicsImage().assignAnimation(IPlayer.ANIMATION_WALK_DOWN, playerAnimationDown);
 		
 	}
 	
@@ -155,11 +155,11 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		
 		if(mPlayerResponsive) {
 
-			IBaseGraphic staticGraphic = player.getGraphicsImage().getAssignedGraphic(selectGraphicIDForDirection(direction));
+			IBaseGraphic staticGraphic = player.getActor().getGraphicsImage().getAssignedGraphic(selectGraphicIDForDirection(direction));
 
 			// TODO: What to do here if graphic is null?
 			if(staticGraphic != null) {
-				player.setGraphicBase(staticGraphic);
+				player.getActor().setGraphicBase(staticGraphic);
 			}
 			
 			return true;
@@ -174,15 +174,15 @@ public class PlayerController extends AbstractController implements IPlayerContr
 
 		if(mPlayerResponsive) {
 
-			player.setVelocity(
-					player.getSpeedX() * ICrossDirection.Tools.horizontalVelocitySignFromDirection(direction),
-					player.getSpeedY() * ICrossDirection.Tools.verticalVelocitySignFromDirectionInvertY(direction)
+			player.getActor().setVelocity(
+					player.getActor().getSpeedX() * ICrossDirection.Tools.horizontalVelocitySignFromDirection(direction),
+					player.getActor().getSpeedY() * ICrossDirection.Tools.verticalVelocitySignFromDirectionInvertY(direction)
 			);
 
 
-			IGameAnimation selAnimation = player.getGraphicsImage().getAssignedAnimation(selectAnimationIDForDirection(direction));
+			IGameAnimation selAnimation = player.getActor().getGraphicsImage().getAssignedAnimation(selectAnimationIDForDirection(direction));
 			if(selAnimation == null) {
-				IGameAnimation animation = player.getGraphicsImage().getAnimation();
+				IGameAnimation animation = player.getActor().getGraphicsImage().getAnimation();
 				if(animation != null) {
 					animation.stopAnimation();
 				}
@@ -191,7 +191,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 				selAnimation.enableLoop(true);
 
 				//mPlayer.setAnimation(selAnimation, playerAnimationCallback);
-				player.getGraphicsImage().startAnimation(selAnimation, TokTales.getGame().getTimeManager().getGameTimeMillis());
+				player.getActor().getGraphicsImage().startAnimation(selAnimation, TokTales.getGame().getTimeManager().getGameTimeMillis());
 			}
 
 			return true;
@@ -206,7 +206,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 		
 		if(mPlayerResponsive) {
 
-			player.setVelocity(0f, 0f);
+			player.getActor().setVelocity(0f, 0f);
 			
 			/* Old motion logic
 			IGameMotion motion = mPlayer.getMotion();
@@ -215,7 +215,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 			}
 			*/
 			
-			IGameAnimation ani = player.getGraphicsImage().getAnimation();
+			IGameAnimation ani = player.getActor().getGraphicsImage().getAnimation();
 			if(ani != null) {
 				ani.stopAnimation();
 			}
@@ -232,7 +232,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	public boolean playerJump() {
 		mPlayerParticipant.doJump(); // Does not actually do anything?
 		
-		player.getParticipation().notifyOfChange("gravity_DoJump");
+		player.getActor().getParticipation().notifyOfChange("gravity_DoJump");
 		
 		return true;
 	}

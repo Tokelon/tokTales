@@ -1,10 +1,9 @@
 package com.tokelon.toktales.core.game.model;
 
-import com.tokelon.toktales.core.game.model.entity.IGameEntity;
-
-
-public interface IPlayer extends IGameEntity {
-
+public interface IPlayer {
+	// TODO: Probably need observable for when the actor changes
+	
+	/* Maybe add a looking angle to support 360 degree looking*/
 
 	public static final String GRAPHIC_IDLE_LEFT = "graphic_idle_left";
 	public static final String GRAPHIC_IDLE_UP = "graphic_idle_up";
@@ -17,30 +16,14 @@ public interface IPlayer extends IGameEntity {
 	public static final String ANIMATION_WALK_DOWN = "animation_walk_down";
 	
 	
-	/* Maybe add a looking angle to support 360 degree looking*/
 	
 	
-	
-	/* Important !
-	 * 
-	 * Player should be a wrapper for an actor ??
-	 * 
-	 */
-	
-	
-	
-	
-	
+	public IActor getActor();
+	public void setActor(IActor actor); // Really have this?
 	
 	
 	
 	//public CrossDirection getLookingDirection();
-	
-	/* Is the concrete interface IPlayerEntity needed or is IMapEntity sufficient?
-	 * 
-	 */
-	//public IPlayerEntity getPlayerEntity();
-	
 	
 	//public boolean isResponsive();
 
