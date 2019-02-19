@@ -2,17 +2,17 @@ package com.tokelon.toktales.core.game.model;
 
 import javax.inject.Inject;
 
-public class ActorPlayer implements IPlayer {
+public class Player implements IPlayer {
 	
 	
 	private IActor playerActor;
 
 	@Inject
-	public ActorPlayer() {
+	public Player() {
 		this(new Actor());
 	}
 	
-	public ActorPlayer(IActor actor) {
+	public Player(IActor actor) {
 		this.playerActor = actor;
 	}
 	

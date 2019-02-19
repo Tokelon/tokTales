@@ -12,7 +12,7 @@ import com.tokelon.toktales.core.game.graphic.animation.IGameAnimation;
 import com.tokelon.toktales.core.game.logic.motion.IGameMotion;
 import com.tokelon.toktales.core.game.logic.motion.IMotionCallback;
 import com.tokelon.toktales.core.game.logic.motion.StraightAnimatedMotion;
-import com.tokelon.toktales.core.game.model.ActorPlayer;
+import com.tokelon.toktales.core.game.model.Player;
 import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
@@ -50,7 +50,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	public PlayerController(IActor playerActor) {
 		mPlayerParticipant = new PlayerParticipant();
 		
-		this.player = new ActorPlayer(playerActor);
+		this.player = new Player(playerActor);
 		//mPlayer.getParticipation().addParticipant(mPlayerParticipant);
 	}
 	
