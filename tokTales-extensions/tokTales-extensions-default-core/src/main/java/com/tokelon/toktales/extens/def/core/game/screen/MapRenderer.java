@@ -323,7 +323,7 @@ public class MapRenderer implements IMapRenderer {
 			// Do not draw special sprites like error sprites?
 		}
 		
-		ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset.getContent());
+		ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset);
 		if(spriteTexture == null) {
 			// TODO: Implement special asset
 			return;

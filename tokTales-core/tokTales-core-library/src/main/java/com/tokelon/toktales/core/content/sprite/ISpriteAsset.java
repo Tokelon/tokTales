@@ -1,15 +1,8 @@
 package com.tokelon.toktales.core.content.sprite;
 
-import com.tokelon.toktales.core.content.IAssetContainer;
-import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
+import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
 
+public interface ISpriteAsset extends ITextureAsset {
+	// In the long run this should probably be replaced by ITextureAsset
 
-public interface ISpriteAsset extends IGraphicsAsset {
-
-	public IAssetContainer<?> getContent();
-
-	
-	// Maybe add?
-	//public boolean isSpecialContent();
-	
 }

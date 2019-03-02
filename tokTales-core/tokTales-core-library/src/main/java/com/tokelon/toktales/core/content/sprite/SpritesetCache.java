@@ -7,10 +7,8 @@ public class SpritesetCache extends AbstractCache {
 
 	
 	private final ConcurrentHashMap<ISpriteset, ISpriteAsset> cache;
-		
 	
 	public SpritesetCache(int initialCapacity) {
-		
 		cache = new ConcurrentHashMap<ISpriteset, ISpriteAsset>(initialCapacity, 0.9f, 1);
 	}
 	
@@ -29,10 +27,9 @@ public class SpritesetCache extends AbstractCache {
 	
 	
 	public void runClearAll() {
-		/* Free assets.
-		 */
+		// Free assets
 		for(ISpriteAsset spriteAsset: cache.values()) {
-			spriteAsset.getContent().freeAsset();
+			spriteAsset.dispose();
 		}
 		
 		cache.clear();

@@ -3,9 +3,9 @@ package com.tokelon.toktales.core.engine.content;
 import java.io.File;
 import java.io.InputStream;
 
-import com.tokelon.toktales.core.content.IAssetContainer;
 import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.ISpecialContent;
+import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
@@ -37,29 +37,29 @@ public interface IContentService extends IEngineService {
 	 * @param fileName
 	 * @return The loaded asset, or null if an error occurs.
 	 */
-	public IAssetContainer<?> lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName);
+	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName);
 	
-	public IAssetContainer<?> lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options); 
+	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options); 
 	//findAndLoadResource()
 	
 	
 	//public InputStream loadAsset(String assetPath) throws IOException;
 	
-	public IAssetContainer<?> loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException;
+	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException;
 	
-	public IAssetContainer<?> loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException;
+	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException;
 	
 	
 	
-	public IAssetContainer<?> loadSpecialContent(ISpecialContent specialContent) throws ContentException;
+	public IGraphicsAsset loadSpecialContent(ISpecialContent specialContent) throws ContentException;
 	
 
-	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException;
+	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException;
 
-	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException;
+	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException;
 
 	
-	public ITexture extractAssetTexture(IAssetContainer<?> container);
+	public ITexture extractAssetTexture(IGraphicsAsset asset);
 
 
 	public ITextureFont lookForFontAndLoad(IApplicationLocation location, String filename);

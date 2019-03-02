@@ -12,12 +12,12 @@ import java.nio.channels.ReadableByteChannel;
 import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
 
-import com.tokelon.toktales.core.content.IAssetContainer;
 import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
-import com.tokelon.toktales.core.content.TextureContainer;
-import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
+import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
+import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
+import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -75,12 +75,12 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	}
 
 	@Override
-	public IAssetContainer<?> lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName) {
+	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName) {
 		return lookForGraphicAssetAndLoad(location, fileName, null);
 	}
 
 	@Override
-	public IAssetContainer<?> lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) {
+	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) {
 
 		InputStream assetInputStream = assetStorageService.tryReadAppFileOnExternal(location, fileName);
 		if(assetInputStream == null) {
@@ -89,8 +89,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 
 		
 		try {
-			IAssetContainer<?> assetCont = loadGraphicAssetFromSource(assetInputStream, options);
-			return assetCont;
+			return loadGraphicAssetFromSource(assetInputStream, options);
 		} catch (ContentException e) {
 			return null;
 		}
@@ -106,12 +105,12 @@ public class DesktopContentService extends AbstractContentService implements ICo
 
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException {
 		return loadGraphicAsset(location, fileName, null);
 	}
 
 	@Override
-	public IAssetContainer<?> loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
 		InputStream assetInputStream;
 		try {
 			assetInputStream = assetStorageService.readAppFileOnExternal(location, fileName);
@@ -124,7 +123,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 
 	
 	@Override
-	public IAssetContainer<?> loadSpecialContent(ISpecialContent specialContent) throws ContentException {
+	public IGraphicsAsset loadSpecialContent(ISpecialContent specialContent) throws ContentException {
 		//TokTales.getLog().d(TAG, "Trying to resolve special asset");
 		
 		String dataString = null;
@@ -242,13 +241,13 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException {
 		return loadGraphicAssetFromSource(source, null);
 	}
 
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
 		
 		// TODO: Important - Fixed size buffer
 		ByteBuffer buffer = LWJGLBufferUtils.getWrapper().createByteBuffer(4 * 1 * 512 * 512);
@@ -259,11 +258,11 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	}
 	
 	
-	private IAssetContainer<?> createGraphicAssetContainer(STBStandardImage image, IGraphicLoadingOptions options) {
+	private IGraphicsAsset createGraphicAssetContainer(STBStandardImage image, IGraphicLoadingOptions options) {
 		// TODO: Use the options to pass settings for the texture - Mainly the texture filter (nearest or linear)
 		Texture texture = new Texture(image);
 		
-		return new TextureContainer(texture); 
+		return new SpriteAsset(texture);
 	}
 
 	
@@ -310,25 +309,23 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	
 	
 	@Override
-	public ITexture extractAssetTexture(IAssetContainer<?> container) {
-		return extractTexture(container);
+	public ITexture extractAssetTexture(IGraphicsAsset asset) {
+		return extractTexture(asset);
 	}
 	
-	public static ITexture extractAssetSprite(ISpriteAsset spriteAsset) {
-		return extractTexture(spriteAsset.getContent());
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static ITexture extractTexture(IAssetContainer<?> container) {
+	private static ITexture extractTexture(IGraphicsAsset asset) {
 		// Do type check ?
 
-		if(container == null) {
+		if(asset == null) {
 			return null;	// TODO: Remove and fix special assets
 		}
 		
-
-		IAssetContainer<ITexture> textureContainer = (IAssetContainer<ITexture>) container;
-		return textureContainer.getAsset();
+		if(asset instanceof ITextureAsset) {
+			return ((ITextureAsset) asset).getTexture();
+		}
+		else {
+			return null; // TODO: Avoid returning null if possible
+		}
 	}
 
 	

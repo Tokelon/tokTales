@@ -8,11 +8,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.core.content.IAssetContainer;
 import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
-import com.tokelon.toktales.core.content.TextureContainer;
+import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
+import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
+import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -99,14 +100,14 @@ public class AndroidContentService extends AbstractContentService implements ICo
 	
 	//TODO: Maybe return only the inputstream and do the decoding in a different method?
 	@Override
-	public IAssetContainer<?> lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName) {
+	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName) {
 		
 		return lookForGraphicAssetAndLoad(location, fileName, null);
 	}
 	
 	
 	@Override
-	public IAssetContainer<?> lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) {
+	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) {
 			
 		InputStream is = null;
 		try {
@@ -141,13 +142,13 @@ public class AndroidContentService extends AbstractContentService implements ICo
 	
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException {
 		
 		return loadGraphicAsset(location, fileName, null);
 	}
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
 		
 		InputStream is = null;
 		try {
@@ -178,8 +179,8 @@ public class AndroidContentService extends AbstractContentService implements ICo
 	
 	
 	@Override
-	public IAssetContainer<?> loadSpecialContent(ISpecialContent specialContent) throws ContentException {
-		IAssetContainer<?> container = null;
+	public IGraphicsAsset loadSpecialContent(ISpecialContent specialContent) throws ContentException {
+		IGraphicsAsset asset = null;
 		
 		if(specialContent == IContentManager.SpecialContent.SPRITE_EMPTY) {
 			Bitmap b1 = decodeBitmapResource(globalContext.getResources(), R.drawable.sp_special_empty);
@@ -187,7 +188,7 @@ public class AndroidContentService extends AbstractContentService implements ICo
 			if(b1 == null) {
 				throw new ContentLoadException("Failed to decode bitmap");
 			} else {
-				container = createGraphicAssetContainer(b1, null);
+				asset = createGraphicAssetContainer(b1, null);
 			}
 		}
 		else if(specialContent == IContentManager.SpecialContent.SPRITE_NOT_FOUND) {
@@ -196,7 +197,7 @@ public class AndroidContentService extends AbstractContentService implements ICo
 			if(b2 == null) {
 				throw new ContentLoadException("Failed to decode bitmap");
 			} else {
-				container = createGraphicAssetContainer(b2, null);
+				asset = createGraphicAssetContainer(b2, null);
 			}
 		}
 		else if(specialContent == IContentManager.SpecialContent.SPRITE_LOAD_ERROR) {
@@ -205,22 +206,22 @@ public class AndroidContentService extends AbstractContentService implements ICo
 			if(b3 == null) {
 				throw new ContentLoadException("Failed to decode bitmap");
 			} else {
-				container = createGraphicAssetContainer(b3, null);
+				asset = createGraphicAssetContainer(b3, null);
 			}
 		}
 		
-		return container;
+		return asset;
 	}
 	
 	
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException {
 		return loadGraphicAssetFromSource(source, null);
 	}
 	
 	@Override
-	public IAssetContainer<?> loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
+	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
 		Bitmap sb = decodeBitmapStream(source, options);
 		
 		if(sb == null) {
@@ -327,28 +328,31 @@ public class AndroidContentService extends AbstractContentService implements ICo
 	}
 	
 	
-	private IAssetContainer<?> createGraphicAssetContainer(Bitmap bitmap, IGraphicLoadingOptions options) {
+	private IGraphicsAsset createGraphicAssetContainer(Bitmap bitmap, IGraphicLoadingOptions options) {
 		AndroidBitmap androidBitmap = new AndroidBitmap(bitmap);
 		
 		// TODO: Use the options to pass settings for the texture - Mainly the texture filter (nearest or linear)
 		Texture texture = new Texture(androidBitmap);
 		
-		return new TextureContainer(texture);
+		return new SpriteAsset(texture);
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public ITexture extractAssetTexture(IAssetContainer<?> container) {
+	public ITexture extractAssetTexture(IGraphicsAsset asset) {
 		// Do type check ?
 		
-		if(container == null) {
+		if(asset == null) {
 			return null;	// TODO: Remove and fix special assets
 		}
 
 		
-		IAssetContainer<ITexture> textureContainer = (IAssetContainer<ITexture>) container;
-		return textureContainer.getAsset();
+		if(asset instanceof ITextureAsset) {
+			return ((ITextureAsset) asset).getTexture();
+		}
+		else {
+			return null; // TODO: Avoid returning null if possible
+		}
 	}
 	
 	

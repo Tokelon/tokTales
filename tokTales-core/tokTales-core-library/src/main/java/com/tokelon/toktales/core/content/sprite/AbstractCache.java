@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.content.sprite;
 
-import com.tokelon.toktales.core.content.IAssetContainer;
+import com.tokelon.toktales.core.render.ITexture;
 
 public abstract class AbstractCache {
 
@@ -13,12 +13,12 @@ public abstract class AbstractCache {
 	private static class SpecialSpriteAsset implements ISpriteAsset {
 
 		@Override
-		public IAssetContainer<?> getContent() {
+		public ITexture getTexture() {
 			return null;
 		}
-
+		
 		@Override
-		public void dispose() {	}	
+		public void dispose() {	}
 	}
 	
 }

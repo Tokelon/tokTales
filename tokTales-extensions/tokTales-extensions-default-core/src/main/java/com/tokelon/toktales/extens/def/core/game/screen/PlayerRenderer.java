@@ -236,7 +236,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 				// Do what?
 			}
 
-			ITexture playerTexture = contentService.extractAssetTexture(playerSpriteAsset.getContent());
+			ITexture playerTexture = contentService.extractAssetTexture(playerSpriteAsset);
 			if(playerTexture == null) {
 				return;	// TODO: Workaround for special assets
 			}

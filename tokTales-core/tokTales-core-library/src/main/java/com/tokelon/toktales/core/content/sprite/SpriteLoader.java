@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.tokelon.toktales.core.content.GenericAsset;
-import com.tokelon.toktales.core.content.IAssetContainer;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
+import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
@@ -164,11 +163,8 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 	
 	
 	private ISpriteAsset loadSpecialSprite(ISpecialContent specialContent) throws ContentException {
-		
-		IAssetContainer<?> ac = contentService.loadSpecialContent(specialContent);
-		
-		ISpriteAsset result = new GenericAsset(ac);
-		return result;
+		// TODO: Remove cast when refactored
+		return (ISpriteAsset) contentService.loadSpecialContent(specialContent);
 	}
 
 
@@ -214,12 +210,12 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 			
 			if(considerAttachedResource && spriteset.hasResourceAttached()) {
 
-				IAssetContainer<?> ac = tryLoadResource(spriteset.getSpritesetName(), spriteset.getResource(), options);
+				ISpriteAsset ac = tryLoadResource(spriteset.getSpritesetName(), spriteset.getResource(), options);
 				
 				if(ac == null) {
 					throw new ContentNotFoundException();
 				} else {
-					return new GenericAsset(ac);
+					return ac;
 				}
 			}
 			else {
@@ -229,12 +225,12 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 		else {
 			if(considerAttachedResource && sprite.hasResourceAttached()) {
 
-				IAssetContainer<?> ac = tryLoadResource(sprite.getSpriteName(), sprite.getResource(), options);
+				ISpriteAsset ac = tryLoadResource(sprite.getSpriteName(), sprite.getResource(), options);
 				
 				if(ac == null) {
 					throw new ContentNotFoundException();
 				} else {
-					return new GenericAsset(ac);
+					return ac;
 				}
 			}
 			else {
@@ -265,8 +261,7 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 			throw new ContentNotFoundException();
 		}
 		
-		IAssetContainer<?> ac = loadResource(fd.getName(), fd.getLocation(), options);		
-		return new GenericAsset(ac);
+		return loadResource(fd.getName(), fd.getLocation(), options);
 	}
 	
 
@@ -274,8 +269,8 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 	
 	// TODO:
 	// Should replace the "try" functions with the ones who throw errors?
-	private IAssetContainer<?> loadResource(String fileName, IStructuredLocation location, IGraphicLoadingOptions options) throws ContentException {
-		IAssetContainer<?> ac = null;
+	private ISpriteAsset loadResource(String fileName, IStructuredLocation location, IGraphicLoadingOptions options) throws ContentException {
+		IGraphicsAsset ac = null;
 		ApplicationLocationWrapper locationWrapper = ApplicationLocationWrapper.getObjectPool().newObject();
 		locationWrapper.objectReset();
 		
@@ -314,7 +309,7 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 		}
 		
 		ApplicationLocationWrapper.getObjectPool().free(locationWrapper);
-		return ac;
+		return (ISpriteAsset) ac; // TODO: Remove cast when refactored
 	}
 	
 	
@@ -345,8 +340,8 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 	
 	*/
 	
-	private IAssetContainer<?> tryLoadResource(String spriteName, IResource resource, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
-		IAssetContainer<?> ac = null;
+	private ISpriteAsset tryLoadResource(String spriteName, IResource resource, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
+		IGraphicsAsset ac = null;
 		ApplicationLocationWrapper locationWrapper = ApplicationLocationWrapper.getObjectPool().newObject();
 		locationWrapper.objectReset();
 		
@@ -386,26 +381,21 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 		}
 		
 		ApplicationLocationWrapper.getObjectPool().free(locationWrapper);
-		return ac;
+		return (ISpriteAsset) ac; // TODO: Remove cast when refactored
 	}
 	
 	
 	
 	@Override
 	public ISpriteAsset loadSpriteInternal(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
-		
-		IAssetContainer<?> ac = contentService.loadGraphicAsset(location, fileName, options);
-		
-		ISpriteAsset result = new GenericAsset(ac);
-		return result;
+		// TODO: Remove cast when refactored
+		return (ISpriteAsset) contentService.loadGraphicAsset(location, fileName, options);
 	}
 	
 	
 	@Override
 	public ISpriteAsset loadSpriteExternal(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws StorageException, ContentLoadException, ContentException {
-		ISpriteAsset result;
-		
-		IAssetContainer<?> ac;
+		IGraphicsAsset ac;
 		InputStream extSpriteStream = null;
 		try {
 			extSpriteStream = storageService.readAppFileOnExternal(location, fileName);
@@ -421,8 +411,7 @@ class SpriteLoader implements ISpriteLoader, Runnable {
 			}
 		}
 		
-		result = new GenericAsset(ac);
-		return result;
+		return (ISpriteAsset) ac; // TODO: Remove cast when refactored
 	}
 		
 }

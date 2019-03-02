@@ -4,15 +4,13 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SpriteCache extends AbstractCache {
-
 	
-	private final ConcurrentHashMap<ISprite, ISpriteAsset> cache;
 	
 	//private int size = Integer.MAX_VALUE;
-	
+
+	private final ConcurrentHashMap<ISprite, ISpriteAsset> cache;
 	
 	public SpriteCache(int initialCapacity) {
-		
 		cache = new ConcurrentHashMap<ISprite, ISpriteAsset>(initialCapacity, 0.9f, 1);
 	}
 	
@@ -31,17 +29,13 @@ public class SpriteCache extends AbstractCache {
 	
 	
 	public void runClearAll() {
-		
-		/* FREE ASSETS - This is important!
-		 * -> Maybe not as important in this case as the Bitmap memory will be freed as soon as it will be GC 
-		 * 
-		 */
+		// FREE ASSETS - This is important!
 		for(ISpriteAsset spriteAsset: cache.values()) {
 			if(spriteAsset == CACHE_SPECIAL_NOT_FOUND || spriteAsset == CACHE_SPECIAL_LOAD_ERROR) {
 				// Do not call freeAsset() as this is a special asset!
 			}
 			else {
-				spriteAsset.getContent().freeAsset();
+				spriteAsset.dispose();
 			}
 		}
 		
@@ -61,5 +55,4 @@ public class SpriteCache extends AbstractCache {
 		}
 	}
 
-	
 }

@@ -236,7 +236,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 						continue;
 					}
 					
-					ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset.getContent());
+					ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset);
 					if(spriteTexture == null) {
 						continue;
 					}

@@ -263,7 +263,7 @@ public class EntityRenderer implements IEntityRenderer {
 				}
 				
 				
-				ITexture entityTexture = contentService.extractAssetTexture(entitySpriteAsset.getContent());
+				ITexture entityTexture = contentService.extractAssetTexture(entitySpriteAsset);
 				if(entityTexture == null) {
 					return;	// TODO: Workaround for special assets
 				}
