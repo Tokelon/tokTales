@@ -1,10 +1,10 @@
 package com.tokelon.toktales.core.content.sprite;
 
 import com.tokelon.toktales.core.content.IAssetContainer;
-import com.tokelon.toktales.core.content.IGraphicAsset;
+import com.tokelon.toktales.core.content.IGraphicsAsset;
 
 
-public interface ISpriteAsset extends IGraphicAsset {
+public interface ISpriteAsset extends IGraphicsAsset {
 
 	public IAssetContainer<?> getContent();
 
