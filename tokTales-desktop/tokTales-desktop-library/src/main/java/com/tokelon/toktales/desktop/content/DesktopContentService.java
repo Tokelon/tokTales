@@ -12,9 +12,9 @@ import java.nio.channels.ReadableByteChannel;
 import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
 
-import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.ISpecialContent;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
 import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;

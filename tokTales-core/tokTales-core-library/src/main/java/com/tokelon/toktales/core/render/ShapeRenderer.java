@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.render;
 
 import org.joml.Vector4f;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IPointModel;

@@ -1,6 +1,6 @@
 package com.tokelon.toktales.desktop.lwjgl.data;
 
-import com.tokelon.toktales.core.content.IBitmap;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 
 /** A bitmap loaded from the STB library.
  */

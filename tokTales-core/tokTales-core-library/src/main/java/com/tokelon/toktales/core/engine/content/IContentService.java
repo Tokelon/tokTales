@@ -3,8 +3,8 @@ package com.tokelon.toktales.core.engine.content;
 import java.io.File;
 import java.io.InputStream;
 
-import com.tokelon.toktales.core.content.IBitmap;
 import com.tokelon.toktales.core.content.ISpecialContent;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngineService;

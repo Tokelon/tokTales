@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extens.def.core.game.model;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
-import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 
 public class ScreenDialog extends TextBox implements IScreenDialog {
 

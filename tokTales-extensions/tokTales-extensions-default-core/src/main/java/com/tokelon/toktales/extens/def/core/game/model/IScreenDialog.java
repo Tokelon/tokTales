@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.model;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.text.IFont;
 
 public interface IScreenDialog extends ITextBox {

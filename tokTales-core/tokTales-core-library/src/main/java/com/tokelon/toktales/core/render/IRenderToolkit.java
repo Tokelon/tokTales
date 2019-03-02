@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.render;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.util.IParams;
 
 public interface IRenderToolkit {

@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.joml.Vector4f;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;

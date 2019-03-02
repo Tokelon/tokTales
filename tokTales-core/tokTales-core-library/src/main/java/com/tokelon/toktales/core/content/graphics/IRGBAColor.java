@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content;
+package com.tokelon.toktales.core.content.graphics;
 
 /** Represents a color with red, green, blue and alpha components.
  * <br>

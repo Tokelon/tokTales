@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.content.ContentException;

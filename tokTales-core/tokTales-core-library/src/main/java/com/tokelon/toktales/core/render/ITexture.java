@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.render;
 
-import com.tokelon.toktales.core.content.IBitmap;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 
 /** Contains an {@link IBitmap} and the configuration for how it should be drawn.
  * <p>

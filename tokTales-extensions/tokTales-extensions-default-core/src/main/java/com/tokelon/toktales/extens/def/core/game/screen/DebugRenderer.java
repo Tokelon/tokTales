@@ -3,7 +3,7 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 import java.io.File;
 import java.util.Set;
 
-import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;

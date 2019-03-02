@@ -2,8 +2,8 @@ package com.tokelon.toktales.core.content.text;
 
 import java.nio.ByteBuffer;
 
-import com.tokelon.toktales.core.content.BitmapImpl;
-import com.tokelon.toktales.core.content.IBitmap;
+import com.tokelon.toktales.core.content.graphics.BitmapImpl;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 

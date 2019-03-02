@@ -2,7 +2,7 @@ package com.tokelon.toktales.extens.def.core.render;
 
 import org.joml.Vector4f;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.AbstractRenderer;

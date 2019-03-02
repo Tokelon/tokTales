@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.content.audio.ISound;
 public class SoundAsset implements ISoundAsset {
 
 	
-	private ISound sound;
+	private final ISound sound;
 
 	public SoundAsset(ISound sound) {
 		this.sound = sound;

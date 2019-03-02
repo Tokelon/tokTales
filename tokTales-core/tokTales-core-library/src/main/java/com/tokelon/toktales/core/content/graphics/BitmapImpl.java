@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content;
+package com.tokelon.toktales.core.content.graphics;
 
 import java.nio.ByteBuffer;
 

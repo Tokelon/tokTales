@@ -1,6 +1,6 @@
-package com.tokelon.toktales.core.content;
+package com.tokelon.toktales.core.content.graphics;
 
-import com.tokelon.toktales.core.content.IRGBAColor.IMutableRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor.IMutableRGBAColor;
 
 /** Creating format:<br>
  * [#](red)[red](green)[green](blue)[blue][alpha][alpha]

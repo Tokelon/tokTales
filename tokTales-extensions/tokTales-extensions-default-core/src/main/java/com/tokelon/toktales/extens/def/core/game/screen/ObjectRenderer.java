@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.joml.Vector4f;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
-import com.tokelon.toktales.core.content.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;

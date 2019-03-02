@@ -2,7 +2,7 @@ package com.tokelon.toktales.desktop.lwjgl.render;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.util.IParams;
 

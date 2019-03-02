@@ -3,8 +3,8 @@ package com.tokelon.toktales.core.engine.content;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import com.tokelon.toktales.core.content.BitmapImpl;
-import com.tokelon.toktales.core.content.IBitmap;
+import com.tokelon.toktales.core.content.graphics.BitmapImpl;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.ITexture;

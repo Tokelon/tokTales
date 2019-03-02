@@ -3,7 +3,7 @@ package com.tokelon.toktales.android.data;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import com.tokelon.toktales.core.content.IBitmap;
+import com.tokelon.toktales.core.content.graphics.IBitmap;
 
 import android.graphics.Bitmap;
 

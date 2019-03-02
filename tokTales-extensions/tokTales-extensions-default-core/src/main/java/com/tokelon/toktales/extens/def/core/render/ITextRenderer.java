@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.render;
 
-import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.render.IChunkRenderer;
 import com.tokelon.toktales.extens.def.core.game.model.ITextBox;
 

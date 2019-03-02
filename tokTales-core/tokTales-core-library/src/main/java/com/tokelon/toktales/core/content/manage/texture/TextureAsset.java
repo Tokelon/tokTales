@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.render.ITexture;
 public class TextureAsset implements ITextureAsset {
 
 	
-	private ITexture texture;
+	private final ITexture texture;
 
 	public TextureAsset(ITexture texture) {
 		this.texture = texture;
