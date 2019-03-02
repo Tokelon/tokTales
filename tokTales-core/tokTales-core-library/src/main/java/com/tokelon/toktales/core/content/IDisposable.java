@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content;
 
 /** Specifies that an object should be disposed to free up resources.
  */
-public interface IDisposable {
+public interface IDisposable extends AutoCloseable {
 
 	
 	/** Releases resources used by this object and marks it as disposed.
@@ -10,5 +10,15 @@ public interface IDisposable {
 	 * The object should not be used after this.
 	 */
 	public void dispose();
+	
+	
+	/** {@inheritDoc}
+	 * <p>
+	 * The default implementation simply calls {@link #dispose()}.
+	 */
+	@Override
+	public default void close() {
+		dispose();
+	}
 	
 }
