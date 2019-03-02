@@ -1,6 +1,7 @@
-package com.tokelon.toktales.core.content.text;
+package com.tokelon.toktales.core.content.manage.codepoint;
 
 import com.tokelon.toktales.core.content.manage.IAssetManager;
+import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.util.INamedOptions;
 
 public interface ICodepointManager extends IAssetManager<ICodepointAsset, ICodepointKey, INamedOptions> {

@@ -1,4 +1,6 @@
-package com.tokelon.toktales.core.content.text;
+package com.tokelon.toktales.core.content.manage.codepoint;
+
+import com.tokelon.toktales.core.content.text.ICodepoint;
 
 public class CodepointAsset implements ICodepointAsset {
 

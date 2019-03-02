@@ -9,10 +9,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
-import com.tokelon.toktales.core.content.text.CodepointAsset;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.content.text.ICodepointAsset;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
@@ -139,14 +137,14 @@ public class STBTextureFont implements ITextureFont {
 	
 	
 	@Override
-	public ICodepointAsset getCodepointAsset(int codepoint) {
+	public ICodepoint getCodepoint(int codepoint) {
 		ICodepointTexture texture = makeCodepointTexture(codepoint);
 		IRectangle2i bitmapBox = new Rectangle2iImpl().set(getCodepointBitmapBox(codepoint)); 
 		
 		int advanceWidth = getCodepointAdvanceWidth(codepoint);
 		int leftSideBearing = getCodepointLeftSideBearing(codepoint);
 		
-		return new CodepointAsset(new STBCodepoint(texture, bitmapBox, advanceWidth, leftSideBearing));
+		return new STBCodepoint(texture, bitmapBox, advanceWidth, leftSideBearing);
 	}
 	
 	@Override

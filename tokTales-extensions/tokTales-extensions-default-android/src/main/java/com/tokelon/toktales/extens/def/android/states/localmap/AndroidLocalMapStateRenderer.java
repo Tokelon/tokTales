@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IMainConfig;
-import com.tokelon.toktales.core.content.text.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;

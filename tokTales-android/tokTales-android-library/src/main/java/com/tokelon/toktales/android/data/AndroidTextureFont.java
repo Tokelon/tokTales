@@ -3,10 +3,8 @@ package com.tokelon.toktales.android.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tokelon.toktales.core.content.text.CodepointAsset;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.content.text.ICodepointAsset;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
@@ -119,11 +117,11 @@ public class AndroidTextureFont implements ITextureFont {
 	
 
 	@Override
-	public ICodepointAsset getCodepointAsset(int codepoint) {
+	public ICodepoint getCodepoint(int codepoint) {
 		ICodepointTexture texture = getOrCreateCodepointTexture(codepoint);
 		IRectangle2i bitmapBox = getCodepointBitmapBox(codepoint);
 		
-		return new CodepointAsset(new AndroidCodepoint(texture, bitmapBox));
+		return new AndroidCodepoint(texture, bitmapBox);
 	}
 
 	

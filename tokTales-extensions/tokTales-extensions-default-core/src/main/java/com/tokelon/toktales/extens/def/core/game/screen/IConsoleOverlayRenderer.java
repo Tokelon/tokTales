@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import com.tokelon.toktales.core.content.text.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;

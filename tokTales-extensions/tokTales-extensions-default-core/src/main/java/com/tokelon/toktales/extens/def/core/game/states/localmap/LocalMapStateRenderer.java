@@ -9,7 +9,7 @@ import org.joml.Matrix4f;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
-import com.tokelon.toktales.core.content.text.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;

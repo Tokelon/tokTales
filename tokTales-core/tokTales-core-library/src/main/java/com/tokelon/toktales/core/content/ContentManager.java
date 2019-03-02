@@ -2,8 +2,8 @@ package com.tokelon.toktales.core.content;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.ITextureManager;
 

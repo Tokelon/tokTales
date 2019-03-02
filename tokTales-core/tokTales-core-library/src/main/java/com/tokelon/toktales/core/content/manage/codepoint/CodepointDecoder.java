@@ -1,8 +1,10 @@
-package com.tokelon.toktales.core.content.text;
+package com.tokelon.toktales.core.content.manage.codepoint;
 
 import java.io.InputStream;
 
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.text.ICodepoint;
+import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.INamedOptions;
 
@@ -14,8 +16,8 @@ public class CodepointDecoder implements IAssetDecoder<ICodepointAsset, ICodepoi
 		int codepoint = key.getCodepoint();
 		
 		ITextureFont font = key.getFont();
-		ICodepointAsset codepointAsset = font.getCodepointAsset(codepoint);
-		return codepointAsset;
+		ICodepoint assetCodepoint = font.getCodepoint(codepoint);
+		return new CodepointAsset(assetCodepoint);
 	}
 
 	@Override

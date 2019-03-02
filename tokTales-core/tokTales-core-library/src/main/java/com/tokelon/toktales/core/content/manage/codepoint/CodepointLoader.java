@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.text;
+package com.tokelon.toktales.core.content.manage.codepoint;
 
 import java.util.concurrent.ExecutorService;
 

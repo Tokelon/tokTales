@@ -2,7 +2,7 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import com.tokelon.toktales.core.content.IRGBAColor;
 import com.tokelon.toktales.core.content.RGBAColorImpl;
-import com.tokelon.toktales.core.content.text.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;

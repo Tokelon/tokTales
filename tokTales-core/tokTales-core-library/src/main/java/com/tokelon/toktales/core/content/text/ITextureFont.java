@@ -16,7 +16,7 @@ public interface ITextureFont extends IFont {
 	public int getFontPixelLineGap();
 	
 
-	public ICodepointAsset getCodepointAsset(int codepoint);
+	public ICodepoint getCodepoint(int codepoint);
 	
 	
 	public ITexture getCodepointTexture(int codepoint);

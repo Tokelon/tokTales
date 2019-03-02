@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content;
 
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.render.ITextureManager;
 
 public interface IContentManager {

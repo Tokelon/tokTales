@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.states.integration;
 
-import com.tokelon.toktales.core.content.text.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;

@@ -5,9 +5,9 @@ import javax.inject.Inject;
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.content.text.ICodepointAsset;
-import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
