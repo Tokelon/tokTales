@@ -15,7 +15,10 @@ public abstract class AbstractCache {
 		@Override
 		public IAssetContainer<?> getContent() {
 			return null;
-		}	
+		}
+
+		@Override
+		public void dispose() {	}	
 	}
 	
 }

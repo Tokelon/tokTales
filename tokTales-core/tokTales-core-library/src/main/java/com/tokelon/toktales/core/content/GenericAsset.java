@@ -15,4 +15,9 @@ public class GenericAsset implements ISpriteAsset {
 		return content;
 	}
 
+	@Override
+	public void dispose() {
+		content.freeAsset();
+	}
+
 }

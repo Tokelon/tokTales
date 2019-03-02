@@ -17,4 +17,9 @@ public class SoundAsset implements ISoundAsset {
 		return sound;
 	}
 
+	@Override
+	public void dispose() {
+		sound.dispose();
+	}
+
 }
