@@ -3,6 +3,10 @@ package com.tokelon.toktales.core.test.engine.inject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.inject.TypeLiteral;
+import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -22,6 +26,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
+import com.tokelon.toktales.core.util.INamedOptions;
 
 /** Core inject module used for testing.
  * <p>
@@ -47,6 +52,9 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 	
 	private static final IGameStateInputHandler gamestateInputHandlerMock = mock(IGameStateInputHandler.class);
 
+	@SuppressWarnings("unchecked")
+	private static final IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> soundAssetDecoder = mock(IAssetDecoder.class);
+	
 	
 	private static final ISurfaceHandler surfaceHandlerMock = mock(ISurfaceHandler.class);
 	
@@ -74,6 +82,8 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 		bind(IGL20.class).toInstance(gl20Mock);
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).toInstance(gamestateInputHandlerMock);
+		
+		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).toInstance(soundAssetDecoder);
 	}
 	
 

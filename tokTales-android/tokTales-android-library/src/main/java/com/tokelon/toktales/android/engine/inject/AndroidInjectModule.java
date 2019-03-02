@@ -3,6 +3,7 @@ package com.tokelon.toktales.android.engine.inject;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
@@ -14,6 +15,7 @@ import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegra
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
+import com.tokelon.toktales.android.data.AndroidSoundDecoder;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
 import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
@@ -45,6 +47,9 @@ import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.android.ui.IUserInterface;
 import com.tokelon.toktales.android.ui.UserInterface;
+import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -68,6 +73,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
+import com.tokelon.toktales.core.util.INamedOptions;
 
 import android.os.Environment;
 
@@ -127,6 +133,9 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
+		
+		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(AndroidSoundDecoder.class);
+
 		
 		
 		/* Unused so far - everything under here */

@@ -18,6 +18,11 @@ import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
+import com.tokelon.toktales.core.content.manage.sound.SoundAssetManager;
+import com.tokelon.toktales.core.content.manage.sound.SoundFileLoader;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
 import com.tokelon.toktales.core.content.sprite.SpriteManager;
@@ -61,11 +66,6 @@ import com.tokelon.toktales.core.game.controller.PlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.controller.map.IMapController.IMapControllerFactory;
 import com.tokelon.toktales.core.game.controller.map.MapController;
-import com.tokelon.toktales.core.game.model.Player;
-import com.tokelon.toktales.core.game.model.entity.GameEntity;
-import com.tokelon.toktales.core.game.model.entity.GameEntityModel;
-import com.tokelon.toktales.core.game.model.entity.IGameEntity;
-import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
 import com.tokelon.toktales.core.game.model.Actor;
 import com.tokelon.toktales.core.game.model.Camera;
 import com.tokelon.toktales.core.game.model.CameraModel;
@@ -73,6 +73,11 @@ import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.ICameraModel;
 import com.tokelon.toktales.core.game.model.IPlayer;
+import com.tokelon.toktales.core.game.model.Player;
+import com.tokelon.toktales.core.game.model.entity.GameEntity;
+import com.tokelon.toktales.core.game.model.entity.GameEntityModel;
+import com.tokelon.toktales.core.game.model.entity.IGameEntity;
+import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
 import com.tokelon.toktales.core.game.model.map.EmptyBlockMap;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.screen.EmptyStateRender;
@@ -322,6 +327,14 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(CodepointLoader.class);
 		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(CodepointDecoder.class);
+		
+		
+		bindInGameScopeAndForNotScoped(ISoundAssetManager.class, SoundAssetManager.class);
+		
+		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
+		bind(new TypeLiteral<IAssetStore<ISoundAsset, ISoundAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISoundAsset, ISoundAssetKey>>() {});
+		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(SoundFileLoader.class);
+		
 	}
 
 }

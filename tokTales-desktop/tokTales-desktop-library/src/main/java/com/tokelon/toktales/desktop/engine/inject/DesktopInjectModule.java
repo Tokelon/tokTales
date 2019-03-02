@@ -5,7 +5,11 @@ import java.io.File;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
+import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -29,6 +33,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
+import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
@@ -40,6 +45,7 @@ import com.tokelon.toktales.desktop.input.dispatch.DesktopInputProducer;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputConsumer.IDesktopInputConsumerFactory;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputDispatch;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer.IDesktopInputProducerFactory;
+import com.tokelon.toktales.desktop.lwjgl.data.STBVorbisSoundDecoder;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
 import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapDriver;
@@ -112,6 +118,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		
 		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
+		
+		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(STBVorbisSoundDecoder.class);
 		
 		
 		/* Unused so far - everything under here */

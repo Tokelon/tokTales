@@ -9,7 +9,10 @@ import java.util.List;
 import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.google.inject.spi.Message;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
+import com.tokelon.toktales.core.util.INamedOptions;
 
 public final class InjectionTestHelper {
 
@@ -22,7 +25,8 @@ public final class InjectionTestHelper {
 				"ILogService", "IRenderService", "IStorageService",	"IUIService",
 				"IGameAdapter",
 				"IGameStateInput",
-				"IGL11", "IGL13", "IGL14", "IGL15", "IGL20"
+				"IGL11", "IGL13", "IGL14", "IGL15", "IGL20",
+				"IAssetDecoder<" + ISoundAsset.class.getName() + ", " + ISoundAssetKey.class.getName() + ", " + INamedOptions.class.getName() + ">"
 		};
 	
 	public static final String[][] CORE_EXPECTED_BINDING_ANNOTATIONS =
