@@ -9,7 +9,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
-import com.tokelon.toktales.core.content.IDisposable;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ICodepointAsset;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
@@ -292,8 +291,10 @@ public class STBTextureFont implements ITextureFont {
 	 */
 	
 	
-	public class STBCodepointAsset implements ICodepointAsset, IDisposable {
+	public class STBCodepointAsset implements ICodepointAsset {
 
+		private boolean disposed = false;
+		
 		private final ICodepointTexture texture;
 		private final IRectangle2i bitmapBox;
 		private final int advanceWidth;
@@ -349,7 +350,10 @@ public class STBTextureFont implements ITextureFont {
 		
 		@Override
 		public void dispose() {
-			STBTruetype.stbtt_FreeBitmap(texture.getBitmap().getData()); // Needs user data?
+			if(!disposed) {
+				disposed = true;
+				STBTruetype.stbtt_FreeBitmap(texture.getBitmap().getData()); // Needs user data?	
+			}
 		}
 	}
 

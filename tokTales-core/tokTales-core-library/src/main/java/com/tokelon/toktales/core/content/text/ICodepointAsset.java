@@ -1,9 +1,10 @@
 package com.tokelon.toktales.core.content.text;
 
+import com.tokelon.toktales.core.content.manage.assets.IAsset;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.ITexture;
 
-public interface ICodepointAsset {
+public interface ICodepointAsset extends IAsset {
 
 	
 	//public int getCodepoint();
