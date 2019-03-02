@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.IRGBAColor;
+import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ICodepointAsset;
 import com.tokelon.toktales.core.content.text.ICodepointManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
@@ -111,16 +112,16 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		if(asset == null) {
 			return;
 		}
-
+		ICodepoint assetCodepoint = asset.getCodepoint();
 		
 		float textSize = height > width ? height : width;
 		
 		
-		ITexture texture = asset.getTexture();
+		ITexture texture = assetCodepoint.getTexture();
 		// Has texture for codepoint?
 		
-		int textureOffsetX = asset.getBitmapOffsetX();
-		int textureOffsetY = asset.getBitmapOffsetY();
+		int textureOffsetX = assetCodepoint.getBitmapOffsetX();
+		int textureOffsetY = assetCodepoint.getBitmapOffsetY();
 		
 		
 		float texScale = textSize / font.getFontPixelHeight();
@@ -137,8 +138,8 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		float scale = textSize / (float) font.getFontPixelHeight();
 		
 		
-		float worldCharWidth = asset.getPixelWidth() * scale;
-		float worldCharHeight = asset.getPixelHeight() * scale;
+		float worldCharWidth = assetCodepoint.getPixelWidth() * scale;
+		float worldCharHeight = assetCodepoint.getPixelHeight() * scale;
 		
 		float pixelCharWidth = getViewTransformer().cameraToScreenX(worldCharWidth);
 		float pixelCharHeight = getViewTransformer().cameraToScreenY(worldCharHeight);

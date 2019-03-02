@@ -9,7 +9,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
+import com.tokelon.toktales.core.content.text.CodepointAsset;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
+import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ICodepointAsset;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
@@ -144,7 +146,7 @@ public class STBTextureFont implements ITextureFont {
 		int advanceWidth = getCodepointAdvanceWidth(codepoint);
 		int leftSideBearing = getCodepointLeftSideBearing(codepoint);
 		
-		return new STBCodepointAsset(texture, bitmapBox, advanceWidth, leftSideBearing);
+		return new CodepointAsset(new STBCodepoint(texture, bitmapBox, advanceWidth, leftSideBearing));
 	}
 	
 	@Override
@@ -291,7 +293,7 @@ public class STBTextureFont implements ITextureFont {
 	 */
 	
 	
-	public class STBCodepointAsset implements ICodepointAsset {
+	public class STBCodepoint implements ICodepoint {
 
 		private boolean disposed = false;
 		
@@ -300,7 +302,7 @@ public class STBTextureFont implements ITextureFont {
 		private final int advanceWidth;
 		private final int leftSideBearing;
 
-		public STBCodepointAsset(ICodepointTexture texture, IRectangle2i bitmapBox, int advanceWidth, int leftSideBearing) {
+		public STBCodepoint(ICodepointTexture texture, IRectangle2i bitmapBox, int advanceWidth, int leftSideBearing) {
 			this.texture = texture;
 			this.bitmapBox = bitmapBox;
 			this.advanceWidth = advanceWidth;

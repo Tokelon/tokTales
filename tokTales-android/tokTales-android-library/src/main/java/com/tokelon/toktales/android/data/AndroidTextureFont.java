@@ -3,7 +3,9 @@ package com.tokelon.toktales.android.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tokelon.toktales.core.content.text.CodepointAsset;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
+import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ICodepointAsset;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.content.text.ITextureFont;
@@ -121,7 +123,7 @@ public class AndroidTextureFont implements ITextureFont {
 		ICodepointTexture texture = getOrCreateCodepointTexture(codepoint);
 		IRectangle2i bitmapBox = getCodepointBitmapBox(codepoint);
 		
-		return new AndroidCodepointAsset(texture, bitmapBox);
+		return new CodepointAsset(new AndroidCodepoint(texture, bitmapBox));
 	}
 
 	
@@ -242,12 +244,12 @@ public class AndroidTextureFont implements ITextureFont {
 
 	
 	
-	public class AndroidCodepointAsset implements ICodepointAsset {
+	public class AndroidCodepoint implements ICodepoint {
 
 		private final ICodepointTexture texture;
 		private final IRectangle2i bitmapBox;
 
-		public AndroidCodepointAsset(ICodepointTexture texture, IRectangle2i bitmapBox) {
+		public AndroidCodepoint(ICodepointTexture texture, IRectangle2i bitmapBox) {
 			this.texture = texture;
 			this.bitmapBox = bitmapBox;
 		}
