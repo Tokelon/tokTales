@@ -19,11 +19,11 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 	public static final INamedOptions EMPTY_OPTIONS = new NamedOptionsImpl();
 	
 	
-	@Inject
 	public CodepointAssetLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
 		super(logger, decoder);
 	}
 	
+	@Inject
 	public CodepointAssetLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
 		super(logger, decoder, executorServiceProvider);
 	}

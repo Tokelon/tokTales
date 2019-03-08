@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.engine.inject;
 
 import java.lang.reflect.Type;
+import java.util.concurrent.ExecutorService;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Scopes;
@@ -14,6 +15,7 @@ import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
 import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
 import com.tokelon.toktales.core.content.manage.DefaultAssetStore;
+import com.tokelon.toktales.core.content.manage.DefaultExecutorServiceProvider;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
@@ -321,6 +323,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 				.build(IAssetManagerFactory.class));
 		*/
 		
+		// TODO: Maybe bind this with a custom annotation like @AssetLoaderExecutorService for finer control
+		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
+		
+		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
 		
 		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {});
@@ -334,7 +340,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
 		bind(new TypeLiteral<IAssetStore<ISoundAsset, ISoundAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISoundAsset, ISoundAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(SoundFileLoader.class);
-		
 	}
 
 }

@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.content.manage;
 
 import java.util.concurrent.ExecutorService;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.manage.ILoaderTask.ILoaderTaskFactory;
@@ -21,6 +22,7 @@ public class LoaderTaskExecutorServiceAssetLoader<T, K, O> extends AbstractExecu
 		this.loaderTaskFactory = loaderTaskFactory;
 	}
 
+	@Inject
 	public LoaderTaskExecutorServiceAssetLoader(ILogger logger, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory, Provider<ExecutorService> executorServiceProvider) {
 		super(logger,decoder, executorServiceProvider);
 		

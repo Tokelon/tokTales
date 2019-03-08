@@ -20,11 +20,11 @@ public class DefaultFileAssetLoader<T, K extends IFileKey, O> extends AbstractEx
 	public static final String TAG = "DefaultFileAssetLoader";
 	
 	
-	@Inject
 	public DefaultFileAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder) {
 		super(logger, decoder);
 	}
 	
+	@Inject
 	public DefaultFileAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
 		super(logger, decoder, executorServiceProvider);
 	}

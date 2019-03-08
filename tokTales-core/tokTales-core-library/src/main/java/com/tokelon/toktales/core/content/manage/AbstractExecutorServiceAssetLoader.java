@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -38,7 +36,7 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	private final Provider<ExecutorService> executorServiceProvider;
 
 	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder) {
-		this(logger, decoder, defaultExecutorServiceProvider());
+		this(logger, decoder, new DefaultExecutorServiceProvider());
 	}
 
 	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
@@ -239,24 +237,6 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	@Override
 	public T load(K key, O options) throws ContentException {
 		return load(key, options, this.decoder);
-	}
-
-
-	protected static Provider<ExecutorService> defaultExecutorServiceProvider() {
-		// TODO: Use Guava executor ?
-		//MoreExecutors.getExitingExecutorService(new ThreadPoolExecutor(1, 1, keepAliveTime, unit, workQueue), 0, TimeUnit.MILLISECONDS);
-		return () -> Executors.newSingleThreadExecutor(new ExecutorServiceDaemonThreadFactory());
-	}
-	
-	protected static class ExecutorServiceDaemonThreadFactory implements ThreadFactory {
-		private final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
-		
-		public Thread newThread(Runnable runnable) {
-			Thread newThread = defaultThreadFactory.newThread(runnable);
-			newThread.setDaemon(true);
-			
-			return newThread;
-		};
 	}
 
 }
