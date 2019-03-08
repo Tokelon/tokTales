@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.states.integration;
 
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
@@ -25,7 +25,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 	private final IConsoleController consoleController;
 	private final IConsoleIntegrationControlHandler controlHandler;
 	
-	public ConsoleIntegration(ICodepointManager codepointManager, IGameState gamestate, IConsoleController consoleController, IConsoleIntegrationControlHandlerFactory controlHandlerFactory) {
+	public ConsoleIntegration(ICodepointAssetManager codepointManager, IGameState gamestate, IConsoleController consoleController, IConsoleIntegrationControlHandlerFactory controlHandlerFactory) {
 		this.gamestate = gamestate;
 		this.consoleController = consoleController;
 		this.controlHandler = controlHandlerFactory.create(this);
@@ -79,7 +79,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		private final IGameState gamestate;
 		private final IConsoleController controller;
 		
-		public ConsoleRenderCallback(ICodepointManager codepointManager, IGameState gamestate, IConsoleController consoleController) {
+		public ConsoleRenderCallback(ICodepointAssetManager codepointManager, IGameState gamestate, IConsoleController consoleController) {
 			this.gamestate = gamestate;
 			this.controller = consoleController;
 			

@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.ITextureManager;
@@ -16,7 +16,7 @@ public class ContentManager implements IContentManager {
 	private final IResourceManager managerResource;
 	private final ISpriteManager managerSprite;
 	private final ITextureManager textureManager;
-	private final ICodepointManager codepointManager;
+	private final ICodepointAssetManager codepointManager;
 	
 	@Inject
 	public ContentManager(
@@ -24,7 +24,7 @@ public class ContentManager implements IContentManager {
 			IResourceManager resourceManager,
 			ISpriteManager spriteManager,
 			ITextureManager textureManager,
-			ICodepointManager codepointManager
+			ICodepointAssetManager codepointManager
 	) {
 		this.logger = logger;
 		this.managerResource = resourceManager;
@@ -65,7 +65,7 @@ public class ContentManager implements IContentManager {
 	}
 	
 	@Override
-	public ICodepointManager getCodepointManager() {
+	public ICodepointAssetManager getCodepointAssetManager() {
 		return codepointManager;
 	}
 

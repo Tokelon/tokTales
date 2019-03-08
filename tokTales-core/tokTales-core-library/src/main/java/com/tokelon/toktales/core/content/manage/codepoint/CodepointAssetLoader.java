@@ -12,7 +12,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.NamedOptionsImpl;
 
-public class CodepointLoader extends AbstractExecutorServiceAssetLoader<ICodepointAsset, ICodepointKey, INamedOptions> {
+public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> {
 	
 	public static final String TAG = "CodepointLoader";
 	
@@ -20,11 +20,11 @@ public class CodepointLoader extends AbstractExecutorServiceAssetLoader<ICodepoi
 	
 	
 	@Inject
-	public CodepointLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointKey, INamedOptions> decoder) {
+	public CodepointAssetLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
 		super(logger, decoder);
 	}
 	
-	public CodepointLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+	public CodepointAssetLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
 		super(logger, decoder, executorServiceProvider);
 	}
 
@@ -41,7 +41,7 @@ public class CodepointLoader extends AbstractExecutorServiceAssetLoader<ICodepoi
 
 	
 	@Override
-	public ICodepointAsset load(ICodepointKey key, INamedOptions options, IAssetDecoder<? extends ICodepointAsset, ICodepointKey, INamedOptions> decoder) throws ContentException {
+	public ICodepointAsset load(ICodepointAssetKey key, INamedOptions options, IAssetDecoder<? extends ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) throws ContentException {
 		return decoder.decode(null, key, options);
 	}
 	

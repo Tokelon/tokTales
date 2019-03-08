@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -91,14 +91,14 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private final ILogger logger;
 	private final IEngine engine;
 	private final IGame game;
-	private final ICodepointManager codepointManager;
+	private final ICodepointAssetManager codepointManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IPlayerController> playerControllerSupplier;
 	private final Supplier<IWorldspace> worlspaceSupplier;
 	
 	public DebugRenderer(
 			IEngineContext engineContext,
-			ICodepointManager codepointManager,
+			ICodepointAssetManager codepointManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IPlayerController> playerControllerSupplier,
 			Supplier<IWorldspace> worlspaceSupplier
@@ -429,7 +429,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		@Override
 		public DebugRenderer create(
 				IEngineContext engineContext,
-				ICodepointManager codepointManager,
+				ICodepointAssetManager codepointManager,
 				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 				Supplier<IPlayerController> playerControllerSupplier,
 				Supplier<IWorldspace> worlspaceSupplier
@@ -439,7 +439,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 
 
 		@Override
-		public DebugRenderer createForGamestate(IGameState gamestate, ICodepointManager codepointManager, Supplier<IWorldspace> worlspaceSupplier) {
+		public DebugRenderer createForGamestate(IGameState gamestate, ICodepointAssetManager codepointManager, Supplier<IWorldspace> worlspaceSupplier) {
 			return new DebugRenderer(
 					gamestate.getEngineContext(),
 					codepointManager,
@@ -450,7 +450,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		}
 
 		@Override
-		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate, ICodepointManager codepointManager) {
+		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate, ICodepointAssetManager codepointManager) {
 			return new DebugRenderer(
 					typedGamestate.getEngineContext(),
 					codepointManager,

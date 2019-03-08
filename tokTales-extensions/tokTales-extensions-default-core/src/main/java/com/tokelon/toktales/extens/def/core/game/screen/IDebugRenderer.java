@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
@@ -35,7 +35,7 @@ public interface IDebugRenderer extends ISegmentRenderer {
 
 		public IDebugRenderer create(
 				IEngineContext engineContext,
-				ICodepointManager codepointManager,
+				ICodepointAssetManager codepointManager,
 				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 				Supplier<IPlayerController> playerControllerSupplier,
 				Supplier<IWorldspace> worlspaceSupplier
@@ -43,13 +43,13 @@ public interface IDebugRenderer extends ISegmentRenderer {
 
 		public IDebugRenderer createForGamestate(
 				IGameState gamestate,
-				ICodepointManager codepointManager,
+				ICodepointAssetManager codepointManager,
 				Supplier<IWorldspace> worlspaceSupplier
 		);
 
 		public IDebugRenderer createForTypedGamestate(
 				ITypedGameState<? extends IExtendedGameScene> typedGamestate,
-				ICodepointManager codepointManager
+				ICodepointAssetManager codepointManager
 		);
 	}
 	

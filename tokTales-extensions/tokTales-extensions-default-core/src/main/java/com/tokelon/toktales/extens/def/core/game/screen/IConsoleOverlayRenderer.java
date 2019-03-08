@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
@@ -20,19 +20,19 @@ public interface IConsoleOverlayRenderer extends ISegmentRenderer {
 
 		public IConsoleOverlayRenderer create(
 				IEngineContext engineContext,
-				ICodepointManager codepointManager,
+				ICodepointAssetManager codepointManager,
 				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 				Supplier<IConsoleController> consoleControllerSupplier
 		);
 
 		public IConsoleOverlayRenderer createForGamestate(
 				IGameState gamestate,
-				ICodepointManager codepointManager
+				ICodepointAssetManager codepointManager
 		);
 
 		public IConsoleOverlayRenderer createForGamestate(
 				IGameState gamestate,
-				ICodepointManager codepointManager,
+				ICodepointAssetManager codepointManager,
 				Supplier<IConsoleController> consoleControllerSupplier
 		);
 	}

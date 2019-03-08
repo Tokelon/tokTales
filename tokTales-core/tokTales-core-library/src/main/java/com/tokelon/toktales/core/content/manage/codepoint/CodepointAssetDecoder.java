@@ -8,11 +8,11 @@ import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.INamedOptions;
 
-public class CodepointDecoder implements IAssetDecoder<ICodepointAsset, ICodepointKey, INamedOptions> {
+public class CodepointAssetDecoder implements IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> {
 
 	
 	@Override
-	public ICodepointAsset decode(InputStream inputstream, ICodepointKey key) throws ContentException {
+	public ICodepointAsset decode(InputStream inputstream, ICodepointAssetKey key) throws ContentException {
 		int codepoint = key.getCodepoint();
 		
 		ITextureFont font = key.getFont();
@@ -21,7 +21,7 @@ public class CodepointDecoder implements IAssetDecoder<ICodepointAsset, ICodepoi
 	}
 
 	@Override
-	public ICodepointAsset decode(InputStream inputstream, ICodepointKey key, INamedOptions options) throws ContentException {
+	public ICodepointAsset decode(InputStream inputstream, ICodepointAssetKey key, INamedOptions options) throws ContentException {
 		return decode(inputstream, key);
 	}
 

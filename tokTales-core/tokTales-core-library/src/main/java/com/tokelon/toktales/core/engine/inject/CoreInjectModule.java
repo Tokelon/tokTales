@@ -18,12 +18,12 @@ import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointDecoder;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointLoader;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetDecoder;
+import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetLoader;
+import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointKey;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
@@ -321,12 +321,12 @@ public class CoreInjectModule extends AbstractInjectModule {
 				.build(IAssetManagerFactory.class));
 		*/
 		
-		bindInGameScopeAndForNotScoped(ICodepointManager.class, CodepointManager.class);
+		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
 		
-		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ICodepointAsset, ICodepointKey, INamedOptions>>() {});
-		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointKey>>() {});
-		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(CodepointLoader.class);
-		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointKey, INamedOptions>>() {}).to(CodepointDecoder.class);
+		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {});
+		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointAssetKey>>() {});
+		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetLoader.class);
+		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetDecoder.class);
 		
 		
 		bindInGameScopeAndForNotScoped(ISoundAssetManager.class, SoundAssetManager.class);

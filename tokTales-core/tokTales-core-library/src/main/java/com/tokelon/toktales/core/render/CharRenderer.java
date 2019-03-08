@@ -6,7 +6,7 @@ import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointManager;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
@@ -40,10 +40,10 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	private IRenderDriver fontDriver;
 	
 	private final IRenderAccess renderAccess;
-	private final ICodepointManager codepointManager;
+	private final ICodepointAssetManager codepointManager;
 	
 	@Inject
-	public CharRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator, ICodepointManager codepointManager) {
+	public CharRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator, ICodepointAssetManager codepointManager) {
 		this.renderAccess = renderAccess;
 		this.codepointManager = codepointManager;
 		

@@ -10,7 +10,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.SynchronizedPool;
 
-public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICodepointKey, INamedOptions> implements ICodepointManager {
+public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions> implements ICodepointAssetManager {
 
 	
 	// TODO: Use a pool? Overhead for synchronization?
@@ -20,7 +20,7 @@ public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICode
 
 	
 	@Inject
-	public CodepointManager(ILogger logger, IAssetStore<ICodepointAsset, ICodepointKey> assetStore, IAssetLoader<ICodepointAsset, ICodepointKey, INamedOptions> assetLoader) {
+	public CodepointAssetManager(ILogger logger, IAssetStore<ICodepointAsset, ICodepointAssetKey> assetStore, IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> assetLoader) {
 		super(logger, assetStore, assetLoader);
 	}
 
@@ -31,7 +31,7 @@ public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICode
 			return getCodepointAssetInternal(font, codepoint, null);
 		}
 		else {
-			return getAsset(new CodepointKeyImpl(font, codepoint));
+			return getAsset(new CodepointAssetKeyImpl(font, codepoint));
 		}
 	}
 
@@ -41,7 +41,7 @@ public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICode
 			return getCodepointAssetInternal(font, codepoint, options);
 		}
 		else {
-			return getAsset(new CodepointKeyImpl(font, codepoint), options);
+			return getAsset(new CodepointAssetKeyImpl(font, codepoint), options);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICode
 		}
 		
 		if(asset == null) {
-			CodepointKeyImpl newKey = new CodepointKeyImpl(font, codepoint); // Pass new key instance
+			CodepointAssetKeyImpl newKey = new CodepointAssetKeyImpl(font, codepoint); // Pass new key instance
 			return options == null ? getAsset(newKey) : getAsset(newKey, options);
 		}
 		else {
@@ -68,7 +68,7 @@ public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICode
 	}
 
 
-	protected class MutableCodepointKey implements ICodepointKey { 
+	protected class MutableCodepointKey implements ICodepointAssetKey { 
 		private ITextureFont font;
 		private int codepoint;
 
@@ -103,10 +103,10 @@ public class CodepointManager extends DefaultAssetManager<ICodepointAsset, ICode
 			if(obj == this) {
 				return true;
 			}
-			if(!(obj instanceof ICodepointKey)) {
+			if(!(obj instanceof ICodepointAssetKey)) {
 				return false;
 			}
-			ICodepointKey that = (ICodepointKey) obj;
+			ICodepointAssetKey that = (ICodepointAssetKey) obj;
 
 			return this.font.equals(that.getFont()) && this.codepoint == that.getCodepoint();
 		}

@@ -191,7 +191,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		}
 		
 
-		consoleIntegration = new ConsoleIntegration(getGame().getContentManager().getCodepointManager(), this, consoleController, consoleOverlayControlHandlerFactory);
+		consoleIntegration = new ConsoleIntegration(getGame().getContentManager().getCodepointAssetManager(), this, consoleController, consoleOverlayControlHandlerFactory);
 		getIntegrator().addIntegration(GAMESTATE_INTEGRATION_CONSOLE, consoleIntegration);
 		consoleIntegration.onStateEngage(this); // Any way to create it earlier and avoid this?
 	}

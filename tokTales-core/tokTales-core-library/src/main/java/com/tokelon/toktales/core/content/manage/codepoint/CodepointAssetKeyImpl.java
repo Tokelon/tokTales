@@ -2,13 +2,13 @@ package com.tokelon.toktales.core.content.manage.codepoint;
 
 import com.tokelon.toktales.core.content.text.ITextureFont;
 
-public class CodepointKeyImpl implements ICodepointKey {
+public class CodepointAssetKeyImpl implements ICodepointAssetKey {
 
 	
 	private final ITextureFont font;
 	private final int codepoint;
 
-	public CodepointKeyImpl(ITextureFont font, int codepoint) {
+	public CodepointAssetKeyImpl(ITextureFont font, int codepoint) {
 		if(font == null) {
 			throw new NullPointerException();
 		}
@@ -39,10 +39,10 @@ public class CodepointKeyImpl implements ICodepointKey {
 		if(obj == this) {
 			return true;
 		}
-		if(!(obj instanceof ICodepointKey)) {
+		if(!(obj instanceof ICodepointAssetKey)) {
 			return false;
 		}
-		ICodepointKey that = (ICodepointKey) obj;
+		ICodepointAssetKey that = (ICodepointAssetKey) obj;
 		
 		return this.font.equals(that.getFont()) && this.codepoint == that.getCodepoint();
 	}
