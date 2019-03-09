@@ -20,8 +20,16 @@ public class DefaultFileAssetLoader<T, K extends IFileKey, O> extends AbstractEx
 	public static final String TAG = "DefaultFileAssetLoader";
 	
 	
+	public DefaultFileAssetLoader(ILogger logger) {
+		super(logger, (k, o, d) -> null);
+	}
+	
 	public DefaultFileAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder) {
 		super(logger, decoder);
+	}
+	
+	public DefaultFileAssetLoader(ILogger logger, Provider<ExecutorService> executorServiceProvider) {
+		super(logger, (k, o, d) -> null, executorServiceProvider);
 	}
 	
 	@Inject
@@ -41,6 +49,7 @@ public class DefaultFileAssetLoader<T, K extends IFileKey, O> extends AbstractEx
 	}
 	
 
+	@Override
 	public <U, V, W> U loadWithCustomDecoder(V key, W options, IAssetDecoder<U, V, W> decoder, IFileKey fileKey) throws ContentException {
 		try(InputStream inputStream = openStream(fileKey)) {
 			return decoder.decode(inputStream, key, options);
@@ -70,6 +79,38 @@ public class DefaultFileAssetLoader<T, K extends IFileKey, O> extends AbstractEx
 	@Override
 	public String getTag() {
 		return TAG;
+	}
+	
+	
+	
+	public static class DefaultFileAssetLoaderFactory implements IFileAssetLoaderFactory {
+		private final Provider<ILogger> loggerProvider;
+
+		@Inject
+		public DefaultFileAssetLoaderFactory(Provider<ILogger> loggerProvider) {
+			this.loggerProvider = loggerProvider;
+		}
+
+		
+		@Override
+		public <T, K extends IFileKey, O> IFileAssetLoader<T, K, O> create() {
+			return new DefaultFileAssetLoader<>(loggerProvider.get());
+		}
+
+		@Override
+		public <T, K extends IFileKey, O> IFileAssetLoader<T, K, O> create(IAssetDecoder<T, K, O> decoder) {
+			return new DefaultFileAssetLoader<>(loggerProvider.get(), decoder);
+		}
+		
+		@Override
+		public <T, K extends IFileKey, O> IFileAssetLoader<T, K, O> create(Provider<ExecutorService> executorServiceProvider) {
+			return new DefaultFileAssetLoader<>(loggerProvider.get(), executorServiceProvider);
+		}
+
+		@Override
+		public <T, K extends IFileKey, O> IFileAssetLoader<T, K, O> create(IAssetDecoder<T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
+			return new DefaultFileAssetLoader<>(loggerProvider.get(), decoder, executorServiceProvider);
+		}
 	}
 
 }

@@ -26,6 +26,8 @@ import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
+import com.tokelon.toktales.core.content.manage.files.DefaultFileAssetLoader;
+import com.tokelon.toktales.core.content.manage.files.IFileAssetLoader;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
@@ -325,6 +327,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		// TODO: Maybe bind this with a custom annotation like @AssetLoaderExecutorService for finer control
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
+		
+		bind(IFileAssetLoader.IFileAssetLoaderFactory.class).to(DefaultFileAssetLoader.DefaultFileAssetLoaderFactory.class);
 		
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);

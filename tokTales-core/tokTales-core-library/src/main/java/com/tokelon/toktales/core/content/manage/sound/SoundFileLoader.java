@@ -7,7 +7,8 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.manage.AbstractExecutorServiceAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
-import com.tokelon.toktales.core.content.manage.files.DefaultFileAssetLoader;
+import com.tokelon.toktales.core.content.manage.files.IFileAssetLoader;
+import com.tokelon.toktales.core.content.manage.files.IFileAssetLoader.IFileAssetLoaderFactory;
 import com.tokelon.toktales.core.content.manage.files.IFileKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -16,17 +17,17 @@ import com.tokelon.toktales.core.util.INamedOptions;
 public class SoundFileLoader extends AbstractExecutorServiceAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions> {
 
 	
-	private final DefaultFileAssetLoader<ISoundAsset, IFileKey, INamedOptions> fileAssetLoader;
+	private final IFileAssetLoader<ISoundAsset, IFileKey, INamedOptions> fileAssetLoader;
 
-	public SoundFileLoader(ILogger logger, IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> decoder) {
+	public SoundFileLoader(ILogger logger, IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> decoder, IFileAssetLoaderFactory fileLoaderFactory) {
 		super(logger, decoder);
-		this.fileAssetLoader = new DefaultFileAssetLoader<ISoundAsset, IFileKey, INamedOptions>(logger, null);
+		this.fileAssetLoader = fileLoaderFactory.create();
 	}
 	
 	@Inject
-	public SoundFileLoader(ILogger logger, IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+	public SoundFileLoader(ILogger logger, IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider, IFileAssetLoaderFactory fileLoaderFactory) {
 		super(logger, decoder, executorServiceProvider);
-		this.fileAssetLoader = new DefaultFileAssetLoader<ISoundAsset, IFileKey, INamedOptions>(logger, null);;
+		this.fileAssetLoader = fileLoaderFactory.create(executorServiceProvider);
 	}
 	
 	
