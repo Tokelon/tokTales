@@ -7,6 +7,8 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.manage.AbstractExecutorServiceAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.IAssetReader;
+import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.INamedOptions;
@@ -19,13 +21,13 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 	public static final INamedOptions EMPTY_OPTIONS = new NamedOptionsImpl();
 	
 	
-	public CodepointAssetLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
-		super(logger, decoder);
+	public CodepointAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
+		super(logger, readerManager, decoder);
 	}
 	
 	@Inject
-	public CodepointAssetLoader(ILogger logger, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
-		super(logger, decoder, executorServiceProvider);
+	public CodepointAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+		super(logger, readerManager, decoder, executorServiceProvider);
 	}
 
 	
@@ -41,7 +43,7 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 
 	
 	@Override
-	public ICodepointAsset load(ICodepointAssetKey key, INamedOptions options, IAssetDecoder<? extends ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) throws ContentException {
+	public ICodepointAsset load(ICodepointAssetKey key, INamedOptions options, IAssetReader reader, IAssetDecoder<? extends ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) throws ContentException {
 		return decoder.decode(null, key, options);
 	}
 	

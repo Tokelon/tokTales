@@ -14,7 +14,7 @@ public interface ILoaderTask<T> {
 		
 		public O getDefaultOptions();
 		
-		public ILoaderTask<T> create(K key, O options, IAssetDecoder<? extends T, K, O> decoder);
+		public ILoaderTask<T> create(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder);
 	}
 	
 }

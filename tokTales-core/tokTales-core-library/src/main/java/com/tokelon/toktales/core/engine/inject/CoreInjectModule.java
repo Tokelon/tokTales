@@ -4,6 +4,8 @@ import java.lang.reflect.Type;
 import java.util.concurrent.ExecutorService;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.util.Types;
@@ -14,11 +16,13 @@ import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
 import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
+import com.tokelon.toktales.core.content.manage.DefaultAssetReaderManager;
 import com.tokelon.toktales.core.content.manage.DefaultAssetStore;
 import com.tokelon.toktales.core.content.manage.DefaultExecutorServiceProvider;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
+import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetLoader;
@@ -27,7 +31,9 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.files.DefaultFileAssetLoader;
+import com.tokelon.toktales.core.content.manage.files.FileAssetReader;
 import com.tokelon.toktales.core.content.manage.files.IFileAssetLoader;
+import com.tokelon.toktales.core.content.manage.files.IFileKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
@@ -329,7 +335,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
 		
 		bind(IFileAssetLoader.IFileAssetLoaderFactory.class).to(DefaultFileAssetLoader.DefaultFileAssetLoaderFactory.class);
-		
+		//bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
+		bind(IAssetReaderManager.class).toProvider(DefaultAssetReaderManagerProvider.class);
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
 		
@@ -343,7 +350,28 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
 		bind(new TypeLiteral<IAssetStore<ISoundAsset, ISoundAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISoundAsset, ISoundAssetKey>>() {});
+		//bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
 		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(SoundFileLoader.class);
+	}
+	
+	
+	private static class DefaultAssetReaderManagerProvider implements Provider<DefaultAssetReaderManager> {
+		private final Provider<DefaultAssetReaderManager> implementationProvider;
+		private final Provider<FileAssetReader> fileAssetReaderProvider;
+		
+		@Inject
+		public DefaultAssetReaderManagerProvider(Provider<DefaultAssetReaderManager> implementationProvider, Provider<FileAssetReader> fileAssetReaderProvider) {
+			this.implementationProvider = implementationProvider;
+			this.fileAssetReaderProvider = fileAssetReaderProvider;
+		}
+		
+		@Override
+		public DefaultAssetReaderManager get() {
+			DefaultAssetReaderManager assetReaderProvider = implementationProvider.get();
+			assetReaderProvider.add(IFileKey.class, fileAssetReaderProvider.get());
+			
+			return assetReaderProvider;
+		}
 	}
 
 }

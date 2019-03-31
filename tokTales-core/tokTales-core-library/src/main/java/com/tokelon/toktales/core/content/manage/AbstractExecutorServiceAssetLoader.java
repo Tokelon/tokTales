@@ -18,6 +18,7 @@ import java9.util.concurrent.CompletableFuture;
 
 public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IExecutorServiceAssetLoader<T, K, O> {
 	// Use guava deamon executor and implement starting and stopping (maybe with guava service?)
+	// TODO: Handle case when findReader returns null?
 	
 	public static final String BASE_TAG = "AbstractExecutorServiceAssetLoader";
 
@@ -28,6 +29,8 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	
 	private final Lock executorLock;
 	
+	private final IAssetReaderManager readerManager;
+	
 	private final Map<K, CompletableFuture<T>> pendingFutures;
 	private final List<Runnable> waitingTasks;
 
@@ -35,16 +38,17 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	private final IAssetDecoder<? extends T, K, O> decoder;
 	private final Provider<ExecutorService> executorServiceProvider;
 
-	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder) {
-		this(logger, decoder, new DefaultExecutorServiceProvider());
+	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
+		this(logger, readerManager, decoder, new DefaultExecutorServiceProvider());
 	}
 
-	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
+	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
 		if(decoder == null || executorServiceProvider == null) {
 			throw new NullPointerException();
 		}
 
 		this.logger = logger;
+		this.readerManager = readerManager;
 		this.decoder = decoder;
 		this.executorServiceProvider = executorServiceProvider;
 
@@ -95,8 +99,13 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	public IAssetDecoder<? extends T, K, O> getDefaultDecoder() {
 		return decoder;
 	}
-
-
+	
+	@Override
+	public IAssetReaderManager getReaderManager() {
+		return readerManager;
+	}
+	
+	
 	@Override
 	public void start() {
 		executorLock.lock();
@@ -112,7 +121,7 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 				}
 				
 				waitingTasks.clear();
-			}	
+			}
 		}
 		finally {
 			executorLock.unlock();
@@ -139,10 +148,10 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	}
 
 	
-	protected ILoaderTask<T> createLoaderTask(K key, O options, IAssetDecoder<? extends T, K, O> decoder) {
+	protected ILoaderTask<T> createLoaderTask(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) {
 		// Really return new object every time? Any way to pass parameters in call?
 		return () -> {
-			return load(key, options, decoder);
+			return load(key, options, reader, decoder);
 		};
 	}
 
@@ -156,24 +165,43 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 			} //catch (InterruptedException ie) // Needed?
 		};
 	}
-
-	@Override
-	public CompletableFuture<T> enqueue(K key) {
-		return enqueue(key, getDefaultOptions(), this.decoder);
+	
+	protected IAssetReader findReader(K key, O options) {
+		return readerManager.findReader(key, options);
 	}
 
 	@Override
-	public CompletableFuture<T> enqueue(K key, IAssetDecoder<? extends T, K, O> decoder) {
-		return enqueue(key, getDefaultOptions(), decoder);
+	public CompletableFuture<T> enqueue(K key) {
+		return enqueue(key, getDefaultOptions(), findReader(key, getDefaultOptions()), getDefaultDecoder());
 	}
 
 	@Override
 	public CompletableFuture<T> enqueue(K key, O options) {
-		return enqueue(key, options, this.decoder);
+		return enqueue(key, options, findReader(key, options), getDefaultDecoder());
+	}
+	
+	@Override
+	public CompletableFuture<T> enqueue(K key, IAssetReader reader) {
+		return enqueue(key, getDefaultOptions(), reader, getDefaultDecoder());
+	}
+	
+	@Override
+	public CompletableFuture<T> enqueue(K key, O options, IAssetReader reader) {
+		return enqueue(key, options, reader, getDefaultDecoder());
+	}
+
+	@Override
+	public CompletableFuture<T> enqueue(K key, IAssetDecoder<? extends T, K, O> decoder) {
+		return enqueue(key, getDefaultOptions(), findReader(key, getDefaultOptions()), decoder);
 	}
 
 	@Override
 	public CompletableFuture<T> enqueue(K key, O options, IAssetDecoder<? extends T, K, O> decoder) {
+		return enqueue(key, options, findReader(key, options), decoder);
+	}
+	
+	@Override
+	public CompletableFuture<T> enqueue(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) {
 		synchronized (pendingFutures) {
 			CompletableFuture<T> cachedFuture = pendingFutures.get(key);
 			if(cachedFuture != null) {
@@ -182,8 +210,8 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 			}
 
 			
-			if(logDebug) logger.d(getTag(), String.format("Creating loader task for [key=%s, options=%s, decoder=%s]", key, options, decoder));
-			ILoaderTask<T> loaderTask = createLoaderTask(key, options, decoder);
+			if(logDebug) logger.d(getTag(), String.format("Creating loader task for [key=%s, options=%s, reader=%s, decoder=%s]", key, options, reader, decoder));
+			ILoaderTask<T> loaderTask = createLoaderTask(key, options, reader, decoder);
 			
 			CompletableFuture<T> wrapperFuture = new CompletableFuture<>();
 			Runnable taskRunner = createTaskRunnable(loaderTask, wrapperFuture);
@@ -197,7 +225,7 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 				else {
 					CompletableFuture.runAsync(taskRunner, currentExecutorService);
 					if(logDebug) logger.d(getTag(), "Loader task was started with executor for key: " + key);
-				}	
+				}
 			}
 			finally {
 				executorLock.unlock();
@@ -226,17 +254,32 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 
 	@Override
 	public T load(K key) throws ContentException {
-		return load(key, this.decoder);
-	}
-
-	@Override
-	public T load(K key, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
-		return load(key, getDefaultOptions(), decoder);
+		return load(key, getDefaultOptions(), findReader(key, getDefaultOptions()), getDefaultDecoder());
 	}
 
 	@Override
 	public T load(K key, O options) throws ContentException {
-		return load(key, options, this.decoder);
+		return load(key, options, findReader(key, options), getDefaultDecoder());
+	}
+	
+	@Override
+	public T load(K key, IAssetReader reader) throws ContentException {
+		return load(key, getDefaultOptions(), reader, getDefaultDecoder());
+	}
+	
+	@Override
+	public T load(K key, O options, IAssetReader reader) throws ContentException {
+		return load(key, options, reader, getDefaultDecoder());
+	}
+	
+	@Override
+	public T load(K key, O options, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+		return load(key, options, findReader(key, options), decoder);
+	}
+	
+	@Override
+	public T load(K key, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+		return load(key, getDefaultOptions(), findReader(key, getDefaultOptions()), decoder);
 	}
 
 }

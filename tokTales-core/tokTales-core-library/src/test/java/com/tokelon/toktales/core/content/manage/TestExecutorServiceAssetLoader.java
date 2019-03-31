@@ -22,7 +22,7 @@ class TestExecutorServiceAssetLoader {
 		System.out.println("TestExecutorServiceAssetLoader started");
 		
 		TestDecoder testDecoder = new TestDecoder();
-		TestLoader testLoader = new TestLoader(new StandardLogger(), testDecoder);
+		TestLoader testLoader = new TestLoader(new StandardLogger(), new DefaultAssetReaderManager(), testDecoder);
 		
 		
 		int tasks = 10;
@@ -111,14 +111,14 @@ class TestExecutorServiceAssetLoader {
 		
 		private int counter = 0;
 		
-		public TestLoader(ILogger logger, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder) {
-			super(logger, decoder);
+		public TestLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder) {
+			super(logger, readerManager, decoder);
 			
 			setLogDebugEnabled(ENABLE_LOG_DEBUG);
 		}
 		
-		public TestLoader(ILogger logger, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
-			super(logger, decoder, executorServiceProvider);
+		public TestLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+			super(logger, readerManager, decoder, executorServiceProvider);
 			
 			setLogDebugEnabled(ENABLE_LOG_DEBUG);
 		}
@@ -135,8 +135,8 @@ class TestExecutorServiceAssetLoader {
 		}
 		
 		@Override
-		public AssetObject load(AssetKey key, AssetOptions options, IAssetDecoder<? extends AssetObject, AssetKey, AssetOptions> decoder) {
-			System.out.println(String.format("Load start asset [%s] with [%s, %s]", key, options, decoder));
+		public AssetObject load(AssetKey key, AssetOptions options, IAssetReader assetReader, IAssetDecoder<? extends AssetObject, AssetKey, AssetOptions> decoder) {
+			System.out.println(String.format("Load start asset [%s] with [%s, %s, %s]", key, options, assetReader, decoder));
 			
 			try {
 				// Emulate loading
@@ -145,7 +145,7 @@ class TestExecutorServiceAssetLoader {
 			
 			AssetObject assetObject = new AssetObject(key.name, String.valueOf(++counter));
 			
-			System.out.println(String.format("Load stop asset [%s] with [%s, %s]", key, options, decoder));
+			System.out.println(String.format("Load stop asset [%s] with [%s, %s, %s]", key, options, assetReader, decoder));
 			return assetObject;
 		}
 	}
