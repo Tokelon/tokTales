@@ -7,7 +7,7 @@ package com.tokelon.toktales.core.util.manage;
 * 
 * @see ISealedObjectOrganizer
 */
-public interface IObjectCoordinator<T, K> extends ISealedObjectOrganizer<T, K> {
+public interface IObjectCoordinator<K, T> extends ISealedObjectOrganizer<K, T> {
 
 	
 	/** Coordinates a number of keyed objects and enables modification.
@@ -17,7 +17,7 @@ public interface IObjectCoordinator<T, K> extends ISealedObjectOrganizer<T, K> {
 	 * 
 	 * @see IObjectOrganizer
 	 */
-	public interface IOpenObjectCoordinator<T, K> extends IObjectCoordinator<T, K>, IObjectOrganizer<T, K> {
+	public interface IOpenObjectCoordinator<K, T> extends IObjectCoordinator<K, T>, IObjectOrganizer<K, T> {
 		
 	}
 	
