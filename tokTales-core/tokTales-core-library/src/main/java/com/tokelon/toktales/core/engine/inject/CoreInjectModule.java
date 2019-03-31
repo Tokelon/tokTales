@@ -15,10 +15,12 @@ import com.tokelon.toktales.core.content.ContentManager;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
+import com.tokelon.toktales.core.content.manage.DefaultAssetLoader;
 import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
 import com.tokelon.toktales.core.content.manage.DefaultAssetReaderManager;
 import com.tokelon.toktales.core.content.manage.DefaultAssetStore;
 import com.tokelon.toktales.core.content.manage.DefaultExecutorServiceProvider;
+import com.tokelon.toktales.core.content.manage.DefaultInjectableAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
@@ -38,7 +40,6 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
 import com.tokelon.toktales.core.content.manage.sound.SoundAssetManager;
-import com.tokelon.toktales.core.content.manage.sound.SoundFileLoader;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
 import com.tokelon.toktales.core.content.sprite.SpriteManager;
@@ -335,7 +336,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
 		
 		bind(IFileAssetLoader.IFileAssetLoaderFactory.class).to(DefaultFileAssetLoader.DefaultFileAssetLoaderFactory.class);
-		//bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
+		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
 		bind(IAssetReaderManager.class).toProvider(DefaultAssetReaderManagerProvider.class);
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
@@ -350,8 +351,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
 		bind(new TypeLiteral<IAssetStore<ISoundAsset, ISoundAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISoundAsset, ISoundAssetKey>>() {});
-		//bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
-		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(SoundFileLoader.class);
+		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
 	}
 	
 	
