@@ -40,25 +40,26 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	}
 
 	
-	private void handleAssetResult(K key, T asset) {
+	private T handleAssetResult(K key, T asset) {
 		if(asset == null) {
 			// TODO: Insert with INullResultAsset?
 		}
 		
 		assetStore.insert(key, asset);
+		return asset; // Return INullResultAsset as well
 	}
 	
-	private void handleAssetFuture(K key, CompletableFuture<T> future) {
-		future
+	private CompletableFuture<T> handleAssetFuture(K key, CompletableFuture<T> future) {
+		return future
 		.exceptionally((exception) -> {
 			// TODO: Insert with ILoadErrorAsset
 			assetStore.insert(key, null);
 			
 			logger.e(TAG, String.format("Asset future completed exceptionally for [key=%s]: %s", key, exception));
-			return null;
+			return null; // TODO: Return ILoadErrorAsset as well
 		})
-		.thenAccept((result) -> {
-			handleAssetResult(key, result);
+		.thenApply((result) -> {
+			return handleAssetResult(key, result);
 		});
 	}
 	
@@ -156,6 +157,28 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		
 		handleAssetResult(key, asset);
 		return result;
+	}
+
+
+	@Override
+	public CompletableFuture<T> addAssetResult(CompletableFuture<T> future, K key) {
+		return handleAssetFuture(key, future);
+	}
+
+	@Override
+	public CompletableFuture<T> addAssetResult(CompletableFuture<T> future, K key, O options) {
+		return handleAssetFuture(key, future);
+	}
+
+
+	@Override
+	public T addAsset(T asset, K key) {
+		return handleAssetResult(key, asset);
+	}
+
+	@Override
+	public T addAsset(T asset, K key, O options) {
+		return handleAssetResult(key, asset);
 	}
 
 }

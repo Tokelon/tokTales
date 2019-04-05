@@ -3,6 +3,8 @@ package com.tokelon.toktales.core.content.manage;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 
+import java9.util.concurrent.CompletableFuture;
+
 public interface IAssetManager<T, K, O> {
 	// TODO: Document all asset management types
 	// Implement memory management strategy and maybe make asset type disposable?
@@ -34,15 +36,22 @@ public interface IAssetManager<T, K, O> {
 	public T getAssetLoadIfNeededOrError(K key) throws ContentException;
 	public T getAssetLoadIfNeededOrError(K key, O options) throws ContentException;
 	
-	//public CompletableFuture<T> requestAsset(K key);
+	
+	// add, store, insert?
+	public CompletableFuture<T> addAssetResult(CompletableFuture<T> future, K key);
+	public CompletableFuture<T> addAssetResult(CompletableFuture<T> future, K key, O options);
 
-
+	public T addAsset(T asset, K key);
+	public T addAsset(T asset, K key, O options);
 
 	/* Manage not loaded assets like this? What's the point of this functionality?
 	public boolean addAsset(K key);
+	
+	// Maybe in addition to addAsset above?
 	public boolean hasAsset(K key);
 	public T removeAsset(K key);
 	*/
+
 	
 	/* Implement these how?
 	public void unloadAll();
