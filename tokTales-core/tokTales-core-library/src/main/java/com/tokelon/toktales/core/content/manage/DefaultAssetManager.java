@@ -106,8 +106,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		
 		T result = null;
 		try {
-			result = assetLoader.load(key);
-			handleAssetResult(key, asset);
+			result = handleAssetResult(key, assetLoader.load(key));
 		} catch (ContentException e) {
 			logger.e(TAG, String.format("Asset loading failed for [key=%s]: %s", key, e));
 		}
@@ -124,8 +123,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		
 		T result = null;
 		try {
-			result = assetLoader.load(key, options);
-			handleAssetResult(key, asset);
+			result = handleAssetResult(key, assetLoader.load(key, options));
 		} catch (ContentException e) {
 			logger.e(TAG, String.format("Asset loading failed for [key=%s, options=%s]: %s", key, options, e));
 		}
@@ -140,10 +138,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 			return asset;
 		}
 		
-		T result = assetLoader.load(key);
-		
-		handleAssetResult(key, asset);
-		return result;
+		return handleAssetResult(key, assetLoader.load(key));
 	}
 
 	@Override
@@ -153,10 +148,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 			return asset;
 		}
 		
-		T result = assetLoader.load(key, options);
-		
-		handleAssetResult(key, asset);
-		return result;
+		return handleAssetResult(key, assetLoader.load(key, options));
 	}
 
 
