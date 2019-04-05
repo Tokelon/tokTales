@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.util.NamedOptionsImpl;
 
 public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> {
 	
-	public static final String TAG = "CodepointLoader";
+	public static final String TAG = "CodepointAssetLoader";
 	
 	public static final INamedOptions EMPTY_OPTIONS = new NamedOptionsImpl();
 	
@@ -38,9 +38,15 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 	
 	@Override
 	public String getTag() {
-		return super.getTag() + "_" + TAG;
+		return TAG;
 	}
 
+	
+	@Override
+	protected IAssetReader findReader(ICodepointAssetKey key, INamedOptions options) {
+		// Reader is not used at the moment so no need to find one
+		return null;
+	}
 	
 	@Override
 	public ICodepointAsset load(ICodepointAssetKey key, INamedOptions options, IAssetReader reader, IAssetDecoder<? extends ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) throws ContentException {

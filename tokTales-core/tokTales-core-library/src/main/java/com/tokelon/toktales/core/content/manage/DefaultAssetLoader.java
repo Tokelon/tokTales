@@ -39,7 +39,7 @@ public class DefaultAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoa
 		} catch (IOException e) {
 			// Exception on close()
 			//throw new ContentException(e);
-			getLogger().w(TAG, "close() threw exception: " + e);
+			getLogger().w(getTag(), "close() threw exception: " + e);
 		}
 		
 		return result;
@@ -50,6 +50,12 @@ public class DefaultAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoa
 	protected O getDefaultOptions() {
 		return null;
 	}
+	
+	@Override
+	public String getTag() {
+		return TAG;
+	}
+	
 	
 	
 	public static class DefaultAssetLoaderFactory implements IAssetLoaderFactory {
