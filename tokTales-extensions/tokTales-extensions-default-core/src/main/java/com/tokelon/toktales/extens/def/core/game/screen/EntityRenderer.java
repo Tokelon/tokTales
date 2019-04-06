@@ -168,7 +168,7 @@ public class EntityRenderer implements IEntityRenderer {
 		}
 		
 		// TODO: What to do about this?
-		int drawDepth = options.getOrDefault(OPTION_DRAW_DEPTH, -1);
+		int drawDepth = options.getAsExactOrDefault(OPTION_DRAW_DEPTH, -1);
 		
 		
 		IWorldspace worldspace = worldspaceSupplier.get();
