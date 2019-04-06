@@ -22,8 +22,8 @@ import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ITriangleModel;
 import com.tokelon.toktales.core.render.model.LineModel;
-import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IParams;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 import android.opengl.GLES20;
 

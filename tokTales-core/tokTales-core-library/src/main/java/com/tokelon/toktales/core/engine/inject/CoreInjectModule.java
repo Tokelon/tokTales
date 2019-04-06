@@ -137,8 +137,8 @@ import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLProgram;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLShader;
 import com.tokelon.toktales.core.util.DefaultObjectPool;
-import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 

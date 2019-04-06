@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.render;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 import com.tokelon.toktales.core.render.model.ManagedTextureModel;
-import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 

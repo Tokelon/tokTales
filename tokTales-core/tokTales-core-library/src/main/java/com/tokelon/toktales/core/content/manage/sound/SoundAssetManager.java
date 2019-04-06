@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public class SoundAssetManager extends DefaultAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions> implements ISoundAssetManager {
 

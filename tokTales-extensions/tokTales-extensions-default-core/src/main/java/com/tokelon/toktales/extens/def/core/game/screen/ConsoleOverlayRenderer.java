@@ -20,8 +20,8 @@ import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.CharRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
-import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.function.Supplier;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {

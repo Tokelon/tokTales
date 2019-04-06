@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.game.screen;
 
 import com.tokelon.toktales.core.render.IRenderer;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public interface ISegmentRenderer extends IRenderer {
 

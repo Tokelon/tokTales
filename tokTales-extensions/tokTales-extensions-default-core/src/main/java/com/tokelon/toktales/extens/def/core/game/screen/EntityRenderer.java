@@ -32,9 +32,9 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
-import com.tokelon.toktales.core.util.INamedOptions;
-import com.tokelon.toktales.core.util.NamedOptionsImpl;
 import com.tokelon.toktales.core.util.function.Supplier;
+import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class EntityRenderer implements IEntityRenderer {

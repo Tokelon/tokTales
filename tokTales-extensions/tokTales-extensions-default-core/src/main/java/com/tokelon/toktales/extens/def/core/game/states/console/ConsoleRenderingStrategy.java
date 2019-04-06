@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
-import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	// Implement conditional clear or limit to 30 fps since we don't need the performance?

@@ -35,8 +35,8 @@ import com.tokelon.toktales.core.render.shapes.LineShape;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.util.FrameTool;
-import com.tokelon.toktales.core.util.INamedOptions;
 import com.tokelon.toktales.core.util.function.Supplier;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	

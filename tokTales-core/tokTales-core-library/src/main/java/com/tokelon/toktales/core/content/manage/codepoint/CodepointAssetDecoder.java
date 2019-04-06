@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public class CodepointAssetDecoder implements IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> {
 

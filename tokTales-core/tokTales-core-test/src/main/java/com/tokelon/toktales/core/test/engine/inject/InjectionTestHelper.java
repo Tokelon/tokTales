@@ -12,7 +12,7 @@ import com.google.inject.spi.Message;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public final class InjectionTestHelper {
 

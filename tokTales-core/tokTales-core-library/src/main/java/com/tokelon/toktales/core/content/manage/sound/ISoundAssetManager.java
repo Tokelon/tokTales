@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content.manage.sound;
 
 import com.tokelon.toktales.core.content.manage.IAssetManager;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public interface ISoundAssetManager extends IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions> {
 

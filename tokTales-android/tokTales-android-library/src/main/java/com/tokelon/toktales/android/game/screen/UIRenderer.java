@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 import android.graphics.Color;
 import android.graphics.Rect;

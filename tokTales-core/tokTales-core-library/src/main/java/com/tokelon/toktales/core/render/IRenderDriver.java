@@ -5,7 +5,7 @@ import java.util.List;
 import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.render.model.IRenderModel;
-import com.tokelon.toktales.core.util.INamedOptions;
+import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public interface IRenderDriver {
 

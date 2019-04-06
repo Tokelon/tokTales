@@ -27,9 +27,9 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
-import com.tokelon.toktales.core.util.INamedOptions;
-import com.tokelon.toktales.core.util.NamedOptionsImpl;
 import com.tokelon.toktales.core.util.function.Supplier;
+import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleRenderer implements ISegmentRenderer {

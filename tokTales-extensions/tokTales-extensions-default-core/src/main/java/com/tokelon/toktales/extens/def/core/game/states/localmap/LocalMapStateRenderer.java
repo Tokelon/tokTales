@@ -24,7 +24,7 @@ import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.util.NamedOptionsImpl;
+import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer;

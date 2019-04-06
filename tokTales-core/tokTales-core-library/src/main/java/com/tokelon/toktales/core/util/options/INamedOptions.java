@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.util;
+package com.tokelon.toktales.core.util.options;
 
 public interface INamedOptions {
 
