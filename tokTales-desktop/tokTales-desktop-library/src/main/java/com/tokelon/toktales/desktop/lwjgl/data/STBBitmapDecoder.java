@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class STBBitmapDecoder implements IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions> {
-
+	// TODO: Implement options?
 
 	@Override
 	public IBitmapAsset decode(InputStream inputstream, IBitmapAssetKey key, IOptions options) throws ContentException {

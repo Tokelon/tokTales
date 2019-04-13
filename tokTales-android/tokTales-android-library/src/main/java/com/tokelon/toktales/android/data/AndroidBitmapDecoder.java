@@ -24,7 +24,10 @@ public class AndroidBitmapDecoder implements IBitmapAssetDecoder {
 			throw new ContentException("Bitmap could not be created for key: " + key);
 		}
 		
-		bitmap = postEditBitmap(bitmap, options);
+		if(options != null) {
+			bitmap = postEditBitmap(bitmap, options);	
+		}
+		
 		return new BitmapAssetImpl(new AndroidBitmap(bitmap));
 	}
 	
