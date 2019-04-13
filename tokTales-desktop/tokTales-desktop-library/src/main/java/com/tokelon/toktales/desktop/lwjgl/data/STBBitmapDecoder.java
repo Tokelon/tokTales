@@ -7,15 +7,15 @@ import java.nio.ByteBuffer;
 import org.lwjgl.system.MemoryStack;
 
 import com.google.common.io.ByteStreams;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
-public class STBBitmapDecoder implements IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions> {
+public class STBBitmapDecoder implements IBitmapAssetDecoder {
 	// TODO: Implement options?
 
 	@Override
