@@ -25,9 +25,7 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 			IFileKey fileKey = (IFileKey) key;
 			Typeface typeface = Typeface.createFromFile(fileKey.getPath().toString()); // Does this throw any exceptions?
 			
-			AndroidTextureFont font = new AndroidTextureFont(textSize);
-			font.initialize(typeface);
-			
+			AndroidTextureFont font = AndroidTextureFont.create(typeface, textSize);
 			return new TextureFontAssetImpl(font);
 		}
 		else {

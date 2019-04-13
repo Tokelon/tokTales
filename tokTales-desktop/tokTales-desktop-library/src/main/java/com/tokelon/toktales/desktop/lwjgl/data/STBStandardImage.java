@@ -10,40 +10,25 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 public class STBStandardImage implements ISTBBitmap { // TODO: Rename to STBBitmap?
 
 	
+	private boolean initialized = false;
+	private boolean disposed = false;
+	
 	private ByteBuffer data;
 	private int width;
 	private int height;
 	private int channels;
 	private int sourceChannels;
 	
-	private STBStandardImage() {
+	protected STBStandardImage() {
 		// Empty constructor
 	}
 	
-	private STBStandardImage(ByteBuffer data, int width, int height, int channels) { // Make public?
+	protected STBStandardImage(ByteBuffer data, int width, int height, int channels, int sourceChannels) {
 		this.data = data;
 		this.width = width;
 		this.height = height;
 		this.channels = channels;
-	}
-	
-	
-	private void initializeImage(ByteBuffer buffer) throws LWJGLException {
-		IntBuffer w = LWJGLBufferUtils.getWrapper().createIntBuffer(1);
-		IntBuffer h = LWJGLBufferUtils.getWrapper().createIntBuffer(1);
-		IntBuffer imageChannels = LWJGLBufferUtils.getWrapper().createIntBuffer(1);
-		
-		int desiredChannels = 4; // Always load as RGBA
-		ByteBuffer image = STBImage.stbi_load_from_memory(buffer, w, h, imageChannels, desiredChannels);
-		if(image == null) {
-			throw new LWJGLException("Failed to load graphic: " + STBImage.stbi_failure_reason());
-		}
-
-		this.data = image;
-		this.width = w.get(0);
-		this.height = h.get(0);
-		this.sourceChannels = imageChannels.get(0);
-		this.channels = desiredChannels;
+		this.sourceChannels = sourceChannels;
 	}
 	
 
@@ -111,19 +96,46 @@ public class STBStandardImage implements ISTBBitmap { // TODO: Rename to STBBitm
 	
 	@Override
 	public void dispose() {
-		STBImage.stbi_image_free(data);
+		if(!disposed) {
+			disposed = true;
+			
+			STBImage.stbi_image_free(data);
+		}
 	}
 	
 	
 
-	public static STBStandardImage create(ByteBuffer data, int width, int height, int channels) {
-		return new STBStandardImage(data, width, height, channels);
+	public static STBStandardImage create(ByteBuffer data, int width, int height, int channels, int sourceChannels) {
+		return new STBStandardImage(data, width, height, channels, sourceChannels);
 	}
 	
-	public static STBStandardImage initFrom(ByteBuffer buffer) throws LWJGLException {
+	public static STBStandardImage createFromBuffer(ByteBuffer buffer) throws LWJGLException {
 		STBStandardImage tex = new STBStandardImage();
-		tex.initializeImage(buffer);
+		initializeImage(tex, buffer);
 		return tex;
+	}
+	
+	public static void initializeImage(STBStandardImage image, ByteBuffer buffer) throws LWJGLException {
+		if(image.initialized) {
+			throw new IllegalStateException("Image was already initialized");
+		}
+		image.initialized = true;
+		
+		IntBuffer w = LWJGLBufferUtils.getWrapper().createIntBuffer(1);
+		IntBuffer h = LWJGLBufferUtils.getWrapper().createIntBuffer(1);
+		IntBuffer imageChannels = LWJGLBufferUtils.getWrapper().createIntBuffer(1);
+		
+		int desiredChannels = 4; // Always load as RGBA
+		ByteBuffer imageBuffer = STBImage.stbi_load_from_memory(buffer, w, h, imageChannels, desiredChannels);
+		if(imageBuffer == null) {
+			throw new LWJGLException("Failed to load graphic: " + STBImage.stbi_failure_reason());
+		}
+
+		image.data = imageBuffer;
+		image.width = w.get(0);
+		image.height = h.get(0);
+		image.sourceChannels = imageChannels.get(0);
+		image.channels = desiredChannels;
 	}
 	
 }

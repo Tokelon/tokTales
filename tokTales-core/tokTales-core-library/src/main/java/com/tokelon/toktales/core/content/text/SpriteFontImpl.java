@@ -53,4 +53,9 @@ public class SpriteFontImpl implements ISpriteFont {
 		return sprite;
 	}
 
+	
+	@Override
+	public void dispose() {
+	}
+
 }

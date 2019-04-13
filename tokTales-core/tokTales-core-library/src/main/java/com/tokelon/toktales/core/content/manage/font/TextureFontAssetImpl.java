@@ -19,7 +19,7 @@ public class TextureFontAssetImpl implements ITextureFontAsset {
 	
 	@Override
 	public void dispose() {
-		// TODO: font.dispose()
+		font.dispose();
 	}
 
 }

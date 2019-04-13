@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 public class AndroidBitmap implements IAndroidBitmap {
 
 	
+	private boolean disposed = false;
+
 	private ByteBuffer dataBuffer;
 	
 	private final Bitmap bitmap;
@@ -98,8 +100,12 @@ public class AndroidBitmap implements IAndroidBitmap {
 	
 	@Override
 	public void dispose() {
-		bitmap.recycle();
-		dataBuffer = null;
+		if(!disposed) {
+			disposed = true;
+
+			bitmap.recycle();
+			dataBuffer = null;	
+		}
 	}
 
 }

@@ -30,7 +30,7 @@ public class STBBitmapDecoder implements IBitmapAssetDecoder {
 			buffer.flip();
 			
 			// Create image by parsing the buffer data
-			STBStandardImage image = STBStandardImage.initFrom(buffer);
+			STBStandardImage image = STBStandardImage.createFromBuffer(buffer);
 			return new BitmapAssetImpl(image);
 		} catch (LWJGLException e) {
 			throw new ContentException(e);

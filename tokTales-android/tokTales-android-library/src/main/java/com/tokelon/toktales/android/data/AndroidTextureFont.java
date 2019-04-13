@@ -20,8 +20,9 @@ import android.graphics.Typeface;
 
 public class AndroidTextureFont implements ITextureFont {
 	// TODO: Implement correct codepoint metrics
+
 	
-	private Map<Integer, CodepointInfo> codepointCache;
+	private final Map<Integer, CodepointInfo> codepointCache; // TODO: This should probably cache AndroidCodepoint objects
 	
 	private Paint paint;
 	
@@ -35,22 +36,23 @@ public class AndroidTextureFont implements ITextureFont {
 	
 	private boolean aaEnabled = false;
 	
+	private boolean initialized = false;
+	private boolean disposed = false;
+
+	private float textSize;
 	
-	private final float textSize;
-	
-	public AndroidTextureFont(float textSize) {
-		this.textSize = textSize;
-		
+	protected AndroidTextureFont() {
+		// see initializeFont()
 		codepointCache = new HashMap<Integer, CodepointInfo>();
 	}
 	
-	
-	public void setAntiAlias(boolean enabled) {
-		aaEnabled = enabled;
-	}
-	
-	
-	public void initialize(Typeface typeface) {
+	protected void initializeFont(Typeface typeface, int textSize) {
+		if(initialized) {
+			throw new IllegalStateException("Font was already initialized");
+		}
+		initialized = true;
+		
+		this.textSize = textSize;
 		
 		paint = new Paint();
 		paint.setAntiAlias(aaEnabled);
@@ -80,9 +82,13 @@ public class AndroidTextureFont implements ITextureFont {
 		
 		//paint.getTextWidths(text, widths)
 		//paint.getTextBounds(text, index, count, bounds)
-		//paint.
 	}
 
+
+	public void setAntiAlias(boolean enabled) {
+		aaEnabled = enabled;
+	}
+	
 	
 	private CodepointInfo getCodepointInfo(int codepoint) {
 		CodepointInfo ci = codepointCache.get(codepoint);
@@ -239,7 +245,29 @@ public class AndroidTextureFont implements ITextureFont {
 	public int getCodepointLeftSideBearing(int codepoint) {
 		return 0;
 	}
+	
+	
+	@Override
+	public void dispose() {
+		if(!disposed) {
+			disposed = true;
+			
+			for(CodepointInfo ci: codepointCache.values()) {
+				ci.texture.getBitmap().dispose();
+			}
+			
+			codepointCache.clear();
+		}
+	}
 
+	
+	public static AndroidTextureFont create(Typeface typeface, int textSize) {
+		AndroidTextureFont result = new AndroidTextureFont();
+		result.initializeFont(typeface, textSize);
+		
+		return result;
+	}
+	
 	
 	
 	public class AndroidCodepoint implements ICodepoint {

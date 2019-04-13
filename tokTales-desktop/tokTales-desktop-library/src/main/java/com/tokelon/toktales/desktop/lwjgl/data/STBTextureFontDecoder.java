@@ -13,6 +13,7 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 
@@ -33,9 +34,10 @@ public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 			buffer.flip();
 			
 			// Create font by parsing the buffer data
-			STBTextureFont font = new STBTextureFont(fontPixelHeight);
-			font.initializeFont(buffer);
+			STBTextureFont font = STBTextureFont.create(buffer, fontPixelHeight);
 			return new TextureFontAssetImpl(font);
+		} catch (LWJGLException e) {
+			throw new ContentException(e);
 		} catch (IOException ioe) {
 			throw new ContentException(ioe);
 		}

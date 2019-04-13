@@ -8,6 +8,7 @@ import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
+import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ICodepoint;
@@ -17,6 +18,7 @@ import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.IRectangle2i.IMutableRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class STBTextureFont implements ITextureFont {
 	/* A few possible optimizations, improvements
@@ -37,46 +39,47 @@ public class STBTextureFont implements ITextureFont {
 	private ByteBuffer fontDataBuffer;
 
 	
-	private Map<Integer, CodepointInfo> codepointCache;
+	private final Map<Integer, CodepointInfo> codepointCache; // TODO: This should probably cache STBCodepoint objects
 	
 	private STBTTFontinfo fontInfo;
 	
 	private float fontScale;
-	
-	private final int fontPixelHeight;
 	
 	private int fontPixelAscent;
 	private int fontPixelDescent;
 	private int fontPixelLineGap;
 	
 	
-	public STBTextureFont(int fontPixelHeight) {
-		this.fontPixelHeight = fontPixelHeight;
-		
+	private boolean initialized = false;
+	private boolean disposed = false;
+	
+
+	private int fontPixelHeight;
+	
+	protected STBTextureFont() {
+		// see initializeFont()
 		codepointCache = new HashMap<Integer, CodepointInfo>();
 	}
 	
-	
-	public void initializeFont(ByteBuffer fontData) {
-		if(fontDataBuffer != null) {
+	protected void initializeFont(ByteBuffer fontData, int fontPixelHeight) throws LWJGLException { 
+		if(initialized) {
 			throw new IllegalStateException("Font was already initialized");
 		}
-		fontDataBuffer = fontData;
-
+		initialized = true;
 		
-		fontInfo = STBTTFontinfo.create();
+		this.fontDataBuffer = fontData;
+		this.fontPixelHeight = fontPixelHeight;
+		
+		this.fontInfo = STBTTFontinfo.create();
 		
 		boolean result = STBTruetype.stbtt_InitFont(fontInfo, fontData);
 		
 		if(!result) { // error
-			throw new IllegalArgumentException("Failed to initialize font");
+			throw new LWJGLException("Failed to initialize font: STBTruetype.stbtt_InitFont() returned false");
 		}
 		
 		
-		fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
-		//fontScale = 0.1f;
-		//fontScale = 1.0f;
-		
+		this.fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
 	
 		// Init font metrics
 		IntBuffer ascentBuffer = BufferUtils.createIntBuffer(1);
@@ -85,9 +88,9 @@ public class STBTextureFont implements ITextureFont {
 		
 		STBTruetype.stbtt_GetFontVMetrics(fontInfo, ascentBuffer, descentBuffer, lineGapBuffer);
 		
-		fontPixelAscent = Math.round(ascentBuffer.get(0) * fontScale);
-		fontPixelDescent = Math.round(descentBuffer.get(0) * fontScale);
-		fontPixelLineGap = Math.round(lineGapBuffer.get(0) * fontScale);
+		this.fontPixelAscent = Math.round(ascentBuffer.get(0) * fontScale);
+		this.fontPixelDescent = Math.round(descentBuffer.get(0) * fontScale);
+		this.fontPixelLineGap = Math.round(lineGapBuffer.get(0) * fontScale);
 	}
 	
 	
@@ -103,15 +106,11 @@ public class STBTextureFont implements ITextureFont {
 
 	
 	public void clearCodepointCache() {
-		for(CodepointInfo cp: codepointCache.values()) {
-			STBTruetype.stbtt_FreeBitmap(cp.texture.getBitmap().getData()); // Needs user data?
+		for(CodepointInfo ci: codepointCache.values()) {
+			STBTruetype.stbtt_FreeBitmap(ci.texture.getBitmap().getData()); // Needs user data?
 		}
 		
 		codepointCache.clear();
-	}
-	
-	public void free() {
-		clearCodepointCache();
 	}
 	
 
@@ -276,6 +275,26 @@ public class STBTextureFont implements ITextureFont {
 		int kernValue = STBTruetype.stbtt_GetCodepointKernAdvance(fontInfo, firstCodepoint, secondCodepoint);
 		return kernValue;
 	}
+	
+	
+	@Override
+	public void dispose() {
+		if(!disposed) {
+			disposed = true;
+			
+			clearCodepointCache();
+			MemoryUtil.memFree(fontDataBuffer);
+		}
+	}
+	
+	
+	public static STBTextureFont create(ByteBuffer fontData, int fontPixelHeight) throws LWJGLException {
+		STBTextureFont result = new STBTextureFont();
+		result.initializeFont(fontData, fontPixelHeight);
+		
+		return result;
+	}
+	
 	
 	
 	

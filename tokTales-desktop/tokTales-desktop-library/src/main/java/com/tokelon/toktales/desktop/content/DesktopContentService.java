@@ -153,7 +153,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 
 			STBStandardImage texImage;
 			try {
-				texImage = STBStandardImage.initFrom(buffer);
+				texImage = STBStandardImage.createFromBuffer(buffer);
 			} catch (LWJGLException e) {
 				throw new ContentException(e);
 			}
@@ -232,9 +232,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		}
 		
 		
-		STBTextureFont font = new STBTextureFont(64);
-		font.initializeFont(buffer);
-		
+		STBTextureFont font = STBTextureFont.create(buffer, 64);		
 		return font;
 	}
 	
@@ -298,7 +296,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		
 		STBStandardImage texImage;
 		try {
-			texImage = STBStandardImage.initFrom(buffer);
+			texImage = STBStandardImage.createFromBuffer(buffer);
 		} catch (LWJGLException e) {
 			throw new ContentException(e);
 		}
@@ -365,7 +363,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		bitmap.getData().position(0);
 		
 
-		STBStandardImage texImage = STBStandardImage.create(cropBuffer, bounds.width(), bounds.height(), channels);
+		STBStandardImage texImage = STBStandardImage.create(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels());
 		return texImage;
 	}
 

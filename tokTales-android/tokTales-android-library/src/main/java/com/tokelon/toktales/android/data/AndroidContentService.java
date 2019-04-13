@@ -398,9 +398,7 @@ public class AndroidContentService extends AbstractContentService implements ICo
 			throw new ContentException("Failed to read typeface");
 		}
 		
-		AndroidTextureFont font = new AndroidTextureFont(32);
-		font.initialize(typeface);
-		
+		AndroidTextureFont font = AndroidTextureFont.create(typeface, 32);
 		return font;
 	}
 	
