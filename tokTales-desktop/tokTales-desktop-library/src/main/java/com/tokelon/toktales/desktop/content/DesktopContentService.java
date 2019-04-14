@@ -232,8 +232,11 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		}
 		
 		
-		STBTextureFont font = STBTextureFont.create(buffer, 64);		
-		return font;
+		try {
+			return STBTextureFont.create(buffer, 64);
+		} catch (LWJGLException e) {
+			throw new ContentException(e);
+		}
 	}
 	
 	
