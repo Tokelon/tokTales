@@ -10,14 +10,14 @@ import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;
 
 import com.google.common.io.ByteStreams;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.SoundAsset;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 
-public class STBVorbisSoundDecoder implements IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> {
+public class STBVorbisSoundDecoder implements ISoundAssetDecoder {
 
 	
 	@Override
