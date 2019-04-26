@@ -14,8 +14,10 @@ import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration;
 import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
+import com.tokelon.toktales.android.data.AndroidBitmapDecoder;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.data.AndroidSoundDecoder;
+import com.tokelon.toktales.android.data.AndroidTextureFontDecoder;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
 import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
@@ -48,6 +50,10 @@ import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.android.ui.IUserInterface;
 import com.tokelon.toktales.android.ui.UserInterface;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.IEnvironment;
@@ -74,6 +80,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.core.util.options.IOptions;
 
 import android.os.Environment;
 
@@ -135,7 +142,8 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
 		
 		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(AndroidSoundDecoder.class);
-
+		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(AndroidBitmapDecoder.class);
+		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(AndroidTextureFontDecoder.class);
 		
 		
 		/* Unused so far - everything under here */

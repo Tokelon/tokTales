@@ -9,10 +9,15 @@ import java.util.List;
 import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.google.inject.spi.Message;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.core.util.options.IOptions;
 
 public final class InjectionTestHelper {
 
@@ -26,7 +31,9 @@ public final class InjectionTestHelper {
 				"IGameAdapter",
 				"IGameStateInput",
 				"IGL11", "IGL13", "IGL14", "IGL15", "IGL20",
-				"IAssetDecoder<" + ISoundAsset.class.getName() + ", " + ISoundAssetKey.class.getName() + ", " + INamedOptions.class.getName() + ">"
+				"IAssetDecoder<" + ISoundAsset.class.getName() + ", " + ISoundAssetKey.class.getName() + ", " + INamedOptions.class.getName() + ">",
+				"IAssetDecoder<" + IBitmapAsset.class.getName() + ", " + IBitmapAssetKey.class.getName() + ", " + IOptions.class.getName() + ">",
+				"IAssetDecoder<" + ITextureFontAsset.class.getName() + ", " + ITextureFontAssetKey.class.getName() + ", " + IOptions.class.getName() + ">"
 		};
 	
 	public static final String[][] CORE_EXPECTED_BINDING_ANNOTATIONS =

@@ -8,6 +8,10 @@ import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.IEnvironment;
@@ -34,6 +38,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
@@ -45,6 +50,8 @@ import com.tokelon.toktales.desktop.input.dispatch.DesktopInputProducer;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputConsumer.IDesktopInputConsumerFactory;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputDispatch;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer.IDesktopInputProducerFactory;
+import com.tokelon.toktales.desktop.lwjgl.data.STBBitmapDecoder;
+import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFontDecoder;
 import com.tokelon.toktales.desktop.lwjgl.data.STBVorbisSoundDecoder;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
@@ -120,6 +127,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
 		
 		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(STBVorbisSoundDecoder.class);
+		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(STBBitmapDecoder.class);
+		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(STBTextureFontDecoder.class);
 		
 		
 		/* Unused so far - everything under here */

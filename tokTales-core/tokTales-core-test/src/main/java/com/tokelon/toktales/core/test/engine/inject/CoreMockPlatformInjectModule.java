@@ -5,6 +5,10 @@ import static org.mockito.Mockito.when;
 
 import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.engine.IEnvironment;
@@ -27,6 +31,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.core.util.options.IOptions;
 
 /** Core inject module used for testing.
  * <p>
@@ -54,7 +59,11 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 
 	@SuppressWarnings("unchecked")
 	private static final IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions> soundAssetDecoder = mock(IAssetDecoder.class);
-	
+	@SuppressWarnings("unchecked")
+	private static final IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions> bitmapAssetDecoder = mock(IAssetDecoder.class);
+	@SuppressWarnings("unchecked")
+	private static final IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions> textureFontAssetDecoder = mock(IAssetDecoder.class);
+
 	
 	private static final ISurfaceHandler surfaceHandlerMock = mock(ISurfaceHandler.class);
 	
@@ -84,7 +93,8 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).toInstance(gamestateInputHandlerMock);
 		
 		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).toInstance(soundAssetDecoder);
+		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).toInstance(bitmapAssetDecoder);
+		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).toInstance(textureFontAssetDecoder);
 	}
-	
 
 }
