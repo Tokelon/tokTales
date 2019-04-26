@@ -7,7 +7,7 @@ import org.lwjgl.stb.STBImage;
 
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
-public class STBStandardImage implements ISTBBitmap { // TODO: Rename to STBBitmap?
+public class STBBitmap implements ISTBBitmap {
 
 	
 	private boolean initialized = false;
@@ -19,11 +19,11 @@ public class STBStandardImage implements ISTBBitmap { // TODO: Rename to STBBitm
 	private int channels;
 	private int sourceChannels;
 	
-	protected STBStandardImage() {
+	protected STBBitmap() {
 		// Empty constructor
 	}
 	
-	protected STBStandardImage(ByteBuffer data, int width, int height, int channels, int sourceChannels) {
+	protected STBBitmap(ByteBuffer data, int width, int height, int channels, int sourceChannels) {
 		this.data = data;
 		this.width = width;
 		this.height = height;
@@ -105,17 +105,17 @@ public class STBStandardImage implements ISTBBitmap { // TODO: Rename to STBBitm
 	
 	
 
-	public static STBStandardImage create(ByteBuffer data, int width, int height, int channels, int sourceChannels) {
-		return new STBStandardImage(data, width, height, channels, sourceChannels);
+	public static STBBitmap create(ByteBuffer data, int width, int height, int channels, int sourceChannels) {
+		return new STBBitmap(data, width, height, channels, sourceChannels);
 	}
 	
-	public static STBStandardImage createFromBuffer(ByteBuffer buffer) throws LWJGLException {
-		STBStandardImage tex = new STBStandardImage();
+	public static STBBitmap createFromBuffer(ByteBuffer buffer) throws LWJGLException {
+		STBBitmap tex = new STBBitmap();
 		initializeImage(tex, buffer);
 		return tex;
 	}
 	
-	public static void initializeImage(STBStandardImage image, ByteBuffer buffer) throws LWJGLException {
+	public static void initializeImage(STBBitmap image, ByteBuffer buffer) throws LWJGLException {
 		if(image.initialized) {
 			throw new IllegalStateException("Image was already initialized");
 		}

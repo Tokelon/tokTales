@@ -35,7 +35,7 @@ import com.tokelon.toktales.core.values.TokelonEmbeddedGraphics;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
-import com.tokelon.toktales.desktop.lwjgl.data.STBStandardImage;
+import com.tokelon.toktales.desktop.lwjgl.data.STBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFont;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 
@@ -151,9 +151,9 @@ public class DesktopContentService extends AbstractContentService implements ICo
 			buffer.flip();
 
 
-			STBStandardImage texImage;
+			STBBitmap texImage;
 			try {
-				texImage = STBStandardImage.createFromBuffer(buffer);
+				texImage = STBBitmap.createFromBuffer(buffer);
 			} catch (LWJGLException e) {
 				throw new ContentException(e);
 			}
@@ -253,13 +253,13 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		// TODO: Important - Fixed size buffer
 		ByteBuffer buffer = LWJGLBufferUtils.getWrapper().createByteBuffer(4 * 1 * 512 * 512);
 
-		STBStandardImage image = decodeImageStream(buffer, source, options);
+		STBBitmap image = decodeImageStream(buffer, source, options);
 
 		return createGraphicAssetContainer(image, options);
 	}
 	
 	
-	private IGraphicsAsset createGraphicAssetContainer(STBStandardImage image, IGraphicLoadingOptions options) {
+	private IGraphicsAsset createGraphicAssetContainer(STBBitmap image, IGraphicLoadingOptions options) {
 		// TODO: Use the options to pass settings for the texture - Mainly the texture filter (nearest or linear)
 		Texture texture = new Texture(image);
 		
@@ -267,7 +267,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	}
 
 	
-	private STBStandardImage decodeImageStream(ByteBuffer buffer, InputStream stream, IGraphicLoadingOptions options) throws ContentException {
+	private STBBitmap decodeImageStream(ByteBuffer buffer, InputStream stream, IGraphicLoadingOptions options) throws ContentException {
 		
 		
 		try(ReadableByteChannel rbc = Channels.newChannel(stream);) {
@@ -297,9 +297,9 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		
 		
 		
-		STBStandardImage texImage;
+		STBBitmap texImage;
 		try {
-			texImage = STBStandardImage.createFromBuffer(buffer);
+			texImage = STBBitmap.createFromBuffer(buffer);
 		} catch (LWJGLException e) {
 			throw new ContentException(e);
 		}
@@ -366,7 +366,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		bitmap.getData().position(0);
 		
 
-		STBStandardImage texImage = STBStandardImage.create(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels());
+		STBBitmap texImage = STBBitmap.create(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels());
 		return texImage;
 	}
 
