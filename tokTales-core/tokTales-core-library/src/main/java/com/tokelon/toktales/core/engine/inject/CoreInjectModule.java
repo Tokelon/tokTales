@@ -27,21 +27,25 @@ import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetLoader;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.files.FileAssetReader;
 import com.tokelon.toktales.core.content.manage.files.IFileKey;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
 import com.tokelon.toktales.core.content.manage.sound.SoundAssetManager;
@@ -349,26 +353,26 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetManager.class);
 		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetLoader.class);
-		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetDecoder.class);
-		
-		
+		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetDecoder.class);
+		bind(ICodepointAssetDecoder.class).to(CodepointAssetDecoder.class);
+
 		bindInGameScopeAndForNotScoped(ISoundAssetManager.class, SoundAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(ISoundAssetManager.class);
 		bind(new TypeLiteral<IAssetStore<ISoundAsset, ISoundAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISoundAsset, ISoundAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
-		
+		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(ISoundAssetDecoder.class);
 		
 		bindInGameScopeAndForNotScoped(IBitmapAssetManager.class, BitmapAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(IBitmapAssetManager.class);
 		bind(new TypeLiteral<IAssetStore<IBitmapAsset, IBitmapAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<IBitmapAsset, IBitmapAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<IBitmapAsset, IBitmapAssetKey, IOptions>>() {});
-		
-		
+		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(IBitmapAssetDecoder.class);
+
 		bindInGameScopeAndForNotScoped(ITextureFontAssetManager.class, TextureFontAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetManager.class);
 		bind(new TypeLiteral<IAssetStore<ITextureFontAsset, ITextureFontAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ITextureFontAsset, ITextureFontAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {});
-		
+		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetDecoder.class);
 	}
 	
 	

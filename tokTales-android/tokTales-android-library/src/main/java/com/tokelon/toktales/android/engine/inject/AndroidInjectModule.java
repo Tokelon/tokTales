@@ -3,7 +3,6 @@ package com.tokelon.toktales.android.engine.inject;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
@@ -49,13 +48,9 @@ import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.android.ui.IUserInterface;
 import com.tokelon.toktales.android.ui.UserInterface;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -79,8 +74,6 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
-import com.tokelon.toktales.core.util.options.INamedOptions;
-import com.tokelon.toktales.core.util.options.IOptions;
 
 import android.os.Environment;
 
@@ -141,9 +134,9 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
 		
-		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(AndroidSoundDecoder.class);
-		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(AndroidBitmapDecoder.class);
-		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(AndroidTextureFontDecoder.class);
+		bind(ISoundAssetDecoder.class).to(AndroidSoundDecoder.class);
+		bind(IBitmapAssetDecoder.class).to(AndroidBitmapDecoder.class);
+		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
 		
 		
 		/* Unused so far - everything under here */
@@ -154,7 +147,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
-		
 	}
 
 

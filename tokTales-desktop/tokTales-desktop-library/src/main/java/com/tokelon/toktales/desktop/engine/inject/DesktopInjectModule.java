@@ -5,15 +5,10 @@ import java.io.File;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -37,8 +32,6 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
-import com.tokelon.toktales.core.util.options.INamedOptions;
-import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
@@ -126,9 +119,9 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
 		
-		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(STBVorbisSoundDecoder.class);
-		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(STBBitmapDecoder.class);
-		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(STBTextureFontDecoder.class);
+		bind(ISoundAssetDecoder.class).to(STBVorbisSoundDecoder.class);
+		bind(IBitmapAssetDecoder.class).to(STBBitmapDecoder.class);
+		bind(ITextureFontAssetDecoder.class).to(STBTextureFontDecoder.class);
 		
 		
 		/* Unused so far - everything under here */
@@ -141,7 +134,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
-
 	}
 
 	
