@@ -347,7 +347,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
 		
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
-		bind(IAssetReaderManager.class).toProvider(DefaultAssetReaderManagerProvider.class);
+		
+		bind(DefaultAssetReaderManager.class); // Will be created via constructor injection
+		bind(IAssetReaderManager.class).toProvider(IAssetReaderManagerProvider.class); // Will be created via provider
 		
 		bind(IFileAssetReader.class).to(FileAssetReader.class);
 		
@@ -379,18 +381,18 @@ public class CoreInjectModule extends AbstractInjectModule {
 	}
 	
 	
-	private static class DefaultAssetReaderManagerProvider implements Provider<DefaultAssetReaderManager> {
+	protected static class IAssetReaderManagerProvider implements Provider<IAssetReaderManager> {
 		private final Provider<DefaultAssetReaderManager> implementationProvider;
 		private final Provider<IFileAssetReader> fileAssetReaderProvider;
 		
 		@Inject
-		public DefaultAssetReaderManagerProvider(Provider<DefaultAssetReaderManager> implementationProvider, Provider<IFileAssetReader> fileAssetReaderProvider) {
+		public IAssetReaderManagerProvider(Provider<DefaultAssetReaderManager> implementationProvider, Provider<IFileAssetReader> fileAssetReaderProvider) {
 			this.implementationProvider = implementationProvider;
 			this.fileAssetReaderProvider = fileAssetReaderProvider;
 		}
 		
 		@Override
-		public DefaultAssetReaderManager get() {
+		public IAssetReaderManager get() {
 			DefaultAssetReaderManager assetReaderProvider = implementationProvider.get();
 			assetReaderProvider.add(IFileKey.class, fileAssetReaderProvider.get());
 			
