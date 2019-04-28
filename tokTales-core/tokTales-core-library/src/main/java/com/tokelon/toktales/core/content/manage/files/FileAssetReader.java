@@ -6,10 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.engine.content.ContentException;
 
-public class FileAssetReader implements IManagedAssetReader {
+public class FileAssetReader implements IFileAssetReader {
 
 	
 	@Override
