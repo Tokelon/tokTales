@@ -45,6 +45,12 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetManager;
+import com.tokelon.toktales.core.content.manage.resources.IResourceAssetReader;
+import com.tokelon.toktales.core.content.manage.resources.IResourceKey;
+import com.tokelon.toktales.core.content.manage.resources.IResourceScannerAssetReader;
+import com.tokelon.toktales.core.content.manage.resources.IResourceScannerKey;
+import com.tokelon.toktales.core.content.manage.resources.ResourceAssetReader;
+import com.tokelon.toktales.core.content.manage.resources.ResourceScannerAssetReader;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
@@ -352,6 +358,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IAssetReaderManager.class).toProvider(IAssetReaderManagerProvider.class); // Will be created via provider
 		
 		bind(IFileAssetReader.class).to(FileAssetReader.class);
+		bind(IResourceAssetReader.class).to(ResourceAssetReader.class);
+		bind(IResourceScannerAssetReader.class).to(ResourceScannerAssetReader.class);
 		
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
@@ -384,17 +392,28 @@ public class CoreInjectModule extends AbstractInjectModule {
 	protected static class IAssetReaderManagerProvider implements Provider<IAssetReaderManager> {
 		private final Provider<DefaultAssetReaderManager> implementationProvider;
 		private final Provider<IFileAssetReader> fileAssetReaderProvider;
+		private final Provider<IResourceAssetReader> resourceAssetReaderProvider;
+		private final Provider<IResourceScannerAssetReader> resourceScannerAssetReader;
 		
 		@Inject
-		public IAssetReaderManagerProvider(Provider<DefaultAssetReaderManager> implementationProvider, Provider<IFileAssetReader> fileAssetReaderProvider) {
+		public IAssetReaderManagerProvider(
+				Provider<DefaultAssetReaderManager> implementationProvider,
+				Provider<IFileAssetReader> fileAssetReaderProvider,
+				Provider<IResourceAssetReader> resourceAssetReaderProvider,
+				Provider<IResourceScannerAssetReader> resourceScannerAssetReader
+		) {
 			this.implementationProvider = implementationProvider;
 			this.fileAssetReaderProvider = fileAssetReaderProvider;
+			this.resourceAssetReaderProvider = resourceAssetReaderProvider;
+			this.resourceScannerAssetReader = resourceScannerAssetReader;
 		}
 		
 		@Override
 		public IAssetReaderManager get() {
 			DefaultAssetReaderManager assetReaderProvider = implementationProvider.get();
 			assetReaderProvider.add(IFileKey.class, fileAssetReaderProvider.get());
+			assetReaderProvider.add(IResourceKey.class, resourceAssetReaderProvider.get());
+			assetReaderProvider.add(IResourceScannerKey.class, resourceScannerAssetReader.get());
 			
 			return assetReaderProvider;
 		}
