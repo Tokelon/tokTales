@@ -96,6 +96,24 @@ public class AndroidContentService extends AbstractContentService implements ICo
 	}
 	
 	
+	@Override
+	public InputStream readAppFileOnAssets(IApplicationLocation location, String fileName) throws ContentException {
+		try {
+			return globalContext.getAssets().open(location.getLocationPath().getPath() + fileName);
+		} catch (IOException e) {
+			throw new ContentException(e);
+		}
+	}
+	
+	@Override
+	public InputStream tryReadAppFileOnAssets(IApplicationLocation location, String fileName) {
+		try {
+			return readAppFileOnAssets(location, fileName);
+		} catch (ContentException e) {
+			logger.i(TAG, "Failed to read app file on assets: " + e);
+			return null;
+		}
+	}
 	
 	
 	//TODO: Maybe return only the inputstream and do the decoding in a different method?

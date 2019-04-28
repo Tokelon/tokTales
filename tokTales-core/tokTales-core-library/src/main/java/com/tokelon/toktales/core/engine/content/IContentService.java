@@ -29,6 +29,10 @@ public interface IContentService extends IEngineService {
 	public IListing createAssetListing(IApplicationLocation location) throws ContentException;
 	
 	
+	public InputStream readAppFileOnAssets(IApplicationLocation location, String fileName) throws ContentException;
+
+	public InputStream tryReadAppFileOnAssets(IApplicationLocation location, String fileName);
+	
 	
 	
 	/** Does not throw any exceptions.

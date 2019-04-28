@@ -73,6 +73,22 @@ public class DesktopContentService extends AbstractContentService implements ICo
 			throw new ContentException(e);
 		}
 	}
+	
+	
+	@Override
+	public InputStream readAppFileOnAssets(IApplicationLocation location, String fileName) throws ContentException {
+		try {
+			return assetStorageService.readAppFileOnExternal(location, fileName);
+		} catch (StorageException e) {
+			throw new ContentException(e);
+		}
+	}
+	
+	@Override
+	public InputStream tryReadAppFileOnAssets(IApplicationLocation location, String fileName) {
+		return assetStorageService.tryReadAppFileOnExternal(location, fileName);
+	}
+	
 
 	@Override
 	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName) {
