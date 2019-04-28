@@ -38,6 +38,7 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.files.FileAssetReader;
+import com.tokelon.toktales.core.content.manage.files.IFileAssetReader;
 import com.tokelon.toktales.core.content.manage.files.IFileKey;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
@@ -348,6 +349,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
 		bind(IAssetReaderManager.class).toProvider(DefaultAssetReaderManagerProvider.class);
 		
+		bind(IFileAssetReader.class).to(FileAssetReader.class);
+		
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetManager.class);
@@ -378,10 +381,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 	
 	private static class DefaultAssetReaderManagerProvider implements Provider<DefaultAssetReaderManager> {
 		private final Provider<DefaultAssetReaderManager> implementationProvider;
-		private final Provider<FileAssetReader> fileAssetReaderProvider;
+		private final Provider<IFileAssetReader> fileAssetReaderProvider;
 		
 		@Inject
-		public DefaultAssetReaderManagerProvider(Provider<DefaultAssetReaderManager> implementationProvider, Provider<FileAssetReader> fileAssetReaderProvider) {
+		public DefaultAssetReaderManagerProvider(Provider<DefaultAssetReaderManager> implementationProvider, Provider<IFileAssetReader> fileAssetReaderProvider) {
 			this.implementationProvider = implementationProvider;
 			this.fileAssetReaderProvider = fileAssetReaderProvider;
 		}
