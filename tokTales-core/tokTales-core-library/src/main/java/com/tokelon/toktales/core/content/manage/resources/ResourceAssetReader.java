@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
@@ -29,15 +30,17 @@ public class ResourceAssetReader implements IResourceAssetReader {
 
 	@Override
 	public boolean canRead(Object key, Object options) {
-		return key instanceof IResourceKey;
+		return IReadDelegateAssetKey.getReadableKey(key) instanceof IResourceKey;
 	}
 	
 	@Override
 	public InputStream read(Object key, Object options) throws ContentException {
-		if(!(key instanceof IResourceKey)) {
+		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
+
+		if(!(readableKey instanceof IResourceKey)) {
 			throw new ContentException("Unsupported key: must be instance of " + IResourceKey.class.getName());
 		}
-		IResourceKey resourceKey = (IResourceKey) key;
+		IResourceKey resourceKey = (IResourceKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
 
 		return readAsset(resourceKey.getResource(), iOptions);

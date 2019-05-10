@@ -6,33 +6,42 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.util.options.IOptions;
 
 public class FileAssetReader implements IFileAssetReader {
 
 	
 	@Override
 	public boolean canRead(Object key, Object options) {
-		return key instanceof IFileKey;
+		return IReadDelegateAssetKey.getReadableKey(key) instanceof IFileKey;
 	}
 	
 	@Override
 	public InputStream read(Object key, Object options) throws ContentException {
-		if(!(key instanceof IFileKey)) {
+		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
+		
+		if(!(readableKey instanceof IFileKey)) {
 			throw new ContentException("Unsupported key: must be instance of " + IFileKey.class.getName());
 		}
-		IFileKey fileKey = (IFileKey) key;
-		
+		IFileKey fileKey = (IFileKey) readableKey;
+		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
+
+		return readAsset(fileKey.getPath(), iOptions);
+	}
+	
+	
+	@Override
+	public InputStream readAsset(Path path, IOptions options) throws ContentException {
 		try {
-			return openStream(fileKey);
+			return openStream(path);
 		} catch (IOException e) {
 			throw new ContentException(e);
 		}
 	}
 	
-	
-	protected InputStream openStream(IFileKey fileKey) throws IOException, ContentException {
-		Path path = fileKey.getPath();
+	protected InputStream openStream(Path path) throws IOException, ContentException {
 		if(Files.isReadable(path)) { // TODO: File.isDirectory?
 			return Files.newInputStream(path, StandardOpenOption.READ);
 		}

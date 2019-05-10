@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.log.ILogger;
 
@@ -33,12 +34,29 @@ public class DefaultAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoa
 	
 	@Override
 	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+		getLogger().d(TAG, String.format("Starting loading for asset key=[%s], options=[%s], reader=[%s], decoder=[%s]", key, options, reader, decoder));
+		
+		if(reader == null) {
+			throw new ContentException(String.format("No reader for key=[%s]", key));
+		}
+		if(decoder == null) {
+			throw new ContentException(String.format("No decoder for key=[%s]", decoder));
+		}
+		
+		Object readableKey;
+		if(key instanceof IReadDelegateAssetKey) {
+			readableKey = ((IReadDelegateAssetKey) key).getReadableKey();
+			getLogger().d(TAG, String.format("Key is delegating to readable key=[%s]", readableKey));
+		}
+		else {
+			readableKey = key;
+		}
+		
 		T result = null;
-		try(InputStream inputStream = reader.read(key, options)) {
+		try(InputStream inputStream = reader.read(readableKey, options)) {
 			result = decoder.decode(inputStream, key, options);
-		} catch (IOException e) {
-			// Exception on close()
-			//throw new ContentException(e);
+		} catch (IOException e) { // Exception on close()
+			// throw exception instead?
 			getLogger().w(getTag(), "close() threw exception: " + e);
 		}
 		

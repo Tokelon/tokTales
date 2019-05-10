@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.util.manage.ObjectOrganizer;
 
 public class DefaultAssetReaderManager extends ObjectOrganizer<Type, IManagedAssetReader> implements IAssetReaderManager {
@@ -15,9 +16,11 @@ public class DefaultAssetReaderManager extends ObjectOrganizer<Type, IManagedAss
 	
 	@Override
 	public IAssetReader findReader(Object key, Object options) {
+		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
+		
 		IManagedAssetReader foundReader = null;
 		for(IManagedAssetReader reader: getObjectMap().values()) {
-			if(reader.canRead(key, options)) {
+			if(reader.canRead(readableKey, options)) {
 				foundReader = reader;
 				break;
 			}

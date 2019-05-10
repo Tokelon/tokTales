@@ -5,6 +5,7 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.IResourceManager;
+import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
@@ -28,15 +29,17 @@ public class ResourceScannerAssetReader implements IResourceScannerAssetReader {
 	
 	@Override
 	public boolean canRead(Object key, Object options) {
-		return key instanceof IResourceScannerKey;
+		return IReadDelegateAssetKey.getReadableKey(key) instanceof IResourceScannerKey;
 	}
 
 	@Override
 	public InputStream read(Object key, Object options) throws ContentException {
-		if(!(key instanceof IResourceScannerKey)) {
+		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
+
+		if(!(readableKey instanceof IResourceScannerKey)) {
 			throw new ContentException("Unsupported key: must be instance of " + IResourceScannerKey.class.getName());
 		}
-		IResourceScannerKey resourceScannerKey = (IResourceScannerKey) key;
+		IResourceScannerKey resourceScannerKey = (IResourceScannerKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
 		
 		return readAsset(resourceScannerKey.getResourceName(), iOptions);
