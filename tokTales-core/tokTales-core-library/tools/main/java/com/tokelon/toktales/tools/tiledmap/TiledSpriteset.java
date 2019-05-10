@@ -1,14 +1,18 @@
 package com.tokelon.toktales.tools.tiledmap;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
+import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetKey;
 import com.tokelon.toktales.core.content.sprite.ISpriteset;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
 
 public class TiledSpriteset implements ISpriteset {
 	
+	
+	private final ISpriteAssetKey assetKey;
+	
 	private final String mName;
 	private final ITiledMapTileset mTileset;
-	
 	
 	public TiledSpriteset(String name, ITiledMapTileset tileset) {
 		if(name == null || tileset == null) {
@@ -17,8 +21,14 @@ public class TiledSpriteset implements ISpriteset {
 		
 		mName = name;
 		mTileset = tileset;
+		assetKey = new SpriteAssetKey(name);
 	}
 
+	
+	@Override
+	public ISpriteAssetKey getAssetKey() {
+		return assetKey;
+	}
 	
 	@Override
 	public String getSpritesetName() {
@@ -61,7 +71,6 @@ public class TiledSpriteset implements ISpriteset {
 	}
 	
 	
-	
 	@Override
 	public boolean equals(Object o) {
 		if(this == o) {
@@ -79,6 +88,5 @@ public class TiledSpriteset implements ISpriteset {
 	public int hashCode() {
 		return mName.hashCode();
 	}
-	
 	
 }

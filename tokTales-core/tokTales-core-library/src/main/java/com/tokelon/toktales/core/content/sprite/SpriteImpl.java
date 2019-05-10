@@ -1,22 +1,35 @@
 package com.tokelon.toktales.core.content.sprite;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
+import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetKey;
 import com.tokelon.toktales.core.resources.IResource;
 
 public class SpriteImpl implements ISprite {
 
+	
+	private final ISpriteAssetKey assetKey;
+	
 	private final String name;
 	private IResource resource;
-	
+
 	public SpriteImpl(String name) {
 		if(name == null) {
 			throw new NullPointerException();
 		}
 		
 		this.name = name;
+		this.assetKey = new SpriteAssetKey(name);
 	}
+	
 	
 	public void attachResource(IResource resource) {
 		this.resource = resource;
+	}
+	
+	
+	@Override
+	public ISpriteAssetKey getAssetKey() {
+		return assetKey;
 	}
 	
 
@@ -52,7 +65,6 @@ public class SpriteImpl implements ISprite {
 	}
 	
 	
-	
 	@Override
 	public boolean equals(Object o) {
 		if(this == o) {
@@ -70,6 +82,5 @@ public class SpriteImpl implements ISprite {
 	public int hashCode() {
 		return name.hashCode();
 	}
-
 	
 }

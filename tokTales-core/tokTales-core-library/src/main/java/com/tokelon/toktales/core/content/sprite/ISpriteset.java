@@ -1,18 +1,26 @@
 package com.tokelon.toktales.core.content.sprite;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
 import com.tokelon.toktales.core.resources.IResource;
 
 public interface ISpriteset {
-
 	// TODO: Rename to ISpritesheet ?
+	// TODO: Define equals with key - use sprite count and size?
 	
-
-	public String getSpritesetName();
 	
+	// TODO: Replace these with the asset key
 	public boolean hasResourceAttached();
 	
 	public IResource getResource();
 	
+
+	
+	public ISpriteAssetKey getAssetKey();
+	
+	
+	
+	public String getSpritesetName();
+
 	
 	public int getSpriteWidth();
 	public int getSpriteHeight();
@@ -31,4 +39,13 @@ public interface ISpriteset {
 	public int getSpacing();
 	public int getMargin();
 	*/
+	
+	/* TODO: Use these instead!
+	public float getHorizontalStartFor(int spriteIndex);
+	public float getHorizontalEndFor(int spriteIndex);
+	
+	public float getVerticalStartFor(int spriteIndex);
+	public float getVerticalEndFor(int spriteIndex);
+	*/
+	
 }

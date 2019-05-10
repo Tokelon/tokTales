@@ -56,14 +56,13 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
 import com.tokelon.toktales.core.content.manage.sound.SoundAssetManager;
-import com.tokelon.toktales.core.content.manage.sprite.ExtendedSpriteAssetManager;
-import com.tokelon.toktales.core.content.manage.sprite.IExtendedSpriteAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetLoader;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetLoader;
+import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
@@ -396,8 +395,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {});
 		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetDecoder.class);
 		
-		bindInGameScopeAndForNotScoped(ISpriteAssetManager.class, IExtendedSpriteAssetManager.class);
-		bindInGameScopeAndForNotScoped(IExtendedSpriteAssetManager.class, ExtendedSpriteAssetManager.class);
+		bindInGameScopeAndForNotScoped(ISpriteAssetManager.class, SpriteAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetManager.class);
 		bind(new TypeLiteral<IAssetStore<ISpriteAsset, ISpriteAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISpriteAsset, ISpriteAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetLoader.class);

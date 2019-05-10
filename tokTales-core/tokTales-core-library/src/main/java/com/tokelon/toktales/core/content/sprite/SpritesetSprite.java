@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.content.sprite;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
 import com.tokelon.toktales.core.resources.IResource;
 
 public class SpritesetSprite implements ISprite {
@@ -12,10 +13,10 @@ public class SpritesetSprite implements ISprite {
 	private IResource mResource;
 	
 	/**
-	 * 
 	 * @param name
 	 * @param spriteset
 	 * @throws NullPointerException If name or spriteset is null.
+	 * @throws IllegalArguementException If spritesetIndex < 0.
 	 */
 	public SpritesetSprite(int spritesetIndex, ISpriteset spriteset) {
 		if(spritesetIndex < 0) {
@@ -30,6 +31,11 @@ public class SpritesetSprite implements ISprite {
 		this.mSpriteset = spriteset;
 	}
 	
+	
+	@Override
+	public ISpriteAssetKey getAssetKey() {
+		return mSpriteset.getAssetKey();
+	}
 	
 	@Override
 	public String getSpriteName() {
@@ -91,6 +97,5 @@ public class SpritesetSprite implements ISprite {
 		res += 13 * mSpriteset.hashCode();
 		return res;
 	}
-	
 	
 }
