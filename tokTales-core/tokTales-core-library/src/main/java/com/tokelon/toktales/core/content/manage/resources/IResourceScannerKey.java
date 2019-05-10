@@ -1,6 +1,8 @@
 package com.tokelon.toktales.core.content.manage.resources;
 
-public interface IResourceScannerKey {
+import com.tokelon.toktales.core.content.manage.keys.IReadableAssetKey;
+
+public interface IResourceScannerKey extends IReadableAssetKey {
 	
 	
 	public String getResourceName();

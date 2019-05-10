@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.content.manage.sound;
 
-public interface ISoundAssetKey {
+import com.tokelon.toktales.core.content.manage.keys.IIdentifiableAssetKey;
+
+public interface ISoundAssetKey extends IIdentifiableAssetKey {
 	
 }

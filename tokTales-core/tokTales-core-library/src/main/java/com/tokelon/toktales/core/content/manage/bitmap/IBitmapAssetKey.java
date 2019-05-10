@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.content.manage.bitmap;
 
-public interface IBitmapAssetKey {
+import com.tokelon.toktales.core.content.manage.keys.IIdentifiableAssetKey;
+
+public interface IBitmapAssetKey extends IIdentifiableAssetKey {
 
 }
