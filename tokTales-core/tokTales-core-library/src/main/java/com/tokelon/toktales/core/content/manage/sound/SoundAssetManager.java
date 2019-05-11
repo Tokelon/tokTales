@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
+import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 
@@ -12,8 +13,8 @@ public class SoundAssetManager extends DefaultAssetManager<ISoundAsset, ISoundAs
 
 
 	@Inject
-	public SoundAssetManager(ILogger logger, IAssetStore<ISoundAsset, ISoundAssetKey> assetStore, IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions> assetLoader) {
-		super(logger, assetStore, assetLoader);
+	public SoundAssetManager(ILogger logger, ISpecialAssetManager<ISoundAsset> specialAssetManager, IAssetStore<ISoundAsset, ISoundAssetKey> assetStore, IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions> assetLoader) {
+		super(logger, specialAssetManager, assetStore, assetLoader);
 	}
 
 }

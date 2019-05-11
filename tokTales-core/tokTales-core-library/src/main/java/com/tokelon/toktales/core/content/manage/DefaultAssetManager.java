@@ -14,12 +14,14 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	
 	
 	private final ILogger logger;
+	private final ISpecialAssetManager<T> specialAssetManager;
 	private final IAssetStore<T, K> assetStore;
 	private final IAssetLoader<T, K, O> assetLoader;
 
 	@Inject
-	public DefaultAssetManager(ILogger logger, IAssetStore<T, K> assetStore, IAssetLoader<T, K, O> assetLoader) {
+	public DefaultAssetManager(ILogger logger, ISpecialAssetManager<T> specialAssetManager, IAssetStore<T, K> assetStore, IAssetLoader<T, K, O> assetLoader) {
 		this.logger = logger;
+		this.specialAssetManager = specialAssetManager;
 		this.assetStore = assetStore;
 		this.assetLoader = assetLoader;
 	}
@@ -27,6 +29,11 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	
 	protected ILogger getLogger() {
 		return logger;
+	}
+	
+	@Override
+	public ISpecialAssetManager<T> getSpecialAssetManager() {
+		return specialAssetManager;
 	}
 	
 	@Override
@@ -41,22 +48,24 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 
 	
 	private T handleAssetResult(K key, T asset) {
+		T assetResult = asset;
 		if(asset == null) {
-			// TODO: Insert with INullResultAsset?
+			assetResult = getSpecialAssetManager().getSpecialAssetNull();
 		}
 		
-		assetStore.insert(key, asset);
-		return asset; // Return INullResultAsset as well
+		getStore().insert(key, assetResult);
+		return assetResult;
 	}
 	
 	private CompletableFuture<T> handleAssetFuture(K key, CompletableFuture<T> future) {
 		return future
 		.exceptionally((exception) -> {
-			// TODO: Insert with ILoadErrorAsset
-			assetStore.insert(key, null);
+			getLogger().e(TAG, String.format("Asset future completed exceptionally for [key=%s]: %s", key, exception));
 			
-			logger.e(TAG, String.format("Asset future completed exceptionally for [key=%s]: %s", key, exception));
-			return null; // TODO: Return ILoadErrorAsset as well
+			T assetResult = getSpecialAssetManager().getSpecialAssetLoadError();
+			getStore().insert(key, assetResult);
+			
+			return assetResult;
 		})
 		.thenApply((result) -> {
 			return handleAssetResult(key, result);
@@ -65,29 +74,29 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	
 	@Override
 	public T getAsset(K key) {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
-		handleAssetFuture(key, assetLoader.enqueue(key));
+		handleAssetFuture(key, getLoader().enqueue(key));
 		return null;
 	}
 
 	@Override
 	public T getAsset(K key, O options) {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
-		handleAssetFuture(key, assetLoader.enqueue(key, options));
+		handleAssetFuture(key, getLoader().enqueue(key, options));
 		return null;
 	}
 
 	@Override
 	public T getAssetOrError(K key) throws ContentNotFoundException {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
@@ -99,16 +108,16 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 
 	@Override
 	public T getAssetLoadIfNeeded(K key) {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
 		T result = null;
 		try {
-			result = handleAssetResult(key, assetLoader.load(key));
+			result = handleAssetResult(key, getLoader().load(key));
 		} catch (ContentException e) {
-			logger.e(TAG, String.format("Asset loading failed for [key=%s]: %s", key, e));
+			getLogger().e(TAG, String.format("Asset loading failed for [key=%s]: %s", key, e));
 		}
 		
 		return result;
@@ -116,16 +125,16 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 
 	@Override
 	public T getAssetLoadIfNeeded(K key, O options) {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
 		T result = null;
 		try {
-			result = handleAssetResult(key, assetLoader.load(key, options));
+			result = handleAssetResult(key, getLoader().load(key, options));
 		} catch (ContentException e) {
-			logger.e(TAG, String.format("Asset loading failed for [key=%s, options=%s]: %s", key, options, e));
+			getLogger().e(TAG, String.format("Asset loading failed for [key=%s, options=%s]: %s", key, options, e));
 		}
 		
 		return result;
@@ -133,22 +142,22 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 
 	@Override
 	public T getAssetLoadIfNeededOrError(K key) throws ContentException {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
-		return handleAssetResult(key, assetLoader.load(key));
+		return handleAssetResult(key, getLoader().load(key));
 	}
 
 	@Override
 	public T getAssetLoadIfNeededOrError(K key, O options) throws ContentException {
-		T asset = assetStore.retrieve(key);
+		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
-		return handleAssetResult(key, assetLoader.load(key, options));
+		return handleAssetResult(key, getLoader().load(key, options));
 	}
 
 
@@ -173,4 +182,15 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		return handleAssetResult(key, asset);
 	}
 
+	
+	@Override
+	public boolean isAssetValid(T asset) {
+		return getSpecialAssetManager().isAssetValid(asset);
+	}
+	
+	@Override
+	public boolean isAssetValidForKey(K key) {
+		return getSpecialAssetManager().isAssetValid(getStore().retrieve(key));
+	}
+	
 }

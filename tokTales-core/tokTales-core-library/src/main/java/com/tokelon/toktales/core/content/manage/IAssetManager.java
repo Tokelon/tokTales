@@ -7,17 +7,19 @@ import java9.util.concurrent.CompletableFuture;
 
 public interface IAssetManager<T, K, O> {
 	// TODO: Document all asset management types
-	// Implement memory management strategy and maybe make asset type disposable?
-
+	// Implement memory management strategy
 	// Support for getting multiple assets?
 
 	
+	public ISpecialAssetManager<T> getSpecialAssetManager();
 	
 	// Maybe don't expose this here?
 	public IAssetStore<T, K> getStore();
 	
 	public IAssetLoader<T, K, O> getLoader();
 	//public IAssetLoader<? extends T, ? extends K> getLoader();
+	
+	
 	
 
 	
@@ -53,6 +55,10 @@ public interface IAssetManager<T, K, O> {
 	*/
 
 	
+	public boolean isAssetValid(T asset);
+	public boolean isAssetValidForKey(K key);
+	
+	
 	/* Implement these how?
 	public void unloadAll();
 	public void removeAll();
@@ -67,12 +73,6 @@ public interface IAssetManager<T, K, O> {
 	public T removeLoadedAsset(K key);
 	*/
 	
-
-	// How to handle special assets? -> No special treatment; Maybe add an identifier method.
-	//public T getSpecialAsset(K key);
-	//public boolean isAssetSpecial(T asset);
-	//public boolean isAssetKeySpecial(K key);
-	//public String/Type getSpecialAssetType(T asset);
 	
 	
 	/* TODO: Add with default binding
