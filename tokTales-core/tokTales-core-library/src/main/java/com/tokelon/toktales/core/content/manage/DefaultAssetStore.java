@@ -11,29 +11,45 @@ import javax.inject.Inject;
 public class DefaultAssetStore<T, K> implements IAssetStore<T, K> {
 	
 	
+	private final T nullAsset;
+	
 	private final Map<K, T> assetMap;
 	private final Set<IAssetStoreChangeListener<T, K>> listeners;
 	
 	@Inject
-	public DefaultAssetStore() {
-		this(32, 0.75f, 1);
+	public DefaultAssetStore(ISpecialAssetFactory<T> specialAssetNullFactory) {
+		this(specialAssetNullFactory, 32, 0.75f, 1);
 	}
 	
-	public DefaultAssetStore(int initialCapacity, float loadFactor, int concurrencyLevel) {
+	public DefaultAssetStore(ISpecialAssetFactory<T> specialAssetNullFactory, int initialCapacity, float loadFactor, int concurrencyLevel) {
+		nullAsset = specialAssetNullFactory.create();
 		assetMap = new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
 		listeners = Collections.synchronizedSet(new HashSet<>());
-		
-		//boolean hasConccurrent = StreamSupport.stream(assetMap.keySet()).spliterator().hasCharacteristics(Spliterator.CONCURRENT);
+	}
+	
+	
+	protected T getNullAsset() {
+		return nullAsset;
+	}
+
+	protected T getAssetIn(T in) {
+		return in == null ? getNullAsset() : in;
+	}
+	
+	protected T getAssetOut(T out) {
+		return out == getNullAsset() ? null : out;
 	}
 	
 	
 	@Override
 	public boolean insert(K key, T asset) {
-		T oldAsset = assetMap.put(key, asset);
+		T actualAsset = getAssetIn(asset);
+		
+		T oldAsset = assetMap.put(key, actualAsset);
 		
 		synchronized (listeners) {
 			for(IAssetStoreChangeListener<T, K> listener: listeners) {
-				listener.onAssetInsert(key, asset, oldAsset);
+				listener.onAssetInsert(key, actualAsset, oldAsset);
 			}
 		}
 		
@@ -42,7 +58,7 @@ public class DefaultAssetStore<T, K> implements IAssetStore<T, K> {
 
 	@Override
 	public T retrieve(K key) {
-		return assetMap.get(key);
+		return getAssetOut(assetMap.get(key));
 	}
 
 	@Override
@@ -58,7 +74,7 @@ public class DefaultAssetStore<T, K> implements IAssetStore<T, K> {
 
 	@Override
 	public T remove(K key) {
-		T removedAsset = assetMap.remove(key);
+		T removedAsset = getAssetOut(assetMap.remove(key));
 		
 		synchronized (listeners) {
 			for(IAssetStoreChangeListener<T, K> listener: listeners) {
