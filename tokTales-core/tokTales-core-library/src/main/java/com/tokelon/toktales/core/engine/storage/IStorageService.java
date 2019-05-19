@@ -73,4 +73,9 @@ public interface IStorageService extends IEngineService {
 	
 	
 	
+	public interface IStorageServiceFactory {
+		
+		public IStorageService create(Path storageRootPath);
+	}
+	
 }

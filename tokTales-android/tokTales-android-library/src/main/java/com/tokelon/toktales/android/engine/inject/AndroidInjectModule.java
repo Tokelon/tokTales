@@ -1,5 +1,7 @@
 package com.tokelon.toktales.android.engine.inject;
 
+import java.nio.file.Path;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
@@ -55,10 +57,10 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
-import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -82,6 +84,9 @@ public class AndroidInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		/* Engine bindings */
+		bind(Path.class).annotatedWith(StorageRootPath.class).toProvider(() -> Environment.getExternalStorageDirectory().toPath());
+		// bind a path for ContentRootPath as well?
+		
 		
 		bindInEngineScope(IEnvironment.class, AndroidEnvironment.class);
 		bindInEngineScope(ILogService.class, AndroidLogService.class);
@@ -91,9 +96,8 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		 //bindInEngineScope(AndroidUIService.class); // Do not bind implementation in this case, scoping will be done via the provider
 		
 		bindInEngineScope(IContentService.class, AndroidContentService.class);
-		bindToProviderInEngineScope(IStorageService.class, ProviderIStorageService.class);
-		 //bindInEngineScope(AndroidStorageService.class); // Does not affect IStorageService binding since provider assignment is via creation
-		
+		bindInEngineScope(IStorageService.class, AndroidStorageService.class);
+		bind(IStorageService.IStorageServiceFactory.class).to(AndroidStorageService.AndroidStorageServiceFactory.class);
 		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
 		bind(IInputService.class).to(IAndroidInputService.class);
 		 bind(IAndroidInputService.class).to(AndroidInputService.class);
@@ -205,19 +209,5 @@ public class AndroidInjectModule extends AbstractInjectModule {
 			return uiService;
 		}
 	}
-
-	private static class ProviderIStorageService implements Provider<IStorageService> {
-		private final IStorageService storageService;
-		@Inject
-		public ProviderIStorageService(ILogger logger) {
-			// Object assignment via creation; scope of AndroidStorageService will not apply!
-			storageService = new AndroidStorageService(logger, Environment.getExternalStorageDirectory());
-		}
-
-		@Override
-		public IStorageService get() {
-			return storageService;
-		}
-	}
-
+	
 }

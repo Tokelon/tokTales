@@ -7,13 +7,12 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IListing;
@@ -29,26 +28,19 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty | TODO: Should this mirror extStorageRoot?
 
 	
-	private final Path rootPath;
 	
-	private final ILogger logger;
-	private final File extStorageRoot;
-	private final String storageDirName;
-
+	private final Path storageRootPath;
+	
 	@Inject
-	public DesktopStorageService(ILogger logger, File externalStorageRoot, String storageDirectoryName) {
-		this.logger = logger;
-		this.extStorageRoot = externalStorageRoot;
-		this.storageDirName = storageDirectoryName;
-		
-		this.rootPath = Paths.get(externalStorageRoot.getAbsolutePath(), storageDirectoryName); //getPath()?
+	public DesktopStorageService(@StorageRootPath Path storageRootPath) {
+		this.storageRootPath = storageRootPath;
 	}
 	
 	
 	
 	@Override
 	public Path getRootPath() {
-		return rootPath;
+		return storageRootPath;
 	}
 	
 	@Override
@@ -216,9 +208,10 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	
 	
 	private File getExtAppDir() throws StorageException {
-		File appDir = new File(extStorageRoot, storageDirName);
+		// TODO: Consider whether returning canonical path might be better
+		File appDir = storageRootPath.toFile(); // Make field?
 		
-		if(!appDir.exists()) {
+		if(!appDir.exists() || !appDir.isDirectory()) {
 			if(!appDir.mkdir()) {
 				throw new StorageException("Unable to create external application root directory");
 			}
@@ -227,5 +220,14 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 		return appDir;
 	}
 	
+	
+	
+	public static class DesktopStorageServiceFactory implements IStorageServiceFactory {
+		
+		@Override
+		public IStorageService create(Path storageRootPath) {
+			return new DesktopStorageService(storageRootPath);
+		}
+	}
 
 }

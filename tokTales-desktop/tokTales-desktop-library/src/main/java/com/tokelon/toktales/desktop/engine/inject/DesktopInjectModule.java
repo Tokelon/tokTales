@@ -1,6 +1,7 @@
 package com.tokelon.toktales.desktop.engine.inject;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -13,10 +14,10 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
-import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -33,6 +34,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
+import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRootPath;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
@@ -80,12 +82,16 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		/* Engine bindings */
+		bind(Path.class).annotatedWith(StorageRootPath.class).toInstance(Paths.get(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
+		bind(Path.class).annotatedWith(AssetRootPath.class).toInstance(Paths.get(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
+		
 		
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);
 		bindInEngineScope(ILogService.class, DesktopLogService.class);
 		bindInEngineScope(IUIService.class, DesktopUIService.class);
-		bindToProviderInEngineScope(IContentService.class, ProviderIContentService.class);
-		bindToProviderInEngineScope(IStorageService.class, ProviderIStorageService.class);
+		bindInEngineScope(IContentService.class, DesktopContentService.class);
+		bindInEngineScope(IStorageService.class, DesktopStorageService.class);
+		bind(IStorageService.IStorageServiceFactory.class).to(DesktopStorageService.DesktopStorageServiceFactory.class);
 		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
 		bind(IInputService.class).to(IDesktopInputService.class);
 		 bind(IDesktopInputService.class).to(DesktopInputService.class);
@@ -172,32 +178,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		@Override
 		public IRenderService get() {
 			return renderService;
-		}
-	}
-
-	public static class ProviderIContentService implements Provider<IContentService> {
-		private final IContentService contentService;
-		@Inject
-		public ProviderIContentService(ILogger logger) {
-			this.contentService = new DesktopContentService(logger, new File(DATA_LOCATION_NAME), CONTENT_LOCATION_NAME);
-		}
-		
-		@Override
-		public IContentService get() {
-			return contentService;
-		}
-	}
-	
-	public static class ProviderIStorageService implements Provider<IStorageService> {
-		private final IStorageService storageService;
-		@Inject
-		public ProviderIStorageService(ILogger logger) {
-			this.storageService = new DesktopStorageService(logger, new File(DATA_LOCATION_NAME), STORAGE_LOCATION_NAME);
-		}
-
-		@Override
-		public IStorageService get() {
-			return storageService;
 		}
 	}
 	

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Path;
 
 import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
@@ -25,6 +26,8 @@ import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.storage.IStorageService;
+import com.tokelon.toktales.core.engine.storage.IStorageService.IStorageServiceFactory;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.ITexture;
@@ -32,27 +35,25 @@ import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.values.TokelonEmbeddedGraphics;
+import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRootPath;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
 import com.tokelon.toktales.desktop.lwjgl.data.STBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFont;
-import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 
 public class DesktopContentService extends AbstractContentService implements IContentService {
 	
 	public static final String TAG = "DesktopContentService";
 	
 	
-	private final DesktopStorageService assetStorageService;
-	
 	private final ILogger logger;
+	private final IStorageService assetStorageService;
 
 	@Inject
-	public DesktopContentService(ILogger logger, File externalStorageRoot, String contentDirectoryName) {
+	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRootPath Path assetRootPath) {
 		this.logger = logger;
-		
-		this.assetStorageService = new DesktopStorageService(logger, externalStorageRoot, contentDirectoryName);
+		this.assetStorageService = storageServiceFactory.create(assetRootPath);
 	}
 	
 	

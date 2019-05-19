@@ -7,13 +7,12 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.engine.storage.StorageUnavailableException;
@@ -36,24 +35,18 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl("");			// Is empty
 
 	
-	private final Path rootPath;
-
-	private final ILogger logger;
-	private final File extStorageRoot;
+	private final Path storageRootPath;
 	
 	@Inject
-	public AndroidStorageService(ILogger logger, File externalStorageRoot) {
-		this.logger = logger;
-		this.extStorageRoot = externalStorageRoot;
-		
-		this.rootPath = Paths.get(externalStorageRoot.getAbsolutePath()); //getPath()?
+	public AndroidStorageService(@StorageRootPath Path storageRootPath) {
+		this.storageRootPath = storageRootPath;
 	}
 
 	
 	
 	@Override
 	public Path getRootPath() {
-		return rootPath;
+		return storageRootPath;
 	}
 	
 	@Override
@@ -276,8 +269,6 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	}
 
 	
-	
-	
 
 	private boolean isExternalStorageWritable() {
 		String state = Environment.getExternalStorageState();
@@ -291,9 +282,10 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	
 	
 	private File getExtAppDir() throws StorageException {
-		File appDir = new File(extStorageRoot, EXTERNAL_APP_DIR.getLocationPath().getPath());
+		// TODO: Consider whether returning canonical path might be better
+		File appDir = storageRootPath.resolve(EXTERNAL_APP_DIR.getLocationPath().getPath()).toFile();
 		
-		if(!appDir.exists()) {
+		if(!appDir.exists() || !appDir.isDirectory()) {
 			if(!appDir.mkdir()) {
 				throw new StorageException("Unable to create external application root directory");
 			}
@@ -303,5 +295,12 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	}
 	
 	
+	public static class AndroidStorageServiceFactory implements IStorageServiceFactory {
+		
+		@Override
+		public IStorageService create(Path storageRootPath) {
+			return new AndroidStorageService(storageRootPath);
+		}
+	}
 	
 }

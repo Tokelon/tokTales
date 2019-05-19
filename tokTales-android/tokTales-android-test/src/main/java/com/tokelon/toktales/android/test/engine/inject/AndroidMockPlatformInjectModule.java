@@ -1,21 +1,18 @@
 package com.tokelon.toktales.android.test.engine.inject;
 
-import android.content.Context;
+import static org.mockito.Mockito.mock;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.tokelon.toktales.android.storage.AndroidStorageService;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.log.ILogService;
-import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 
-import java.io.File;
-
-import static org.mockito.Mockito.mock;
+import android.content.Context;
 
 /** Desktop inject module used for testing.
  * <p>
@@ -40,22 +37,12 @@ public class AndroidMockPlatformInjectModule extends AbstractInjectModule {
         bindInEngineScope(ILogService.class, SysoutLogService.class);
         
         // Bind to avoid RuntimeException when trying to access android Environment
-		bindToProviderInEngineScope(IStorageService.class, ProviderIStorageService.class); // Maybe mock as well
+		bind(Path.class).annotatedWith(StorageRootPath.class).toInstance(Paths.get("build/tmp/tests"));
+		// Maybe mock IStorageService to avoid file changes
+		//bind(IStorageService.class).toInstance(mock(IStorageService.class));
+		//bind(IStorageService.IStorageServiceFactory.class).toInstance(mock(IStorageService.IStorageServiceFactory.class));
 	}
 	
-	
-	private static class ProviderIStorageService implements Provider<IStorageService> {
-		private final IStorageService storageService;
-		@Inject
-		public ProviderIStorageService(ILogger logger) {
-			storageService = new AndroidStorageService(logger, new File(""));
-		}
-
-		@Override
-		public IStorageService get() {
-			return storageService;
-		}
-	}
 	
 	private static class SysoutLogService extends AbstractEngineService implements ILogService {
 
