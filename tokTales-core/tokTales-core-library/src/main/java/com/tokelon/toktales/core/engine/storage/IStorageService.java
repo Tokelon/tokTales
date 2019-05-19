@@ -3,15 +3,18 @@ package com.tokelon.toktales.core.engine.storage;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 
 public interface IStorageService extends IEngineService {
-	
 	// TODO: Make same listing methods as in content framework
 	// Also write javadoc
+
+	
+	public Path getRootPath();
 	
 	public IApplicationLocation getRootLocation();
 	

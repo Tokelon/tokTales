@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,11 +29,14 @@ import com.tokelon.toktales.core.values.LocationsAndPlaces;
 import android.os.Environment;
 
 public class AndroidStorageService extends AbstractEngineService implements IStorageService {
-
+	//TODO: !! CHeck if all the streams are being closed correctly!
+	
 	
 	private static final ILocation EXTERNAL_APP_DIR = LocationsAndPlaces.LOCATION_EXTERNAL;
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl("");			// Is empty
+
 	
+	private final Path rootPath;
 
 	private final ILogger logger;
 	private final File extStorageRoot;
@@ -40,12 +45,16 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	public AndroidStorageService(ILogger logger, File externalStorageRoot) {
 		this.logger = logger;
 		this.extStorageRoot = externalStorageRoot;
+		
+		this.rootPath = Paths.get(externalStorageRoot.getAbsolutePath()); //getPath()?
 	}
 
 	
 	
-	//TODO: !! CHeck if all the streams are being closed correctly!
-	
+	@Override
+	public Path getRootPath() {
+		return rootPath;
+	}
 	
 	@Override
 	public IApplicationLocation getRootLocation() {

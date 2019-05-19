@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,6 +29,8 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty | TODO: Should this mirror extStorageRoot?
 
 	
+	private final Path rootPath;
+	
 	private final ILogger logger;
 	private final File extStorageRoot;
 	private final String storageDirName;
@@ -36,9 +40,16 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 		this.logger = logger;
 		this.extStorageRoot = externalStorageRoot;
 		this.storageDirName = storageDirectoryName;
+		
+		this.rootPath = Paths.get(externalStorageRoot.getAbsolutePath(), storageDirectoryName); //getPath()?
 	}
 	
 	
+	
+	@Override
+	public Path getRootPath() {
+		return rootPath;
+	}
 	
 	@Override
 	public IApplicationLocation getRootLocation() {
