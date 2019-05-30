@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.content.manage;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -22,7 +23,7 @@ class TestExecutorServiceAssetLoader {
 		System.out.println("TestExecutorServiceAssetLoader started");
 		
 		TestDecoder testDecoder = new TestDecoder();
-		TestLoader testLoader = new TestLoader(new StandardLogger(), new DefaultAssetReaderManager(), testDecoder);
+		TestLoader testLoader = new TestLoader(new StandardLogger(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
 		
 		
 		int tasks = 10;

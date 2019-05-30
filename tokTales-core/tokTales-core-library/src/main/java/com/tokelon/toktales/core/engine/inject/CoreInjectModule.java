@@ -5,8 +5,6 @@ import java.lang.reflect.Type;
 import java.util.concurrent.ExecutorService;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
@@ -29,6 +27,7 @@ import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
+import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetFactory;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
@@ -89,6 +88,7 @@ import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
 import com.tokelon.toktales.core.engine.inject.annotation.GridTileSize;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
@@ -380,15 +380,19 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
 		
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
+		bind(IAssetReaderManager.class).to(DefaultAssetReaderManager.class);
 		
-		bind(DefaultAssetReaderManager.class); // Will be created via constructor injection
-		bind(IAssetReaderManager.class).toProvider(IAssetReaderManagerProvider.class); // Will be created via provider
-		
+		MapBinder<Type, IManagedAssetReader> assetReaderBinder = MapBinder.newMapBinder(binder(), Type.class, IManagedAssetReader.class, AssetReaders.class);
+		assetReaderBinder.addBinding(IFileKey.class).to(IFileAssetReader.class);
+		assetReaderBinder.addBinding(IRelativeFileKey.class).to(IRelativeFileAssetReader.class);
+		assetReaderBinder.addBinding(IResourceKey.class).to(IResourceAssetReader.class);
+		assetReaderBinder.addBinding(IResourceScannerKey.class).to(IResourceScannerAssetReader.class);
+
 		bind(IFileAssetReader.class).to(FileAssetReader.class);
 		bind(IRelativeFileAssetReader.class).to(RelativeFileAssetReader.class);
 		bind(IResourceAssetReader.class).to(ResourceAssetReader.class);
 		bind(IResourceScannerAssetReader.class).to(ResourceScannerAssetReader.class);
-
+		
 		
 		Multibinder<IParentResolver<File>> fileParentResolverBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<File>>() {}, ParentResolvers.class);
 		fileParentResolverBinder.addBinding().to(FileParentResolver.class);
@@ -441,39 +445,4 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<ISpecialAssetManager<ISpriteAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISpriteAsset>>() {}).in(Scopes.SINGLETON);
 	}
 	
-	
-	protected static class IAssetReaderManagerProvider implements Provider<IAssetReaderManager> {
-		private final Provider<DefaultAssetReaderManager> implementationProvider;
-		private final Provider<IFileAssetReader> fileAssetReaderProvider;
-		private final Provider<IRelativeFileAssetReader> relativefileAssetReaderProvider;
-		private final Provider<IResourceAssetReader> resourceAssetReaderProvider;
-		private final Provider<IResourceScannerAssetReader> resourceScannerAssetReader;
-		
-		@Inject
-		public IAssetReaderManagerProvider(
-				Provider<DefaultAssetReaderManager> implementationProvider,
-				Provider<IFileAssetReader> fileAssetReaderProvider,
-				Provider<IRelativeFileAssetReader> relativefileAssetReaderProvider,
-				Provider<IResourceAssetReader> resourceAssetReaderProvider,
-				Provider<IResourceScannerAssetReader> resourceScannerAssetReader
-		) {
-			this.implementationProvider = implementationProvider;
-			this.fileAssetReaderProvider = fileAssetReaderProvider;
-			this.relativefileAssetReaderProvider = relativefileAssetReaderProvider;
-			this.resourceAssetReaderProvider = resourceAssetReaderProvider;
-			this.resourceScannerAssetReader = resourceScannerAssetReader;
-		}
-		
-		@Override
-		public IAssetReaderManager get() {
-			DefaultAssetReaderManager assetReaderProvider = implementationProvider.get();
-			assetReaderProvider.add(IFileKey.class, fileAssetReaderProvider.get());
-			assetReaderProvider.add(IRelativeFileKey.class, relativefileAssetReaderProvider.get());
-			assetReaderProvider.add(IResourceKey.class, resourceAssetReaderProvider.get());
-			assetReaderProvider.add(IResourceScannerKey.class, resourceScannerAssetReader.get());
-			
-			return assetReaderProvider;
-		}
-	}
-
 }
