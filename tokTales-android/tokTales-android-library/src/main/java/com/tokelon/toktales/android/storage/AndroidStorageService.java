@@ -11,7 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.engine.storage.StorageUnavailableException;
@@ -37,7 +37,7 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	private final String storageRoot;
 	
 	@Inject
-	public AndroidStorageService(@StorageRootPath String storageRoot) {
+	public AndroidStorageService(@StorageRoot String storageRoot) {
 		this.storageRoot = storageRoot;
 	}
 	

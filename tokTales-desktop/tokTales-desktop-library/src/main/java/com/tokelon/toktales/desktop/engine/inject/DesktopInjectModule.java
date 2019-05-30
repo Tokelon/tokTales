@@ -19,7 +19,7 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
-import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
@@ -39,7 +39,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
-import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRootPath;
+import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
@@ -87,8 +87,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-		bind(String.class).annotatedWith(StorageRootPath.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME).getPath());
-		bind(String.class).annotatedWith(AssetRootPath.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME).getPath());
+		bind(String.class).annotatedWith(StorageRoot.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME).getPath());
+		bind(String.class).annotatedWith(AssetRoot.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME).getPath());
 		
 		
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);
@@ -135,6 +135,10 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(ITextureFontAssetDecoder.class).to(STBTextureFontDecoder.class);
 		
 		
+		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
+		fileParentIdentifierBinder.addBinding(StorageRoot.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
+		fileParentIdentifierBinder.addBinding(AssetRoot.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
+		
 		/* Unused so far - everything under here */
 
 		/* Overriding bindings does not work with Multibinder or MapBinder, because the final value is always arbitrary
@@ -145,11 +149,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
-		
-		
-		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
-		fileParentIdentifierBinder.addBinding(StorageRootPath.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
-		fileParentIdentifierBinder.addBinding(AssetRootPath.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
 	}
 
 	

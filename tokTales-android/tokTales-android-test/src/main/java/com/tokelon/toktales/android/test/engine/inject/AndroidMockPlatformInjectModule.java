@@ -10,7 +10,7 @@ import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
-import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
@@ -40,7 +40,7 @@ public class AndroidMockPlatformInjectModule extends AbstractInjectModule {
         bindInEngineScope(ILogService.class, SysoutLogService.class);
         
         // Bind to avoid RuntimeException when trying to access android Environment
-		bind(String.class).annotatedWith(StorageRootPath.class).toInstance("build/tmp/tests");
+		bind(String.class).annotatedWith(StorageRoot.class).toInstance("build/tmp/tests");
 		// Maybe mock IStorageService to avoid file changes
 		//bind(IStorageService.class).toInstance(mock(IStorageService.class));
 		//bind(IStorageService.IStorageServiceFactory.class).toInstance(mock(IStorageService.IStorageServiceFactory.class));

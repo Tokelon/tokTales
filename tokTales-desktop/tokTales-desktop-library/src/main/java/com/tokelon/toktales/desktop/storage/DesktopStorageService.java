@@ -11,7 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.AbstractEngineService;
-import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IListing;
@@ -30,7 +30,7 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	private final String storageRoot;
 	
 	@Inject
-	public DesktopStorageService(@StorageRootPath String storageRoot) {
+	public DesktopStorageService(@StorageRoot String storageRoot) {
 		this.storageRoot = storageRoot;
 	}
 	

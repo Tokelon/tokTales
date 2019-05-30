@@ -34,7 +34,7 @@ import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.values.TokelonEmbeddedGraphics;
-import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRootPath;
+import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
@@ -50,7 +50,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	private final IStorageService assetStorageService;
 
 	@Inject
-	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRootPath String assetRoot) {
+	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot) {
 		this.logger = logger;
 		this.assetStorageService = storageServiceFactory.create(assetRoot);
 	}

@@ -59,7 +59,7 @@ import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
-import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
+import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
@@ -86,7 +86,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-		bind(String.class).annotatedWith(StorageRootPath.class).toProvider(() -> Environment.getExternalStorageDirectory().getPath());
+		bind(String.class).annotatedWith(StorageRoot.class).toProvider(() -> Environment.getExternalStorageDirectory().getPath());
 		// bind a path for ContentRootPath as well?
 		
 		
@@ -146,7 +146,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		
 		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
-		fileParentIdentifierBinder.addBinding(StorageRootPath.class).toProvider(() -> Environment.getExternalStorageDirectory());
+		fileParentIdentifierBinder.addBinding(StorageRoot.class).toProvider(() -> Environment.getExternalStorageDirectory());
 		
 		
 		/* Unused so far - everything under here */
