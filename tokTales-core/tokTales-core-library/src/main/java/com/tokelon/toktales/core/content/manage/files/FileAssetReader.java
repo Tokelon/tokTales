@@ -1,10 +1,9 @@
 package com.tokelon.toktales.core.content.manage.files;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -28,25 +27,26 @@ public class FileAssetReader implements IFileAssetReader {
 		IFileKey fileKey = (IFileKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
 
-		return readAsset(fileKey.getPath(), iOptions);
+		return readAsset(fileKey.getFile(), iOptions);
 	}
 	
 	
 	@Override
-	public InputStream readAsset(Path path, IOptions options) throws ContentException {
+	public InputStream readAsset(File file, IOptions options) throws ContentException {
 		try {
-			return openStream(path);
+			return openStream(file);
 		} catch (IOException e) {
 			throw new ContentException(e);
 		}
 	}
 	
-	protected InputStream openStream(Path path) throws IOException, ContentException {
-		if(Files.isReadable(path)) { // TODO: File.isDirectory?
-			return Files.newInputStream(path, StandardOpenOption.READ);
+	protected InputStream openStream(File file) throws IOException, ContentException {
+		if(file.canRead()) { // TODO: File.isDirectory?
+			return new FileInputStream(file);
+			//return Files.asByteSource(file).openStream();
 		}
 		else {
-			throw new ContentException("File is not readable: " + path);
+			throw new ContentException("File is not readable: " + file);
 		}
 	}
 

@@ -1,20 +1,20 @@
 package com.tokelon.toktales.core.content.manage.files;
 
-import java.nio.file.Path;
+import java.io.File;
 
 public class FileKey implements IFileKey {
 	
 	
-	private Path path;
+	private final File file;
 
-	public FileKey(Path path) {
-		this.path = path;
+	public FileKey(File path) {
+		this.file = path;
 	}
 
 	
 	@Override
-	public Path getPath() {
-		return path;
+	public File getFile() {
+		return file;
 	}
 
 
@@ -22,7 +22,7 @@ public class FileKey implements IFileKey {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((file == null) ? 0 : file.hashCode());
 		return result;
 	}
 
@@ -39,11 +39,11 @@ public class FileKey implements IFileKey {
 		}
 		
 		IFileKey other = (IFileKey) obj;
-		if (path == null) {
-			if (other.getPath() != null) {
+		if (file == null) {
+			if (other.getFile() != null) {
 				return false;
 			}
-		} else if (!path.equals(other.getPath())) {
+		} else if (!file.equals(other.getFile())) {
 			return false;
 		}
 		
