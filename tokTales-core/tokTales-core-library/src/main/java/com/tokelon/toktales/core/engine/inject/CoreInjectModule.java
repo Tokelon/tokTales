@@ -50,6 +50,9 @@ import com.tokelon.toktales.core.content.manage.files.FileParentResolver;
 import com.tokelon.toktales.core.content.manage.files.IFileAssetReader;
 import com.tokelon.toktales.core.content.manage.files.IFileKey;
 import com.tokelon.toktales.core.content.manage.files.IParentResolver;
+import com.tokelon.toktales.core.content.manage.files.IRelativeFileAssetReader;
+import com.tokelon.toktales.core.content.manage.files.IRelativeFileKey;
+import com.tokelon.toktales.core.content.manage.files.RelativeFileAssetReader;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
@@ -382,9 +385,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IAssetReaderManager.class).toProvider(IAssetReaderManagerProvider.class); // Will be created via provider
 		
 		bind(IFileAssetReader.class).to(FileAssetReader.class);
+		bind(IRelativeFileAssetReader.class).to(RelativeFileAssetReader.class);
 		bind(IResourceAssetReader.class).to(ResourceAssetReader.class);
 		bind(IResourceScannerAssetReader.class).to(ResourceScannerAssetReader.class);
-		
+
 		
 		Multibinder<IParentResolver<File>> fileParentResolverBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<File>>() {}, ParentResolvers.class);
 		fileParentResolverBinder.addBinding().to(FileParentResolver.class);
@@ -441,6 +445,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 	protected static class IAssetReaderManagerProvider implements Provider<IAssetReaderManager> {
 		private final Provider<DefaultAssetReaderManager> implementationProvider;
 		private final Provider<IFileAssetReader> fileAssetReaderProvider;
+		private final Provider<IRelativeFileAssetReader> relativefileAssetReaderProvider;
 		private final Provider<IResourceAssetReader> resourceAssetReaderProvider;
 		private final Provider<IResourceScannerAssetReader> resourceScannerAssetReader;
 		
@@ -448,11 +453,13 @@ public class CoreInjectModule extends AbstractInjectModule {
 		public IAssetReaderManagerProvider(
 				Provider<DefaultAssetReaderManager> implementationProvider,
 				Provider<IFileAssetReader> fileAssetReaderProvider,
+				Provider<IRelativeFileAssetReader> relativefileAssetReaderProvider,
 				Provider<IResourceAssetReader> resourceAssetReaderProvider,
 				Provider<IResourceScannerAssetReader> resourceScannerAssetReader
 		) {
 			this.implementationProvider = implementationProvider;
 			this.fileAssetReaderProvider = fileAssetReaderProvider;
+			this.relativefileAssetReaderProvider = relativefileAssetReaderProvider;
 			this.resourceAssetReaderProvider = resourceAssetReaderProvider;
 			this.resourceScannerAssetReader = resourceScannerAssetReader;
 		}
@@ -461,6 +468,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		public IAssetReaderManager get() {
 			DefaultAssetReaderManager assetReaderProvider = implementationProvider.get();
 			assetReaderProvider.add(IFileKey.class, fileAssetReaderProvider.get());
+			assetReaderProvider.add(IRelativeFileKey.class, relativefileAssetReaderProvider.get());
 			assetReaderProvider.add(IResourceKey.class, resourceAssetReaderProvider.get());
 			assetReaderProvider.add(IResourceScannerKey.class, resourceScannerAssetReader.get());
 			
