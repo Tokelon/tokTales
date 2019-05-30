@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,19 +27,17 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty | TODO: Should this mirror extStorageRoot?
 
 	
-	
-	private final Path storageRootPath;
+	private final String storageRoot;
 	
 	@Inject
-	public DesktopStorageService(@StorageRootPath Path storageRootPath) {
-		this.storageRootPath = storageRootPath;
+	public DesktopStorageService(@StorageRootPath String storageRoot) {
+		this.storageRoot = storageRoot;
 	}
 	
 	
-	
 	@Override
-	public Path getRootPath() {
-		return storageRootPath;
+	public String getRoot() {
+		return storageRoot;
 	}
 	
 	@Override
@@ -208,8 +205,7 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	
 	
 	private File getExtAppDir() throws StorageException {
-		// TODO: Consider whether returning canonical path might be better
-		File appDir = storageRootPath.toFile(); // Make field?
+		File appDir = new File(storageRoot); // Make field?
 		
 		if(!appDir.exists() || !appDir.isDirectory()) {
 			if(!appDir.mkdir()) {
@@ -225,8 +221,8 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	public static class DesktopStorageServiceFactory implements IStorageServiceFactory {
 		
 		@Override
-		public IStorageService create(Path storageRootPath) {
-			return new DesktopStorageService(storageRootPath);
+		public IStorageService create(String storageRoot) {
+			return new DesktopStorageService(storageRoot);
 		}
 	}
 

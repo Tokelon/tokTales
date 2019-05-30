@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Path;
 
 import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
@@ -51,9 +50,9 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	private final IStorageService assetStorageService;
 
 	@Inject
-	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRootPath Path assetRootPath) {
+	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRootPath String assetRoot) {
 		this.logger = logger;
-		this.assetStorageService = storageServiceFactory.create(assetRootPath);
+		this.assetStorageService = storageServiceFactory.create(assetRoot);
 	}
 	
 	

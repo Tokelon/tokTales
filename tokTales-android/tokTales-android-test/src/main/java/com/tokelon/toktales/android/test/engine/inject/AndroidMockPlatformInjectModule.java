@@ -2,9 +2,6 @@ package com.tokelon.toktales.android.test.engine.inject;
 
 import static org.mockito.Mockito.mock;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
@@ -37,7 +34,7 @@ public class AndroidMockPlatformInjectModule extends AbstractInjectModule {
         bindInEngineScope(ILogService.class, SysoutLogService.class);
         
         // Bind to avoid RuntimeException when trying to access android Environment
-		bind(Path.class).annotatedWith(StorageRootPath.class).toInstance(Paths.get("build/tmp/tests"));
+		bind(String.class).annotatedWith(StorageRootPath.class).toInstance("build/tmp/tests");
 		// Maybe mock IStorageService to avoid file changes
 		//bind(IStorageService.class).toInstance(mock(IStorageService.class));
 		//bind(IStorageService.IStorageServiceFactory.class).toInstance(mock(IStorageService.IStorageServiceFactory.class));

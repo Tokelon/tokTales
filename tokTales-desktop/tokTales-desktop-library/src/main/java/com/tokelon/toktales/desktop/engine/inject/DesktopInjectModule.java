@@ -1,5 +1,6 @@
 package com.tokelon.toktales.desktop.engine.inject;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -82,8 +83,8 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-		bind(Path.class).annotatedWith(StorageRootPath.class).toInstance(Paths.get(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
-		bind(Path.class).annotatedWith(AssetRootPath.class).toInstance(Paths.get(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
+		bind(String.class).annotatedWith(StorageRootPath.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME).getPath());
+		bind(String.class).annotatedWith(AssetRootPath.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME).getPath());
 		
 		
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);

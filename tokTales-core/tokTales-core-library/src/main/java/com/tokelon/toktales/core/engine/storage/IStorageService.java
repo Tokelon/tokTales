@@ -3,7 +3,6 @@ package com.tokelon.toktales.core.engine.storage;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.resources.IListing;
@@ -14,7 +13,7 @@ public interface IStorageService extends IEngineService {
 	// Also write javadoc
 
 	
-	public Path getRootPath();
+	public String getRoot();
 	
 	public IApplicationLocation getRootLocation();
 	
@@ -75,7 +74,7 @@ public interface IStorageService extends IEngineService {
 	
 	public interface IStorageServiceFactory {
 		
-		public IStorageService create(Path storageRootPath);
+		public IStorageService create(String storageRoot);
 	}
 	
 }

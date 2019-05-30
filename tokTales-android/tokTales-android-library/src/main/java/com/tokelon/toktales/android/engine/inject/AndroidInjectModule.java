@@ -1,7 +1,5 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import java.nio.file.Path;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
@@ -84,7 +82,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-		bind(Path.class).annotatedWith(StorageRootPath.class).toProvider(() -> Environment.getExternalStorageDirectory().toPath());
+		bind(String.class).annotatedWith(StorageRootPath.class).toProvider(() -> Environment.getExternalStorageDirectory().getPath());
 		// bind a path for ContentRootPath as well?
 		
 		

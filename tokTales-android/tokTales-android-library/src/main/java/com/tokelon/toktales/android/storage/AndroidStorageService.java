@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,18 +34,17 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl("");			// Is empty
 
 	
-	private final Path storageRootPath;
+	private final String storageRoot;
 	
 	@Inject
-	public AndroidStorageService(@StorageRootPath Path storageRootPath) {
-		this.storageRootPath = storageRootPath;
+	public AndroidStorageService(@StorageRootPath String storageRoot) {
+		this.storageRoot = storageRoot;
 	}
-
 	
 	
 	@Override
-	public Path getRootPath() {
-		return storageRootPath;
+	public String getRoot() {
+		return storageRoot;
 	}
 	
 	@Override
@@ -282,8 +280,7 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	
 	
 	private File getExtAppDir() throws StorageException {
-		// TODO: Consider whether returning canonical path might be better
-		File appDir = storageRootPath.resolve(EXTERNAL_APP_DIR.getLocationPath().getPath()).toFile();
+		File appDir = new File(storageRoot, EXTERNAL_APP_DIR.getLocationPath().getPath());
 		
 		if(!appDir.exists() || !appDir.isDirectory()) {
 			if(!appDir.mkdir()) {
@@ -298,8 +295,8 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	public static class AndroidStorageServiceFactory implements IStorageServiceFactory {
 		
 		@Override
-		public IStorageService create(Path storageRootPath) {
-			return new AndroidStorageService(storageRootPath);
+		public IStorageService create(String storageRoot) {
+			return new AndroidStorageService(storageRoot);
 		}
 	}
 	
