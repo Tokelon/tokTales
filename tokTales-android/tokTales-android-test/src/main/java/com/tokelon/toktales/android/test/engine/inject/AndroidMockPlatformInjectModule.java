@@ -2,8 +2,14 @@ package com.tokelon.toktales.android.test.engine.inject;
 
 import static org.mockito.Mockito.mock;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.game.IGameAdapter;
@@ -29,7 +35,7 @@ public class AndroidMockPlatformInjectModule extends AbstractInjectModule {
 		bind(IGameAdapter.class).to(DummyGameAdapter.class);
         bind(Context.class).toInstance(mockedContext);
         
-
+        
         // Bind to avoid RuntimeException when trying to log
         bindInEngineScope(ILogService.class, SysoutLogService.class);
         
@@ -38,6 +44,9 @@ public class AndroidMockPlatformInjectModule extends AbstractInjectModule {
 		// Maybe mock IStorageService to avoid file changes
 		//bind(IStorageService.class).toInstance(mock(IStorageService.class));
 		//bind(IStorageService.IStorageServiceFactory.class).toInstance(mock(IStorageService.IStorageServiceFactory.class));
+		
+		// Bind to override StorageRoot provider that calls Android Environment
+		bind(new TypeLiteral<Map<Object, File>>() {}).annotatedWith(ParentIdentifiers.class).toInstance(new HashMap<>());
 	}
 	
 	

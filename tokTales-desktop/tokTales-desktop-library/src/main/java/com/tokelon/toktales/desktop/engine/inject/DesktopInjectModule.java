@@ -7,14 +7,18 @@ import java.nio.file.Paths;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
+import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
+import com.tokelon.toktales.core.content.manage.files.IParentResolver;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
+import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
+import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
@@ -141,6 +145,11 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
+		
+		
+		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
+		fileParentIdentifierBinder.addBinding(StorageRootPath.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
+		fileParentIdentifierBinder.addBinding(AssetRootPath.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
 	}
 
 	

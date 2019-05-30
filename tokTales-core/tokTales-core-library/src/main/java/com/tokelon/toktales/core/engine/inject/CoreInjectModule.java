@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.engine.inject;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.concurrent.ExecutorService;
 
@@ -8,6 +9,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.MapBinder;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Types;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -43,8 +46,10 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.files.FileAssetReader;
+import com.tokelon.toktales.core.content.manage.files.FileParentResolver;
 import com.tokelon.toktales.core.content.manage.files.IFileAssetReader;
 import com.tokelon.toktales.core.content.manage.files.IFileKey;
+import com.tokelon.toktales.core.content.manage.files.IParentResolver;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
@@ -82,6 +87,9 @@ import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.annotation.GridTileSize;
+import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
+import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
+import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
@@ -376,6 +384,13 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(IFileAssetReader.class).to(FileAssetReader.class);
 		bind(IResourceAssetReader.class).to(ResourceAssetReader.class);
 		bind(IResourceScannerAssetReader.class).to(ResourceScannerAssetReader.class);
+		
+		
+		Multibinder<IParentResolver<File>> fileParentResolverBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<File>>() {}, ParentResolvers.class);
+		fileParentResolverBinder.addBinding().to(FileParentResolver.class);
+
+		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
+		fileParentIdentifierBinder.addBinding(UserDir.class).toInstance(new File("."));
 		
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);

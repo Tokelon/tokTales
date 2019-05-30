@@ -1,9 +1,12 @@
 package com.tokelon.toktales.android.engine.inject;
 
+import java.io.File;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
@@ -55,6 +58,7 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
+import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRootPath;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
@@ -139,6 +143,10 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(ISoundAssetDecoder.class).to(AndroidSoundDecoder.class);
 		bind(IBitmapAssetDecoder.class).to(AndroidBitmapDecoder.class);
 		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
+		
+		
+		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
+		fileParentIdentifierBinder.addBinding(StorageRootPath.class).toProvider(() -> Environment.getExternalStorageDirectory());
 		
 		
 		/* Unused so far - everything under here */
