@@ -59,4 +59,10 @@ public interface IHierarchicalInjectConfig extends IInjectConfig {
 	 */
 	public IHierarchicalInjectConfig setDefaultStage(Stage stage);
 
+	
+	/**
+	 * @return The filter modules currently set.
+	 */
+	public Collection<Class<? extends Module>> getFilterModules();
+	
 }

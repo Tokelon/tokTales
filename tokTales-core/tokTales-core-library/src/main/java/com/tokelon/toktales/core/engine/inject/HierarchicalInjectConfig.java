@@ -110,4 +110,9 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
         return configModules;
     }
     
+    @Override
+    public Collection<Class<? extends Module>> getFilterModules() {
+    	return configFilterModules;
+    }
+    
 }
