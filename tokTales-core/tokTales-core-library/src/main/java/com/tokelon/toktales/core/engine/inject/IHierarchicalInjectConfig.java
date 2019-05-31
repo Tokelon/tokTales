@@ -14,14 +14,14 @@ public interface IHierarchicalInjectConfig extends IInjectConfig {
 	 * @param modules
 	 * @return
 	 */
-	public HierarchicalInjectConfig extend(Module... modules);
+	public IHierarchicalInjectConfig extend(Module... modules);
 
 	/** Combines all current modules with the given ones.
 	 * 
 	 * @param modules
 	 * @return
 	 */
-	public HierarchicalInjectConfig extend(Collection<Module> modules);
+	public IHierarchicalInjectConfig extend(Collection<Module> modules);
 
 	/** Combines all current modules with the given ones, but marks the given ones as overrides.
 	 * <p>
@@ -30,21 +30,21 @@ public interface IHierarchicalInjectConfig extends IInjectConfig {
 	 * @param modules
 	 * @return
 	 */
-	public HierarchicalInjectConfig override(Module... modules);
+	public IHierarchicalInjectConfig override(Module... modules);
 
 	/** Combines all current modules with the given ones, but marks the given ones as overrides.
 	 * 
 	 * @param modules
 	 * @return
 	 */
-	public HierarchicalInjectConfig override(Collection<Module> modules);
+	public IHierarchicalInjectConfig override(Collection<Module> modules);
 
 	/** Sets the default stage.
 	 * 
 	 * @param stage The stage that will be used if none is provided.
 	 * @return This object.
 	 */
-	public HierarchicalInjectConfig setDefaultStage(Stage stage);
+	public IHierarchicalInjectConfig setDefaultStage(Stage stage);
 
 
 }
