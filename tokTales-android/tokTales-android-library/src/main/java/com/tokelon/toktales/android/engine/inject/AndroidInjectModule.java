@@ -1,12 +1,9 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import java.io.File;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
@@ -18,6 +15,7 @@ import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidBitmapDecoder;
 import com.tokelon.toktales.android.data.AndroidContentService;
+import com.tokelon.toktales.android.data.AndroidParentIdentifiersInjectModule;
 import com.tokelon.toktales.android.data.AndroidSoundDecoder;
 import com.tokelon.toktales.android.data.AndroidTextureFontDecoder;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
@@ -58,7 +56,6 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
@@ -145,8 +142,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
 		
 		
-		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
-		fileParentIdentifierBinder.addBinding(StorageRoot.class).toProvider(() -> Environment.getExternalStorageDirectory());
+		install(new AndroidParentIdentifiersInjectModule());
 		
 		
 		/* Unused so far - everything under here */

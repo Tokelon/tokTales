@@ -1,14 +1,11 @@
 package com.tokelon.toktales.core.engine.inject;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.concurrent.ExecutorService;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.MapBinder;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Types;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -27,7 +24,6 @@ import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
-import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetFactory;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
@@ -44,26 +40,13 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
-import com.tokelon.toktales.core.content.manage.files.FileAssetReader;
-import com.tokelon.toktales.core.content.manage.files.FileParentResolver;
-import com.tokelon.toktales.core.content.manage.files.IFileAssetReader;
-import com.tokelon.toktales.core.content.manage.files.IFileKey;
-import com.tokelon.toktales.core.content.manage.files.IParentResolver;
-import com.tokelon.toktales.core.content.manage.files.IRelativeFileAssetReader;
-import com.tokelon.toktales.core.content.manage.files.IRelativeFileKey;
-import com.tokelon.toktales.core.content.manage.files.RelativeFileAssetReader;
+import com.tokelon.toktales.core.content.manage.files.AssetReadersInjectModule;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetManager;
-import com.tokelon.toktales.core.content.manage.resources.IResourceAssetReader;
-import com.tokelon.toktales.core.content.manage.resources.IResourceKey;
-import com.tokelon.toktales.core.content.manage.resources.IResourceScannerAssetReader;
-import com.tokelon.toktales.core.content.manage.resources.IResourceScannerKey;
-import com.tokelon.toktales.core.content.manage.resources.ResourceAssetReader;
-import com.tokelon.toktales.core.content.manage.resources.ResourceScannerAssetReader;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
@@ -88,11 +71,7 @@ import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
 import com.tokelon.toktales.core.engine.inject.annotation.GridTileSize;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
-import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.MainLogger;
 import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
@@ -376,29 +355,14 @@ public class CoreInjectModule extends AbstractInjectModule {
 				.build(IAssetManagerFactory.class));
 		*/
 		
+		
 		// TODO: Maybe bind this with a custom annotation like @AssetLoaderExecutorService for finer control
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
 		
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
 		bind(IAssetReaderManager.class).to(DefaultAssetReaderManager.class);
 		
-		MapBinder<Type, IManagedAssetReader> assetReaderBinder = MapBinder.newMapBinder(binder(), Type.class, IManagedAssetReader.class, AssetReaders.class);
-		assetReaderBinder.addBinding(IFileKey.class).to(IFileAssetReader.class);
-		assetReaderBinder.addBinding(IRelativeFileKey.class).to(IRelativeFileAssetReader.class);
-		assetReaderBinder.addBinding(IResourceKey.class).to(IResourceAssetReader.class);
-		assetReaderBinder.addBinding(IResourceScannerKey.class).to(IResourceScannerAssetReader.class);
-
-		bind(IFileAssetReader.class).to(FileAssetReader.class);
-		bind(IRelativeFileAssetReader.class).to(RelativeFileAssetReader.class);
-		bind(IResourceAssetReader.class).to(ResourceAssetReader.class);
-		bind(IResourceScannerAssetReader.class).to(ResourceScannerAssetReader.class);
-		
-		
-		Multibinder<IParentResolver<File>> fileParentResolverBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<File>>() {}, ParentResolvers.class);
-		fileParentResolverBinder.addBinding().to(FileParentResolver.class);
-
-		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
-		fileParentIdentifierBinder.addBinding(UserDir.class).toInstance(new File("."));
+		install(new AssetReadersInjectModule());
 		
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);

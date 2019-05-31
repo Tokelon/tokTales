@@ -1,35 +1,19 @@
 package com.tokelon.toktales.desktop.engine.inject;
 
 import java.io.File;
-import java.lang.reflect.Type;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
-import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
-import com.tokelon.toktales.core.content.manage.files.IParentResolver;
-import com.tokelon.toktales.core.content.manage.files.IPathAssetReader;
-import com.tokelon.toktales.core.content.manage.files.IPathKey;
-import com.tokelon.toktales.core.content.manage.files.IRelativePathAssetReader;
-import com.tokelon.toktales.core.content.manage.files.IRelativePathKey;
-import com.tokelon.toktales.core.content.manage.files.PathAssetReader;
-import com.tokelon.toktales.core.content.manage.files.PathParentResolver;
-import com.tokelon.toktales.core.content.manage.files.RelativePathAssetReader;
+import com.tokelon.toktales.core.content.manage.files.PathAssetReadersInjectModule;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
-import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
@@ -50,6 +34,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
+import com.tokelon.toktales.desktop.content.DesktopParentIdentifiersInjectModule;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
@@ -147,25 +132,10 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		
 		
 		// File parent identifiers
-		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
-		fileParentIdentifierBinder.addBinding(StorageRoot.class).toInstance(new File(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
-		fileParentIdentifierBinder.addBinding(AssetRoot.class).toInstance(new File(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
-		
-		// Path parent identifiers
-		Multibinder<IParentResolver<Path>> pathParentResolver = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<Path>>() {}, ParentResolvers.class);
-		pathParentResolver.addBinding().to(PathParentResolver.class);
-		
-		MapBinder<Object, Path> pathParentIdentifier = MapBinder.newMapBinder(binder(), Object.class, Path.class, ParentIdentifiers.class);
-		pathParentIdentifier.addBinding(StorageRoot.class).toInstance(Paths.get(DATA_LOCATION_NAME, STORAGE_LOCATION_NAME));
-		pathParentIdentifier.addBinding(AssetRoot.class).toInstance(Paths.get(DATA_LOCATION_NAME, CONTENT_LOCATION_NAME));
+		install(new DesktopParentIdentifiersInjectModule());
 		
 		// Path asset readers
-		MapBinder<Type, IManagedAssetReader> assetReaderBinder = MapBinder.newMapBinder(binder(), Type.class, IManagedAssetReader.class, AssetReaders.class);
-		assetReaderBinder.addBinding(IPathKey.class).to(IPathAssetReader.class);
-		assetReaderBinder.addBinding(IRelativePathKey.class).to(IRelativePathAssetReader.class);
-
-		bind(IPathAssetReader.class).to(PathAssetReader.class);
-		bind(IRelativePathAssetReader.class).to(RelativePathAssetReader.class);
+		install(new PathAssetReadersInjectModule());
 		
 		
 		/* Unused so far - everything under here */
@@ -179,7 +149,7 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
 		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
 	}
-
+	
 	
 	/* Apparently this also works? What about scope though?
 	@ForClass(InitialGamestate.class)
