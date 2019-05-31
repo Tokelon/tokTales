@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadFactory;
 import javax.inject.Provider;
 
 public class DefaultExecutorServiceProvider implements Provider<ExecutorService> {
-
+	// Use Guava daemon executor and implement starting and stopping? (maybe with Guava service?)
 	
 	@Override
 	public ExecutorService get() {
