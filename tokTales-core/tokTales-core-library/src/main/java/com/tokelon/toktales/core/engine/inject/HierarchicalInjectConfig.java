@@ -19,17 +19,17 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
     
     private List<Module> configModules = new ArrayList<>();
     
-    private List<Class<Module>> configFilterModules = new ArrayList<>();
+    private List<Class<? extends Module>> configFilterModules = new ArrayList<>();
     
     
     public HierarchicalInjectConfig() { }
     
     @SafeVarargs
-	public HierarchicalInjectConfig(Class<Module>... filterModules) {
+	public HierarchicalInjectConfig(Class<? extends Module>... filterModules) {
     	configFilterModules.addAll(Arrays.asList(filterModules));
 	}
     
-    public HierarchicalInjectConfig(Collection<Class<Module>> filterModules) {
+    public HierarchicalInjectConfig(Collection<Class<? extends Module>> filterModules) {
     	configFilterModules.addAll(filterModules);
 	}
     
@@ -70,12 +70,12 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
     
     
     @Override
-    public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<Module>... modules) {
+    public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<? extends Module>... modules) {
     	return filter(Arrays.asList(modules));
     }
     
     @Override
-    public IHierarchicalInjectConfig filter(Collection<Class<Module>> modules) {
+    public IHierarchicalInjectConfig filter(Collection<Class<? extends Module>> modules) {
     	configFilterModules.addAll(modules);
     	return this;
     }

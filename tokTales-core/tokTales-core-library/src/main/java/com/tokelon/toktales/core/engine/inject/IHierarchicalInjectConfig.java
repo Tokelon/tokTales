@@ -42,14 +42,14 @@ public interface IHierarchicalInjectConfig extends IInjectConfig {
 	 * @param modules
 	 * @return
 	 */
-	public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<Module>... modules);
+	public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<? extends Module>... modules);
 
 	/** Adds all given modules to the filter modules list. Any modules contained in the list will be filtered out in operations after this one.
 	 * 
 	 * @param modules
 	 * @return
 	 */
-	public IHierarchicalInjectConfig filter(Collection<Class<Module>> modules);
+	public IHierarchicalInjectConfig filter(Collection<Class<? extends Module>> modules);
 
 
 	/** Sets the default stage.
