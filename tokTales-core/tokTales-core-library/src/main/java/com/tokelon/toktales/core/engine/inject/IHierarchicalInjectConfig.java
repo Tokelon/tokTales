@@ -7,9 +7,8 @@ import com.google.inject.Stage;
 
 public interface IHierarchicalInjectConfig extends IInjectConfig {
 
+	
 	/** Combines all current modules with the given ones.
-	 * <p>
-	 * Note: When passing an array, do not modify it afterwards.
 	 * 
 	 * @param modules
 	 * @return
@@ -24,8 +23,6 @@ public interface IHierarchicalInjectConfig extends IInjectConfig {
 	public IHierarchicalInjectConfig extend(Collection<Module> modules);
 
 	/** Combines all current modules with the given ones, but marks the given ones as overrides.
-	 * <p>
-	 * Note: When passing an array, do not modify it afterwards.
 	 * 
 	 * @param modules
 	 * @return
@@ -39,12 +36,27 @@ public interface IHierarchicalInjectConfig extends IInjectConfig {
 	 */
 	public IHierarchicalInjectConfig override(Collection<Module> modules);
 
+
+	/** Adds all given modules to the filter modules list. Any modules contained in the list will be filtered out in operations after this one.
+	 * 
+	 * @param modules
+	 * @return
+	 */
+	public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<Module>... modules);
+
+	/** Adds all given modules to the filter modules list. Any modules contained in the list will be filtered out in operations after this one.
+	 * 
+	 * @param modules
+	 * @return
+	 */
+	public IHierarchicalInjectConfig filter(Collection<Class<Module>> modules);
+
+
 	/** Sets the default stage.
 	 * 
 	 * @param stage The stage that will be used if none is provided.
 	 * @return This object.
 	 */
 	public IHierarchicalInjectConfig setDefaultStage(Stage stage);
-
 
 }

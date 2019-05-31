@@ -9,11 +9,29 @@ import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 
+import java9.util.stream.Collectors;
+import java9.util.stream.StreamSupport;
+
 public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
 
-    private List<Module> moduleList = new ArrayList<>();
-    
+	
     private Stage defaultStage = Stage.PRODUCTION;
+    
+    private List<Module> configModules = new ArrayList<>();
+    
+    private List<Class<Module>> configFilterModules = new ArrayList<>();
+    
+    
+    public HierarchicalInjectConfig() { }
+    
+    @SafeVarargs
+	public HierarchicalInjectConfig(Class<Module>... filterModules) {
+    	configFilterModules.addAll(Arrays.asList(filterModules));
+	}
+    
+    public HierarchicalInjectConfig(Collection<Class<Module>> filterModules) {
+    	configFilterModules.addAll(filterModules);
+	}
     
     
     @Override
@@ -23,7 +41,8 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
     
     @Override
 	public HierarchicalInjectConfig extend(Collection<Module> modules) {
-        moduleList.addAll(modules);
+    	Collection<Module> filteredModules = filterModules(modules);
+        configModules.addAll(filteredModules);
         return this;
     }
     
@@ -35,19 +54,45 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
     
     @Override
 	public HierarchicalInjectConfig override(Collection<Module> modules) {
-        if(moduleList.isEmpty()) {
-            moduleList.addAll(modules);    
+    	Collection<Module> filteredModules = filterModules(modules);
+        if(configModules.isEmpty()) {
+            configModules.addAll(filteredModules);
         }
         else {
-            Module overrideModule = Modules.override(moduleList).with(modules);
+            Module overrideModule = Modules.override(configModules).with(filteredModules);
             
-            moduleList = new ArrayList<>();
-            moduleList.add(overrideModule);    
+            configModules = new ArrayList<>();
+            configModules.add(overrideModule);    
         }
         
         return this;
     }
     
+    
+    @Override
+    public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<Module>... modules) {
+    	return filter(Arrays.asList(modules));
+    }
+    
+    @Override
+    public IHierarchicalInjectConfig filter(Collection<Class<Module>> modules) {
+    	configFilterModules.addAll(modules);
+    	return this;
+    }
+
+    
+    protected Collection<Module> filterModules(Collection<Module> modules) {
+    	if(modules.isEmpty()) {
+    		return modules;
+    	}
+    	
+    	List<Module> result = StreamSupport.stream(modules)
+    	.filter(m -> StreamSupport.stream(configFilterModules).noneMatch(c -> c.isInstance(m)))
+    	.collect(Collectors.toList());
+
+    	return result;
+    }
+
 
     @Override
 	public HierarchicalInjectConfig setDefaultStage(Stage stage) {
@@ -58,11 +103,11 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
     @Override
     public Stage getDefaultStage() {
         return defaultStage;
-    }    
+    }
     
     @Override
     public Collection<Module> getModules() {
-        return moduleList;
+        return configModules;
     }
     
 }
