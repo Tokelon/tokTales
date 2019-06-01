@@ -15,6 +15,8 @@ import java9.util.stream.StreamSupport;
 public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
 
 	
+	private boolean isConfigured = false;
+	
     private Stage defaultStage = Stage.PRODUCTION;
     
     private List<Module> configModules = new ArrayList<>();
@@ -22,16 +24,35 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
     private List<Class<? extends Module>> configFilterModules = new ArrayList<>();
     
     
-    public HierarchicalInjectConfig() { }
+    public HierarchicalInjectConfig() {
+    	configure();
+    }
     
     @SafeVarargs
 	public HierarchicalInjectConfig(Class<? extends Module>... filterModules) {
     	configFilterModules.addAll(Arrays.asList(filterModules));
+    	configure();
 	}
     
     public HierarchicalInjectConfig(Collection<Class<? extends Module>> filterModules) {
     	configFilterModules.addAll(filterModules);
+    	configure();
 	}
+
+
+    /** Called when this inject config is created.
+	 * <p>
+	 * This is where you would call methods to configure your modules.<br>
+	 * Note that at this point you cannot rely on this config being initialized.
+	 * <p>
+	 */
+    protected void configure() {
+    	if(isConfigured) {
+    		throw new IllegalStateException("Config has already been configured");
+    	}
+    	
+    	isConfigured = true;
+    }
     
     
     @Override
