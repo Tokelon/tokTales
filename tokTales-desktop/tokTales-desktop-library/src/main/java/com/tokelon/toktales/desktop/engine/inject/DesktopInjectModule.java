@@ -7,7 +7,6 @@ import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
-import com.tokelon.toktales.core.content.manage.files.PathAssetReadersInjectModule;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
@@ -34,7 +33,6 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
-import com.tokelon.toktales.desktop.content.DesktopParentIdentifiersInjectModule;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
 import com.tokelon.toktales.desktop.game.states.IDesktopGameStateInput;
@@ -129,13 +127,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(ISoundAssetDecoder.class).to(STBVorbisSoundDecoder.class);
 		bind(IBitmapAssetDecoder.class).to(STBBitmapDecoder.class);
 		bind(ITextureFontAssetDecoder.class).to(STBTextureFontDecoder.class);
-		
-		
-		// File parent identifiers
-		install(new DesktopParentIdentifiersInjectModule());
-		
-		// Path asset readers
-		install(new PathAssetReadersInjectModule());
 		
 		
 		/* Unused so far - everything under here */

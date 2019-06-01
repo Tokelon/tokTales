@@ -40,7 +40,6 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
-import com.tokelon.toktales.core.content.manage.files.AssetReadersInjectModule;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
@@ -361,8 +360,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
 		bind(IAssetReaderManager.class).to(DefaultAssetReaderManager.class);
-		
-		install(new AssetReadersInjectModule());
 		
 		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);

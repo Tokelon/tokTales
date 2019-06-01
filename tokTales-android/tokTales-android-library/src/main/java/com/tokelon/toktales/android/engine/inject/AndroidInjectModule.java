@@ -15,7 +15,6 @@ import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidBitmapDecoder;
 import com.tokelon.toktales.android.data.AndroidContentService;
-import com.tokelon.toktales.android.data.AndroidParentIdentifiersInjectModule;
 import com.tokelon.toktales.android.data.AndroidSoundDecoder;
 import com.tokelon.toktales.android.data.AndroidTextureFontDecoder;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
@@ -140,9 +139,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(ISoundAssetDecoder.class).to(AndroidSoundDecoder.class);
 		bind(IBitmapAssetDecoder.class).to(AndroidBitmapDecoder.class);
 		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
-		
-		
-		install(new AndroidParentIdentifiersInjectModule());
 		
 		
 		/* Unused so far - everything under here */
