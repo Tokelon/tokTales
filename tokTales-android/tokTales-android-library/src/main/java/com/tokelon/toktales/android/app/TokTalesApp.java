@@ -1,7 +1,7 @@
 package com.tokelon.toktales.android.app;
 
 import com.tokelon.toktales.android.engine.AndroidEngineLauncher;
-import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
+import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
@@ -127,7 +127,7 @@ public class TokTalesApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		
-		AndroidEngineLauncher androidLauncher = new AndroidEngineLauncher(new AndroidInjectConfig(), getApplicationContext());
+		AndroidEngineLauncher androidLauncher = new AndroidEngineLauncher(new MasterAndroidInjectConfig(), getApplicationContext());
 		try {
 			launchEngine(androidLauncher);
 		} catch (EngineException e) {

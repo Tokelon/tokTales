@@ -2,7 +2,7 @@ package com.tokelon.toktales.test.android.game.states;
 
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
+import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.android.test.engine.inject.AndroidMockPlatformInjectModule;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.game.states.IControlScheme;
@@ -28,8 +28,9 @@ public class AndroidTestStatesInjectModule extends AbstractInjectModule {
 	}
 
 
+	// This should probably be in a config
 	public static Injector createAndroidStatesInjector() {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
 		injectConfig.extend(new CoreTestStatesInjectModule());
 		injectConfig.override(new AndroidTestStatesInjectModule());

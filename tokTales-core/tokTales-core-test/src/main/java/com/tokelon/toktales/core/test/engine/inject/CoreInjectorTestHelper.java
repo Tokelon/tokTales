@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.test.engine.inject;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
+import com.tokelon.toktales.core.engine.inject.MasterCoreInjectConfig;
 
 public class CoreInjectorTestHelper {
 
@@ -14,7 +14,7 @@ public class CoreInjectorTestHelper {
 	}
 	
 	public static Injector createCoreMockInjector(Module[] extendModules, Module[] overrideModules) {
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		

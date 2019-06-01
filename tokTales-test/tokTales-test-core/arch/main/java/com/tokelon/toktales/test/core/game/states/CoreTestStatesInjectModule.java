@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
+import com.tokelon.toktales.core.engine.inject.MasterCoreInjectConfig;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.test.engine.inject.CoreMockPlatformInjectModule;
 import com.tokelon.toktales.test.core.game.states.enginestate.EngineGamescene;
@@ -61,8 +61,9 @@ public class CoreTestStatesInjectModule extends AbstractInjectModule {
 	}
 	
 
+	// This should probably be in a config
 	public static Injector createCoreStatesInjector() {
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		
 		injectConfig.override(new CoreTestStatesInjectModule());

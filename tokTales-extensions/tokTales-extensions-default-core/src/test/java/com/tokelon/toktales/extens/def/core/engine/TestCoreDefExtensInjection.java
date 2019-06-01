@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.test.engine.inject.CoreMockPlatformInjectModule;
 import com.tokelon.toktales.core.test.engine.inject.InjectionTestHelper;
-import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectConfig;
+import com.tokelon.toktales.extens.def.core.engine.inject.MasterCoreDefExtensInjectConfig;
 import com.tokelon.toktales.extens.def.core.test.engine.inject.CoreDefExtensMockPlatformInjectModule;
 
 public class TestCoreDefExtensInjection {
@@ -38,13 +38,13 @@ public class TestCoreDefExtensInjection {
 	@Test(expected = CreationException.class)
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		
-		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
+		MasterCoreDefExtensInjectConfig injectConfig = new MasterCoreDefExtensInjectConfig();
 		Injector injector = injectConfig.createInjector();	
 	}
 	
 	@Test
 	public void injectorCreation_ShouldOnlyFailOnExpectedBindings() {
-		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
+		MasterCoreDefExtensInjectConfig injectConfig = new MasterCoreDefExtensInjectConfig();
 		
 		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ALL_EXPECTED_BINDING_TYPES, ALL_EXPECTED_BINDING_ANNOTATIONS);
 	}
@@ -52,7 +52,7 @@ public class TestCoreDefExtensInjection {
 
 	@Test
 	public void injectorCreationWithMockPlatform_ShouldSucceed() {
-		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
+		MasterCoreDefExtensInjectConfig injectConfig = new MasterCoreDefExtensInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreDefExtensMockPlatformInjectModule());
@@ -62,7 +62,7 @@ public class TestCoreDefExtensInjection {
 	
 	@Test
 	public void engineCreationWithMockPlatform_ShouldSucceed() {
-		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
+		MasterCoreDefExtensInjectConfig injectConfig = new MasterCoreDefExtensInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreDefExtensMockPlatformInjectModule());
@@ -73,7 +73,7 @@ public class TestCoreDefExtensInjection {
 	
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		CoreDefExtensInjectConfig injectConfig = new CoreDefExtensInjectConfig();
+		MasterCoreDefExtensInjectConfig injectConfig = new MasterCoreDefExtensInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreDefExtensMockPlatformInjectModule());

@@ -18,7 +18,7 @@ public class TestDesktopInjection {
 	
 	@Test
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 		
 		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new String[0][0]);
 	}
@@ -26,7 +26,7 @@ public class TestDesktopInjection {
 	
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 		
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 		
@@ -35,7 +35,7 @@ public class TestDesktopInjection {
 	
 	@Test
 	public void engineCreationWithSetupModule_ShouldSucceed() {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 		
@@ -45,7 +45,7 @@ public class TestDesktopInjection {
 
 	@Test
 	public void setupCreationWithSetupModule_ShouldSucceed() throws EngineException {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 
@@ -56,7 +56,7 @@ public class TestDesktopInjection {
 	
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 		
 		injectConfig.override(new DesktopMockPlatformInjectModule());
 		

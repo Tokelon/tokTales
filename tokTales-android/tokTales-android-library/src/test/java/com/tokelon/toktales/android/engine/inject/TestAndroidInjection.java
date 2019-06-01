@@ -26,14 +26,14 @@ public class TestAndroidInjection {
 	
 	@Test
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
 		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new String[0][0]);
 	}
 	
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
 		
@@ -43,7 +43,7 @@ public class TestAndroidInjection {
 	
 	@Test(expected = ProvisionException.class)
 	public void engineCreationWithStubs_ShouldFail() {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
 
 		Injector injector = injectConfig.createInjector();
@@ -52,7 +52,7 @@ public class TestAndroidInjection {
 	
 	@Test(expected = ProvisionException.class)
 	public void setupCreationWithStubs_ShouldFail() throws EngineException {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
 
 		BaseInjectSetup setup = new BaseInjectSetup();
@@ -62,7 +62,7 @@ public class TestAndroidInjection {
 
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
 		injectConfig.override(new AndroidMockPlatformInjectModule());
 		

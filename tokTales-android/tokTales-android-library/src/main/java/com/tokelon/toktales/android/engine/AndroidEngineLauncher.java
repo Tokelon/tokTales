@@ -1,7 +1,7 @@
 package com.tokelon.toktales.android.engine;
 
-import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
 import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
+import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.BaseEngineLauncher;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -21,7 +21,7 @@ public class AndroidEngineLauncher extends BaseEngineLauncher {
 	 * @param injectConfig
 	 * @param applicationContext
 	 * 
-	 * @see AndroidInjectConfig
+	 * @see MasterAndroidInjectConfig
 	 */
 	public AndroidEngineLauncher(IHierarchicalInjectConfig injectConfig, Context applicationContext) {
 		super(injectConfig);

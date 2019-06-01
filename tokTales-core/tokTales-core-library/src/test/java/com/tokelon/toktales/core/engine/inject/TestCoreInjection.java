@@ -16,13 +16,13 @@ public class TestCoreInjection {
 	@Test(expected = CreationException.class)
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		Injector injector = injectConfig.createInjector();
 	}
 	
 	@Test
 	public void injectorCreation_ShouldOnlyFailOnExpectedBindings() {
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 
 		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, InjectionTestHelper.CORE_EXPECTED_BINDING_TYPES, InjectionTestHelper.CORE_EXPECTED_BINDING_ANNOTATIONS);
 	}
@@ -30,7 +30,7 @@ public class TestCoreInjection {
 	
 	@Test
 	public void injectorCreationWithMockPlatform_ShouldSucceed() {
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		
@@ -39,7 +39,7 @@ public class TestCoreInjection {
 	
 	@Test
 	public void engineCreationWithMockPlatform_ShouldSucceed() {
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		
@@ -49,7 +49,7 @@ public class TestCoreInjection {
 	
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		CoreInjectConfig injectConfig = new CoreInjectConfig();
+		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		

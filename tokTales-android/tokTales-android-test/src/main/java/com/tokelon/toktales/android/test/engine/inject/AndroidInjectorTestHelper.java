@@ -1,15 +1,15 @@
 package com.tokelon.toktales.android.test.engine.inject;
 
-import android.content.Context;
+import static org.mockito.Mockito.mock;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
 import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
+import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 
-import static org.mockito.Mockito.mock;
+import android.content.Context;
 
 public class AndroidInjectorTestHelper {
 
@@ -32,7 +32,7 @@ public class AndroidInjectorTestHelper {
 	}
 	
 	public static Injector createAndroidInjector(Module[] extendModules, Module[] overrideModules, Context androidContext) {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(androidContext));
 		
@@ -53,7 +53,7 @@ public class AndroidInjectorTestHelper {
 	}
 	
 	public static Injector createAndroidMockInjector(Module[] extendModules, Module[] overrideModules) {
-		AndroidInjectConfig injectConfig = new AndroidInjectConfig();
+		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
 		injectConfig.override(new AndroidMockPlatformInjectModule());
 		

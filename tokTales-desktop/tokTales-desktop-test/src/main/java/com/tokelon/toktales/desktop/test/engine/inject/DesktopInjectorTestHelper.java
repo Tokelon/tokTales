@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
-import com.tokelon.toktales.desktop.engine.inject.DesktopInjectConfig;
+import com.tokelon.toktales.desktop.engine.inject.MasterDesktopInjectConfig;
 
 public class DesktopInjectorTestHelper {
 
@@ -16,7 +16,7 @@ public class DesktopInjectorTestHelper {
 	}
 	
 	public static Injector createDesktopInjector(Module[] extendModules, Module[] overrideModules) {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 		
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 		
@@ -37,7 +37,7 @@ public class DesktopInjectorTestHelper {
 	}
 	
 	public static Injector createDesktopMockInjector(Module[] extendModules, Module[] overrideModules) {
-		DesktopInjectConfig injectConfig = new DesktopInjectConfig();
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 		
 		injectConfig.override(new DesktopMockPlatformInjectModule());
 		
