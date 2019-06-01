@@ -2,8 +2,13 @@ package com.tokelon.toktales.core.engine.inject;
 
 public class CoreInjectConfig extends HierarchicalInjectConfig {
 
-    public CoreInjectConfig() {
-        extend(new CoreInjectModule());
+    
+	@Override
+    public void configure() {
+		super.configure();
+		
+		// Add regular modules here
+    	extend(new CoreInjectModule());
     }
     
 }
