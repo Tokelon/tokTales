@@ -18,20 +18,16 @@ import com.tokelon.toktales.core.engine.storage.StorageUnavailableException;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.ILocation;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
-import com.tokelon.toktales.core.values.LocationsAndPlaces;
 
 import android.os.Environment;
 
 public class AndroidStorageService extends AbstractEngineService implements IStorageService {
-	//TODO: !! CHeck if all the streams are being closed correctly!
+	// TODO: Check if all the streams are being closed correctly!
 	
-	
-	private static final ILocation EXTERNAL_APP_DIR = LocationsAndPlaces.LOCATION_EXTERNAL;
-	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl("");			// Is empty
+	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty
 
 	
 	private final String storageRoot;
@@ -280,7 +276,7 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	
 	
 	private File getExtAppDir() throws StorageException {
-		File appDir = new File(storageRoot, EXTERNAL_APP_DIR.getLocationPath().getPath());
+		File appDir = new File(storageRoot);
 		
 		if(!appDir.exists() || !appDir.isDirectory()) {
 			if(!appDir.mkdir()) {

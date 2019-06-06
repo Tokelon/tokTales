@@ -1,5 +1,7 @@
 package com.tokelon.toktales.android.engine.inject;
 
+import java.io.File;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
@@ -78,11 +80,14 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import android.os.Environment;
 
 public class AndroidInjectModule extends AbstractInjectModule {
+	
+	public static final String DEFAULT_STORAGE_DIR_NAME = "Tokelon";
 
+	
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-		bind(String.class).annotatedWith(StorageRoot.class).toProvider(() -> Environment.getExternalStorageDirectory().getPath());
+		bind(String.class).annotatedWith(StorageRoot.class).toProvider(() -> new File(Environment.getExternalStorageDirectory(), DEFAULT_STORAGE_DIR_NAME).getPath());
 		// bind a path for ContentRootPath as well?
 		
 		
