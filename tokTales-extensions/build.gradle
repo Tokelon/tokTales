@@ -5,19 +5,15 @@ version "0.0.1"
 
 
 buildscript {
-    
     repositories {
         google()
         jcenter()
     }
+    
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
-        
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:3.4.1'
     }
 }
-
 
 allprojects {
     repositories {
@@ -26,15 +22,11 @@ allprojects {
     }
 
     apply plugin: 'eclipse'
-
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
 
-task wrapper(type: Wrapper) {
+task wrapperCustom(type: Wrapper) {
     group 'build setup'
-    gradleVersion = '4.10.1'
+    gradleVersion = '5.1.1'
     distributionType = Wrapper.DistributionType.ALL
 }
