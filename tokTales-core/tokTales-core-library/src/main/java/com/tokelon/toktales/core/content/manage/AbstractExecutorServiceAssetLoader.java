@@ -162,6 +162,9 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 				wrapperFuture.complete(result);
 			} catch (ContentException ce) {
 				wrapperFuture.completeExceptionally(ce);
+			} catch (RuntimeException re) { 
+				getLogger().e(getTag(), "Loader task threw RuntimeException: " + re);
+				wrapperFuture.completeExceptionally(re);
 			} //catch (InterruptedException ie) // Needed?
 		};
 	}
