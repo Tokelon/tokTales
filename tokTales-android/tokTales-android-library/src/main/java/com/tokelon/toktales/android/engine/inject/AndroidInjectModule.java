@@ -2,8 +2,6 @@ package com.tokelon.toktales.android.engine.inject;
 
 import java.io.File;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
@@ -17,8 +15,6 @@ import com.tokelon.toktales.android.data.AndroidBitmapDecoder;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.data.AndroidSoundDecoder;
 import com.tokelon.toktales.android.data.AndroidTextureFontDecoder;
-import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
-import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.input.dispatch.AndroidInputConsumer;
@@ -61,9 +57,14 @@ import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import android.os.Environment;
 
 public class AndroidInjectModule extends AbstractInjectModule {
+	/* When using providers, always create or inject the object once in the constructor,
+	 * this is to adhere to the scope of the provider.
+	 * 
+	 * When injected be aware that it might have it's own scope.
+	 */
 	
 	public static final String DEFAULT_STORAGE_DIR_NAME = "Tokelon";
-
+	
 	
 	@Override
 	protected void configure() {
@@ -75,10 +76,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bindInEngineScope(IEnvironment.class, AndroidEnvironment.class);
 		bindInEngineScope(ILogService.class, AndroidLogService.class);
 		bind(IUIService.class).to(IAndroidUIService.class);
-		 bind(IAndroidUIService.class).toProvider(ProviderIUIService.class);
-		 bindInEngineScope(ProviderIUIService.class); // Bind to scope via the provider!
-		 //bindInEngineScope(AndroidUIService.class); // Do not bind implementation in this case, scoping will be done via the provider
-		
+		 bindInEngineScope(IAndroidUIService.class, AndroidUIService.class);
 		bindInEngineScope(IContentService.class, AndroidContentService.class);
 		bindInEngineScope(IStorageService.class, AndroidStorageService.class);
 		bind(IStorageService.IStorageServiceFactory.class).to(AndroidStorageService.AndroidStorageServiceFactory.class);
@@ -93,7 +91,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		
 		/* Other bindings */
-		
 		install(new FactoryModuleBuilder()
 				.implement(IActivityIntegrator.class, ActivityIntegrator.class)
 				.build(IActivityIntegratorFactory.class));
@@ -114,33 +111,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(ISoundAssetDecoder.class).to(AndroidSoundDecoder.class);
 		bind(IBitmapAssetDecoder.class).to(AndroidBitmapDecoder.class);
 		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
-	}
-
-
-
-	/* When using providers, always create or inject the object once in the constructor,
-	 * this is to adhere to the scope of the provider.
-	 * 
-	 * When injected be aware that it might have it's own scope.
-	 */
-
-
-	private static class ProviderIUIService implements Provider<IAndroidUIService> {
-		private final IAndroidUIService uiService;
-		@Inject
-		public ProviderIUIService(AndroidUIService androidUIService) {
-			// Object assignment via injection; scope of AndroidUIService will apply!
-			this.uiService = androidUIService;
-			
-			// TODO: Possibly refactor | Also refactor strings into static references
-			uiService.addExtension("console", new AndroidConsoleUIExtension());
-			uiService.addExtension("debug", new AndroidDebugUIExtension());
-		}
-		
-		@Override
-		public IAndroidUIService get() {
-			return uiService;
-		}
 	}
 	
 }
