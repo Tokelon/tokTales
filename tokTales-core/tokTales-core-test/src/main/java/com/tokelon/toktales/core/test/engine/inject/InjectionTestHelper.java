@@ -36,54 +36,54 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
 public final class InjectionTestHelper {
-	// TODO: Use Class instead of String?
 	
 	private InjectionTestHelper() {}
 
 
-	public static final String[] CORE_EXPECTED_BINDING_TYPES =
+	public static final Class<?>[] CORE_EXPECTED_BINDING_TYPES =
 		{
-				IEnvironment.class.getName(), IContentService.class.getName(), IInputService.class.getName(),
-				ILogService.class.getName(), IRenderService.class.getName(), IStorageService.class.getName(), IUIService.class.getName(),
-				IGameAdapter.class.getName(),
-				IGameStateInput.class.getName(),
-				IGL11.class.getName(), IGL13.class.getName(), IGL14.class.getName(), IGL15.class.getName(), IGL20.class.getName(),
-				ISoundAssetDecoder.class.getName(),
-				IBitmapAssetDecoder.class.getName(),
-				ITextureFontAssetDecoder.class.getName(),
-				IRenderToolkitFactory.class.getName()
+				IEnvironment.class, IContentService.class, IInputService.class,
+				ILogService.class, IRenderService.class, IStorageService.class, IUIService.class,
+				IGameAdapter.class,
+				IGameStateInput.class,
+				IGL11.class, IGL13.class, IGL14.class, IGL15.class, IGL20.class,
+				ISoundAssetDecoder.class,
+				IBitmapAssetDecoder.class,
+				ITextureFontAssetDecoder.class,
+				IRenderToolkitFactory.class
 		};
 	
-	public static final String[][] CORE_EXPECTED_BINDING_ANNOTATIONS =
+	public static final Class<?>[][] CORE_EXPECTED_BINDING_ANNOTATIONS =
 		{
-				{ IGameStateInputHandler.class.getName(), ForClass.class.getName(), InitialGamestate.class.getName() },
-				{ Set.class.getName(), IRenderDriverFactory.class.getName(), RenderDrivers.class.getName() }
+				{ IGameStateInputHandler.class, ForClass.class, InitialGamestate.class },
+				{ Set.class, IRenderDriverFactory.class, RenderDrivers.class }
 		};
 
 	
-	public static String[] combineExpectedBindingTypes(String[]... arrays) {
-		List<String> list = new ArrayList<>();
-		for(String[] arr: arrays) {
-			for(String str: arr) {
-				list.add(str);
+	public static Class<?>[] combineExpectedBindingTypes(Class<?>[]... arrays) {
+		List<Class<?>> list = new ArrayList<>();
+		for(Class<?>[] arr: arrays) {
+			for(Class<?> clazz: arr) {
+				list.add(clazz);
 			}
 		}
 		
-		return list.toArray(new String[0]);
+		return list.toArray(new Class<?>[0]);
 	}
 
-	public static String[][] combineExpectedBindingAnnotations(String[][]... arrays) {
-		List<String[]> list = new ArrayList<>();
-		for(String[][] arr: arrays) {
-			for(String[] innerArr: arr) {
+	public static Class<?>[][] combineExpectedBindingAnnotations(Class<?>[][]... arrays) {
+		List<Class<?>[]> list = new ArrayList<>();
+		for(Class<?>[][] arr: arrays) {
+			for(Class<?>[] innerArr: arr) {
 				list.add(innerArr);
 			}
 		}
-		return list.toArray(new String[0][]);
+		
+		return list.toArray(new Class<?>[0][]);
 	}
 	
 	
-	public static void assertInjectorCreationFailsWithExpectedBindings(IInjectConfig injectConfig, String[] expectedBindingTypes, String[][] expectedBindingAnnotations) {
+	public static void assertInjectorCreationFailsWithExpectedBindings(IInjectConfig injectConfig, Class<?>[] expectedBindingTypes, Class<?>[][] expectedBindingAnnotations) {
 		try {
 			Injector injector = injectConfig.createInjector();
 			fail("Injector creation did not fail");
@@ -96,17 +96,17 @@ public final class InjectionTestHelper {
 		}
 	}
 	
-	public static boolean errorMessageMatchesExpectedBinding(String error, String[] expectedTypes, String[][] expectedBindingAnnotations) {
-		for(String type: expectedTypes) {
-			if(error.contains(type + " was bound")) {
+	public static boolean errorMessageMatchesExpectedBinding(String error, Class<?>[] expectedTypes, Class<?>[][] expectedBindingAnnotations) {
+		for(Class<?> clazz: expectedTypes) {
+			if(error.contains(clazz.getName() + " was bound")) {
 				return true;
 			}
 		}
 		
-		for(String[] annotatedBinding: expectedBindingAnnotations) {
+		for(Class<?>[] annotatedBinding: expectedBindingAnnotations) {
 			boolean matches = true;
-			for(String str: annotatedBinding) {
-				matches = matches && error.contains(str);
+			for(Class<?> clazz: annotatedBinding) {
+				matches = matches && error.contains(clazz.getName());
 			}
 			
 			if(matches) {

@@ -15,7 +15,6 @@ public class TestCoreInjection {
 
 	@Test(expected = CreationException.class)
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
-		
 		MasterCoreInjectConfig injectConfig = new MasterCoreInjectConfig();
 		Injector injector = injectConfig.createInjector();
 	}

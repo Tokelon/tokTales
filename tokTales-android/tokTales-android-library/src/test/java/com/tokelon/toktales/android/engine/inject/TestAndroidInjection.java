@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.test.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 
@@ -19,7 +20,11 @@ import android.content.Context;
 public class TestAndroidInjection {
 	// TODO: Fix this not working in manual Eclipse run
 
-	public static final String[] ANDROID_EXPECTED_BINDING_TYPES = { "android.content.Context", "IGameAdapter" };
+	public static final Class<?>[] ANDROID_EXPECTED_BINDING_TYPES =
+	{
+			Context.class,
+			IGameAdapter.class,
+	};
 	
 	private static final Context mockedContext = mock(Context.class);
 
@@ -28,7 +33,7 @@ public class TestAndroidInjection {
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
 		
-		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new String[0][0]);
+		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new Class<?>[0][0]);
 	}
 	
 	@Test

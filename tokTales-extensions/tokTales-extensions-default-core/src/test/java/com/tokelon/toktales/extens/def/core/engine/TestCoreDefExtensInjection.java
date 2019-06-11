@@ -21,22 +21,22 @@ import com.tokelon.toktales.extens.def.core.test.engine.inject.CoreDefExtensMock
 public class TestCoreDefExtensInjection {
 	
 	
-	public static final String[] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES =
+	public static final Class<?>[] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES =
 	{
-			ILocalMapInputHandler.ILocalMapInputHandlerFactory.class.getName(),
-			ILocalMapControlScheme.class.getName()
+			ILocalMapInputHandler.ILocalMapInputHandlerFactory.class,
+			ILocalMapControlScheme.class
 	};
 	
-	public static final String[][] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS = 
+	public static final Class<?>[][] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS = 
 	{
-			{ IControlScheme.class.getName(), ForClass.class.getName() },
-			{ IGameStateInputHandler.class.getName(), ForClass.class.getName(), ConsoleGamestate.class.getName() }
+			{ IControlScheme.class, ForClass.class },
+			{ IGameStateInputHandler.class, ForClass.class, ConsoleGamestate.class }
 	};
 	
-	public static final String[] ALL_EXPECTED_BINDING_TYPES = 
+	public static final Class<?>[] ALL_EXPECTED_BINDING_TYPES = 
 			InjectionTestHelper.combineExpectedBindingTypes(InjectionTestHelper.CORE_EXPECTED_BINDING_TYPES, CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES);
 	
-	public static final String[][] ALL_EXPECTED_BINDING_ANNOTATIONS = 
+	public static final Class<?>[][] ALL_EXPECTED_BINDING_ANNOTATIONS = 
 			InjectionTestHelper.combineExpectedBindingAnnotations(InjectionTestHelper.CORE_EXPECTED_BINDING_ANNOTATIONS, CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS);
 	
 	

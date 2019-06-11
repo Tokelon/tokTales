@@ -7,20 +7,25 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.test.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 import com.tokelon.toktales.desktop.test.engine.inject.DesktopMockPlatformInjectModule;
 
 public class TestDesktopInjection {
 
-	public static final String[] DESKTOP_EXPECTED_BINDING_TYPES = { "IGameAdapter" };
+
+	public static final Class<?>[] DESKTOP_EXPECTED_BINDING_TYPES =
+	{
+			IGameAdapter.class
+	};
 	
 	
 	@Test
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 		
-		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new String[0][0]);
+		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new Class<?>[0][0]);
 	}
 	
 	
