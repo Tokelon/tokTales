@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
@@ -24,6 +25,8 @@ import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
+import com.tokelon.toktales.core.engine.inject.annotation.services.StorageServiceExtensions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.IStorageService.IStorageServiceFactory;
@@ -49,10 +52,17 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	private final ILogger logger;
 	private final IStorageService assetStorageService;
 
-	@Inject
 	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot) {
 		this.logger = logger;
 		this.assetStorageService = storageServiceFactory.create(assetRoot);
+	}
+	
+	@Inject
+	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot, @ContentServiceExtensions Map<String, IServiceExtension> contentExtensions, @StorageServiceExtensions Map<String, IServiceExtension> storageExtensions) {
+		super(contentExtensions);
+		
+		this.logger = logger;
+		this.assetStorageService = storageServiceFactory.create(assetRoot, storageExtensions);
 	}
 	
 	

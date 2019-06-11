@@ -3,6 +3,7 @@ package com.tokelon.toktales.core.engine.storage;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.resources.IListing;
@@ -75,6 +76,7 @@ public interface IStorageService extends IEngineService {
 	public interface IStorageServiceFactory {
 		
 		public IStorageService create(String storageRoot);
+		public IStorageService create(String storageRoot, Map<String, IServiceExtension> extensions);
 	}
 	
 }

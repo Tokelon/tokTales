@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.engine.content;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Map;
 
 import com.tokelon.toktales.core.content.graphics.BitmapImpl;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
@@ -12,6 +13,15 @@ import com.tokelon.toktales.core.render.Texture;
 
 public abstract class AbstractContentService extends AbstractEngineService implements IContentService {
 
+	
+	public AbstractContentService() {
+		super();
+	}
+	
+	public AbstractContentService(Map<String, IServiceExtension> extensions) {
+		super(extensions);
+	}
+	
 	
 	@Override
 	public ITexture cropTexture(ITexture texture, IRectangle2i bounds) {

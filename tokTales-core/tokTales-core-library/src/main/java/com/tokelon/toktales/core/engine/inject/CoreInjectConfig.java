@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.engine.inject;
 
 import com.tokelon.toktales.core.content.manage.files.AssetReadersInjectModule;
+import com.tokelon.toktales.core.engine.ServiceExtensionsInjectModule;
 import com.tokelon.toktales.core.render.opengl.CoreGLInjectModule;
 
 public class CoreInjectConfig extends HierarchicalInjectConfig {
@@ -14,6 +15,8 @@ public class CoreInjectConfig extends HierarchicalInjectConfig {
     	extend(new CoreInjectModule());
     	
     	extend(new CoreDebugInjectModule());
+    	
+    	extend(new ServiceExtensionsInjectModule());
     	
     	extend(new AssetReadersInjectModule());
     	

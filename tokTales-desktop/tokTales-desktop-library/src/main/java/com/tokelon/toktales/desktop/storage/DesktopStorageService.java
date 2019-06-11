@@ -7,11 +7,13 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
+import com.tokelon.toktales.core.engine.inject.annotation.services.StorageServiceExtensions;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IListing;
@@ -29,8 +31,14 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	
 	private final String storageRoot;
 	
-	@Inject
 	public DesktopStorageService(@StorageRoot String storageRoot) {
+		this.storageRoot = storageRoot;
+	}
+	
+	@Inject
+	public DesktopStorageService(@StorageRoot String storageRoot, @StorageServiceExtensions Map<String, IServiceExtension> extensions) {
+		super(extensions);
+		
 		this.storageRoot = storageRoot;
 	}
 	
@@ -223,6 +231,11 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 		@Override
 		public IStorageService create(String storageRoot) {
 			return new DesktopStorageService(storageRoot);
+		}
+
+		@Override
+		public IStorageService create(String storageRoot, Map<String, IServiceExtension> extensions) {
+			return new DesktopStorageService(storageRoot, extensions);
 		}
 	}
 

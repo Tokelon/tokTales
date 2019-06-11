@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,7 @@ import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.ITexture;
@@ -44,11 +46,17 @@ public class AndroidContentService extends AbstractContentService implements ICo
 
 	
 	private final Context globalContext;
-	
 	private final ILogger logger;
 	
-	@Inject
 	public AndroidContentService(ILogger logger, Context globalContext) {
+		this.logger = logger;
+		this.globalContext = globalContext;
+	}
+	
+	@Inject
+	public AndroidContentService(ILogger logger, Context globalContext, @ContentServiceExtensions Map<String, IServiceExtension> extensions) {
+		super(extensions);
+		
 		this.logger = logger;
 		this.globalContext = globalContext;
 	}

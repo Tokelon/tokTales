@@ -6,10 +6,15 @@ import java.util.Map;
 
 public abstract class AbstractEngineService implements IEngineService {
 
+	
 	private final Map<String, IServiceExtension> extensionsMap;
 	
 	public AbstractEngineService() {
 		this.extensionsMap = Collections.synchronizedMap(new HashMap<String, IServiceExtension>());
+	}
+	
+	public AbstractEngineService(Map<String, IServiceExtension> extensions) {
+		this.extensionsMap = Collections.synchronizedMap(new HashMap<String, IServiceExtension>(extensions));
 	}
 	
 	
@@ -98,6 +103,5 @@ public abstract class AbstractEngineService implements IEngineService {
 		
 		return result;
 	}
-
 
 }
