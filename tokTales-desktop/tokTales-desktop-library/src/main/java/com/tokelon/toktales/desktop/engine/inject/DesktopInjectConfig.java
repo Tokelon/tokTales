@@ -3,6 +3,7 @@ package com.tokelon.toktales.desktop.engine.inject;
 import com.tokelon.toktales.core.content.manage.files.PathAssetReadersInjectModule;
 import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 import com.tokelon.toktales.desktop.content.DesktopParentIdentifiersInjectModule;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLInjectModule;
 import com.tokelon.toktales.desktop.lwjgl.render.LWJGLRenderDriversInjectModule;
 
 public class DesktopInjectConfig extends HierarchicalInjectConfig {
@@ -17,6 +18,7 @@ public class DesktopInjectConfig extends HierarchicalInjectConfig {
     	extend(new DesktopParentIdentifiersInjectModule());
     	extend(new PathAssetReadersInjectModule());
     	
+    	extend(new LWJGLInjectModule());
     	extend(new LWJGLRenderDriversInjectModule());
     }
     

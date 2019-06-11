@@ -3,9 +3,6 @@ package com.tokelon.toktales.desktop.engine.inject;
 import java.io.File;
 
 import com.google.inject.Scopes;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -20,8 +17,6 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.IRenderToolkit;
-import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
@@ -39,11 +34,6 @@ import com.tokelon.toktales.desktop.input.dispatch.DesktopInputProducer;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputConsumer.IDesktopInputConsumerFactory;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputDispatch;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer.IDesktopInputProducerFactory;
-import com.tokelon.toktales.desktop.lwjgl.data.STBBitmapDecoder;
-import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFontDecoder;
-import com.tokelon.toktales.desktop.lwjgl.data.STBVorbisSoundDecoder;
-import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
-import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
 import com.tokelon.toktales.desktop.main.DesktopEnvironment;
 import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
@@ -108,14 +98,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(IGL14.class).to(DesktopGL14.class).in(Scopes.SINGLETON);
 		bind(IGL15.class).to(DesktopGL15.class).in(Scopes.SINGLETON);
 		bind(IGL20.class).to(DesktopGL20.class).in(Scopes.SINGLETON);
-		
-		
-		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
-		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
-		
-		bind(ISoundAssetDecoder.class).to(STBVorbisSoundDecoder.class);
-		bind(IBitmapAssetDecoder.class).to(STBBitmapDecoder.class);
-		bind(ITextureFontAssetDecoder.class).to(STBTextureFontDecoder.class);
 	}
 	
 	
