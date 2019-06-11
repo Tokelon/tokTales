@@ -31,5 +31,4 @@ public class AndroidRenderService extends AbstractEngineService implements IRend
 		return renderAccess;
 	}
 	
-	
 }

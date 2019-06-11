@@ -3,6 +3,10 @@ package com.tokelon.toktales.core.test.engine.inject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
@@ -10,6 +14,7 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
+import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -20,6 +25,8 @@ import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.render.IRenderDriverFactory;
+import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
@@ -47,12 +54,13 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 	private static final IGL14 gl14Mock = mock(IGL14.class);
 	private static final IGL15 gl15Mock = mock(IGL15.class);
 	private static final IGL20 gl20Mock = mock(IGL20.class);
-	
+	private static final IRenderToolkitFactory renderToolkitFactoryMock = mock(IRenderToolkitFactory.class);
+
 	private static final IGameStateInputHandler gamestateInputHandlerMock = mock(IGameStateInputHandler.class);
 
-	private static final ISoundAssetDecoder soundAssetDecoder = mock(ISoundAssetDecoder.class);
-	private static final IBitmapAssetDecoder bitmapAssetDecoder = mock(IBitmapAssetDecoder.class);
-	private static final ITextureFontAssetDecoder textureFontAssetDecoder = mock(ITextureFontAssetDecoder.class);
+	private static final ISoundAssetDecoder soundAssetDecoderMock = mock(ISoundAssetDecoder.class);
+	private static final IBitmapAssetDecoder bitmapAssetDecoderMock = mock(IBitmapAssetDecoder.class);
+	private static final ITextureFontAssetDecoder textureFontAssetDecoderMock = mock(ITextureFontAssetDecoder.class);
 
 	
 	private static final ISurfaceHandler surfaceHandlerMock = mock(ISurfaceHandler.class);
@@ -79,12 +87,15 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 		bind(IGL14.class).toInstance(gl14Mock);
 		bind(IGL15.class).toInstance(gl15Mock);
 		bind(IGL20.class).toInstance(gl20Mock);
+		bind(IRenderToolkitFactory.class).toInstance(renderToolkitFactoryMock);
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).toInstance(gamestateInputHandlerMock);
 		
-		bind(ISoundAssetDecoder.class).toInstance(soundAssetDecoder);
-		bind(IBitmapAssetDecoder.class).toInstance(bitmapAssetDecoder);
-		bind(ITextureFontAssetDecoder.class).toInstance(textureFontAssetDecoder);
+		bind(ISoundAssetDecoder.class).toInstance(soundAssetDecoderMock);
+		bind(IBitmapAssetDecoder.class).toInstance(bitmapAssetDecoderMock);
+		bind(ITextureFontAssetDecoder.class).toInstance(textureFontAssetDecoderMock);
+		
+		bind(new TypeLiteral<Set<IRenderDriverFactory>>() {}).annotatedWith(RenderDrivers.class).toInstance(new HashSet<>());
 	}
 
 }

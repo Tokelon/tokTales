@@ -30,7 +30,5 @@ public class DesktopRenderService extends AbstractEngineService implements IRend
 	public IRenderAccess getRenderAccess() {
 		return renderAccess;
 	}
-
-
 	
 }

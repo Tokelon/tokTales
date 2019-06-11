@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
@@ -32,11 +31,6 @@ import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer.IAndroi
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit.AndroidRenderToolkitFactory;
-import com.tokelon.toktales.android.render.opengl.GLBitmapDriver;
-import com.tokelon.toktales.android.render.opengl.GLBitmapFontDriver;
-import com.tokelon.toktales.android.render.opengl.GLShapeDriver;
-import com.tokelon.toktales.android.render.opengl.GLSpriteDriver;
-import com.tokelon.toktales.android.render.opengl.GLSpriteFontDriver;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL13;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL14;
@@ -61,14 +55,12 @@ import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
-import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
@@ -101,7 +93,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bindInEngineScope(IContentService.class, AndroidContentService.class);
 		bindInEngineScope(IStorageService.class, AndroidStorageService.class);
 		bind(IStorageService.IStorageServiceFactory.class).to(AndroidStorageService.AndroidStorageServiceFactory.class);
-		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
+		bindInEngineScope(IRenderService.class, AndroidRenderService.class);
 		bind(IInputService.class).to(IAndroidInputService.class);
 		 bind(IAndroidInputService.class).to(AndroidInputService.class);
 		 bindInEngineScope(AndroidInputService.class); // Bind to scope via the implementation!
@@ -132,11 +124,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IGL15.class).to(AndroidGL15.class).in(Scopes.SINGLETON);
 		bind(IGL20.class).to(AndroidGL20.class).in(Scopes.SINGLETON);
 		
-		bind(GLSpriteDriver.class);
-		bind(GLSpriteFontDriver.class);
-		bind(GLBitmapFontDriver.class);
-		bind(GLShapeDriver.class);
-		bind(GLBitmapDriver.class);
 		
 		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
@@ -144,16 +131,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(ISoundAssetDecoder.class).to(AndroidSoundDecoder.class);
 		bind(IBitmapAssetDecoder.class).to(AndroidBitmapDecoder.class);
 		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
-		
-		
-		/* Unused so far - everything under here */
-		
-		Multibinder<IRenderDriverFactory> renderDriverFactoryBinder = Multibinder.newSetBinder(binder(), IRenderDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLSpriteDriver.GLSpriteDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLSpriteFontDriver.GLSpriteFontDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
 	}
 
 
@@ -163,37 +140,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 	 * 
 	 * When injected be aware that it might have it's own scope.
 	 */
-	
-	private static class ProviderIRenderService implements Provider<IRenderService> {
-		private final IRenderService renderService;
-		
-		@Inject
-		public ProviderIRenderService(
-				AndroidRenderService androidRenderService,
-				IRenderToolkitFactory renderToolkitFactory,
-				GLSpriteDriver.GLSpriteDriverFactory glSpriteDriverFactory,
-				GLSpriteFontDriver.GLSpriteFontDriverFactory glSpriteFontDriverFactory,
-				GLBitmapFontDriver.GLBitmapFontDriverFactory glBitmapFontDriverFactory,
-				GLShapeDriver.GLShapeDriverFactory glShapeDriverFactory,
-				GLBitmapDriver.GLBitmapDriverFactory glBitmapDriverFactory
-		) {
-			
-			this.renderService = androidRenderService;
-			
-			IRenderAccess renderAccess = androidRenderService.getRenderAccess();
-			renderAccess.registerToolkit(renderToolkitFactory);
-			renderAccess.registerDriver(glSpriteDriverFactory);
-			renderAccess.registerDriver(glSpriteFontDriverFactory);
-			renderAccess.registerDriver(glBitmapFontDriverFactory);
-			renderAccess.registerDriver(glShapeDriverFactory);
-			renderAccess.registerDriver(glBitmapDriverFactory);
-		}
-		
-		@Override
-		public IRenderService get() {
-			return renderService;
-		}
-	}
+
 
 	private static class ProviderIUIService implements Provider<IAndroidUIService> {
 		private final IAndroidUIService uiService;

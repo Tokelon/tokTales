@@ -3,7 +3,11 @@ package com.tokelon.toktales.core.engine.render;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
@@ -18,11 +22,12 @@ public class DefaultRenderAccess implements IRenderAccess {
 
 
 	private IRenderToolkitFactory toolkitFactory;
+	private final List<IRenderDriverFactory> drivers;
 	
-	private List<IRenderDriverFactory> drivers;
-	
-	public DefaultRenderAccess() {
-		drivers = Collections.synchronizedList(new ArrayList<IRenderDriverFactory>());
+	@Inject
+	public DefaultRenderAccess(IRenderToolkitFactory renderToolkitFactory, @RenderDrivers Set<IRenderDriverFactory> renderDriverFactories) {
+		this.toolkitFactory = renderToolkitFactory;
+		this.drivers = Collections.synchronizedList(new ArrayList<IRenderDriverFactory>(renderDriverFactories));
 	}
 	
 	

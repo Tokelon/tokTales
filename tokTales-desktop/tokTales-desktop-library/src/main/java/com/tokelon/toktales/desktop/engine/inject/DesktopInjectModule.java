@@ -2,10 +2,7 @@ package com.tokelon.toktales.desktop.engine.inject;
 
 import java.io.File;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Scopes;
-import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
@@ -17,14 +14,12 @@ import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
-import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
@@ -49,11 +44,6 @@ import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFontDecoder;
 import com.tokelon.toktales.desktop.lwjgl.data.STBVorbisSoundDecoder;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
 import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
-import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLBitmapFontDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLShapeDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLSpriteFontDriver;
 import com.tokelon.toktales.desktop.main.DesktopEnvironment;
 import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
@@ -78,6 +68,10 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	 * however it will be differentiated by the type injected so IContentService or IContentServiceFactory
 	 */
 	
+	/* Overriding bindings does not work with Multibinder or MapBinder, because the final value is always arbitrary
+	 */
+	
+	
 	@Override
 	protected void configure() {
 		/* Engine bindings */
@@ -91,7 +85,7 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bindInEngineScope(IContentService.class, DesktopContentService.class);
 		bindInEngineScope(IStorageService.class, DesktopStorageService.class);
 		bind(IStorageService.IStorageServiceFactory.class).to(DesktopStorageService.DesktopStorageServiceFactory.class);
-		bindToProviderInEngineScope(IRenderService.class, ProviderIRenderService.class);
+		bindInEngineScope(IRenderService.class, DesktopRenderService.class);
 		bind(IInputService.class).to(IDesktopInputService.class);
 		 bind(IDesktopInputService.class).to(DesktopInputService.class);
 		 bindInEngineScope(DesktopInputService.class);
@@ -115,11 +109,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(IGL15.class).to(DesktopGL15.class).in(Scopes.SINGLETON);
 		bind(IGL20.class).to(DesktopGL20.class).in(Scopes.SINGLETON);
 		
-		bind(GLSpriteDriver.class);
-		bind(GLSpriteFontDriver.class);
-		bind(GLBitmapFontDriver.class);
-		bind(GLShapeDriver.class);
-		bind(GLBitmapDriver.class);
 		
 		bind(IRenderToolkitFactory.class).to(DesktopRenderToolkitFactory.class);
 		bind(IRenderToolkit.class).to(DesktopRenderToolkit.class);
@@ -127,18 +116,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		bind(ISoundAssetDecoder.class).to(STBVorbisSoundDecoder.class);
 		bind(IBitmapAssetDecoder.class).to(STBBitmapDecoder.class);
 		bind(ITextureFontAssetDecoder.class).to(STBTextureFontDecoder.class);
-		
-		
-		/* Unused so far - everything under here */
-
-		/* Overriding bindings does not work with Multibinder or MapBinder, because the final value is always arbitrary
-		 */
-		Multibinder<IRenderDriverFactory> renderDriverFactoryBinder = Multibinder.newSetBinder(binder(), IRenderDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLSpriteDriver.GLSpriteDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLSpriteFontDriver.GLSpriteFontDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLBitmapFontDriver.GLBitmapFontDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLShapeDriver.GLShapeDriverFactory.class);
-		renderDriverFactoryBinder.addBinding().to(GLBitmapDriver.GLBitmapDriverFactory.class);
 	}
 	
 	
@@ -148,36 +125,5 @@ public class DesktopInjectModule extends AbstractInjectModule {
 	protected IGameStateInputHandler providesIGameStateInputHandler() {
 		return new BaseGamestate.EmptyStateInputHandler();
 	}*/
-
-	
-	public static class ProviderIRenderService implements Provider<IRenderService> {
-		private final IRenderService renderService;
-		@Inject
-		public ProviderIRenderService(
-				DesktopRenderService desktopRenderService,
-				IRenderToolkitFactory renderToolkitFactory,
-				GLSpriteDriver.GLSpriteDriverFactory glSpriteDriverFactory,
-				GLSpriteFontDriver.GLSpriteFontDriverFactory glSpriteFontDriverFactory,
-				GLBitmapFontDriver.GLBitmapFontDriverFactory glBitmapFontDriverFactory,
-				GLShapeDriver.GLShapeDriverFactory glShapeDriverFactory,
-				GLBitmapDriver.GLBitmapDriverFactory glBitmapDriverFactory
-		) {
-
-			this.renderService = desktopRenderService;
-
-			IRenderAccess renderAccess = desktopRenderService.getRenderAccess();
-			renderAccess.registerToolkit(renderToolkitFactory);
-			renderAccess.registerDriver(glSpriteDriverFactory);
-			renderAccess.registerDriver(glSpriteFontDriverFactory);
-			renderAccess.registerDriver(glBitmapFontDriverFactory);
-			renderAccess.registerDriver(glShapeDriverFactory);
-			renderAccess.registerDriver(glBitmapDriverFactory);
-		}
-		
-		@Override
-		public IRenderService get() {
-			return renderService;
-		}
-	}
 	
 }

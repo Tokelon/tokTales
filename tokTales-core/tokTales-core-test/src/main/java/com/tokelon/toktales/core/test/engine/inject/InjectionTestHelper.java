@@ -25,12 +25,14 @@ public final class InjectionTestHelper {
 				"IGL11", "IGL13", "IGL14", "IGL15", "IGL20",
 				"ISoundAssetDecoder",
 				"IBitmapAssetDecoder",
-				"ITextureFontAssetDecoder"
+				"ITextureFontAssetDecoder",
+				"IRenderToolkitFactory"
 		};
 	
 	public static final String[][] CORE_EXPECTED_BINDING_ANNOTATIONS =
 		{
-				{ "IGameStateInputHandler", "ForClass", "InitialGamestate" }
+				{ "IGameStateInputHandler", "ForClass", "InitialGamestate" },
+				{ "Set", "IRenderDriverFactory", "RenderDrivers" }
 		};
 
 	
