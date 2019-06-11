@@ -11,6 +11,9 @@ public class CoreInjectConfig extends HierarchicalInjectConfig {
 		
 		// Add regular modules here
     	extend(new CoreInjectModule());
+    	
+    	extend(new CoreDebugInjectModule());
+    	
     	extend(new AssetReadersInjectModule());
     }
     

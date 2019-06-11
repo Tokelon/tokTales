@@ -288,10 +288,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		// Asset Management
 		bindAssetManagers();
-		
-		
-		// Other inject modules
-		install(new CoreDebugInjectModule());
 	}
 	
 	
