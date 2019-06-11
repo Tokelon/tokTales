@@ -6,10 +6,16 @@ import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.game.states.IControlScheme;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.test.engine.inject.CoreMockPlatformInjectModule;
 import com.tokelon.toktales.core.test.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.extens.def.core.engine.inject.MasterCoreDefExtensInjectConfig;
+import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlScheme;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
 import com.tokelon.toktales.extens.def.core.test.engine.inject.CoreDefExtensMockPlatformInjectModule;
 
 public class TestCoreDefExtensInjection {
@@ -17,15 +23,14 @@ public class TestCoreDefExtensInjection {
 	
 	public static final String[] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_TYPES =
 	{
-			"ILocalMapInputHandler$ILocalMapInputHandlerFactory",
-			"IConsoleGamestateInputHandler$IConsoleGamestateInputHandlerFactory",
-			"ILocalMapControlScheme"
+			ILocalMapInputHandler.ILocalMapInputHandlerFactory.class.getName(),
+			ILocalMapControlScheme.class.getName()
 	};
 	
 	public static final String[][] CORE_DEFAULT_EXTENSIONS_EXPECTED_BINDING_ANNOTATIONS = 
 	{
-			{ "IControlScheme", "ForClass", },
-			{ "IGameStateInputHandler", "ForClass", "ConsoleGamestate"}
+			{ IControlScheme.class.getName(), ForClass.class.getName() },
+			{ IGameStateInputHandler.class.getName(), ForClass.class.getName(), ConsoleGamestate.class.getName() }
 	};
 	
 	public static final String[] ALL_EXPECTED_BINDING_TYPES = 
@@ -37,9 +42,8 @@ public class TestCoreDefExtensInjection {
 	
 	@Test(expected = CreationException.class)
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
-		
 		MasterCoreDefExtensInjectConfig injectConfig = new MasterCoreDefExtensInjectConfig();
-		Injector injector = injectConfig.createInjector();	
+		Injector injector = injectConfig.createInjector();
 	}
 	
 	@Test

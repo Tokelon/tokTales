@@ -5,34 +5,59 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.google.inject.spi.Message;
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
+import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
+import com.tokelon.toktales.core.engine.IEnvironment;
+import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
+import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
+import com.tokelon.toktales.core.engine.input.IInputService;
+import com.tokelon.toktales.core.engine.log.ILogService;
+import com.tokelon.toktales.core.engine.render.IRenderService;
+import com.tokelon.toktales.core.engine.storage.IStorageService;
+import com.tokelon.toktales.core.engine.ui.IUIService;
+import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.core.game.states.IGameStateInput;
+import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.render.IRenderDriverFactory;
+import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
+import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
 public final class InjectionTestHelper {
-
+	// TODO: Use Class instead of String?
+	
 	private InjectionTestHelper() {}
 
 
 	public static final String[] CORE_EXPECTED_BINDING_TYPES =
 		{
-				"IEnvironment", "IContentService", "IInputService",
-				"ILogService", "IRenderService", "IStorageService",	"IUIService",
-				"IGameAdapter",
-				"IGameStateInput",
-				"IGL11", "IGL13", "IGL14", "IGL15", "IGL20",
-				"ISoundAssetDecoder",
-				"IBitmapAssetDecoder",
-				"ITextureFontAssetDecoder",
-				"IRenderToolkitFactory"
+				IEnvironment.class.getName(), IContentService.class.getName(), IInputService.class.getName(),
+				ILogService.class.getName(), IRenderService.class.getName(), IStorageService.class.getName(), IUIService.class.getName(),
+				IGameAdapter.class.getName(),
+				IGameStateInput.class.getName(),
+				IGL11.class.getName(), IGL13.class.getName(), IGL14.class.getName(), IGL15.class.getName(), IGL20.class.getName(),
+				ISoundAssetDecoder.class.getName(),
+				IBitmapAssetDecoder.class.getName(),
+				ITextureFontAssetDecoder.class.getName(),
+				IRenderToolkitFactory.class.getName()
 		};
 	
 	public static final String[][] CORE_EXPECTED_BINDING_ANNOTATIONS =
 		{
-				{ "IGameStateInputHandler", "ForClass", "InitialGamestate" },
-				{ "Set", "IRenderDriverFactory", "RenderDrivers" }
+				{ IGameStateInputHandler.class.getName(), ForClass.class.getName(), InitialGamestate.class.getName() },
+				{ Set.class.getName(), IRenderDriverFactory.class.getName(), RenderDrivers.class.getName() }
 		};
 
 	
