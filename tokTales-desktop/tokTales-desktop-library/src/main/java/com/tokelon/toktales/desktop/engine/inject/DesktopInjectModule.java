@@ -2,7 +2,6 @@ package com.tokelon.toktales.desktop.engine.inject;
 
 import java.io.File;
 
-import com.google.inject.Scopes;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -17,11 +16,6 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
-import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
-import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
-import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
-import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 import com.tokelon.toktales.desktop.content.DesktopContentService;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 import com.tokelon.toktales.desktop.game.states.DesktopGameStateInput;
@@ -37,11 +31,6 @@ import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer.IDeskto
 import com.tokelon.toktales.desktop.main.DesktopEnvironment;
 import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
-import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGL11;
-import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGL13;
-import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGL14;
-import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGL15;
-import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGL20;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 import com.tokelon.toktales.desktop.ui.DesktopUIService;
 
@@ -92,12 +81,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		
 		// Use inexact annotation binding? Just ForClass.class
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
-		
-		bind(IGL11.class).to(DesktopGL11.class).in(Scopes.SINGLETON);
-		bind(IGL13.class).to(DesktopGL13.class).in(Scopes.SINGLETON);
-		bind(IGL14.class).to(DesktopGL14.class).in(Scopes.SINGLETON);
-		bind(IGL15.class).to(DesktopGL15.class).in(Scopes.SINGLETON);
-		bind(IGL20.class).to(DesktopGL20.class).in(Scopes.SINGLETON);
 	}
 	
 	

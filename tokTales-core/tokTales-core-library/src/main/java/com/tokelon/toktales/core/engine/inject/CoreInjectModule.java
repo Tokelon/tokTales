@@ -147,19 +147,7 @@ import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.DefaultTextureManager;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
-import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.ITextureManager;
-import com.tokelon.toktales.core.render.opengl.GLBufferUtils;
-import com.tokelon.toktales.core.render.opengl.IGLBufferUtils;
-import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
-import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
-import com.tokelon.toktales.core.render.opengl.gl20.GLTextureDriver;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.GLFactory;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.GLProgram;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.GLShader;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFactory;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLProgram;
-import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLShader;
 import com.tokelon.toktales.core.util.DefaultObjectPool;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.core.util.options.INamedOptions;
@@ -270,15 +258,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		 bind(IGameEntityModel.class).to(GameEntityModel.class);
 		bind(ICamera.class).to(Camera.class);
 		 bind(ICameraModel.class).to(CameraModel.class);
-		
-		 
-		// GL Stuff
-		bind(IGLErrorUtils.class).to(GLErrorUtils.class); // Could bind this to no-op implementation
-		bind(IGLBufferUtils.class).to(GLBufferUtils.class).in(Scopes.SINGLETON);
-		bind(IGLFactory.class).to(GLFactory.class);
-		bind(IGLProgram.class).to(GLProgram.class);
-		bind(IGLShader.class).to(GLShader.class);
-		bind(ITextureDriver.class).to(GLTextureDriver.class);
 		
 		
 		// Tools

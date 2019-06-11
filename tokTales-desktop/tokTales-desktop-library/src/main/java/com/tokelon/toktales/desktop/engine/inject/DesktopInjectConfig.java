@@ -5,10 +5,11 @@ import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 import com.tokelon.toktales.desktop.content.DesktopParentIdentifiersInjectModule;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLInjectModule;
 import com.tokelon.toktales.desktop.lwjgl.render.LWJGLRenderDriversInjectModule;
+import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGLInjectModule;
 
 public class DesktopInjectConfig extends HierarchicalInjectConfig {
 
-    
+
     @Override
     public void configure() {
     	super.configure();
@@ -17,6 +18,8 @@ public class DesktopInjectConfig extends HierarchicalInjectConfig {
     	
     	extend(new DesktopParentIdentifiersInjectModule());
     	extend(new PathAssetReadersInjectModule());
+    	
+    	extend(new DesktopGLInjectModule());
     	
     	extend(new LWJGLInjectModule());
     	extend(new LWJGLRenderDriversInjectModule());
