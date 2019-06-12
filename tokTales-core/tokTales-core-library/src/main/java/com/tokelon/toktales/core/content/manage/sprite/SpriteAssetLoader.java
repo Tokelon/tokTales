@@ -9,6 +9,7 @@ import com.tokelon.toktales.core.content.manage.DefaultAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
+import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.options.IOptions;
 
@@ -22,7 +23,7 @@ public class SpriteAssetLoader extends DefaultAssetLoader<ISpriteAsset, ISpriteA
 	}
 
 	@Inject
-	public SpriteAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+	public SpriteAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
 		super(logger, readerManager, decoder, executorServiceProvider);
 	}
 	

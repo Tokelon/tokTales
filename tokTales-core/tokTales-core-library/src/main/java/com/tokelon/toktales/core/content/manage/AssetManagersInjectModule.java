@@ -40,6 +40,8 @@ import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
+import com.tokelon.toktales.core.engine.inject.annotation.GlobalExecutorServiceImplementation;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.IOptions;
 
@@ -56,8 +58,10 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		*/
 		
 		
-		// TODO: Maybe bind this with a custom annotation like @AssetLoaderExecutorService for finer control
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
+		bind(ExecutorService.class).annotatedWith(GlobalExecutorServiceImplementation.class).toProvider(DefaultExecutorServiceProvider.class);
+		bind(ExecutorService.class).annotatedWith(AssetLoader.class).to(RecyclableExecutorService.class).in(Scopes.SINGLETON);
+		
 		
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
 		bind(IAssetReaderManager.class).to(DefaultAssetReaderManager.class);

@@ -7,6 +7,7 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.manage.ILoaderTask.ILoaderTaskFactory;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.core.engine.log.ILogger;
 
 public class LoaderTaskExecutorServiceAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoader<T, K, O> {
@@ -23,7 +24,7 @@ public class LoaderTaskExecutorServiceAssetLoader<T, K, O> extends AbstractExecu
 	}
 
 	@Inject
-	public LoaderTaskExecutorServiceAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory, Provider<ExecutorService> executorServiceProvider) {
+	public LoaderTaskExecutorServiceAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
 		super(logger, readerManager, decoder, executorServiceProvider);
 		
 		this.loaderTaskFactory = loaderTaskFactory;

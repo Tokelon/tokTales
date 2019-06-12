@@ -10,6 +10,7 @@ import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetReader;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
@@ -26,7 +27,7 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 	}
 	
 	@Inject
-	public CodepointAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+	public CodepointAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
 		super(logger, readerManager, decoder, executorServiceProvider);
 	}
 
