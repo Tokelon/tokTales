@@ -1,10 +1,8 @@
 package com.tokelon.toktales.core.engine.inject;
 
 import java.lang.reflect.Type;
-import java.util.concurrent.ExecutorService;
 
 import com.google.common.reflect.TypeToken;
-import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.util.Types;
 import com.tokelon.toktales.core.config.ConfigManager;
@@ -13,56 +11,8 @@ import com.tokelon.toktales.core.content.ContentManager;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
-import com.tokelon.toktales.core.content.manage.DefaultAssetLoader;
-import com.tokelon.toktales.core.content.manage.DefaultAssetReaderManager;
-import com.tokelon.toktales.core.content.manage.DefaultAssetStore;
-import com.tokelon.toktales.core.content.manage.DefaultExecutorServiceProvider;
-import com.tokelon.toktales.core.content.manage.DefaultInjectableAssetLoader;
-import com.tokelon.toktales.core.content.manage.DefaultSpecialAssetManager;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
-import com.tokelon.toktales.core.content.manage.IAssetLoader;
-import com.tokelon.toktales.core.content.manage.IAssetManager;
-import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
-import com.tokelon.toktales.core.content.manage.IAssetStore;
-import com.tokelon.toktales.core.content.manage.ISpecialAssetFactory;
-import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
-import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
-import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetManager;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointAsset;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetDecoder;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetLoader;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetManager;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
-import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
-import com.tokelon.toktales.core.content.manage.font.TextureFontAssetManager;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetManager;
-import com.tokelon.toktales.core.content.manage.sound.SoundAsset;
-import com.tokelon.toktales.core.content.manage.sound.SoundAssetManager;
-import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetDecoder;
-import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
-import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetLoader;
-import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
-import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetDecoder;
-import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetLoader;
-import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetManager;
-import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
-import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteManager;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
@@ -150,8 +100,6 @@ import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorF
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.util.DefaultObjectPool;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
-import com.tokelon.toktales.core.util.options.INamedOptions;
-import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
 import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
 
@@ -263,10 +211,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		// Tools
 		bind(IParameterInjectorFactory.class).to(ParameterInjectorFactory.class);
 		bind(IObjectPoolFactory.class).to(DefaultObjectPool.DefaultObjectPoolFactory.class);
-		
-		
-		// Asset Management
-		bindAssetManagers();
 	}
 	
 	
@@ -319,66 +263,5 @@ public class CoreInjectModule extends AbstractInjectModule {
 	protected IModifiableGameSceneControl<? extends IGameScene> provideModifiableGameSceneControl(ILogger logger) {
 		return new GameSceneControl<IGameScene>(logger);
 	}*/
-	
-	
-	private void bindAssetManagers() {
-		/*
-		//bind(IAssetManager.class) // Cannot bind this in a generic way
-		install(new FactoryModuleBuilder() // If we do this we have to bind store, loader etc.
-				.implement(IAssetManager.class, DefaultAssetManager.class)
-				.build(IAssetManagerFactory.class));
-		*/
-		
-		
-		// TODO: Maybe bind this with a custom annotation like @AssetLoaderExecutorService for finer control
-		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
-		
-		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
-		bind(IAssetReaderManager.class).to(DefaultAssetReaderManager.class);
-		
-		
-		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
-		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetManager.class);
-		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointAssetKey>>() {});
-		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetLoader.class);
-		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetDecoder.class);
-		bind(ICodepointAssetDecoder.class).to(CodepointAssetDecoder.class);
-		bind(new TypeLiteral<ISpecialAssetFactory<ICodepointAsset>>() {}).toInstance(() -> new CodepointAsset(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ICodepointAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ICodepointAsset>>() {}).in(Scopes.SINGLETON);
-
-		bindInGameScopeAndForNotScoped(ISoundAssetManager.class, SoundAssetManager.class);
-		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(ISoundAssetManager.class);
-		bind(new TypeLiteral<IAssetStore<ISoundAsset, ISoundAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISoundAsset, ISoundAssetKey>>() {});
-		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
-		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(ISoundAssetDecoder.class);
-		bind(new TypeLiteral<ISpecialAssetFactory<ISoundAsset>>() {}).toInstance(() -> new SoundAsset(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ISoundAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISoundAsset>>() {}).in(Scopes.SINGLETON);
-		
-		bindInGameScopeAndForNotScoped(IBitmapAssetManager.class, BitmapAssetManager.class);
-		bind(new TypeLiteral<IAssetManager<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(IBitmapAssetManager.class);
-		bind(new TypeLiteral<IAssetStore<IBitmapAsset, IBitmapAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<IBitmapAsset, IBitmapAssetKey>>() {});
-		bind(new TypeLiteral<IAssetLoader<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<IBitmapAsset, IBitmapAssetKey, IOptions>>() {});
-		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(IBitmapAssetDecoder.class);
-		bind(new TypeLiteral<ISpecialAssetFactory<IBitmapAsset>>() {}).toInstance(() -> new BitmapAssetImpl(null));
-		bind(new TypeLiteral<ISpecialAssetManager<IBitmapAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<IBitmapAsset>>() {}).in(Scopes.SINGLETON);
-		
-		bindInGameScopeAndForNotScoped(ITextureFontAssetManager.class, TextureFontAssetManager.class);
-		bind(new TypeLiteral<IAssetManager<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetManager.class);
-		bind(new TypeLiteral<IAssetStore<ITextureFontAsset, ITextureFontAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ITextureFontAsset, ITextureFontAssetKey>>() {});
-		bind(new TypeLiteral<IAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {});
-		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetDecoder.class);
-		bind(new TypeLiteral<ISpecialAssetFactory<ITextureFontAsset>>() {}).toInstance(() -> new TextureFontAssetImpl(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ITextureFontAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ITextureFontAsset>>() {}).in(Scopes.SINGLETON);
-		
-		bindInGameScopeAndForNotScoped(ISpriteAssetManager.class, SpriteAssetManager.class);
-		bind(new TypeLiteral<IAssetManager<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetManager.class);
-		bind(new TypeLiteral<IAssetStore<ISpriteAsset, ISpriteAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ISpriteAsset, ISpriteAssetKey>>() {});
-		bind(new TypeLiteral<IAssetLoader<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetLoader.class);
-		bind(ISpriteAssetLoader.class).to(SpriteAssetLoader.class);
-		bind(new TypeLiteral<IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetDecoder.class);
-		bind(ISpriteAssetDecoder.class).to(SpriteAssetDecoder.class);
-		bind(new TypeLiteral<ISpecialAssetFactory<ISpriteAsset>>() {}).toInstance(() -> new SpriteAsset(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ISpriteAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISpriteAsset>>() {}).in(Scopes.SINGLETON);
-	}
 	
 }
