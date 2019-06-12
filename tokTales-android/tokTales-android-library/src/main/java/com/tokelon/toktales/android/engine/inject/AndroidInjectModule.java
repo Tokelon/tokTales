@@ -11,10 +11,7 @@ import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration;
 import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.app.AndroidLogService;
-import com.tokelon.toktales.android.data.AndroidBitmapDecoder;
 import com.tokelon.toktales.android.data.AndroidContentService;
-import com.tokelon.toktales.android.data.AndroidSoundDecoder;
-import com.tokelon.toktales.android.data.AndroidTextureFontDecoder;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.input.dispatch.AndroidInputConsumer;
@@ -24,8 +21,6 @@ import com.tokelon.toktales.android.input.dispatch.IAndroidInputConsumer.IAndroi
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputDispatch;
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer.IAndroidInputProducerFactory;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
-import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
-import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit.AndroidRenderToolkitFactory;
 import com.tokelon.toktales.android.states.AndroidGameStateInput;
 import com.tokelon.toktales.android.states.AndroidInitialGamestateInputHandler;
 import com.tokelon.toktales.android.states.IAndroidGameStateInput;
@@ -34,9 +29,6 @@ import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.android.ui.IUserInterface;
 import com.tokelon.toktales.android.ui.UserInterface;
-import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
-import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -51,8 +43,6 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.core.render.IRenderToolkit;
-import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
 
 import android.os.Environment;
 
@@ -102,15 +92,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IAndroidGameStateInput.class).to(AndroidGameStateInput.class);
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
-		
-		
-		// Move these two into separate module (like AndroidGLInjectModule)?
-		bind(IRenderToolkitFactory.class).to(AndroidRenderToolkitFactory.class);
-		bind(IRenderToolkit.class).to(AndroidRenderToolkit.class);
-		
-		bind(ISoundAssetDecoder.class).to(AndroidSoundDecoder.class);
-		bind(IBitmapAssetDecoder.class).to(AndroidBitmapDecoder.class);
-		bind(ITextureFontAssetDecoder.class).to(AndroidTextureFontDecoder.class);
 	}
 	
 }

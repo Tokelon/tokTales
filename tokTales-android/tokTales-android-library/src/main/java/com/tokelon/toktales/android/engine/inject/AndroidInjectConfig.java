@@ -19,6 +19,7 @@ public class AndroidInjectConfig extends HierarchicalInjectConfig {
         
         extend(new AndroidGLInjectModule());
         
+        extend(new AndroidPlatformInjectModule());
         extend(new AndroidRenderDriversInjectModule());
         
         extend(new AndroidUIServiceExtensionsInjectModule());
