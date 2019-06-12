@@ -15,6 +15,8 @@ public class AndroidInjectConfig extends HierarchicalInjectConfig {
     	
         extend(new AndroidInjectModule());
         
+        extend(new AndroidValuesInjectModule());
+        
         extend(new AndroidParentIdentifiersInjectModule());
         
         extend(new AndroidGLInjectModule());

@@ -16,6 +16,8 @@ public class DesktopInjectConfig extends HierarchicalInjectConfig {
     	
     	extend(new DesktopInjectModule());
     	
+    	extend(new DesktopValuesInjectModule());
+    	
     	extend(new DesktopParentIdentifiersInjectModule());
     	extend(new PathAssetReadersInjectModule());
     	

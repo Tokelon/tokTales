@@ -1,7 +1,5 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import java.io.File;
-
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
@@ -33,7 +31,6 @@ import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
-import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.log.ILogService;
@@ -44,24 +41,18 @@ import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 
-import android.os.Environment;
-
 public class AndroidInjectModule extends AbstractInjectModule {
+	
 	/* When using providers, always create or inject the object once in the constructor,
 	 * this is to adhere to the scope of the provider.
 	 * 
 	 * When injected be aware that it might have it's own scope.
 	 */
 	
-	public static final String DEFAULT_STORAGE_DIR_NAME = "Tokelon";
-	
 	
 	@Override
 	protected void configure() {
 		/* Engine bindings */
-		bind(String.class).annotatedWith(StorageRoot.class).toProvider(() -> new File(Environment.getExternalStorageDirectory(), DEFAULT_STORAGE_DIR_NAME).getPath());
-		// bind a path for ContentRootPath as well?
-		
 		
 		bindInEngineScope(IEnvironment.class, AndroidEnvironment.class);
 		bindInEngineScope(ILogService.class, AndroidLogService.class);
@@ -81,6 +72,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		
 		/* Other bindings */
+		
 		install(new FactoryModuleBuilder()
 				.implement(IActivityIntegrator.class, ActivityIntegrator.class)
 				.build(IActivityIntegratorFactory.class));
