@@ -3,7 +3,6 @@ package com.tokelon.toktales.core.content.manage.files;
 import java.io.File;
 import java.lang.reflect.Type;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
@@ -17,12 +16,13 @@ import com.tokelon.toktales.core.content.manage.resources.IResourceScannerAssetR
 import com.tokelon.toktales.core.content.manage.resources.IResourceScannerKey;
 import com.tokelon.toktales.core.content.manage.resources.ResourceAssetReader;
 import com.tokelon.toktales.core.content.manage.resources.ResourceScannerAssetReader;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
 
-public class AssetReadersInjectModule extends AbstractModule {
+public class AssetReadersInjectModule extends AbstractInjectModule {
 
 	
 	@Override

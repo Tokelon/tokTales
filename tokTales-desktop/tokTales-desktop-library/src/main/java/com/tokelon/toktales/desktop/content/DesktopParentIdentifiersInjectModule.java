@@ -4,15 +4,15 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.MapBinder;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 
-public class DesktopParentIdentifiersInjectModule extends AbstractModule {
+public class DesktopParentIdentifiersInjectModule extends AbstractInjectModule {
 	// Add StorageRoot bindings in core?
 	
 	

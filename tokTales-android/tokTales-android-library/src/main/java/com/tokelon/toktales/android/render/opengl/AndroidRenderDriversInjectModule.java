@@ -1,11 +1,11 @@
 package com.tokelon.toktales.android.render.opengl;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 
-public class AndroidRenderDriversInjectModule extends AbstractModule {
+public class AndroidRenderDriversInjectModule extends AbstractInjectModule {
 
 	
 	@Override

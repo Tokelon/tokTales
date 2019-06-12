@@ -1,14 +1,14 @@
 package com.tokelon.toktales.desktop.render.opengl.gl20;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
-public class DesktopGLInjectModule extends AbstractModule {
+public class DesktopGLInjectModule extends AbstractInjectModule {
 	// TODO: Move all these types into LWJGL package
 	
 	

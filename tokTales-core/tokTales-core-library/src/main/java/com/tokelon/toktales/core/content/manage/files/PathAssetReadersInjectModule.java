@@ -4,17 +4,17 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
 
-public class PathAssetReadersInjectModule extends AbstractModule {
+public class PathAssetReadersInjectModule extends AbstractInjectModule {
 
 	
 	@Override

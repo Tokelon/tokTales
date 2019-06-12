@@ -1,11 +1,11 @@
 package com.tokelon.toktales.desktop.lwjgl.render;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 
-public class LWJGLRenderDriversInjectModule extends AbstractModule {
+public class LWJGLRenderDriversInjectModule extends AbstractInjectModule {
 
 	
 	@Override

@@ -1,8 +1,8 @@
 package com.tokelon.toktales.core.engine;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import com.tokelon.toktales.core.engine.IEngineService.IServiceExtension;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.inject.annotation.services.InputServiceExtensions;
 import com.tokelon.toktales.core.engine.inject.annotation.services.LogServiceExtensions;
@@ -10,7 +10,7 @@ import com.tokelon.toktales.core.engine.inject.annotation.services.RenderService
 import com.tokelon.toktales.core.engine.inject.annotation.services.StorageServiceExtensions;
 import com.tokelon.toktales.core.engine.inject.annotation.services.UIServiceExtensions;
 
-public class ServiceExtensionsInjectModule extends AbstractModule {
+public class ServiceExtensionsInjectModule extends AbstractInjectModule {
 
 
 	@Override

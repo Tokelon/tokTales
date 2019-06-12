@@ -1,15 +1,15 @@
 package com.tokelon.toktales.android.ui;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import com.tokelon.toktales.android.engine.ui.AndroidConsoleUIExtension;
 import com.tokelon.toktales.android.engine.ui.AndroidDebugUIExtension;
 import com.tokelon.toktales.core.engine.IEngineService.IServiceExtension;
+import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.services.UIServiceExtensions;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 
-public class AndroidUIServiceExtensionsInjectModule extends AbstractModule {
+public class AndroidUIServiceExtensionsInjectModule extends AbstractInjectModule {
 
 
 	public static final String UI_SERVICE_EXTENSION_CONSOLE = "UI_SERVICE_EXTENSION_CONSOLE";
