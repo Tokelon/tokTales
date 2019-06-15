@@ -21,6 +21,8 @@ public class CoreInjectConfig extends HierarchicalInjectConfig {
     	
     	extend(new ServiceExtensionsInjectModule());
     	
+    	extend(new GlobalRegistriesInjectModule());
+    	
     	extend(new AssetReadersInjectModule());
     	extend(new AssetManagersInjectModule());
     	
