@@ -27,6 +27,8 @@ public interface IAssetManager<T, K, O> {
 	public T getAsset(K key, O options);
 	//public T getAsset(K key, O options, String group);
 	
+	public T getAssetIfKeyValid(K key, String tag);
+	public T getAssetIfKeyValid(K key, O options, String tag);
 	
 	// The exception used here is more of a ContentNotLoadedException - Make it custom?
 	public T getAssetOrError(K key) throws ContentNotFoundException;
@@ -34,6 +36,9 @@ public interface IAssetManager<T, K, O> {
 
 	public T getAssetLoadIfNeeded(K key);
 	public T getAssetLoadIfNeeded(K key, O options);
+
+	public T getAssetLoadIfNeededIfKeyValid(K key, String tag);
+	public T getAssetLoadIfNeededIfKeyValid(K key, O options, String tag);
 	
 	public T getAssetLoadIfNeededOrError(K key) throws ContentException;
 	public T getAssetLoadIfNeededOrError(K key, O options) throws ContentException;

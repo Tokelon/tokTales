@@ -95,6 +95,26 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	}
 
 	@Override
+	public T getAssetIfKeyValid(K key, String tag) {
+		if(key == null) {
+			getLogger().logOnce('w', tag, TAG, "Asset key was null for tag: " + tag);
+			return null;
+		}
+		
+		return getAsset(key);
+	}
+	
+	@Override
+	public T getAssetIfKeyValid(K key, O options, String tag) {
+		if(key == null) {
+			getLogger().logOnce('w', tag, TAG, "(With Options) Asset key was null for tag: " + tag);
+			return null;
+		}
+		
+		return getAsset(key, options);
+	}
+	
+	@Override
 	public T getAssetOrError(K key) throws ContentNotFoundException {
 		T asset = getStore().retrieve(key);
 		if(asset != null) {
@@ -138,6 +158,26 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public T getAssetLoadIfNeededIfKeyValid(K key, String tag) {
+		if(key == null) {
+			getLogger().logOnce('w', tag, TAG, "(Load if Needed) Asset key was null for tag: " + tag);
+			return null;
+		}
+		
+		return getAssetLoadIfNeeded(key);
+	}
+	
+	@Override
+	public T getAssetLoadIfNeededIfKeyValid(K key, O options, String tag) {
+		if(key == null) {
+			getLogger().logOnce('w', tag, TAG, "(Load if Needed) (With Options) Asset key was null for tag: " + tag);
+			return null;
+		}
+		
+		return getAssetLoadIfNeeded(key, options);
 	}
 
 	@Override
