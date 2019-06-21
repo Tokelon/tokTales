@@ -10,11 +10,15 @@ public abstract class AbstractEngineService implements IEngineService {
 	private final Map<String, IServiceExtension> extensionsMap;
 	
 	public AbstractEngineService() {
-		this.extensionsMap = Collections.synchronizedMap(new HashMap<String, IServiceExtension>());
+		this.extensionsMap = Collections.synchronizedMap(new HashMap<>());
 	}
 	
 	public AbstractEngineService(Map<String, IServiceExtension> extensions) {
-		this.extensionsMap = Collections.synchronizedMap(new HashMap<String, IServiceExtension>(extensions));
+		this.extensionsMap = Collections.synchronizedMap(new HashMap<>());
+		
+		for(Map.Entry<String, IServiceExtension> entry: extensions.entrySet()) {
+			addExtension(entry.getKey(), entry.getValue());
+		}
 	}
 	
 	
