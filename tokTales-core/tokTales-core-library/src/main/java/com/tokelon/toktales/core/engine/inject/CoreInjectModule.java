@@ -31,7 +31,9 @@ import com.tokelon.toktales.core.game.GameLogicManager;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameLogicManager;
 import com.tokelon.toktales.core.game.IGameScriptManager;
+import com.tokelon.toktales.core.game.IRegistryManager;
 import com.tokelon.toktales.core.game.LuaGameScriptManager;
+import com.tokelon.toktales.core.game.RegistryManager;
 import com.tokelon.toktales.core.game.control.GameControl;
 import com.tokelon.toktales.core.game.control.IGameControl;
 import com.tokelon.toktales.core.game.control.ITimeManager;
@@ -161,7 +163,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		   bindInGameScopeAndForNotScoped(ISpriteManager.class, SpriteManager.class);
 		   bind(ISpriteManagerFactory.class).to(SpriteManager.SpriteManagerFactory.class);
 		   bindInGameScopeAndForNotScoped(ITextureManager.class, DefaultTextureManager.class);
+		   bindInGameScope(IRegistryManager.class, RegistryManager.class);
 		  bindInGameScopeAndForNotScoped(IWorld.class, World.class);
+		  
 		
 		
 		// Other

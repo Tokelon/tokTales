@@ -17,21 +17,26 @@ public class Game implements IGame, IGameScriptManagerProvider {
 	
 	private final Object gameAdapterLock = new Object();
 
-	private final IGameControl mGameControl;
-	private final IGameStateControl mStateControl;
-	private final ITimeManager mTimeManager;
-	private final IGameScriptManager mScriptManager;
-
-	private final IGameLogicManager mLogicManager;
-
-	private final IConfigManager mConfigManager;
-	private final IEditorManager mEditorManager;
-	private final IContentManager mContentManager;
 	
-	private final IWorld mWorld;
+	private IGameAdapter gameAdapter;
 
-	private final Provider<IGameAdapter> mGameAdapterProvider;
-	private IGameAdapter mGameAdapter;
+	
+	private final IGameControl gameControl;
+	private final IGameStateControl stateControl;
+	private final ITimeManager timeManager;
+	private final IGameScriptManager scriptManager;
+
+	private final IGameLogicManager logicManager;
+
+	private final IConfigManager configManager;
+	private final IEditorManager editorManager;
+	private final IContentManager contentManager;
+	
+	private final IRegistryManager registryManager;
+	
+	private final IWorld world;
+
+	private final Provider<IGameAdapter> gameAdapterProvider;
 	
 	@Inject
 	public Game(
@@ -43,91 +48,94 @@ public class Game implements IGame, IGameScriptManagerProvider {
 			IConfigManager configManager,
 			IEditorManager editorManager,
 			IContentManager contentManager,
+			IRegistryManager registryManager,
 			IWorld world,
 			Provider<IGameAdapter> gameAdapterProvider // Pass provider to avoid generation here
-			) {
+	) {
 		
-		this.mGameControl = gameControl;
-		this.mStateControl = stateControl;
-		this.mTimeManager = timeManager;
-		this.mScriptManager = scriptManager;
-		this.mLogicManager = logicManager;
-		this.mConfigManager = configManager;
-		this.mEditorManager = editorManager;
-		this.mContentManager = contentManager;
-		this.mWorld = world;
-		this.mGameAdapterProvider = gameAdapterProvider;
+		this.gameControl = gameControl;
+		this.stateControl = stateControl;
+		this.timeManager = timeManager;
+		this.scriptManager = scriptManager;
+		this.logicManager = logicManager;
+		this.configManager = configManager;
+		this.editorManager = editorManager;
+		this.contentManager = contentManager;
+		this.registryManager = registryManager;
+		this.world = world;
+		this.gameAdapterProvider = gameAdapterProvider;
 	}
-
-	
-	
-	@Override
-	public IGameAdapter getGameAdapter() {
-		if(mGameAdapter == null) { // Check before locking to avoid overhead
-			
-			synchronized (gameAdapterLock) {
-				if(mGameAdapter == null) {
-					mGameAdapter = mGameAdapterProvider.get();
-				}
-			}
-		}
-		
-		return mGameAdapter;
-	}
-
-	@Override
-	public IGameControl getGameControl() {
-		return mGameControl;
-	}
-	
-	@Override
-	public IGameStateControl getStateControl() {
-		return mStateControl;
-	}
-
-	@Override
-	public ITimeManager getTimeManager() {
-		return mTimeManager;
-	}
-	
-	@Override
-	public IGameScriptManager getScriptManager() {
-		return mScriptManager;
-	}
-	
-	@Override
-	public IGameLogicManager getLogicManager() {
-		return mLogicManager;
-	}
-
-
-
-	@Override
-	public IConfigManager getConfigManager() {
-		return mConfigManager;
-	}
-
-	@Override
-	public IEditorManager getEditorManager() {
-		return mEditorManager;
-	}
-
-	@Override
-	public IContentManager getContentManager() {
-		return mContentManager;
-	}
-
 
 
 	@Override
 	public IGameState getActiveState() {
-		return mStateControl.getActiveState();
+		return stateControl.getActiveState();
 	}
 	
 	@Override
+	public IGameAdapter getGameAdapter() {
+		if(gameAdapter == null) { // Check before locking to avoid overhead
+			synchronized (gameAdapterLock) {
+				if(gameAdapter == null) {
+					gameAdapter = gameAdapterProvider.get();
+				}
+			}
+		}
+		
+		return gameAdapter;
+	}
+
+	@Override
 	public IWorld getWorld() {
-		return mWorld;
+		return world;
 	}
 	
+	
+	@Override
+	public IGameControl getGameControl() {
+		return gameControl;
+	}
+	
+	@Override
+	public IGameStateControl getStateControl() {
+		return stateControl;
+	}
+
+	@Override
+	public ITimeManager getTimeManager() {
+		return timeManager;
+	}
+	
+	@Override
+	public IGameScriptManager getScriptManager() {
+		return scriptManager;
+	}
+	
+	@Override
+	public IGameLogicManager getLogicManager() {
+		return logicManager;
+	}
+
+
+	@Override
+	public IConfigManager getConfigManager() {
+		return configManager;
+	}
+
+	@Override
+	public IEditorManager getEditorManager() {
+		return editorManager;
+	}
+
+	@Override
+	public IContentManager getContentManager() {
+		return contentManager;
+	}
+
+	
+	@Override
+	public IRegistryManager getRegistryManager() {
+		return registryManager;
+	}
 	
 }
