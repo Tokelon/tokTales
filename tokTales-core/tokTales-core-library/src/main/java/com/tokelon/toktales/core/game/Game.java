@@ -12,7 +12,7 @@ import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
 import com.tokelon.toktales.core.game.world.IWorld;
 
-public class Game implements IGame, IGameScriptManagerProvider {
+public class Game implements IGame {
 
 	
 	private final Object gameAdapterLock = new Object();
