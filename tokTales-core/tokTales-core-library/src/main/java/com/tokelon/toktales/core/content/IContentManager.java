@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.content;
 
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.render.ITextureManager;
 
@@ -17,8 +18,9 @@ public interface IContentManager {
 	
 	public ITextureManager getTextureManager();
 
-	public ICodepointAssetManager getCodepointAssetManager();
+	public ITextureFontAssetManager getFontAssetManager();
 	
+	public ICodepointAssetManager getCodepointAssetManager();
 	
 	
 	public enum SpecialContent implements ISpecialContent {
