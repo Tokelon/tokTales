@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -211,7 +212,25 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 	}
 	
 	
+	@Override
+	public File createTempFile(String prefix, String suffix) throws StorageException {
+		try {
+			return File.createTempFile(prefix, suffix);
+		} catch (IOException e) {
+			throw new StorageException(e);
+		}
+	}
 	
+	@Override
+	public File createTempFileOnExternal(String prefix, String suffix) throws StorageException {
+		try {
+			return File.createTempFile(prefix, suffix, getExtCacheDir());
+		} catch (IOException e) {
+			throw new StorageException(e);
+		}
+	}
+	
+
 	private File getExtAppDir() throws StorageException {
 		File appDir = new File(storageRoot); // Make field?
 		
@@ -222,6 +241,18 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 		}
 		
 		return appDir;
+	}
+	
+	private File getExtCacheDir() throws StorageException {
+		File cacheDir = new File(storageRoot, "cache");
+		
+		if(!cacheDir.exists() || !cacheDir.isDirectory()) {
+			if(!cacheDir.mkdir()) {
+				throw new StorageException("Unable to create external application cache directory");
+			}
+		}
+		
+		return cacheDir;
 	}
 	
 	

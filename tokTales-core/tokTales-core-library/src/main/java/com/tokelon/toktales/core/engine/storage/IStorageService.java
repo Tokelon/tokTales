@@ -72,6 +72,9 @@ public interface IStorageService extends IEngineService {
 	public File getAppFileOnExternal(IApplicationLocation storageLocation, String filename) throws StorageException;
 	
 	
+	public File createTempFile(String prefix, String suffix) throws StorageException;
+	public File createTempFileOnExternal(String prefix, String suffix) throws StorageException;
+	
 	
 	public interface IStorageServiceFactory {
 		

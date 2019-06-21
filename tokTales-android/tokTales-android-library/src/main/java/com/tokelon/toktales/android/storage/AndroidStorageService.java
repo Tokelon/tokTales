@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
+import android.content.Context;
 import android.os.Environment;
 
 public class AndroidStorageService extends AbstractEngineService implements IStorageService {
@@ -32,16 +34,19 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty
 
 	
+	private final Context globalContext;
 	private final String storageRoot;
 	
-	public AndroidStorageService(@StorageRoot String storageRoot) {
+	public AndroidStorageService(Context globalContext, @StorageRoot String storageRoot) {
+		this.globalContext = globalContext;
 		this.storageRoot = storageRoot;
 	}
 	
 	@Inject
-	public AndroidStorageService(@StorageRoot String storageRoot, @StorageServiceExtensions Map<String, IServiceExtension> extensions) {
+	public AndroidStorageService(Context globalContext, @StorageRoot String storageRoot, @StorageServiceExtensions Map<String, IServiceExtension> extensions) {
 		super(extensions);
 		
+		this.globalContext = globalContext;
 		this.storageRoot = storageRoot;
 	}
 	
@@ -270,6 +275,24 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 		return externalFile;
 	}
 
+
+	@Override
+	public File createTempFile(String prefix, String suffix) throws StorageException {
+		try {
+			return File.createTempFile(prefix, suffix, globalContext.getCacheDir());
+		} catch (IOException e) {
+			throw new StorageException(e);
+		}
+	}
+	
+	@Override
+	public File createTempFileOnExternal(String prefix, String suffix) throws StorageException {
+		try {
+			return File.createTempFile(prefix, suffix, globalContext.getExternalCacheDir());
+		} catch (IOException e) {
+			throw new StorageException(e);
+		}
+	}
 	
 
 	private boolean isExternalStorageWritable() {
@@ -297,15 +320,21 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 	
 	
 	public static class AndroidStorageServiceFactory implements IStorageServiceFactory {
+		private final Context globalContext;
+
+		@Inject
+		public AndroidStorageServiceFactory(Context globalContext) {
+			this.globalContext = globalContext;
+		}
 		
 		@Override
 		public IStorageService create(String storageRoot) {
-			return new AndroidStorageService(storageRoot);
+			return new AndroidStorageService(globalContext, storageRoot);
 		}
 
 		@Override
 		public IStorageService create(String storageRoot, Map<String, IServiceExtension> extensions) {
-			return new AndroidStorageService(storageRoot, extensions);
+			return new AndroidStorageService(globalContext, storageRoot, extensions);
 		}
 	}
 	
