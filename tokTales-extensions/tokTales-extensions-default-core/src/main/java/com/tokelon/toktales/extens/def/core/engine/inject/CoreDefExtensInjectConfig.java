@@ -10,6 +10,8 @@ public class CoreDefExtensInjectConfig extends HierarchicalInjectConfig {
     	super.configure();
     	
     	extend(new CoreDefExtensInjectModule());
+    	
+    	extend(new CoreDefExtensGlobalRegistriesInjectModule());
     }
     
 }
