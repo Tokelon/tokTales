@@ -1,17 +1,19 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
-import java.io.File;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyRegistry;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.model.IActor;
@@ -32,15 +34,16 @@ import com.tokelon.toktales.core.render.ShapeRenderer;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.LineShape;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.tools.registry.IBasicRegistry;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	
 	public static final String TAG = "DebugRenderer";
+	
+	public static final String ASSET_KEY_ID_FONT_MAIN = "DEBUG_RENDERER-ASSET_KEY_ID_FONT_MAIN";
 
 	
 	private static final RGBAColorImpl gridColor = RGBAColorImpl.createFromCode("FF0000", 0.5f);
@@ -82,38 +85,37 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private int flashCountdown = 0;
 
 	
-	private final ITextureFont textureFont;
-	
 	private ShapeRenderer shapeRenderer;
 	private CharRenderer charRenderer;
 
-
+	
 	private final ILogger logger;
 	private final IEngine engine;
 	private final IGame game;
-	private final ICodepointAssetManager codepointManager;
+	private final IContentManager contentManager;
+	private final IBasicRegistry assetKeyRegistry;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IPlayerController> playerControllerSupplier;
 	private final Supplier<IWorldspace> worlspaceSupplier;
 	
 	public DebugRenderer(
 			IEngineContext engineContext,
-			ICodepointAssetManager codepointManager,
+			IContentManager contentManager,
+			IBasicRegistry assetKeyRegistry,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IPlayerController> playerControllerSupplier,
 			Supplier<IWorldspace> worlspaceSupplier
 	) {
+		
 		this.logger = engineContext.getLog();
 		this.engine = engineContext.getEngine();
 		this.game = engineContext.getGame();
-		this.codepointManager = codepointManager;
+		this.contentManager = contentManager;
+		this.assetKeyRegistry = assetKeyRegistry;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.playerControllerSupplier = playerControllerSupplier;
 		this.worlspaceSupplier = worlspaceSupplier;
 		
-		
-		textureFont = loadFont();
-
 		lastFpsTime = System.currentTimeMillis();
 		lastGameTime = engineContext.getGame().getTimeManager().getGameTimeMillis();
 	}
@@ -126,11 +128,8 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		shapeRenderer = new ShapeRenderer(renderAccess);
 		shapeRenderer.contextCreated();
 		
-		charRenderer = new CharRenderer(renderAccess, textureCoordinatorSupplier.get(), codepointManager);
+		charRenderer = new CharRenderer(renderAccess, textureCoordinatorSupplier.get(), contentManager.getCodepointAssetManager());
 		charRenderer.contextCreated();
-		
-		charRenderer.setFont(textureFont);
-		charRenderer.setSize(fontSize, fontSize);
 	}
 
 	@Override
@@ -153,6 +152,8 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	@Override
 	public void prepare(long currentTimeMillis) {
 		// if !view
+		charRenderer.setFont(getFont());
+		charRenderer.setSize(fontSize, fontSize);
 	}
 
 	@Override
@@ -398,51 +399,42 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	}
 	
 	
-	
-	// TODO: Refactor - Extract
-	private ITextureFont loadFont() {
-		
-		boolean isAndroid = engine.getEnvironment().getPlatformName().equals("Android");
-		String fontPath = isAndroid ? "assets/fonts" : "assets\\fonts";
-		
-		
-		String fontFilename = "m5x7.ttf";
-		IApplicationLocation fontLocation = new LocationImpl(fontPath);
-		
-		ITextureFont font = null;
-		try {
-			File fontFile = engine.getStorageService().getAppFileOnExternal(fontLocation, fontFilename);
-			
-			font = engine.getContentService().loadFontFromFile(fontFile);
-		} catch (ContentException e) {
-			logger.e(TAG, "Unable to load font: " + e.getMessage());
-		} catch (StorageException e) {
-			logger.e(TAG, "Unable to read font file: " + e.getMessage());
-		}
-		
-		return font;
+	private ITextureFont getFont() {
+		ITextureFontAssetKey fontAssetKey = assetKeyRegistry.resolveAs(ASSET_KEY_ID_FONT_MAIN, ITextureFontAssetKey.class);
+		ITextureFontAsset asset = contentManager.getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
+		return contentManager.getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
 	}
 	
-
+	
+	
 	public static class DebugRendererFactory implements IDebugRendererFactory {
+		private final IBasicRegistry assetKeyRegistry;
 
+		@Inject
+		public DebugRendererFactory(@GlobalAssetKeyRegistry IBasicRegistry assetKeyRegistry) {
+			this.assetKeyRegistry = assetKeyRegistry;
+		}
+
+		
 		@Override
 		public DebugRenderer create(
 				IEngineContext engineContext,
-				ICodepointAssetManager codepointManager,
+				IContentManager contentManager,
+				IBasicRegistry assetKeyRegistry,
 				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 				Supplier<IPlayerController> playerControllerSupplier,
 				Supplier<IWorldspace> worlspaceSupplier
 		) {
-			return new DebugRenderer(engineContext, codepointManager, textureCoordinatorSupplier, playerControllerSupplier, worlspaceSupplier);
+			return new DebugRenderer(engineContext, contentManager, assetKeyRegistry, textureCoordinatorSupplier, playerControllerSupplier, worlspaceSupplier);
 		}
 
 
 		@Override
-		public DebugRenderer createForGamestate(IGameState gamestate, ICodepointAssetManager codepointManager, Supplier<IWorldspace> worlspaceSupplier) {
+		public DebugRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worlspaceSupplier) {
 			return new DebugRenderer(
 					gamestate.getEngineContext(),
-					codepointManager,
+					gamestate.getGame().getContentManager(),
+					assetKeyRegistry,
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(gamestate),
 					worlspaceSupplier
@@ -450,10 +442,11 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		}
 
 		@Override
-		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate, ICodepointAssetManager codepointManager) {
+		public DebugRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
 			return new DebugRenderer(
 					typedGamestate.getEngineContext(),
-					codepointManager,
+					typedGamestate.getGame().getContentManager(),
+					assetKeyRegistry,
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)

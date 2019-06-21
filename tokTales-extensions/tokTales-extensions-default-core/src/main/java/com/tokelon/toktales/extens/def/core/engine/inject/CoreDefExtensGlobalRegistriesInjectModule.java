@@ -8,6 +8,9 @@ import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyAliases;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyEntries;
 import com.tokelon.toktales.core.values.AssetValues;
 import com.tokelon.toktales.core.values.EmbeddedFontM5X7;
+import com.tokelon.toktales.extens.def.core.game.screen.DebugRenderer;
+import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleGamestate;
+import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
 
 public class CoreDefExtensGlobalRegistriesInjectModule extends AbstractInjectModule {
 
@@ -32,6 +35,11 @@ public class CoreDefExtensGlobalRegistriesInjectModule extends AbstractInjectMod
 
 	    MapBinder<Object, Object> globalAssetKeyAliasesBinder = MapBinder.newMapBinder(binder(), Object.class, Object.class, GlobalAssetKeyAliases.class);
 	    globalAssetKeyAliasesBinder.addBinding(AssetValues.ASSET_KEY_ID_FONT_DEFAULT).toInstance(ASSET_KEY_NAME_FONT_M5X7);
+
+	    
+	    globalAssetKeyAliasesBinder.addBinding(DebugRenderer.ASSET_KEY_ID_FONT_MAIN).toInstance(AssetValues.ASSET_KEY_ID_FONT_DEFAULT);
+	    globalAssetKeyAliasesBinder.addBinding(LocalMapGamestate.ASSET_KEY_ID_FONT_MAIN).toInstance(AssetValues.ASSET_KEY_ID_FONT_DEFAULT);
+	    globalAssetKeyAliasesBinder.addBinding(ConsoleGamestate.ASSET_KEY_ID_FONT_MAIN).toInstance(AssetValues.ASSET_KEY_ID_FONT_DEFAULT);
 	}
 	
 }

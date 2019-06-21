@@ -150,7 +150,6 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		
 		ITextureFont cFont = consoleController.getFont();
 		if(cFont == null) {
-			assert false : "No font for console controller";
 			return;
 		}
 		

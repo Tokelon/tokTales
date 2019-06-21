@@ -1,16 +1,15 @@
 package com.tokelon.toktales.extens.def.core.game.states.localmap;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.config.IFileConfig;
 import com.tokelon.toktales.core.config.IFileConfig.OnConfigChangeListener;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
@@ -21,8 +20,6 @@ import com.tokelon.toktales.core.game.states.ExtendedGamescene;
 import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultConsoleController;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreter;
@@ -39,6 +36,8 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 
 	public static final String SUB_TAG = "LocalMapGamestate";
 	
+	public static final String ASSET_KEY_ID_FONT_MAIN = "LOCAL_MAP_GAMESTATE-ASSET_KEY_ID_FONT_MAIN";
+
 	
 	private static final String CONSOLE_PROMPT = ">"; //"> ";
 
@@ -55,8 +54,6 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	private boolean logRenderTime = false;
 
 	
-	
-	private ITextureFont font;
 	
 	private IConsoleIntegration consoleIntegration;
 
@@ -176,32 +173,25 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		*/
 		
 		
-		font = loadFont();
-		if(font == null) {
-			TokTales.getLog().e(getTag(), "Failed to load font");
-		}
-		
-		
 		IConsole console = new Console(consoleInterpreter);
 		console.setPrompt(CONSOLE_PROMPT);
 		
 		IConsoleController consoleController = new DefaultConsoleController(console);
-		if(font != null) {
-			consoleController.setFont(font);
-		}
-		
-
 		consoleIntegration = new ConsoleIntegration(getGame().getContentManager().getCodepointAssetManager(), this, consoleController, consoleOverlayControlHandlerFactory);
 		getIntegrator().addIntegration(GAMESTATE_INTEGRATION_CONSOLE, consoleIntegration);
 		consoleIntegration.onStateEngage(this); // Any way to create it earlier and avoid this?
 	}
 	
-	
+	@Override
+	public void onUpdate(long timeMillis) {
+		super.onUpdate(timeMillis);
+
+		consoleIntegration.getConsoleController().setFont(getFont());
+	}
 	
 	@Override
 	public void onRender() {
 		long renderStart = System.currentTimeMillis();
-
 		
 		IMapController mapController = getActiveScene().getMapController();
 		
@@ -234,38 +224,19 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 	
 	
-	
-	
-	private ITextureFont loadFont() {
-		// TODO: Is this okay?? Should be a default font somewhere that is just used here
-		
-		boolean isAndroid = getEngine().getEnvironment().getPlatformName().equals("Android");
-		String fontPath = isAndroid ? "assets/fonts" : "assets\\fonts";
-		
-		
-		String fontFilename = "m5x7.ttf";
-		IApplicationLocation fontLocation = new LocationImpl(fontPath);
-		
-		ITextureFont font = null;
-		try {
-			File fontFile = getEngine().getStorageService().getAppFileOnExternal(fontLocation, fontFilename);
-			
-			font = getEngine().getContentService().loadFontFromFile(fontFile);
-		} catch (ContentException e) {
-			TokTales.getLog().e(getTag(), "Unable to load font: " + e.getMessage());
-		} catch (StorageException e) {
-			TokTales.getLog().e(getTag(), "Unable to read font file: " + e.getMessage());
-		}
-		
-		return font;
-	}
-	
-	
 	@Override
 	protected String getTag() {
 		return SUB_TAG + "_" + BASE_TAG;
 	}
 
+
+	private ITextureFont getFont() {
+		// TODO: Enable injecting your own registry?
+		ITextureFontAssetKey fontAssetKey = getGame().getRegistryManager().getAssetKeyRegistry().resolveAs(ASSET_KEY_ID_FONT_MAIN, ITextureFontAssetKey.class);
+		ITextureFontAsset asset = getGame().getContentManager().getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
+		return getGame().getContentManager().getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
+	}
+	
 	
 	// TODO: Implement or remove
 	@SuppressWarnings("unused")

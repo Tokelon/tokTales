@@ -1,15 +1,12 @@
 package com.tokelon.toktales.extens.def.core.game.states.console;
 
-import java.io.File;
-
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
+import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.inject.ForClass;
-import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
@@ -18,8 +15,6 @@ import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultConsoleController;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extens.def.core.game.controller.DefaultTextBoxController;
@@ -40,6 +35,9 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	
 	public static final String TAG = "ConsoleGamestate";
 	
+	public static final String ASSET_KEY_ID_FONT_MAIN = "CONSOLE_GAMESTATE-ASSET_KEY_ID_FONT_MAIN";
+
+	
 	public static final String RENDERER_CONSOLE_NAME = "renderer_console";
 	public static final String RENDERER_TEXT_NAME = "renderer_text_name";
 	public static final String RENDERER_DIALOG_NAME = "renderer_dialog_name";
@@ -49,8 +47,8 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	
 	
 	private DefaultConsoleController consoleController;
-	private Console console;
-	
+	private DefaultDialogController dialogController;
+	private DefaultTextBoxController textBoxController;
 	
 	private final IRenderingStrategy renderingStrategy;
 	private final IConsoleInterpreterManager consoleInterpreterManager;
@@ -93,7 +91,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 		
 		// Console
-		console = new Console(consoleInterpreterManager);
+		Console console = new Console(consoleInterpreterManager);
 		console.setPrompt(CONSOLE_PROMPT);
 		
 		consoleController = new DefaultConsoleController(console);
@@ -105,7 +103,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		// Dialog
 		ScreenDialog dialog = new ScreenDialog(camera.getWidth() * 0.80f, camera.getHeight() * 0.20f, 48f);
 		dialog.setText("Hello World!");
-		DefaultDialogController dialogController = new DefaultDialogController(dialog);
+		dialogController = new DefaultDialogController(dialog);
 		
 		IDialogRenderer dialogSegmentRenderer = new DialogRendererFactory().createForGamestate(this);
 		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_DIALOG, dialogController);
@@ -123,7 +121,8 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 		TextBoxRenderer textSegmentRenderer = new TextBoxRendererFactory().createForGamestate(this);
 		textSegmentRenderer.setColor(RGBAColorImpl.createFromCode("#FFE688"));
-		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_TEXTBOX, new DefaultTextBoxController(textBox));
+		textBoxController = new DefaultTextBoxController(textBox);
+		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_TEXTBOX, textBoxController);
 		
 
 		// State renderer
@@ -137,80 +136,26 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 		baseStateRenderer.updateCamera(getActiveScene().getSceneCamera());
 		setStateRender(baseStateRenderer);
-		
-		
-
-		/*
-		// TODO: Fix the path logic
-		boolean isAndroid = getEngine().getEnvironment().getPlatformName().equals("Android");
-		String tilesetLocation = isAndroid ? "assets/tilesets" : "assets\\tilesets";
-		String spritesetsLocation = isAndroid ? "/assets/graphics/spritesets" : "\\assets\\graphics\\spritesets";
-		
-		TiledMapTilesetReader tilesetReader = new TiledMapTilesetReader();
-		try {
-			tilesetReader.setup();
-			
-			String spritesetFilename = "m5x7mod.png";
-			String tilesetFilename = "m5x7mod.tsx";
-			LocationImpl location = new LocationImpl(tilesetLocation);
-			
-			InputStream inputstream = getEngine().getStorageFramework().tryReadAppFileOnExternal(location, tilesetFilename);
-			if(inputstream == null) {
-				TokTales.getLog().e(TAG, String.format("Unable to open stream to file %s at %s", tilesetFilename, location));
-			}
-			else {
-				
-				TiledMapTilesetImpl tileset = tilesetReader.readTileset(inputstream);
-				TiledSpriteset spriteset = new TiledSpriteset(spritesetFilename, tileset);
-				
-				
-				SpriteFontImpl font = new SpriteFontImpl(spriteset);
-				mConsoleController.setFont(font);
-				
-				textBox.setFont(font);
-				
-				
-				StructuredLocation spritesetLocation = new StructuredLocation(LocationPrefix.EXTERNAL, spritesetsLocation);
-				Resource spritesetsResource = new Resource(IResourceType.Type.SPRITE_SET, "-spritesets", spritesetLocation);
-				
-				try {
-					getGame().getContentManager().getResourceManager().preloadResource(spritesetsResource, getGame().getContentManager().getResourceManager().getLooseResources());
-				} catch (ContentException e1) {
-					e1.printStackTrace();
-				} catch (StorageException e1) {
-					e1.printStackTrace();
-				}
-			}
-			
-		} catch (TiledMapFormatException e) {
-			TokTales.getLog().e(TAG, "Unable to load tileset: " + e.getMessage());
-		}
-		*/
-		
-		boolean isAndroid = getEngine().getEnvironment().getPlatformName().equals("Android");
-		String fontPath = isAndroid ? "assets/fonts" : "assets\\fonts";
-		
-		
-		String fontFilename = "m5x7.ttf";
-		IApplicationLocation fontLocation = new LocationImpl(fontPath);
-		
-		ITextureFont font;
-		try {
-			File fontFile = getEngine().getStorageService().getAppFileOnExternal(fontLocation, fontFilename);
-			
-			font = getEngine().getContentService().loadFontFromFile(fontFile);
-			
-			consoleController.setFont(font);
-			textBox.setFont(font);
-			dialog.setFont(font);
-		} catch (ContentException e) {
-			TokTales.getLog().e(TAG, "Unable to load font: " + e.getMessage());
-		} catch (StorageException e) {
-			TokTales.getLog().e(TAG, "Unable to read font file: " + e.getMessage());
-		}
-		
 	}
 	
+	
+	@Override
+	public void onUpdate(long timeMillis) {
+		super.onUpdate(timeMillis);
+
+		updateFont();
+	}
+	
+
+	private void updateFont() {
+		ITextureFontAssetKey fontAssetKey = getGame().getRegistryManager().getAssetKeyRegistry().resolveAs(ASSET_KEY_ID_FONT_MAIN, ITextureFontAssetKey.class);
+		ITextureFontAsset asset = getGame().getContentManager().getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
+		ITextureFont font = getGame().getContentManager().getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
+
+		consoleController.setFont(font);
+		textBoxController.getModel().setFont(font);
+		dialogController.getDialog().setFont(font);
+	}
 	
 
 	@Override

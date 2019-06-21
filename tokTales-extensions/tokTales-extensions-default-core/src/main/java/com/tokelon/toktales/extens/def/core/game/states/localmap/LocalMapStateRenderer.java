@@ -9,7 +9,6 @@ import org.joml.Matrix4f;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
-import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
@@ -87,7 +86,6 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 			IObjectRendererFactory objecRendererFactory,
 			IDebugRendererFactory debugRendererFactory,
 			ITextureCoordinator textureCoordinator,
-			ICodepointAssetManager codepointManager,
 			@DebugRenderingEnabled boolean debugRenderingEnabled,
 			@Assisted ILocalMapGamestate gamestate
 	) {
@@ -100,7 +98,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 		this.mapRenderer = mapRendererFactory.createForTypedGamestate(gamestate);
 		this.playerRenderer = playerRendererFactory.createForTypedGamestate(gamestate);
 		this.entityRenderer = entityRendererFactory.createForTypedGamestate(gamestate);
-		this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate, codepointManager);
+		this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate);
 		this.objectRenderer = objecRendererFactory.createForTypedGamestate(gamestate);
 		
 		this.defaultViewTransformer = new DefaultViewTransformer();
