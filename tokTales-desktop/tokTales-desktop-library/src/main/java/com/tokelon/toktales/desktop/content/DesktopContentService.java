@@ -1,8 +1,5 @@
 package com.tokelon.toktales.desktop.content;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -19,7 +16,6 @@ import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
 import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
-import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
@@ -42,7 +38,6 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
 import com.tokelon.toktales.desktop.lwjgl.data.STBBitmap;
-import com.tokelon.toktales.desktop.lwjgl.data.STBTextureFont;
 
 public class DesktopContentService extends AbstractContentService implements IContentService {
 	
@@ -192,80 +187,6 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		}
 	}
 
-	
-	@Override
-	public ITextureFont lookForFontAndLoad(IApplicationLocation location, String filename) {
-		
-		InputStream fontInputStream = assetStorageService.tryReadAppFileOnExternal(location, filename);
-		if(fontInputStream == null) {
-			return null;
-		}
-		
-		try {
-			ITextureFont font = loadFontFromSource(fontInputStream);
-			return font;
-		} catch (ContentException e) {
-			logger.e(TAG, e.getMessage());
-			return null;
-		} finally {
-			try {
-				fontInputStream.close();
-			} catch (IOException ex) { /* Nothing */ }
-		}
-	}
-	
-	@Override
-	public ITextureFont loadFont(IApplicationLocation location, String filename) throws ContentException {
-		InputStream fontInputStream;
-		try {
-			fontInputStream = assetStorageService.readAppFileOnExternal(location, filename);
-		} catch (StorageException se) {
-			throw new ContentLoadException(se);
-		}
-		
-		try {
-			return loadFontFromSource(fontInputStream);			
-		} finally {
-			try {
-				fontInputStream.close();	
-			} catch (IOException ioe) { /* Nothing */ }
-		}
-	}
-	
-	@Override
-	public ITextureFont loadFontFromFile(File file) throws ContentException {
-		
-		InputStream fontInputStream;
-		try {
-			fontInputStream = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			throw new ContentException(e);
-		}
-		
-		return loadFontFromSource(fontInputStream);
-	}
-
-	
-	private ITextureFont loadFontFromSource(InputStream source) throws ContentException {
-		
-		// TODO: Important - Fixed size buffer
-		ByteBuffer buffer = LWJGLBufferUtils.getWrapper().createByteBuffer(1000000);
-
-		try {
-			ContentHelper.readStreamIntoByteBuffer(source, buffer);	
-		} catch (IOException e) {
-			throw new ContentLoadException(e);
-		}
-		
-		
-		try {
-			return STBTextureFont.create(buffer, 64);
-		} catch (LWJGLException e) {
-			throw new ContentException(e);
-		}
-	}
-	
-	
 	
 	@Override
 	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException {

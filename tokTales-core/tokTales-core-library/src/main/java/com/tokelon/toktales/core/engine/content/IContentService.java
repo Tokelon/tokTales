@@ -1,12 +1,10 @@
 package com.tokelon.toktales.core.engine.content;
 
-import java.io.File;
 import java.io.InputStream;
 
 import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
-import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.ITexture;
@@ -65,14 +63,6 @@ public interface IContentService extends IEngineService {
 	
 	public ITexture extractAssetTexture(IGraphicsAsset asset);
 
-
-	public ITextureFont lookForFontAndLoad(IApplicationLocation location, String filename);
-	//public ITextureFont lookForFontAndLoad(IApplicationLocation location, String filename, IFontLoadingOptions options);
-	
-	public ITextureFont loadFont(IApplicationLocation location, String filename) throws ContentException;
-	
-	public ITextureFont loadFontFromFile(File file) throws ContentException;
-	
 	
 	public ITexture cropTexture(ITexture texture, IRectangle2i bounds);
 	

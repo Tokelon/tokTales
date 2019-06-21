@@ -1,6 +1,5 @@
 package com.tokelon.toktales.android.data;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -15,7 +14,6 @@ import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
 import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
-import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentLoadException;
@@ -38,7 +36,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Typeface;
 
 public class AndroidContentService extends AbstractContentService implements IContentService {
 	
@@ -379,53 +376,6 @@ public class AndroidContentService extends AbstractContentService implements ICo
 		else {
 			return null; // TODO: Avoid returning null if possible
 		}
-	}
-	
-	
-	@Override
-	public ITextureFont lookForFontAndLoad(IApplicationLocation location, String filename) {
-		try {
-			return loadFontFromSource(location.getLocationPath().getPath());
-		} catch (ContentException ce) {
-			logger.e(TAG, ce.getMessage());
-			return null;
-		}
-	}
-	
-	
-	@Override
-	public ITextureFont loadFont(IApplicationLocation location, String filename) throws ContentException {
-		return loadFontFromSource(location.getLocationPath().getPath() + filename);
-	}
-	
-
-	private ITextureFont loadFontFromSource(String filePath) throws ContentException {
-		Typeface typeface = Typeface.createFromAsset(globalContext.getAssets(), filePath);
-		return fontFromTypeface(typeface);
-	}
-	
-
-	@Override
-	public ITextureFont loadFontFromFile(File file) throws ContentException {
-		Typeface typeface;
-		try {
-			 typeface = Typeface.createFromFile(file);
-		} catch(Exception ex) {
-		    // Wrap any exception into content exception
-			throw new ContentException(ex);
-		}
-
-		return fontFromTypeface(typeface);
-	}
-	
-	
-	private ITextureFont fontFromTypeface(Typeface typeface) throws ContentException {
-		if(typeface == null) {
-			throw new ContentException("Failed to read typeface");
-		}
-		
-		AndroidTextureFont font = AndroidTextureFont.create(typeface, 32);
-		return font;
 	}
 	
 	
