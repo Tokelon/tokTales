@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.content.manage;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Throwables;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -60,7 +61,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	private CompletableFuture<T> handleAssetFuture(K key, CompletableFuture<T> future) {
 		return future
 		.exceptionally((exception) -> {
-			getLogger().e(TAG, String.format("Asset future completed exceptionally for [key=%s]: %s", key, exception));
+			getLogger().e(TAG, String.format("Asset future completed exceptionally for [key=%s]: %s", key, Throwables.getStackTraceAsString(exception)));
 			
 			T assetResult = getSpecialAssetManager().getSpecialAssetLoadError();
 			getStore().insert(key, assetResult);
