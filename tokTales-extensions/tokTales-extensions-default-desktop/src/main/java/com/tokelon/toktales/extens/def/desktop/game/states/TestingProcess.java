@@ -100,7 +100,7 @@ public class TestingProcess {
 			game.getContentManager().getResourceManager().preloadResourceSet("blkmap_editor_loaded_map_resources", loadedMap.getResources());
 
 			
-			game.getContentManager().getSpriteManager().runClearAll();
+			game.getContentManager().getSpriteAssetManager().getStore().clear();
 
 			
 			//game.getStateControl().changeStateTo(TokelonGameStates.STATE_LOCAL_MAP);

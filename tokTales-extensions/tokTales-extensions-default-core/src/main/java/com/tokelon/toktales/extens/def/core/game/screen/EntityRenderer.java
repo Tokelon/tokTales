@@ -5,12 +5,11 @@ import java.util.Set;
 
 import org.joml.Matrix4f;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
@@ -71,22 +70,20 @@ public class EntityRenderer implements IEntityRenderer {
 	
 	private final ILogger logger;
 	private final IRenderService renderService;
-	private final IContentService contentService;
-	private final ISpriteManager spriteManager;
+	private final ISpriteAssetManager spriteAssetManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IWorldspace> worldspaceSupplier;
 
 	public EntityRenderer(
 			ILogger logger,
 			IEngine engine,
-			ISpriteManager spriteManager,
+			ISpriteAssetManager spriteAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IWorldspace> worldspaceSupplier
 	) {
 		this.logger = logger;
 		this.renderService = engine.getRenderService();
-		this.contentService = engine.getContentService();
-		this.spriteManager = spriteManager;
+		this.spriteAssetManager = spriteAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.worldspaceSupplier = worldspaceSupplier;
 	
@@ -250,24 +247,15 @@ public class EntityRenderer implements IEntityRenderer {
 				ISpriteGraphic spriteGraphic = (ISpriteGraphic) entityGraphic;
 				ISprite entitySprite = spriteGraphic.getSprite();
 
-				ISpriteAsset entitySpriteAsset = spriteManager.getSpriteAsset(entitySprite);
-
-				if(entitySpriteAsset == null) {
-					// Asset not loaded yet
+				
+				ISpriteAsset entitySpriteAsset = spriteAssetManager.getAsset(entitySprite.getAssetKey());
+				if(!spriteAssetManager.isAssetValid(entitySpriteAsset)) {
 					continue;
 				}
+				
+				boolean assetIsSpecial = spriteAssetManager.isAssetSpecial(entitySpriteAsset);
+				ITexture entityTexture = entitySpriteAsset.getTexture();
 
-				boolean assetIsSpecial = spriteManager.assetIsSpecial(entitySpriteAsset);
-				if(assetIsSpecial) {
-					// Do something ?
-				}
-				
-				
-				ITexture entityTexture = contentService.extractAssetTexture(entitySpriteAsset);
-				if(entityTexture == null) {
-					return;	// TODO: Workaround for special assets
-				}
-				
 				
 				spriteModel.setScaling2D(entityDestinationBounds.width(), entityDestinationBounds.height());
 				spriteModel.setTranslation2D(entityDestinationBounds.left(), entityDestinationBounds.top()); // (float)drawDepth
@@ -312,7 +300,7 @@ public class EntityRenderer implements IEntityRenderer {
 			return new EntityRenderer(
 					engineContext.getLog(),
 					engineContext.getEngine(),
-					engineContext.getGame().getContentManager().getSpriteManager(),
+					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					textureCoordinatorSupplier,
 					worldspaceSupplier
 			);
@@ -324,7 +312,7 @@ public class EntityRenderer implements IEntityRenderer {
 			return new EntityRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
-					gamestate.getGame().getContentManager().getSpriteManager(),
+					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					worldspaceSupplier
 			);
@@ -335,7 +323,7 @@ public class EntityRenderer implements IEntityRenderer {
 			return new EntityRenderer(
 					typedGamestate.getLog(),
 					typedGamestate.getEngine(),
-					typedGamestate.getGame().getContentManager().getSpriteManager(),
+					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
 			);

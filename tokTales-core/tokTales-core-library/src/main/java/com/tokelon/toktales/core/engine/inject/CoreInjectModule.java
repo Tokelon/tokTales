@@ -11,9 +11,6 @@ import com.tokelon.toktales.core.content.ContentManager;
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager.ISpriteManagerFactory;
-import com.tokelon.toktales.core.content.sprite.SpriteManager;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
 import com.tokelon.toktales.core.engine.Engine;
@@ -160,8 +157,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		  bindInGameScopeAndForNotScoped(IEditorManager.class, EditorManager.class);
 		  bindInGameScopeAndForNotScoped(IContentManager.class, ContentManager.class);
 		   bindInGameScopeAndForNotScoped(IResourceManager.class, ResourceManager.class);
-		   bindInGameScopeAndForNotScoped(ISpriteManager.class, SpriteManager.class);
-		   bind(ISpriteManagerFactory.class).to(SpriteManager.SpriteManagerFactory.class);
 		   bindInGameScopeAndForNotScoped(ITextureManager.class, DefaultTextureManager.class);
 		   bindInGameScope(IRegistryManager.class, RegistryManager.class);
 		  bindInGameScopeAndForNotScoped(IWorld.class, World.class);

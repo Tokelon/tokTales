@@ -2,12 +2,11 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import org.joml.Matrix4f;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
@@ -68,22 +67,20 @@ public class PlayerRenderer implements IPlayerRenderer {
 	
 	private final ILogger logger;
 	private final IRenderService renderService;
-	private final IContentService contentService;
-	private final ISpriteManager spriteManager;
+	private final ISpriteAssetManager spriteAssetManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IPlayerController> playerControllerSupplier;
 	
 	public PlayerRenderer(
 			ILogger logger,
 			IEngine engine,
-			ISpriteManager spriteManager,
+			ISpriteAssetManager spriteAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IPlayerController> playerControllerSupplier
 	) {
 		this.logger = logger;
 		this.renderService = engine.getRenderService();
-		this.contentService = engine.getContentService();
-		this.spriteManager = spriteManager;
+		this.spriteAssetManager = spriteAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.playerControllerSupplier = playerControllerSupplier;
 		
@@ -224,23 +221,15 @@ public class PlayerRenderer implements IPlayerRenderer {
 			
 			ISpriteGraphic spriteGraphic = (ISpriteGraphic) playerGraphic;
 			ISprite playerSprite = spriteGraphic.getSprite();
-
-			ISpriteAsset playerSpriteAsset = spriteManager.getSpriteAsset(playerSprite);
-			if(playerSpriteAsset == null) {
-				// Asset not loaded yet
+			
+			ISpriteAsset playerSpriteAsset = spriteAssetManager.getAsset(playerSprite.getAssetKey());
+			if(!spriteAssetManager.isAssetValid(playerSpriteAsset)) {
 				return;
 			}
 			
-			boolean assetIsSpecial = spriteManager.assetIsSpecial(playerSpriteAsset);
-			if(assetIsSpecial) {
-				// Do what?
-			}
+			boolean assetIsSpecial = spriteAssetManager.isAssetSpecial(playerSpriteAsset);
+			ITexture playerTexture = playerSpriteAsset.getTexture();
 
-			ITexture playerTexture = contentService.extractAssetTexture(playerSpriteAsset);
-			if(playerTexture == null) {
-				return;	// TODO: Workaround for special assets
-			}
-			
 			
 			spriteModel.setScaling2D(playerDestinationBounds.width(), playerDestinationBounds.height());
 			spriteModel.setTranslation2D(playerDestinationBounds.left(), playerDestinationBounds.top());	//(float)drawDepth
@@ -294,7 +283,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 			return new PlayerRenderer(
 					engineContext.getLog(),
 					engineContext.getEngine(),
-					engineContext.getGame().getContentManager().getSpriteManager(),
+					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					textureCoordinatorSupplier,
 					playerControllerSupplier
 			);
@@ -306,7 +295,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 			return new PlayerRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
-					gamestate.getGame().getContentManager().getSpriteManager(),
+					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(gamestate)
 			);
@@ -317,7 +306,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 			return new PlayerRenderer(
 					typedGamestate.getLog(),
 					typedGamestate.getEngine(),
-					typedGamestate.getGame().getContentManager().getSpriteManager(),
+					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromGamestate(typedGamestate)
 			);

@@ -1,7 +1,8 @@
 package com.tokelon.toktales.core.content.sprite;
 
+import com.tokelon.toktales.core.content.manage.resources.ResourceScannerKey;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
-import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetKey;
+import com.tokelon.toktales.core.content.manage.sprite.ReadDelegateSpriteAssetKey;
 import com.tokelon.toktales.core.resources.IResource;
 
 public class SpriteImpl implements ISprite {
@@ -18,7 +19,7 @@ public class SpriteImpl implements ISprite {
 		}
 		
 		this.name = name;
-		this.assetKey = new SpriteAssetKey(name);
+		this.assetKey = new ReadDelegateSpriteAssetKey(name, new ResourceScannerKey(name));
 	}
 	
 	

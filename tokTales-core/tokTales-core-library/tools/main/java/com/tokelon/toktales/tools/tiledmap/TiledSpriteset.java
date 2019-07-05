@@ -1,7 +1,8 @@
 package com.tokelon.toktales.tools.tiledmap;
 
+import com.tokelon.toktales.core.content.manage.resources.ResourceScannerKey;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
-import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetKey;
+import com.tokelon.toktales.core.content.manage.sprite.ReadDelegateSpriteAssetKey;
 import com.tokelon.toktales.core.content.sprite.ISpriteset;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
@@ -21,7 +22,7 @@ public class TiledSpriteset implements ISpriteset {
 		
 		mName = name;
 		mTileset = tileset;
-		assetKey = new SpriteAssetKey(name);
+		assetKey = new ReadDelegateSpriteAssetKey(name, new ResourceScannerKey(name));
 	}
 
 	

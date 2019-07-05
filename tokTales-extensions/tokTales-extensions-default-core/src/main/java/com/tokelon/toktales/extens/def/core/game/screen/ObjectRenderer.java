@@ -6,12 +6,11 @@ import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
@@ -91,23 +90,21 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	private IRenderDriver spriteDriver;
 	
 	private final ILogger logger;
-	private final IContentService contentService;
 	private final IRenderService renderService;
-	private final ISpriteManager spriteManager;
+	private final ISpriteAssetManager spriteAssetManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IMapController> mapControllerSupplier;
 	
 	public ObjectRenderer(
 			ILogger logger,
 			IEngine engine,
-			ISpriteManager spriteManager,
+			ISpriteAssetManager spriteAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IMapController> mapControllerSupplier
 	) {
 		this.logger = logger;
-		this.contentService = engine.getContentService();
 		this.renderService = engine.getRenderService();
-		this.spriteManager = spriteManager;
+		this.spriteAssetManager = spriteAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.mapControllerSupplier = mapControllerSupplier;
 		
@@ -227,20 +224,13 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 				if(mapObject.hasSprite()) {
 					ISprite sprite = mapObject.getSprite();
 					
-					ISpriteAsset spriteAsset = spriteManager.getSpriteAsset(sprite);
-					if(spriteAsset == null) {
-						continue; // Not loaded yet
-					}
-					
-					if(spriteManager.assetIsSpecial(spriteAsset)) {
+					ISpriteAsset spriteAsset = spriteAssetManager.getAsset(sprite.getAssetKey());
+					if(!spriteAssetManager.isAssetValid(spriteAsset)) {
 						continue;
 					}
 					
-					ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset);
-					if(spriteTexture == null) {
-						continue;
-					}
-					
+					boolean assetIsSpecial = spriteAssetManager.isAssetSpecial(spriteAsset);
+					ITexture spriteTexture = spriteAsset.getTexture();
 					
 					spriteCoordinates.set(
 							mapObject.getWorldX(),
@@ -260,7 +250,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 					spriteModel.setTargetSprite(sprite);
 					spriteModel.setTargetTexture(spriteTexture);
 					
-					drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, false);	//assetIsSpecial
+					drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);
 					
 					lazyUseRenderDriver(spriteDriver);
 					spriteDriver.draw(spriteModel, drawingOptions);
@@ -421,7 +411,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 			return new ObjectRenderer(
 					engineContext.getLog(),
 					engineContext.getEngine(),
-					engineContext.getGame().getContentManager().getSpriteManager(),
+					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					textureCoordinatorSupplier,
 					mapControllerSupplier
 			);
@@ -433,7 +423,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 			return new ObjectRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
-					gamestate.getGame().getContentManager().getSpriteManager(),
+					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromManager(gamestate)
 			);
@@ -444,7 +434,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 			return new ObjectRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
-					gamestate.getGame().getContentManager().getSpriteManager(),
+					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromGamestate(gamestate)
 			);

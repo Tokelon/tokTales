@@ -2,12 +2,11 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import org.joml.Matrix4f;
 
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
@@ -73,8 +72,7 @@ public class MapRenderer implements IMapRenderer {
 	
 	private final ILogger logger;
 	private final IRenderService renderService;
-	private final IContentService contentService;
-	private final ISpriteManager spriteManager;
+	private final ISpriteAssetManager spriteAssetManager;
 	private final IWorld world;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IMapController> mapControllerSupplier;
@@ -82,15 +80,14 @@ public class MapRenderer implements IMapRenderer {
 	public MapRenderer(
 			ILogger logger,
 			IEngine engine,
-			ISpriteManager spriteManager,
+			ISpriteAssetManager spriteAssetManager,
 			IWorld world,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IMapController> mapControllerSupplier
 	) {
 		this.logger = logger;
 		this.renderService = engine.getRenderService();
-		this.contentService = engine.getContentService();
-		this.spriteManager = spriteManager;
+		this.spriteAssetManager = spriteAssetManager;
 		this.world = world;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.mapControllerSupplier = mapControllerSupplier;
@@ -311,23 +308,13 @@ public class MapRenderer implements IMapRenderer {
 
 	
 	private void drawElementSprite(ISprite sprite, DrawingMeta dmeta) {
-	
-		ISpriteAsset spriteAsset = spriteManager.getSpriteAsset(sprite);
-		if(spriteAsset == null) {
-			// Asset has not been loaded yet
+		ISpriteAsset spriteAsset = spriteAssetManager.getAsset(sprite.getAssetKey());
+		if(!spriteAssetManager.isAssetValid(spriteAsset)) {
 			return;
 		}
 		
-		boolean assetIsSpecial = spriteManager.assetIsSpecial(spriteAsset);
-		if(assetIsSpecial) {
-			// Do not draw special sprites like error sprites?
-		}
-		
-		ITexture spriteTexture = contentService.extractAssetTexture(spriteAsset);
-		if(spriteTexture == null) {
-			// TODO: Implement special asset
-			return;
-		}
+		boolean assetIsSpecial = spriteAssetManager.isAssetSpecial(spriteAsset);
+		ITexture spriteTexture = spriteAsset.getTexture();
 
 		
 		// If only a part of the sprite should be rendered
@@ -364,7 +351,7 @@ public class MapRenderer implements IMapRenderer {
 		spriteModel.setTargetTexture(spriteTexture);
 		
 		
-		drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);	// make a variable for the name ?
+		drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, assetIsSpecial);
 		
 		spriteDriver.draw(spriteModel, drawingOptions);
 	}
@@ -398,7 +385,7 @@ public class MapRenderer implements IMapRenderer {
 			return new MapRenderer(
 					engineContext.getLog(),
 					engineContext.getEngine(),
-					engineContext.getGame().getContentManager().getSpriteManager(),
+					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					world,
 					textureCoordinatorSupplier,
 					mapControllerSupplier
@@ -411,7 +398,7 @@ public class MapRenderer implements IMapRenderer {
 			return new MapRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
-					gamestate.getGame().getContentManager().getSpriteManager(),
+					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					gamestate.getGame().getWorld(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromManager(gamestate)
@@ -423,7 +410,7 @@ public class MapRenderer implements IMapRenderer {
 			return new MapRenderer(
 					typedGamestate.getLog(),
 					typedGamestate.getEngine(),
-					typedGamestate.getGame().getContentManager().getSpriteManager(),
+					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					typedGamestate.getGame().getWorld(),
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromGamestate(typedGamestate)

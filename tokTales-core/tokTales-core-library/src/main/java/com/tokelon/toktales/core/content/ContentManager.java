@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
-import com.tokelon.toktales.core.content.sprite.ISpriteManager;
+import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.render.ITextureManager;
 
@@ -15,7 +15,7 @@ public class ContentManager implements IContentManager {
 
 	private final ILogger logger;
 	private final IResourceManager managerResource;
-	private final ISpriteManager managerSprite;
+	private final ISpriteAssetManager spriteAssetManager;
 	private final ITextureManager textureManager;
 	private final ITextureFontAssetManager fontManager;
 	private final ICodepointAssetManager codepointManager;
@@ -24,14 +24,14 @@ public class ContentManager implements IContentManager {
 	public ContentManager(
 			ILogger logger,
 			IResourceManager resourceManager,
-			ISpriteManager spriteManager,
+			ISpriteAssetManager spriteAssetManager,
 			ITextureManager textureManager,
 			ITextureFontAssetManager fontManager,
 			ICodepointAssetManager codepointManager
 	) {
 		this.logger = logger;
 		this.managerResource = resourceManager;
-		this.managerSprite = spriteManager;
+		this.spriteAssetManager = spriteAssetManager;
 		this.textureManager = textureManager;
 		this.fontManager = fontManager;
 		this.codepointManager = codepointManager;
@@ -41,7 +41,7 @@ public class ContentManager implements IContentManager {
 	@Override
 	public void startLoaders() {
 		logger.i(TAG, "Starting content loaders");
-		managerSprite.startLoading();
+		spriteAssetManager.getLoader().start();
 		fontManager.getLoader().start();
 		codepointManager.getLoader().start();
 	}
@@ -49,7 +49,7 @@ public class ContentManager implements IContentManager {
 	@Override
 	public void stopLoaders() {
 		logger.i(TAG, "Stopping content loaders");
-		managerSprite.stopLoading();
+		spriteAssetManager.getLoader().stop();
 		fontManager.getLoader().stop();
 		codepointManager.getLoader().stop();
 	}
@@ -61,8 +61,8 @@ public class ContentManager implements IContentManager {
 	}
 	
 	@Override
-	public ISpriteManager getSpriteManager() {
-		return managerSprite;
+	public ISpriteAssetManager getSpriteAssetManager() {
+		return spriteAssetManager;
 	}
 
 	@Override
