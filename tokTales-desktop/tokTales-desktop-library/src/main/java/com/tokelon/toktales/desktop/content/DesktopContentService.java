@@ -1,26 +1,15 @@
 package com.tokelon.toktales.desktop.content;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.xml.bind.DatatypeConverter;
 
-import com.tokelon.toktales.core.content.IContentManager;
-import com.tokelon.toktales.core.content.ISpecialContent;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
-import com.tokelon.toktales.core.content.manage.assets.IGraphicsAsset;
-import com.tokelon.toktales.core.content.manage.texture.ITextureAsset;
-import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
-import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.inject.annotation.services.StorageServiceExtensions;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -28,13 +17,9 @@ import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.IStorageService.IStorageServiceFactory;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.ITexture;
-import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.values.TokelonEmbeddedGraphics;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
 import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
 import com.tokelon.toktales.desktop.lwjgl.data.STBBitmap;
@@ -44,11 +29,9 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	public static final String TAG = "DesktopContentService";
 	
 	
-	private final ILogger logger;
 	private final IStorageService assetStorageService;
 
 	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot) {
-		this.logger = logger;
 		this.assetStorageService = storageServiceFactory.create(assetRoot);
 	}
 	
@@ -56,7 +39,6 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot, @ContentServiceExtensions Map<String, IServiceExtension> contentExtensions, @StorageServiceExtensions Map<String, IServiceExtension> storageExtensions) {
 		super(contentExtensions);
 		
-		this.logger = logger;
 		this.assetStorageService = storageServiceFactory.create(assetRoot, storageExtensions);
 	}
 	
@@ -94,187 +76,6 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		return assetStorageService.tryReadAppFileOnExternal(location, fileName);
 	}
 	
-
-	@Override
-	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName) {
-		return lookForGraphicAssetAndLoad(location, fileName, null);
-	}
-
-	@Override
-	public IGraphicsAsset lookForGraphicAssetAndLoad(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) {
-
-		InputStream assetInputStream = assetStorageService.tryReadAppFileOnExternal(location, fileName);
-		if(assetInputStream == null) {
-			return null;
-		}
-
-		
-		try {
-			return loadGraphicAssetFromSource(assetInputStream, options);
-		} catch (ContentException e) {
-			return null;
-		}
-		finally {
-			try {
-				assetInputStream.close();
-			} catch (IOException e) {
-				// Nothing to do here
-			}
-		}
-		
-	}
-
-	
-	@Override
-	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName) throws ContentLoadException, ContentException {
-		return loadGraphicAsset(location, fileName, null);
-	}
-
-	@Override
-	public IGraphicsAsset loadGraphicAsset(IApplicationLocation location, String fileName, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
-		InputStream assetInputStream;
-		try {
-			assetInputStream = assetStorageService.readAppFileOnExternal(location, fileName);
-		} catch (StorageException e) {
-			throw new ContentLoadException(e);
-		}
-		
-		return loadGraphicAssetFromSource(assetInputStream, options);
-	}
-
-	
-	@Override
-	public IGraphicsAsset loadSpecialContent(ISpecialContent specialContent) throws ContentException {
-		//TokTales.getLog().d(TAG, "Trying to resolve special asset");
-		
-		String dataString = null;
-		if(specialContent == IContentManager.SpecialContent.SPRITE_EMPTY) {
-			
-		}
-		else if(specialContent == IContentManager.SpecialContent.SPRITE_NOT_FOUND) {
-			dataString = TokelonEmbeddedGraphics.GRAPHIC_SPRITE404;
-		}
-		else if(specialContent == IContentManager.SpecialContent.SPRITE_LOAD_ERROR) {
-
-		}
-		
-		
-		if(dataString == null) {
-			return null;
-		}
-		
-		try {
-			byte[] data = DatatypeConverter.parseBase64Binary(dataString); // Maybe extract into helper class
-			
-
-			ByteBuffer buffer = LWJGLBufferUtils.getWrapper().createByteBuffer(data.length);
-			buffer.put(data);
-			buffer.flip();
-
-
-			STBBitmap texImage;
-			try {
-				texImage = STBBitmap.createFromBuffer(buffer);
-			} catch (LWJGLException e) {
-				throw new ContentException(e);
-			}
-			
-			
-			return createGraphicAssetContainer(texImage, null);
-		}
-		catch(IllegalArgumentException iae) {
-			return null;
-		}
-	}
-
-	
-	@Override
-	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source) throws ContentLoadException, ContentException {
-		return loadGraphicAssetFromSource(source, null);
-	}
-
-	
-	@Override
-	public IGraphicsAsset loadGraphicAssetFromSource(InputStream source, IGraphicLoadingOptions options) throws ContentLoadException, ContentException {
-		
-		// TODO: Important - Fixed size buffer
-		ByteBuffer buffer = LWJGLBufferUtils.getWrapper().createByteBuffer(4 * 1 * 512 * 512);
-
-		STBBitmap image = decodeImageStream(buffer, source, options);
-
-		return createGraphicAssetContainer(image, options);
-	}
-	
-	
-	private IGraphicsAsset createGraphicAssetContainer(STBBitmap image, IGraphicLoadingOptions options) {
-		// TODO: Use the options to pass settings for the texture - Mainly the texture filter (nearest or linear)
-		Texture texture = new Texture(image);
-		
-		return new SpriteAsset(texture);
-	}
-
-	
-	private STBBitmap decodeImageStream(ByteBuffer buffer, InputStream stream, IGraphicLoadingOptions options) throws ContentException {
-		
-		
-		try(ReadableByteChannel rbc = Channels.newChannel(stream);) {
-			
-			int bytes;
-			do {
-				bytes = rbc.read(buffer);	// This returns 0 when its unable to write into the buffer because its full
-				
-				//if(buffer.remaining() == 0)
-				// resize buffer
-				if(bytes == 0) {
-					throw new ContentLoadException("Unable to write more bytes: buffer is full");
-				}
-			}
-			while(bytes != -1);
-		}
-		catch (IOException ioe) {
-			throw new ContentLoadException(ioe);
-		}
-		finally {
-			try {
-				stream.close();
-			} catch (IOException e) { /* No can do */ }
-		}
-		
-		buffer.flip();
-		
-		
-		
-		STBBitmap texImage;
-		try {
-			texImage = STBBitmap.createFromBuffer(buffer);
-		} catch (LWJGLException e) {
-			throw new ContentException(e);
-		}
-		
-		return texImage;
-	}
-	
-	
-	
-	@Override
-	public ITexture extractAssetTexture(IGraphicsAsset asset) {
-		return extractTexture(asset);
-	}
-	
-	private static ITexture extractTexture(IGraphicsAsset asset) {
-		// Do type check ?
-
-		if(asset == null) {
-			return null;	// TODO: Remove and fix special assets
-		}
-		
-		if(asset instanceof ITextureAsset) {
-			return ((ITextureAsset) asset).getTexture();
-		}
-		else {
-			return null; // TODO: Avoid returning null if possible
-		}
-	}
 
 	
 	@Override

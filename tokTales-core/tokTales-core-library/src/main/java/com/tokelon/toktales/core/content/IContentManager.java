@@ -24,12 +24,5 @@ public interface IContentManager {
 	public ITextureFontAssetManager getFontAssetManager();
 	
 	public ICodepointAssetManager getCodepointAssetManager();
-	
-	
-	public enum SpecialContent implements ISpecialContent {
-		SPRITE_EMPTY,
-		SPRITE_NOT_FOUND,
-		SPRITE_LOAD_ERROR;
-	}
 
 }
