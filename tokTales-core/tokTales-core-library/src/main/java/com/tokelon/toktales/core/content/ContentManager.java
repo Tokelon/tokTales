@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.content;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
@@ -15,6 +16,7 @@ public class ContentManager implements IContentManager {
 
 	private final ILogger logger;
 	private final IResourceManager managerResource;
+	private final IBitmapAssetManager bitmapAssetManager;
 	private final ISpriteAssetManager spriteAssetManager;
 	private final ITextureManager textureManager;
 	private final ITextureFontAssetManager fontManager;
@@ -24,6 +26,7 @@ public class ContentManager implements IContentManager {
 	public ContentManager(
 			ILogger logger,
 			IResourceManager resourceManager,
+			IBitmapAssetManager bitmapAssetManager,
 			ISpriteAssetManager spriteAssetManager,
 			ITextureManager textureManager,
 			ITextureFontAssetManager fontManager,
@@ -31,6 +34,7 @@ public class ContentManager implements IContentManager {
 	) {
 		this.logger = logger;
 		this.managerResource = resourceManager;
+		this.bitmapAssetManager = bitmapAssetManager;
 		this.spriteAssetManager = spriteAssetManager;
 		this.textureManager = textureManager;
 		this.fontManager = fontManager;
@@ -41,6 +45,7 @@ public class ContentManager implements IContentManager {
 	@Override
 	public void startLoaders() {
 		logger.i(TAG, "Starting content loaders");
+		bitmapAssetManager.getLoader().start();
 		spriteAssetManager.getLoader().start();
 		fontManager.getLoader().start();
 		codepointManager.getLoader().start();
@@ -49,6 +54,7 @@ public class ContentManager implements IContentManager {
 	@Override
 	public void stopLoaders() {
 		logger.i(TAG, "Stopping content loaders");
+		bitmapAssetManager.getLoader().stop();
 		spriteAssetManager.getLoader().stop();
 		fontManager.getLoader().stop();
 		codepointManager.getLoader().stop();
@@ -58,6 +64,11 @@ public class ContentManager implements IContentManager {
 	@Override
 	public IResourceManager getResourceManager() {
 		return managerResource;
+	}
+	
+	@Override
+	public IBitmapAssetManager getBitmapAssetManager() {
+		return bitmapAssetManager;
 	}
 	
 	@Override

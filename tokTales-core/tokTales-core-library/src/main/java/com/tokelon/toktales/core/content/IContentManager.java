@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.content;
 
+import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
@@ -13,6 +14,8 @@ public interface IContentManager {
 
 	
 	public IResourceManager getResourceManager();
+	
+	public IBitmapAssetManager getBitmapAssetManager();
 	
 	public ISpriteAssetManager getSpriteAssetManager();
 
