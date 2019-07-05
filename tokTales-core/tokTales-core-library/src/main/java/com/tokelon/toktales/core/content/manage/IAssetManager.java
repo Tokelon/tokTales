@@ -63,6 +63,9 @@ public interface IAssetManager<T, K, O> {
 	public boolean isAssetValid(T asset);
 	public boolean isAssetValidForKey(K key);
 	
+	public boolean isAssetSpecial(T asset);
+	public boolean isAssetSpecialForKey(K key);
+	
 	
 	/* Implement these how?
 	public void unloadAll();

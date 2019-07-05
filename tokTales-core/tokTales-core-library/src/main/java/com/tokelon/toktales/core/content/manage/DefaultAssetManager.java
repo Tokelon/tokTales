@@ -234,4 +234,14 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		return getSpecialAssetManager().isAssetValid(getStore().retrieve(key));
 	}
 	
+	@Override
+	public boolean isAssetSpecial(T asset) {
+		return getSpecialAssetManager().isAssetSpecial(asset);
+	}
+	
+	@Override
+	public boolean isAssetSpecialForKey(K key) {
+		return getSpecialAssetManager().isAssetSpecial(getStore().retrieve(key));
+	}
+	
 }
