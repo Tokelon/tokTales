@@ -48,13 +48,16 @@ public class ResourceScannerAssetReader implements IResourceScannerAssetReader {
 	
 	@Override
 	public InputStream readAsset(String resourceName, IOptions options) throws ContentException {
+		ResourceTypeFilter filterType = options == null ? null : options.getAsOrDefault(OPTION_RESOURCE_LOOKUP_FILTER_TYPE, null, ResourceTypeFilter.class);
+		int matchingType = options == null ? IResourceLookup.STRING_FILTER_TYPE_EQUALS : options.getAsOrDefault(OPTION_RESOURCE_LOOKUP_NAME_MATCHING_TYPE, IResourceLookup.STRING_FILTER_TYPE_EQUALS, Integer.class);
+		
 		FileDescriptor resourceFileDescriptor = null;
 		
 		ResourceLookup resourceLookup = ResourceLookup.getObjectPool().newObject();
 		resourceLookup.objectReset();
 		try {
-			resourceLookup.setFilterType(options.getAsOrDefault(OPTION_RESOURCE_LOOKUP_FILTER_TYPE, null, ResourceTypeFilter.class));
-			resourceLookup.setNameMatchingType(options.getAsOrDefault(OPTION_RESOURCE_LOOKUP_NAME_MATCHING_TYPE, IResourceLookup.STRING_FILTER_TYPE_EQUALS, Integer.class));
+			resourceLookup.setFilterType(filterType);
+			resourceLookup.setNameMatchingType(matchingType);
 			resourceLookup.setFilterName(resourceName);
 			
 			resourceFileDescriptor = resourceManager.lookForFileMatching(resourceLookup);
