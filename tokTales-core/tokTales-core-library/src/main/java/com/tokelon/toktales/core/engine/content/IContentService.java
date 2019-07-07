@@ -2,10 +2,7 @@ package com.tokelon.toktales.core.engine.content;
 
 import java.io.InputStream;
 
-import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.engine.IEngineService;
-import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 
@@ -28,11 +25,5 @@ public interface IContentService extends IEngineService {
 	public InputStream readAppFileOnAssets(IApplicationLocation location, String fileName) throws ContentException;
 
 	public InputStream tryReadAppFileOnAssets(IApplicationLocation location, String fileName);
-	
-	
-	
-	public ITexture cropTexture(ITexture texture, IRectangle2i bounds);
-	
-	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds);
 	
 }

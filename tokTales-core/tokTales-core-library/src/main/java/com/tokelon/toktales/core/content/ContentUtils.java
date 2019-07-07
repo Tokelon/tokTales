@@ -1,28 +1,17 @@
-package com.tokelon.toktales.core.engine.content;
+package com.tokelon.toktales.core.content;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Map;
 
 import com.tokelon.toktales.core.content.graphics.BitmapImpl;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
-import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.Texture;
 
-public abstract class AbstractContentService extends AbstractEngineService implements IContentService {
+public class ContentUtils implements IContentUtils {
 
-	
-	public AbstractContentService() {
-		super();
-	}
-	
-	public AbstractContentService(Map<String, IServiceExtension> extensions) {
-		super(extensions);
-	}
-	
-	
+
 	@Override
 	public ITexture cropTexture(ITexture texture, IRectangle2i bounds) {
 		IBitmap bitmap = cropBitmap(texture.getBitmap(), bounds);
@@ -44,8 +33,7 @@ public abstract class AbstractContentService extends AbstractEngineService imple
 	public IBitmap cropBitmap(IBitmap bitmap, IRectangle2i bounds) {
 		int channels = getChannels(bitmap.getFormat());
 		if(channels == -1) {
-			// TODO: What?
-			channels = 0;
+			throw new IllegalArgumentException("Failed to determine number of channels: Unknown bitmap format");
 		}
 		
 		int capacity = channels * bounds.width() * bounds.height();
@@ -60,11 +48,9 @@ public abstract class AbstractContentService extends AbstractEngineService imple
 			bitmap.getData().position(srcPos);
 			bitmap.getData().get(arrayBuffer);
 			
-			//int dstPos = (4 * i * source.getWidth());
-			//cropBuffer.position()
 			cropBuffer.put(arrayBuffer);
 		}
-		cropBuffer.position(0);
+		cropBuffer.position(0); // flip buffer?
 		bitmap.getData().position(0);
 		
 

@@ -13,17 +13,17 @@ import org.joml.Vector2f;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
+import com.tokelon.toktales.core.content.IContentUtils;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.prog.annotation.Experimental;
 import com.tokelon.toktales.core.prog.annotation.Unmaintained;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteFontModel;
@@ -74,11 +74,11 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	private GLSpriteMesh spriteMesh;
 	
 
-	private final IContentService contentService;
+	private final IContentUtils contentUtils;
 	
 	@Inject
-	public GLSpriteFontDriver(IContentService contentService) {
-		this.contentService = contentService;
+	public GLSpriteFontDriver(IContentUtils contentUtils) {
+		this.contentUtils = contentUtils;
 		
 		textureMap = new HashMap<>();
 		
@@ -192,7 +192,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			rectSpriteSourceCoordsStatic.moveBy(offHor, offVer);
 
 			
-			ITexture textureRegion = contentService.cropTexture(fontTexture, rectSpriteSourceCoordsStatic);
+			ITexture textureRegion = contentUtils.cropTexture(fontTexture, rectSpriteSourceCoordsStatic);
 			
 			
 			textureMap.put(fontSprite, textureRegion);

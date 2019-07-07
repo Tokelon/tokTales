@@ -10,6 +10,8 @@ public class AndroidOverrideInjectConfig extends HierarchicalInjectConfig {
 		super.configure();
 		
 		extend(new AndroidOverrideInjectModule());
+		
+		extend(new AndroidPlatformOverrideInjectModule());
 	}
 	
 }

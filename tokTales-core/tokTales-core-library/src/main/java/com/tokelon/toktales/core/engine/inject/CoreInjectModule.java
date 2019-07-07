@@ -8,7 +8,9 @@ import com.google.inject.util.Types;
 import com.tokelon.toktales.core.config.ConfigManager;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.content.ContentManager;
+import com.tokelon.toktales.core.content.ContentUtils;
 import com.tokelon.toktales.core.content.IContentManager;
+import com.tokelon.toktales.core.content.IContentUtils;
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
 import com.tokelon.toktales.core.editor.EditorManager;
@@ -161,7 +163,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		   bindInGameScope(IRegistryManager.class, RegistryManager.class);
 		  bindInGameScopeAndForNotScoped(IWorld.class, World.class);
 		  
-		
+		bind(IContentUtils.class).to(ContentUtils.class);
 		
 		// Other
 		bind(IGameState.class).to(DefaultGamestate.class);
