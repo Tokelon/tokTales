@@ -2,23 +2,24 @@ package com.tokelon.toktales.desktop.lwjgl.data;
 
 import java.nio.ShortBuffer;
 
-import org.lwjgl.system.libc.LibCStdlib;
-
+import com.tokelon.toktales.core.content.IDisposer;
 import com.tokelon.toktales.core.content.audio.ISound;
 
 public class STBSound implements ISound {
 	
 	
 	private boolean disposed = false;
-	
+
+	private ShortBuffer data;
 	private final int channels;
 	private final int sampleRate;
-	private ShortBuffer data;
+	private final IDisposer<STBSound> disposer;
 
-	public STBSound(int channels, int sampleRate, ShortBuffer data) {
+	public STBSound(ShortBuffer data, int channels, int sampleRate, IDisposer<STBSound> disposer) {
+		this.data = data;
 		this.channels = channels;
 		this.sampleRate = sampleRate;
-		this.data = data;
+		this.disposer = disposer;
 	}
 	
 	
@@ -48,10 +49,9 @@ public class STBSound implements ISound {
 		if(!disposed) {
 			disposed = true;
 			
-			//Free the memory allocated by STB
-			LibCStdlib.free(data);
+			disposer.dispose(this);
 			
-			data = null;	
+			data = null;
 		}
 	}
 	

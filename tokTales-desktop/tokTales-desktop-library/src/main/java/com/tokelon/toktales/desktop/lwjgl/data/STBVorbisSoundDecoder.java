@@ -8,53 +8,57 @@ import java.nio.ShortBuffer;
 
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.io.ByteStreams;
+import com.tokelon.toktales.core.content.audio.ISound;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.SoundAsset;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class STBVorbisSoundDecoder implements ISoundAssetDecoder {
 
-	
-	@Override
-	public ISoundAsset decode(InputStream inputstream, ISoundAssetKey key) throws ContentException {
-		byte[] bytes;
-		try {
-			bytes = ByteStreams.toByteArray(inputstream);
-		} catch (IOException e) {
-			throw new ContentException(e);
-		}
-		
-		int channels;
-		int sampleRate;
-		ShortBuffer rawAudioBuffer;
-		
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer channelsBuffer = stack.mallocInt(1);
-			IntBuffer sampleRateBuffer = stack.mallocInt(1);
-			
-			
-			ByteBuffer buffer = stack.malloc(bytes.length);
-			buffer.put(bytes);
-
-			rawAudioBuffer = STBVorbis.stb_vorbis_decode_memory(buffer, channelsBuffer, sampleRateBuffer);
-
-
-			//Retrieve the extra information that was stored in the buffers by the function
-			channels = channelsBuffer.get();
-			sampleRate = sampleRateBuffer.get();
-		}
-		
-		return new SoundAsset(new STBSound(channels, sampleRate, rawAudioBuffer));
-	}
 
 	@Override
 	public ISoundAsset decode(InputStream inputstream, ISoundAssetKey key, INamedOptions options) throws ContentException {
-		return decode(inputstream, key);
+		try {
+			byte[] bytes = ByteStreams.toByteArray(inputstream);
+			
+			ByteBuffer buffer = MemoryUtil.memAlloc(bytes.length);
+			try {
+				buffer.put(bytes);
+				buffer.flip();
+				
+				ISound sound = createSound(buffer);
+				return new SoundAsset(sound);
+			}
+			finally {
+				MemoryUtil.memFree(buffer);
+			}
+		} catch (IOException e) {
+			throw new ContentException(e);
+		} catch (LWJGLException lwe) {
+			throw new ContentException(lwe);
+		}
+	}
+	
+	
+	public ISound createSound(ByteBuffer buffer) throws LWJGLException {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer channelsBuffer = stack.callocInt(1);
+			IntBuffer sampleRateBuffer = stack.callocInt(1);
+			
+			ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_memory(buffer, channelsBuffer, sampleRateBuffer);
+			if(rawAudioBuffer == null) {
+				throw new LWJGLException("Failed to load sound"); // TODO: Append further information if possible
+			}
+
+			return new STBSound(rawAudioBuffer, channelsBuffer.get(0), sampleRateBuffer.get(0), (sound) -> MemoryUtil.memFree(sound.getData())); //Use LibCStdlib.free(data) ?
+		}
 	}
 
 }
