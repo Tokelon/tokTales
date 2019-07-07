@@ -18,7 +18,6 @@ import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.IRectangle2i.IMutableRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.render.ITexture;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class STBTextureFont implements ITextureFont {
 	/* A few possible optimizations, improvements
@@ -32,65 +31,39 @@ public class STBTextureFont implements ITextureFont {
 	 */
 	
 	
-	// THIS IS IT!!! This is the cause of the font bug that caused crashes!
-	// We have to keep a reference to this because STBTruetype only saves the pointer to it,
-	// so if it gets garbage collected it will crash!
-	// http://forum.lwjgl.org/index.php?topic=6241.msg33357#msg33357
-	private ByteBuffer fontDataBuffer;
-
-	
-	private final Map<Integer, CodepointInfo> codepointCache; // TODO: This should probably cache STBCodepoint objects
-	
-	private STBTTFontinfo fontInfo;
-	
-	private float fontScale;
-	
-	private int fontPixelAscent;
-	private int fontPixelDescent;
-	private int fontPixelLineGap;
-	
-	
-	private boolean initialized = false;
 	private boolean disposed = false;
 	
+	private final Map<Integer, CodepointInfo> codepointCache; // TODO: This should probably cache STBCodepoint objects
 
-	private int fontPixelHeight;
 	
-	protected STBTextureFont() {
-		// see initializeFont()
-		codepointCache = new HashMap<Integer, CodepointInfo>();
-	}
+	private final int fontPixelHeight;
+	private final float fontScale;
 	
-	protected void initializeFont(ByteBuffer fontData, int fontPixelHeight) throws LWJGLException { 
-		if(initialized) {
-			throw new IllegalStateException("Font was already initialized");
-		}
-		initialized = true;
+	
+	// We have to keep a reference to this because STBTruetype only saves the pointer to it, so if it gets garbage collected it will crash.
+	// http://forum.lwjgl.org/index.php?topic=6241.msg33357#msg33357
+	private ByteBuffer fontDataBuffer;
+	private final STBTTFontinfo fontInfo;
+	private final int fontPixelAscent;
+	private final int fontPixelDescent;
+	private final int fontPixelLineGap;
+	
+	public STBTextureFont(ByteBuffer data, STBTTFontinfo fontInfo, int ascent, int descent, int lineGap, float fontScale, int fontPixelHeight) {
+		this.codepointCache = new HashMap<Integer, CodepointInfo>();
 		
-		this.fontDataBuffer = fontData;
+		this.fontDataBuffer = data;
+		this.fontInfo = fontInfo;
+		//this.fontPixelAscent = ascent;
+		//this.fontPixelDescent = descent;
+		//this.fontPixelLineGap = lineGap;
+		
+		// TODO: Extract into codepoint creation
 		this.fontPixelHeight = fontPixelHeight;
-		
-		this.fontInfo = STBTTFontinfo.create();
-		
-		boolean result = STBTruetype.stbtt_InitFont(fontInfo, fontData);
-		
-		if(!result) { // error
-			throw new LWJGLException("Failed to initialize font: STBTruetype.stbtt_InitFont() returned false");
-		}
-		
-		
-		this.fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
-	
-		// Init font metrics
-		IntBuffer ascentBuffer = BufferUtils.createIntBuffer(1);
-		IntBuffer descentBuffer = BufferUtils.createIntBuffer(1);
-		IntBuffer lineGapBuffer = BufferUtils.createIntBuffer(1);
-		
-		STBTruetype.stbtt_GetFontVMetrics(fontInfo, ascentBuffer, descentBuffer, lineGapBuffer);
-		
-		this.fontPixelAscent = Math.round(ascentBuffer.get(0) * fontScale);
-		this.fontPixelDescent = Math.round(descentBuffer.get(0) * fontScale);
-		this.fontPixelLineGap = Math.round(lineGapBuffer.get(0) * fontScale);
+		this.fontScale = fontScale;
+
+		this.fontPixelAscent = Math.round(ascent * fontScale);
+		this.fontPixelDescent = Math.round(descent * fontScale);
+		this.fontPixelLineGap = Math.round(lineGap * fontScale);
 	}
 	
 	
@@ -286,15 +259,6 @@ public class STBTextureFont implements ITextureFont {
 			MemoryUtil.memFree(fontDataBuffer);
 		}
 	}
-	
-	
-	public static STBTextureFont create(ByteBuffer fontData, int fontPixelHeight) throws LWJGLException {
-		STBTextureFont result = new STBTextureFont();
-		result.initializeFont(fontData, fontPixelHeight);
-		
-		return result;
-	}
-	
 	
 	
 	

@@ -3,14 +3,19 @@ package com.tokelon.toktales.desktop.lwjgl.data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
+import org.lwjgl.stb.STBTTFontinfo;
+import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.io.ByteStreams;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
+import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
@@ -24,22 +29,44 @@ public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws ContentException {
 		int fontPixelHeight = options == null ? DEFAULT_FONT_PIXEL_HEIGHT : options.getAsOrDefault(OPTION_FONT_PIXEL_HEIGHT, DEFAULT_FONT_PIXEL_HEIGHT, Integer.class);
 		
-		try(MemoryStack stack = MemoryStack.stackPush()) {
-			// Read input stream into byte array
-			byte[] byteArray = ByteStreams.toByteArray(inputstream);
+		try {
+			byte[] bytes = ByteStreams.toByteArray(inputstream);
 			
-			// Put byte array into direct buffer (managed memory)
-			ByteBuffer buffer = stack.malloc(byteArray.length);
-			buffer.put(byteArray);
-			buffer.flip();
-			
-			// Create font by parsing the buffer data
-			STBTextureFont font = STBTextureFont.create(buffer, fontPixelHeight);
+			ITextureFont font = createFont(bytes, fontPixelHeight);
 			return new TextureFontAssetImpl(font);
 		} catch (LWJGLException e) {
 			throw new ContentException(e);
 		} catch (IOException ioe) {
 			throw new ContentException(ioe);
+		}
+	}
+	
+	
+	public ITextureFont createFont(byte[] bytes, int fontPixelHeight) throws LWJGLException {
+		ByteBuffer buffer = MemoryUtil.memAlloc(bytes.length);
+		buffer.put(bytes);
+		buffer.flip();
+		
+		
+		STBTTFontinfo fontInfo = STBTTFontinfo.create();
+		
+		boolean success = STBTruetype.stbtt_InitFont(fontInfo, buffer);
+		if(!success) {
+			MemoryUtil.memFree(buffer);
+
+			throw new LWJGLException("Failed to initialize font: STBTruetype.stbtt_InitFont() returned false");
+		}
+		
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer ascentBuffer = stack.callocInt(1);
+			IntBuffer descentBuffer = stack.callocInt(1);
+			IntBuffer lineGapBuffer = stack.callocInt(1);
+
+			STBTruetype.stbtt_GetFontVMetrics(fontInfo, ascentBuffer, descentBuffer, lineGapBuffer);
+
+			float fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
+			
+			return new STBTextureFont(buffer, fontInfo, ascentBuffer.get(0), descentBuffer.get(0), lineGapBuffer.get(0), fontScale, fontPixelHeight);
 		}
 	}
 
