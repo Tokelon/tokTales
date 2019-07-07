@@ -45,7 +45,7 @@ public class DesktopContentUtils extends ContentUtils {
 		bitmap.getData().position(0);
 		
 
-		STBBitmap texImage = new STBBitmap(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels(), (image) -> MemoryUtil.memFree(cropBuffer));
+		STBBitmap texImage = new STBBitmap(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels(), (image) -> MemoryUtil.memFree(image.getData()));
 		return texImage;
 	}
 

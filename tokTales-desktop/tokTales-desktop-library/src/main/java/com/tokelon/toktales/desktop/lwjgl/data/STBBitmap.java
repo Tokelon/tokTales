@@ -9,7 +9,7 @@ public class STBBitmap implements ISTBBitmap {
 
 	private boolean disposed = false;
 	
-	private final ByteBuffer data;
+	private ByteBuffer data;
 	private final int width;
 	private final int height;
 	private final int channels;
@@ -94,6 +94,8 @@ public class STBBitmap implements ISTBBitmap {
 			disposed = true;
 			
 			disposer.dispose(this);
+			
+			data = null;
 		}
 	}
 	

@@ -60,7 +60,7 @@ public class STBBitmapDecoder implements IBitmapAssetDecoder {
 				throw new LWJGLException("Failed to load image: " + STBImage.stbi_failure_reason());
 			}
 			
-			return new STBBitmap(imageBuffer, width.get(0), height.get(0), desiredChannels, imageChannels.get(0), (image) -> STBImage.stbi_image_free(imageBuffer));
+			return new STBBitmap(imageBuffer, width.get(0), height.get(0), desiredChannels, imageChannels.get(0), (image) -> STBImage.stbi_image_free(image.getData()));
 		}
 	}
 	
