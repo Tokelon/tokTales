@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.lwjgl.system.MemoryUtil;
+
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.engine.content.AbstractContentService;
 import com.tokelon.toktales.core.engine.content.ContentException;
@@ -21,7 +23,6 @@ import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
-import com.tokelon.toktales.desktop.lwjgl.data.LWJGLBufferUtils;
 import com.tokelon.toktales.desktop.lwjgl.data.STBBitmap;
 
 public class DesktopContentService extends AbstractContentService implements IContentService {
@@ -95,11 +96,9 @@ public class DesktopContentService extends AbstractContentService implements ICo
 	private static IBitmap cropSTBBitmap(ISTBBitmap bitmap, IRectangle2i bounds) {
 		int channels = bitmap.getChannels();
 		
-		ByteBuffer cropBuffer = LWJGLBufferUtils.getWrapper().createByteBuffer(channels * bounds.width() * bounds.height());
+		ByteBuffer cropBuffer = MemoryUtil.memAlloc(channels * bounds.width() * bounds.height());
 		
 		byte[] arrayBuffer = new byte[channels * bounds.width()];
-
-		
 		for(int i = 0; i < bounds.height(); i++) {
 			
 			int srcPos = (channels * (i + bounds.top()) * bitmap.getWidth()) + 4 * bounds.left();
@@ -114,7 +113,7 @@ public class DesktopContentService extends AbstractContentService implements ICo
 		bitmap.getData().position(0);
 		
 
-		STBBitmap texImage = STBBitmap.create(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels());
+		STBBitmap texImage = new STBBitmap(cropBuffer, bounds.width(), bounds.height(), channels, bitmap.getSourceChannels(), (image) -> MemoryUtil.memFree(cropBuffer));
 		return texImage;
 	}
 
