@@ -11,7 +11,6 @@ import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAsset;
-import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetLoader;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
@@ -72,7 +71,6 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointAssetKey>>() {});
 		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetLoader.class);
 		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetDecoder.class);
-		bind(ICodepointAssetDecoder.class).to(CodepointAssetDecoder.class);
 		bind(new TypeLiteral<ISpecialAssetFactory<ICodepointAsset>>() {}).toInstance(() -> new CodepointAsset(null));
 		bind(new TypeLiteral<ISpecialAssetManager<ICodepointAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ICodepointAsset>>() {}).in(Scopes.SINGLETON);
 
