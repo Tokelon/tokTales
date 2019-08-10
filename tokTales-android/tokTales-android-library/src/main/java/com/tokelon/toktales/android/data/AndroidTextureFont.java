@@ -11,11 +11,11 @@ public class AndroidTextureFont implements ITextureFont {
 
 	private final Paint paint;
 	
-	protected AndroidTextureFont(Typeface typeface, float fontTextSizePixels) {
+	protected AndroidTextureFont(Typeface typeface, float fontTextSize) {
 		this.paint = new Paint();
 		
 		paint.setTypeface(typeface);
-		paint.setTextSize(fontTextSizePixels);
+		paint.setTextSize(fontTextSize);
 		paint.setColor(Color.WHITE);
 	}
 	
@@ -30,10 +30,6 @@ public class AndroidTextureFont implements ITextureFont {
 	
 	public Paint getPaint() {
 		return paint;
-	}
-	
-	public float getFontTextSizePixels() {
-		return paint.getTextSize();
 	}
 
 	
