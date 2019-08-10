@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
+import org.lwjgl.system.MemoryStack;
 
 import com.tokelon.toktales.core.content.IDisposer;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAsset;
@@ -22,7 +22,6 @@ import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 
 public class STBCodepointDecoder implements ICodepointAssetDecoder {
-	// TODO: Use proper memory calls
 
 
 	@Override
@@ -41,7 +40,6 @@ public class STBCodepointDecoder implements ICodepointAssetDecoder {
 	
 	public ICodepoint createCodepoint(STBTextureFont textureFont, int codepoint, float fontPixelHeight) {
 		STBTTFontinfo fontInfo = textureFont.getFontInfo();
-		
 		float fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
 		
 		ICodepointTexture texture = makeCodepointTexture(fontInfo, codepoint, fontScale);
@@ -49,13 +47,18 @@ public class STBCodepointDecoder implements ICodepointAssetDecoder {
 
 		
 		// Metrics
-		IntBuffer advanceWidthBuffer = BufferUtils.createIntBuffer(1);
-		IntBuffer leftSideBearingBuffer = BufferUtils.createIntBuffer(1);	// Do something with this?
+		int advanceWidth, leftSideBearing;
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer advanceWidthBuffer = stack.callocInt(1);
+			IntBuffer leftSideBearingBuffer = stack.callocInt(1);
+			
+			STBTruetype.stbtt_GetCodepointHMetrics(fontInfo, codepoint, advanceWidthBuffer, leftSideBearingBuffer);
+			
+			advanceWidth = advanceWidthBuffer.get(0);
+			leftSideBearing = leftSideBearingBuffer.get(0);
+		}
 		
-		STBTruetype.stbtt_GetCodepointHMetrics(fontInfo, codepoint, advanceWidthBuffer, leftSideBearingBuffer);
 		// Do these need to be multiplied by fontScale?
-		int advanceWidth = advanceWidthBuffer.get(0);
-		int leftSideBearing = leftSideBearingBuffer.get(0);
 		int bitmapOffsetX = texture.getOriginOffsetX();
 		int bitmapOffsetY = texture.getOriginOffsetY() + Math.round(textureFont.getFontPixelAscent() * fontScale); // Add the font ascend so it counts from the top instead of the origin;
 		
@@ -68,16 +71,17 @@ public class STBCodepointDecoder implements ICodepointAssetDecoder {
 	private CodepointTexture makeCodepointTexture(STBTTFontinfo fontInfo, int codepoint, float fontScale) {
 		//STBTruetype.stbtt_MakeCodepointBitmap(info, output, out_w, out_h, out_stride, scale_x, scale_y, codepoint)
 
-		IntBuffer width = BufferUtils.createIntBuffer(1);
-		IntBuffer height = BufferUtils.createIntBuffer(1);
-		IntBuffer xoffset = BufferUtils.createIntBuffer(1);
-		IntBuffer yoffset = BufferUtils.createIntBuffer(1);
-
-		ByteBuffer bitmap = STBTruetype.stbtt_GetCodepointBitmap(fontInfo, fontScale, fontScale, codepoint, width, height, xoffset, yoffset);
-
-		CodepointTexture texture = CodepointTexture.create(bitmap, width.get(0), height.get(0), xoffset.get(0), yoffset.get(0));
-		
-		return texture;
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer widthBuffer = stack.callocInt(1);
+			IntBuffer heightBuffer = stack.callocInt(1);
+			IntBuffer xoffsetBuffer = stack.callocInt(1);
+			IntBuffer yoffsetBuffer = stack.callocInt(1);
+			
+			ByteBuffer bitmap = STBTruetype.stbtt_GetCodepointBitmap(fontInfo, fontScale, fontScale, codepoint, widthBuffer, heightBuffer, xoffsetBuffer, yoffsetBuffer);
+			
+			CodepointTexture texture = CodepointTexture.create(bitmap, widthBuffer.get(0), heightBuffer.get(0), xoffsetBuffer.get(0), yoffsetBuffer.get(0));
+			return texture;
+		}
 	}
 	
 
@@ -89,15 +93,16 @@ public class STBCodepointDecoder implements ICodepointAssetDecoder {
 		// top - bottom = height
 		// right - left = width
 		
-		
-		IntBuffer left = BufferUtils.createIntBuffer(1);
-		IntBuffer top = BufferUtils.createIntBuffer(1);
-		IntBuffer right = BufferUtils.createIntBuffer(1);
-		IntBuffer bottom = BufferUtils.createIntBuffer(1);
-		
-		STBTruetype.stbtt_GetCodepointBitmapBox(fontInfo, codepoint, fontScale, fontScale, left, bottom, right, top);
-		
-		return new Rectangle2iImpl().set(left.get(0), top.get(0), right.get(0), bottom.get(0));
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer left = stack.callocInt(1);
+			IntBuffer top = stack.callocInt(1);
+			IntBuffer right = stack.callocInt(1);
+			IntBuffer bottom = stack.callocInt(1);
+			
+			STBTruetype.stbtt_GetCodepointBitmapBox(fontInfo, codepoint, fontScale, fontScale, left, bottom, right, top);
+			
+			return new Rectangle2iImpl().set(left.get(0), top.get(0), right.get(0), bottom.get(0));
+		}
 	}
 	
 }

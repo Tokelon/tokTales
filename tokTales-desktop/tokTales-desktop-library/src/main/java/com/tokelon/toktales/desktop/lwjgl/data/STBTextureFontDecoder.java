@@ -64,6 +64,7 @@ public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 
 			STBTruetype.stbtt_GetFontVMetrics(fontInfo, ascentBuffer, descentBuffer, lineGapBuffer);
 
+			// Use STBTTFontinfo.free() for disposer?
 			STBTextureFont result = new STBTextureFont(buffer, fontInfo, ascentBuffer.get(0), descentBuffer.get(0), lineGapBuffer.get(0), (font) -> MemoryUtil.memFree(font.getData()));
 			result.setFontTextSize(fontPixelHeight);
 			return result;
