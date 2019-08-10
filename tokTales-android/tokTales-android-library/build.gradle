@@ -91,6 +91,8 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
+			
+			srcDir 'exp/main/java'
 		}
 	}
 	test {

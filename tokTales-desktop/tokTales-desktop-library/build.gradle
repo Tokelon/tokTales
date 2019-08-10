@@ -11,6 +11,8 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
+			
+			srcDir 'exp/main/java'
 		}
 		resources {
 			srcDir 'src/main/resources'
