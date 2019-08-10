@@ -11,6 +11,7 @@ import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.google.inject.spi.Message;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
@@ -50,6 +51,7 @@ public final class InjectionTestHelper {
 				ISoundAssetDecoder.class,
 				IBitmapAssetDecoder.class,
 				ITextureFontAssetDecoder.class,
+				ICodepointAssetDecoder.class,
 				IRenderToolkitFactory.class
 		};
 	

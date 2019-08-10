@@ -107,24 +107,26 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 			//logger.e(TAG, "Cannot draw: no font"); // TODO: Only log this once per font?
 			return;
 		}
+		
+		float textSize = height > width ? height : width;
 
-		ICodepointAsset asset = codepointManager.getCodepointAsset(font, codepoint);
-		if(asset == null) {
+		
+		float textPixelSize = getViewTransformer().cameraToViewportY(textSize);
+		float fontPixelHeight = FontTextSizeHelper.getBestFontPixelHeight(font, textPixelSize);
+		ICodepointAsset asset = codepointManager.getCodepointAsset(font, codepoint, fontPixelHeight);
+		if(!codepointManager.isAssetValid(asset)) {
 			return;
 		}
 		ICodepoint assetCodepoint = asset.getCodepoint();
 		
-		float textSize = height > width ? height : width;
-		
 		
 		ITexture texture = assetCodepoint.getTexture();
-		// Has texture for codepoint?
 		
 		int textureOffsetX = assetCodepoint.getBitmapOffsetX();
 		int textureOffsetY = assetCodepoint.getBitmapOffsetY();
 		
 		
-		float texScale = textSize / font.getFontPixelHeight();
+		float texScale = textSize / assetCodepoint.getFontPixelHeight();
 		
 		float tileTop = texScale * textureOffsetY;
 		float tileLeft = texScale * textureOffsetX;
@@ -135,7 +137,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		fontModel.translate2D(getViewTransformer().cameraToScreenX(tileLeft), getViewTransformer().cameraToScreenY(tileTop));	// Translate the codepoint glyph to the right y offset
 
 		
-		float scale = textSize / (float) font.getFontPixelHeight();
+		float scale = textSize / assetCodepoint.getFontPixelHeight();
 		
 		
 		float worldCharWidth = assetCodepoint.getPixelWidth() * scale;

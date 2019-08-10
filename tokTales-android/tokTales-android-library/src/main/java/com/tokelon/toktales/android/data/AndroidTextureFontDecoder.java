@@ -32,7 +32,7 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 	public AndroidTextureFontDecoder(IStorageService storageService) {
 		this.storageService = storageService;
 	}
-
+	
 	
 	@Override
 	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws ContentException {
@@ -42,7 +42,7 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 			IFileKey fileKey = (IFileKey) key;
 			Typeface typeface = Typeface.createFromFile(fileKey.getFile().getPath()); // Does this throw any exceptions?
 			
-			AndroidTextureFont font = AndroidTextureFont.create(typeface, textSize);
+			AndroidTextureFont font = new AndroidTextureFont(typeface, textSize);
 			return new TextureFontAssetImpl(font);
 		}
 		else {
@@ -63,7 +63,7 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 				
 				Typeface typeface = Typeface.createFromFile(tmpFile); // Does this throw any exceptions?
 				
-				AndroidTextureFont font = AndroidTextureFont.create(typeface, textSize);
+				AndroidTextureFont font = new AndroidTextureFont(typeface, textSize);
 				return new TextureFontAssetImpl(font);
 			}
 			finally {

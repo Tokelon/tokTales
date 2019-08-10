@@ -3,11 +3,14 @@ package com.tokelon.toktales.extens.def.core.render;
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
+import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.AbstractRenderer;
+import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
@@ -29,10 +32,11 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 	private IRenderDriver fontDriver;
 	
 	private final IRenderAccess renderAccess;
+	private final ICodepointAssetManager codepointAssetManager;
 	
-	
-	public TextRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator) {
+	public TextRenderer(IRenderAccess renderAccess, ICodepointAssetManager codepointAssetManager, ITextureCoordinator textureCoordinator) {
 		this.renderAccess = renderAccess;
+		this.codepointAssetManager = codepointAssetManager;
 		
 		fontModel.setTextureCoordinator(textureCoordinator);
 		fontModel.setInvertYAxis(true);
@@ -90,7 +94,7 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 		colorVector.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 		
 		if(!isInBatchDraw) {
-			fontDriver.use(getMatrixProjectionAndView());	
+			fontDriver.use(getMatrixProjectionAndView());
 		}
 		
 		
@@ -142,8 +146,15 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 					String currentWord = textBox.getWord(wordIndex);
 					int wordCodepointCount = currentWord.codePointCount(0, currentWord.length());
 					
-					float wordWidth = textBox.getWordWidth(wordIndex) + (wordCodepointCount * charSpacing);
 					
+					// TODO: Use textBox.getTextSize() for fontTargetPixelHeight ? What about scaling logic in here?
+					float textBoxTextPixelHeight = getViewTransformer().cameraToViewportY(textBox.getTextSize());
+					float fontPixelHeight = FontTextSizeHelper.getBestFontPixelHeight(font, textBoxTextPixelHeight);
+					//float fontPixelHeight = 128f; // TODO: Fix bug with text wrap 
+					
+					String word = textBox.getWord(wordIndex);
+					// getWordWidth() does not actually consider the world size compared to textBox.getCharWidth() and textBox.getCharHeight ?
+					float wordWidth = getWordWidth(font, fontPixelHeight, word) + (wordCodepointCount * charSpacing);
 					
 					
 					if(wordWidth <= widthLeft) {	//&& wordWidth <= textBoxWidth	// Add
@@ -162,15 +173,19 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 							}
 
 							
-							ITexture texture = font.getCodepointTexture(codepoint);
-							// Has texture for codepoint?
-
+							ICodepointAsset codepointAsset = codepointAssetManager.getCodepointAsset(font, codepoint, fontPixelHeight);
+							if(!codepointAssetManager.isAssetValid(codepointAsset)) {
+								continue;
+							}
 							
-							int textureOffsetX = font.getCodepointBitmapOffsetX(codepoint);
-							int textureOffsetY = font.getCodepointBitmapOffsetY(codepoint);
+							ICodepoint fontCodepoint = codepointAsset.getCodepoint();
 							
 							
-							float texScale = textBox.getTextSize() / font.getFontPixelHeight();
+							int textureOffsetX = fontCodepoint.getBitmapOffsetX();
+							int textureOffsetY = fontCodepoint.getBitmapOffsetY();
+							
+							
+							float texScale = textBox.getTextSize() / fontCodepoint.getFontPixelHeight();
 							
 							float tileTop = texScale * textureOffsetY;
 							float tileLeft = texScale * textureOffsetX;
@@ -182,15 +197,15 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 
 							
 							
-							float worldCharWidth = textBox.getCharWidth(codepoint);
-							float worldCharHeight = textBox.getCharHeight(codepoint);
+							float worldCharWidth = textBox.getCharWidth(fontCodepoint.getPixelWidth(), fontCodepoint.getFontPixelHeight());
+							float worldCharHeight = textBox.getCharHeight(fontCodepoint.getPixelHeight(), fontCodepoint.getFontPixelHeight());
 							
 							float pixelCharWidth = getViewTransformer().cameraToScreenX(worldCharWidth);
 							float pixelCharHeight = getViewTransformer().cameraToScreenY(worldCharHeight);
 							fontModel.setScaling2D(pixelCharWidth, pixelCharHeight);
 							
 							
-							fontModel.setTargetTexture(texture);
+							fontModel.setTargetTexture(fontCodepoint.getTexture());
 
 							fontDriver.draw(fontModel, drawingOptions);
 							
@@ -211,6 +226,31 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 		if(!isInBatchDraw) {
 			fontDriver.release();
 		}
+	}
+	
+	
+	private float getWordWidth(ITextureFont font, float textSize, String word) {
+		int wordCodepointCount = word.codePointCount(0, word.length());
+		
+		float wordWidth = 0.0f;
+		for(int i = 0; i < wordCodepointCount; i++) {
+			int codepoint = word.codePointAt(i);
+			
+			ICodepointAsset codepointAsset = codepointAssetManager.getCodepointAsset(font, codepoint, textSize);
+			if(!codepointAssetManager.isAssetValid(codepointAsset)) {
+				continue;
+			}
+			
+			wordWidth += codepointAsset.getCodepoint().getPixelWidth();
+			
+			/*
+			if(i != wordCodepointCount-1) {
+				float kernAdvance = mFont.getCodepointKernAdvance(word.codePointAt(i), word.codePointAt(i+1));
+				wordWidth += kernAdvance;	
+			}*/
+		}
+		
+		return wordWidth;
 	}
 
 }

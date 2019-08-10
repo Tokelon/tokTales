@@ -22,7 +22,7 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 
-	public static final int DEFAULT_FONT_PIXEL_HEIGHT = 64;
+	public static final int DEFAULT_FONT_PIXEL_HEIGHT = 0;
 	
 
 	@Override
@@ -64,9 +64,9 @@ public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 
 			STBTruetype.stbtt_GetFontVMetrics(fontInfo, ascentBuffer, descentBuffer, lineGapBuffer);
 
-			float fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
-			
-			return new STBTextureFont(buffer, fontInfo, ascentBuffer.get(0), descentBuffer.get(0), lineGapBuffer.get(0), fontScale, fontPixelHeight);
+			STBTextureFont result = new STBTextureFont(buffer, fontInfo, ascentBuffer.get(0), descentBuffer.get(0), lineGapBuffer.get(0), (font) -> MemoryUtil.memFree(font.getData()));
+			result.setFontTextSize(fontPixelHeight);
+			return result;
 		}
 	}
 

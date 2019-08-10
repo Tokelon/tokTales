@@ -10,4 +10,6 @@ public interface ICodepointAssetKey extends IIdentifiableAssetKey {
 	
 	public int getCodepoint();
 	
+	public float getFontPixelHeight();
+	
 }

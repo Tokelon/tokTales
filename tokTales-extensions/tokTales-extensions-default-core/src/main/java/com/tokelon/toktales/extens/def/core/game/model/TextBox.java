@@ -6,9 +6,8 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 
 public class TextBox implements ITextBox {
 
-	
+
 	private static final String WORD_SPLIT_REGEX = " ";
-	
 	
 	
 	private final GameEntity mEntity;
@@ -66,32 +65,6 @@ public class TextBox implements ITextBox {
 	
 	
 	@Override
-	public float getWordWidth(int wordIndex) {
-		
-		String word = getWord(wordIndex);
-		return wordWidth(word);
-	}
-	
-	private float wordWidth(String word) {
-		int wordCodepointCount = word.codePointCount(0, word.length());
-		
-		float wordWidth = 0.0f;
-		for(int i = 0; i < wordCodepointCount; i++) {
-			wordWidth += mFont.getCodepointPixelWidth(word.codePointAt(i));
-			
-			/*
-			if(i != wordCodepointCount-1) {
-				float kernAdvance = mFont.getCodepointKernAdvance(word.codePointAt(i), word.codePointAt(i+1));
-				wordWidth += kernAdvance;	
-			}*/
-		}
-		
-		return wordWidth;
-	}
-
-	
-	
-	@Override
 	public void setTextSize(float worldSize) {
 		this.mTextSize = worldSize;
 		
@@ -125,18 +98,14 @@ public class TextBox implements ITextBox {
 	
 
 	@Override
-	public float getCharWidth(int codepoint) {
-		int wPixels = mFont.getCodepointPixelWidth(codepoint);
-		
-		float worldWidth = (float)wPixels * mTextSize / (float) mFont.getFontPixelHeight();
+	public float getCharWidth(int codepointWidth, float fontPixelHeight) {
+		float worldWidth = (float) codepointWidth * mTextSize / fontPixelHeight;
 		return worldWidth;
 	}
 	
 	@Override
-	public float getCharHeight(int codepoint) {
-		int hPixels = mFont.getCodepointPixelHeight(codepoint);
-		
-		float worldHeight = (float) hPixels * mTextSize / (float) mFont.getFontPixelHeight();
+	public float getCharHeight(int codepointHeight, float fontPixelHeight) {
+		float worldHeight = (float) codepointHeight * mTextSize / fontPixelHeight;
 		return worldHeight;
 	}
 	
@@ -198,6 +167,5 @@ public class TextBox implements ITextBox {
 	public float getLineSpacingModifier() {
 		return mLineSpacingMod;
 	}
-	
 	
 }

@@ -3,6 +3,9 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
+import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -21,8 +24,8 @@ import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.world.IWorld;
+import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
-import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
@@ -63,6 +66,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	private final ILogger logger;
 	private final IRenderService renderService;
 	private final IWorld world;
+	private final ICodepointAssetManager codepointAssetManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IConsoleController> consoleControllerSupplier;
 	
@@ -70,10 +74,12 @@ public class ConsoleRenderer implements ISegmentRenderer {
 			ILogger logger,
 			IEngine engine,
 			IWorld world,
+			ICodepointAssetManager codepointAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IConsoleController> consoleControllerSupplier
 	) {
 		this.logger = logger;
+		this.codepointAssetManager = codepointAssetManager;
 		this.renderService = engine.getRenderService();
 		this.world = world;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
@@ -256,16 +262,23 @@ public class ConsoleRenderer implements ISegmentRenderer {
 				}
 
 				
-				ITexture texture = font.getCodepointTexture(targetCodepoint);
+				// TODO: Use dmeta.tilePixeSize for fontTargetPixelHeight ? What about scaling logic in here?
+				float textBoxTextPixelHeight = viewTransformer.cameraToViewportY(dmeta.tilePixeSize);
+				float targetFontPixelHeight = FontTextSizeHelper.getBestFontPixelHeight(font, textBoxTextPixelHeight);
+				ICodepointAsset codepointAsset = codepointAssetManager.getCodepointAsset(font, targetCodepoint, targetFontPixelHeight); 
+				if(!codepointAssetManager.isAssetValid(codepointAsset)) {
+					continue;
+				}
 				
+				ICodepoint codepoint = codepointAsset.getCodepoint();
 				
 				
 				// bottom is yoffset
 				// right is xoffset ?
 				// top - bottom = height
 				// right - left = width
-				int textureOffsetX = font.getCodepointBitmapOffsetX(targetCodepoint);
-				int textureOffsetY = font.getCodepointBitmapOffsetY(targetCodepoint);
+				int textureOffsetX = codepoint.getBitmapOffsetX();
+				int textureOffsetY = codepoint.getBitmapOffsetY();
 				
 				// fontheight - desc + yoff
 				//int posTop = asc + codepointyoff;
@@ -274,8 +287,8 @@ public class ConsoleRenderer implements ISegmentRenderer {
 				int bitmapLeft = textureOffsetX;
 				
 				
-				int fontPixelHeight = font.getFontPixelHeight();
-				float texToTileScale = dmeta.tilePixeSize / (float)fontPixelHeight;
+				float fontPixelHeight = codepoint.getFontPixelHeight();
+				float texToTileScale = dmeta.tilePixeSize / fontPixelHeight;
 				
 				float tileTop = texToTileScale * (float)bitmapTop;
 				float tileLeft = texToTileScale * (float)bitmapLeft;
@@ -289,8 +302,8 @@ public class ConsoleRenderer implements ISegmentRenderer {
 				configModel();
 
 				
-				int texWidth = font.getCodepointPixelWidth(targetCodepoint);
-				int textHeight = font.getCodepointPixelHeight(targetCodepoint);
+				int texWidth = codepoint.getPixelWidth();
+				int textHeight = codepoint.getPixelHeight();
 				
 				// Scale to the actual texture size we need
 				// To we need to scale to the viewport as well ?
@@ -298,7 +311,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 				fontModel.translate2D(tileLeft, tileTop);	// Translate the codepoint glyph to the right y offset
 				
 				
-				fontModel.setTargetTexture(texture);
+				fontModel.setTargetTexture(codepoint.getTexture());
 
 				
 				//drawingOptions.set(RenderDriverOptions.DRAWING_OPTION_IGNORE_SPRITESET, false);
@@ -368,6 +381,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 					engineContext.getLog(),
 					engineContext.getEngine(),
 					engineContext.getGame().getWorld(),
+					engineContext.getGame().getContentManager().getCodepointAssetManager(),
 					textureCoordinatorSupplier,
 					consoleControllerSupplier
 			);
@@ -378,6 +392,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 					gamestate.getLog(),
 					gamestate.getEngine(),
 					gamestate.getGame().getWorld(),
+					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_CONSOLE, IConsoleController.class)
 			);
@@ -388,6 +403,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 					gamestate.getLog(),
 					gamestate.getEngine(),
 					gamestate.getGame().getWorld(),
+					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					consoleControllerSupplier
 			);

@@ -7,14 +7,16 @@ public class CodepointAssetKeyImpl implements ICodepointAssetKey {
 	
 	private final ITextureFont font;
 	private final int codepoint;
+	private final float fontPixelHeight;
 
-	public CodepointAssetKeyImpl(ITextureFont font, int codepoint) {
+	public CodepointAssetKeyImpl(ITextureFont font, int codepoint, float fontPixelHeight) {
 		if(font == null) {
 			throw new NullPointerException();
 		}
 		
 		this.font = font;
 		this.codepoint = codepoint;
+		this.fontPixelHeight = fontPixelHeight;
 	}
 	
 	
@@ -28,10 +30,15 @@ public class CodepointAssetKeyImpl implements ICodepointAssetKey {
 		return codepoint;
 	}
 	
+	@Override
+	public float getFontPixelHeight() {
+		return fontPixelHeight;
+	}
+	
 	
 	@Override
 	public int hashCode() {
-		return 13 + codepoint*37 + font.hashCode()*37;
+		return 13 + codepoint*37 + font.hashCode()*37 + (int)(fontPixelHeight*13);
 	}
 	
 	@Override
@@ -44,7 +51,7 @@ public class CodepointAssetKeyImpl implements ICodepointAssetKey {
 		}
 		ICodepointAssetKey that = (ICodepointAssetKey) obj;
 		
-		return this.font.equals(that.getFont()) && this.codepoint == that.getCodepoint();
+		return this.font.equals(that.getFont()) && this.codepoint == that.getCodepoint() && this.fontPixelHeight == that.getFontPixelHeight(); // Float comparison - use error value?
 	}
 
 }

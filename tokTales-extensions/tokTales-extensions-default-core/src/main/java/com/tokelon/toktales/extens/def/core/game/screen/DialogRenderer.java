@@ -1,5 +1,6 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -33,17 +34,20 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	
 	private final ILogger logger;
 	private final IRenderService renderService;
+	private final ICodepointAssetManager codepointAssetManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<IDialogController> dialogControllerSupplier;
 	
 	public DialogRenderer(
 			ILogger logger,
 			IEngine engine,
+			ICodepointAssetManager codepointAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IDialogController> dialogControllerSupplier
 	) {
 		this.logger = logger;
 		this.renderService = engine.getRenderService();
+		this.codepointAssetManager = codepointAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.dialogControllerSupplier = dialogControllerSupplier;
 		
@@ -56,7 +60,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	
 	@Override
 	protected void onContextCreated() {
-		textRenderer = new TextRenderer(renderService.getRenderAccess(), textureCoordinatorSupplier.get());
+		textRenderer = new TextRenderer(renderService.getRenderAccess(), codepointAssetManager, textureCoordinatorSupplier.get());
 		shapeRenderer = new ShapeRenderer(renderService.getRenderAccess());
 		
 		textRenderer.contextCreated();
@@ -167,6 +171,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 			return new DialogRenderer(
 					engineContext.getLog(),
 					engineContext.getEngine(),
+					engineContext.getGame().getContentManager().getCodepointAssetManager(),
 					textureCoordinatorSupplier,
 					dialogControllerSupplier
 			);
@@ -178,6 +183,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 			return new DialogRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_DIALOG, IDialogController.class)
 			);
@@ -188,6 +194,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 			return new DialogRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					dialogControllerSupplier
 			);

@@ -15,7 +15,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 	
 	// TODO: Use a pool? Overhead for synchronization?
-	private boolean useObjectPool = false;
+	private boolean useObjectPool = true;
 	
 	private final SynchronizedPool<MutableCodepointKey> codepointKeyPool = new SynchronizedPool<>(() -> new MutableCodepointKey(), 100);
 
@@ -27,29 +27,30 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 
 	@Override
-	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint) {
+	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, float fontPixelHeight) {
 		if(useObjectPool) {
-			return getCodepointAssetInternal(font, codepoint, null);
+			return getCodepointAssetInternal(font, codepoint, fontPixelHeight, null);
 		}
 		else {
-			return getAsset(new CodepointAssetKeyImpl(font, codepoint));
+			return getAsset(new CodepointAssetKeyImpl(font, codepoint, fontPixelHeight));
 		}
 	}
 
 	@Override
-	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, INamedOptions options) {
+	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
 		if(useObjectPool) {
-			return getCodepointAssetInternal(font, codepoint, options);
+			return getCodepointAssetInternal(font, codepoint, fontPixelHeight, options);
 		}
 		else {
-			return getAsset(new CodepointAssetKeyImpl(font, codepoint), options);
+			return getAsset(new CodepointAssetKeyImpl(font, codepoint, fontPixelHeight), options);
 		}
 	}
 
-	protected ICodepointAsset getCodepointAssetInternal(ITextureFont font, int codepoint, INamedOptions options) {
+	protected ICodepointAsset getCodepointAssetInternal(ITextureFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
 		MutableCodepointKey key = codepointKeyPool.newObject();
 		key.setFont(font);
 		key.setCodepoint(codepoint);
+		key.setFontPixelHeight(fontPixelHeight);
 		
 		ICodepointAsset asset;
 		try {
@@ -60,7 +61,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 		}
 		
 		if(asset == null) {
-			CodepointAssetKeyImpl newKey = new CodepointAssetKeyImpl(font, codepoint); // Pass new key instance
+			CodepointAssetKeyImpl newKey = new CodepointAssetKeyImpl(font, codepoint, fontPixelHeight); // Pass new key instance
 			return options == null ? getAsset(newKey) : getAsset(newKey, options);
 		}
 		else {
@@ -72,7 +73,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 	protected class MutableCodepointKey implements ICodepointAssetKey { 
 		private ITextureFont font;
 		private int codepoint;
-
+		private float fontPixelHeight;
 
 		public void setFont(ITextureFont font) {
 			this.font = font;
@@ -80,6 +81,10 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 		public void setCodepoint(int codepoint) {
 			this.codepoint = codepoint;
+		}
+		
+		public void setFontPixelHeight(float fontPixelHeight) {
+			this.fontPixelHeight = fontPixelHeight;
 		}
 
 
@@ -93,10 +98,15 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 			return codepoint;
 		}
 
+		@Override
+		public float getFontPixelHeight() {
+			return fontPixelHeight;
+		}
+		
 
 		@Override
 		public int hashCode() {
-			return 13 + codepoint*37 + font.hashCode()*37;
+			return 13 + codepoint*37 + font.hashCode()*37 + (int)(fontPixelHeight*13);
 		}
 
 		@Override
@@ -109,7 +119,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 			}
 			ICodepointAssetKey that = (ICodepointAssetKey) obj;
 
-			return this.font.equals(that.getFont()) && this.codepoint == that.getCodepoint();
+			return this.font.equals(that.getFont()) && this.codepoint == that.getCodepoint() && this.fontPixelHeight == that.getFontPixelHeight(); // Float comparison - use error value?
 		}
 	}
 

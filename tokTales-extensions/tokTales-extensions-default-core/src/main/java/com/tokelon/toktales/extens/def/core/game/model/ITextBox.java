@@ -31,10 +31,9 @@ public interface ITextBox {
 	
 	
 
-	public float getWordWidth(int wordIndex);
-	
-	public float getCharWidth(int codepoint);
-	public float getCharHeight(int codepoint);
+	// Keep those like this?
+	public float getCharWidth(int codepointWidth, float fontPixelHeight);
+	public float getCharHeight(int codepointWidth, float fontPixelHeight);
 	
 	
 	// Maybe make font just IFont?

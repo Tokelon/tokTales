@@ -2,6 +2,7 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -30,17 +31,20 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 	
 	private final ILogger logger;
 	private final IRenderService renderService;
+	private final ICodepointAssetManager codepointAssetManager;
 	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
 	private final Supplier<ITextBoxController> textBoxControllerSupplier;
 	
 	public TextBoxRenderer(
 			ILogger logger,
 			IEngine engine,
+			ICodepointAssetManager codepointAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<ITextBoxController> textBoxControllerSupplier
 	) {
 		this.logger = logger;
 		this.renderService = engine.getRenderService();
+		this.codepointAssetManager = codepointAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
 		this.textBoxControllerSupplier = textBoxControllerSupplier;
 	}
@@ -58,7 +62,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 
 	@Override
 	protected void onContextCreated() {
-		textRenderer = new TextRenderer(renderService.getRenderAccess(), textureCoordinatorSupplier.get());
+		textRenderer = new TextRenderer(renderService.getRenderAccess(), codepointAssetManager, textureCoordinatorSupplier.get());
 		textRenderer.contextCreated();
 	}
 
@@ -107,6 +111,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 			return new TextBoxRenderer(
 					engineContext.getLog(),
 					engineContext.getEngine(),
+					engineContext.getGame().getContentManager().getCodepointAssetManager(),
 					textureCoordinatorSupplier,
 					textBoxControllerSupplier
 			);
@@ -116,6 +121,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 			return new TextBoxRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_TEXTBOX, ITextBoxController.class)
 			);
@@ -125,6 +131,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 			return new TextBoxRenderer(
 					gamestate.getLog(),
 					gamestate.getEngine(),
+					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
 					textBoxControllerSupplier
 			);

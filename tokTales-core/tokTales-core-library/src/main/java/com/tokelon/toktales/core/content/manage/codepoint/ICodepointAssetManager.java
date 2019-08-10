@@ -8,7 +8,7 @@ public interface ICodepointAssetManager extends IAssetManager<ICodepointAsset, I
 	
 	
 	// Maybe add getCodepointAsset...() methods analogous to getAsset...() in IAssetManager
-	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint);
-	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, INamedOptions options);
+	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, float fontPixelHeight);
+	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, float fontPixelHeight, INamedOptions options);
 	
 }
