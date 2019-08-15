@@ -13,7 +13,8 @@ import java9.util.stream.Collectors;
 import java9.util.stream.StreamSupport;
 
 public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
-
+	// TODO: Test configure and constructor parameter filters
+	
 	
 	private boolean isConfigured = false;
 	

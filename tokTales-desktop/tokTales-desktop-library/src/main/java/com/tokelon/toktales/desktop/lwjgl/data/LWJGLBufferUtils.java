@@ -6,6 +6,9 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 public final class LWJGLBufferUtils {
+	/* TODO: Replace all usages with MemoryStack or MemoryUtils.
+	 * Also replace all usages of BufferUtils.
+	 */
 
 	private LWJGLBufferUtils() { }
 	

@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.ILocation;
 
 public final class LocationsAndPlaces {
-	
+	// TODO: Use this or remove?
 	// Maybe rename to StorageLocations?
 
 	private LocationsAndPlaces() {}

@@ -3,7 +3,9 @@ package com.tokelon.toktales.core.content.manage;
 public interface IAssetStore<T, K> {
 	// TODO: Keep listeners? Disable recursive callbacks?
 	// TODO: Implement groups
-
+	// TODO: Implement StoringStrategy (Lifetime) (Forever, None, Normal, References)
+	// with StoringManager (onFreeMemory etc.)
+	
 	// Implement listener support?
 	// Allow null values?
 	// Implement explicit "is loaded" logic in here?

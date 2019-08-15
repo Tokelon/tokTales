@@ -18,6 +18,8 @@ public class CoreGLInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		// GL Stuff
+		
+		// TODO: Bind this to no-op implementation when in production mode? | also bind in scope?
 		bind(IGLErrorUtils.class).to(GLErrorUtils.class); // Could bind this to no-op implementation
 		bind(IGLBufferUtils.class).to(GLBufferUtils.class).in(Scopes.SINGLETON);
 		bind(IGLFactory.class).to(GLFactory.class);
