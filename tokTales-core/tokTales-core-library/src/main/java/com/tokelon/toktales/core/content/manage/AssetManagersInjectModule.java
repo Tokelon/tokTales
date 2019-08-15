@@ -2,7 +2,6 @@ package com.tokelon.toktales.core.content.manage;
 
 import java.util.concurrent.ExecutorService;
 
-import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetManager;
@@ -39,13 +38,17 @@ import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.GameScoped;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalExecutorServiceImplementation;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.IOptions;
 
 public class AssetManagersInjectModule extends AbstractInjectModule {
-
+	// Rename to AssetManagementInjectModule ?
+	// TODO: Use GameScoped or EngineScoped?
+	// TODO: Use bindInGameScope methods instead of the annotation? Also bind in no scope?
+	// TODO: Bind managers in game scope and no-scoped as it was for IContentManager properties?
 
 	@Override
 	protected void configure() {
@@ -59,7 +62,7 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		
 		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
 		bind(ExecutorService.class).annotatedWith(GlobalExecutorServiceImplementation.class).toProvider(DefaultExecutorServiceProvider.class);
-		bind(ExecutorService.class).annotatedWith(AssetLoader.class).to(RecyclableExecutorService.class).in(Scopes.SINGLETON);
+		bind(ExecutorService.class).annotatedWith(AssetLoader.class).to(RecyclableExecutorService.class).in(GameScoped.class);
 		
 		
 		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
@@ -72,7 +75,7 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(CodepointAssetLoader.class);
 		bind(new TypeLiteral<IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetDecoder.class);
 		bind(new TypeLiteral<ISpecialAssetFactory<ICodepointAsset>>() {}).toInstance(() -> new CodepointAsset(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ICodepointAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ICodepointAsset>>() {}).in(Scopes.SINGLETON);
+		bind(new TypeLiteral<ISpecialAssetManager<ICodepointAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ICodepointAsset>>() {}).in(GameScoped.class);
 
 		bindInGameScopeAndForNotScoped(ISoundAssetManager.class, SoundAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(ISoundAssetManager.class);
@@ -80,7 +83,7 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions>>() {});
 		bind(new TypeLiteral<IAssetDecoder<ISoundAsset, ISoundAssetKey, INamedOptions>>() {}).to(ISoundAssetDecoder.class);
 		bind(new TypeLiteral<ISpecialAssetFactory<ISoundAsset>>() {}).toInstance(() -> new SoundAsset(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ISoundAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISoundAsset>>() {}).in(Scopes.SINGLETON);
+		bind(new TypeLiteral<ISpecialAssetManager<ISoundAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISoundAsset>>() {}).in(GameScoped.class);
 		
 		bindInGameScopeAndForNotScoped(IBitmapAssetManager.class, BitmapAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(IBitmapAssetManager.class);
@@ -88,7 +91,7 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetLoader<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<IBitmapAsset, IBitmapAssetKey, IOptions>>() {});
 		bind(new TypeLiteral<IAssetDecoder<IBitmapAsset, IBitmapAssetKey, IOptions>>() {}).to(IBitmapAssetDecoder.class);
 		bind(new TypeLiteral<ISpecialAssetFactory<IBitmapAsset>>() {}).toInstance(() -> new BitmapAssetImpl(null));
-		bind(new TypeLiteral<ISpecialAssetManager<IBitmapAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<IBitmapAsset>>() {}).in(Scopes.SINGLETON);
+		bind(new TypeLiteral<ISpecialAssetManager<IBitmapAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<IBitmapAsset>>() {}).in(GameScoped.class);
 		
 		bindInGameScopeAndForNotScoped(ITextureFontAssetManager.class, TextureFontAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetManager.class);
@@ -96,7 +99,7 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(new TypeLiteral<DefaultInjectableAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {});
 		bind(new TypeLiteral<IAssetDecoder<ITextureFontAsset, ITextureFontAssetKey, IOptions>>() {}).to(ITextureFontAssetDecoder.class);
 		bind(new TypeLiteral<ISpecialAssetFactory<ITextureFontAsset>>() {}).toInstance(() -> new TextureFontAssetImpl(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ITextureFontAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ITextureFontAsset>>() {}).in(Scopes.SINGLETON);
+		bind(new TypeLiteral<ISpecialAssetManager<ITextureFontAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ITextureFontAsset>>() {}).in(GameScoped.class);
 		
 		bindInGameScopeAndForNotScoped(ISpriteAssetManager.class, SpriteAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetManager.class);
@@ -106,7 +109,7 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 		bind(new TypeLiteral<IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions>>() {}).to(ISpriteAssetDecoder.class);
 		bind(ISpriteAssetDecoder.class).to(SpriteAssetDecoder.class);
 		bind(new TypeLiteral<ISpecialAssetFactory<ISpriteAsset>>() {}).toInstance(() -> new SpriteAsset(null));
-		bind(new TypeLiteral<ISpecialAssetManager<ISpriteAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISpriteAsset>>() {}).in(Scopes.SINGLETON);
+		bind(new TypeLiteral<ISpecialAssetManager<ISpriteAsset>>() {}).to(new TypeLiteral<DefaultSpecialAssetManager<ISpriteAsset>>() {}).in(GameScoped.class);
 	}
 	
 }
