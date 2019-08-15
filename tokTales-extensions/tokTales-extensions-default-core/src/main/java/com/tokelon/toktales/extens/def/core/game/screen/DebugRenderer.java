@@ -3,6 +3,7 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
@@ -451,6 +452,88 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
 			);
+		}
+	}
+	
+
+	public static class DebugRendererBuilder implements IDebugRendererBuilder {
+		private final Provider<IEngineContext> engineContextProvider;
+		private final Provider<IContentManager> contentManagerProvider;
+		private final Provider<IBasicRegistry> assetKeyRegistryProvider;
+		
+		private IEngineContext engineContext;
+		private IContentManager contentManager;
+		private IBasicRegistry assetKeyRegistry;
+		
+		@Inject
+		public DebugRendererBuilder(
+				Provider<IEngineContext> engineContextProvider,
+				Provider<IContentManager> contentManagerProvider,
+				Provider<IBasicRegistry> assetKeyRegistryProvider
+		) {
+			this.engineContextProvider = engineContextProvider;
+			this.contentManagerProvider = contentManagerProvider;
+			this.assetKeyRegistryProvider = assetKeyRegistryProvider;
+		}
+		
+		
+		@Override
+		public IDebugRenderer build(
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IPlayerController> playerControllerSupplier,
+				Supplier<IWorldspace> worlspaceSupplier
+		) {
+			return new DebugRenderer(
+					engineContext == null ? engineContextProvider.get() : engineContext,
+					contentManager == null ? contentManagerProvider.get() : contentManager,
+					assetKeyRegistry == null ? assetKeyRegistryProvider.get() : assetKeyRegistry,
+					textureCoordinatorSupplier,
+					playerControllerSupplier,
+					worlspaceSupplier
+			);
+		}
+
+		@Override
+		public IDebugRenderer build(IGameState gamestate, Supplier<IWorldspace> worlspaceSupplier) {
+			return new DebugRenderer(
+					engineContext == null ? engineContextProvider.get() : engineContext,
+					contentManager == null ? contentManagerProvider.get() : contentManager,
+					assetKeyRegistry == null ? assetKeyRegistryProvider.get() : assetKeyRegistry,
+					() -> gamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofPlayerControllerFromManager(gamestate),
+					worlspaceSupplier
+			);
+		}
+
+		@Override
+		public IDebugRenderer build(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
+			return new DebugRenderer(
+					engineContext == null ? engineContextProvider.get() : engineContext,
+					contentManager == null ? contentManagerProvider.get() : contentManager,
+					assetKeyRegistry == null ? assetKeyRegistryProvider.get() : assetKeyRegistry,
+					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
+					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
+			);
+		}
+
+
+		@Override
+		public IDebugRendererBuilder withEngineContext(IEngineContext engineContext) {
+			this.engineContext = engineContext;
+			return this;
+		}
+
+		@Override
+		public IDebugRendererBuilder withContentManager(IContentManager contentManager) {
+			this.contentManager = contentManager;
+			return this;
+		}
+		
+		@Override
+		public IDebugRendererBuilder withAssetKeyRegistry(IBasicRegistry assetKeyRegistry) {
+			this.assetKeyRegistry = assetKeyRegistry;
+			return this;
 		}
 	}
 	

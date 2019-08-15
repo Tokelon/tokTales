@@ -53,4 +53,29 @@ public interface IDebugRenderer extends ISegmentRenderer {
 		);
 	}
 	
+	// TODO: Use this instead of factory?
+	public interface IDebugRendererBuilder {
+		// Add getters for values that have setters?
+		
+		public IDebugRenderer build(
+				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
+				Supplier<IPlayerController> playerControllerSupplier,
+				Supplier<IWorldspace> worlspaceSupplier
+		);
+		
+		public IDebugRenderer build(
+				IGameState gamestate,
+				Supplier<IWorldspace> worlspaceSupplier
+		);
+		
+		public IDebugRenderer build(
+				ITypedGameState<? extends IExtendedGameScene> typedGamestate
+		);
+		
+		
+		public IDebugRendererBuilder withEngineContext(IEngineContext engineContext);
+		public IDebugRendererBuilder withContentManager(IContentManager contentManager);
+		public IDebugRendererBuilder withAssetKeyRegistry(IBasicRegistry assetKeyRegistry);
+	}
+	
 }
