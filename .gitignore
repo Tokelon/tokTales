@@ -17,6 +17,10 @@ bin/
 .metadata
 .settings/
 
+# Static code analysis tools
+.checkstyle
+.pmd
+
 # Code Recommenders
 .recommenders
 .recommenders/
