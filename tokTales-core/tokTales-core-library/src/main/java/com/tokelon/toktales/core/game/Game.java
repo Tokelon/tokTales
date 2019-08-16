@@ -74,11 +74,9 @@ public class Game implements IGame {
 	
 	@Override
 	public IGameAdapter getGameAdapter() {
-		if(gameAdapter == null) { // Check before locking to avoid overhead
-			synchronized (gameAdapterLock) {
-				if(gameAdapter == null) {
-					gameAdapter = gameAdapterProvider.get();
-				}
+		synchronized (gameAdapterLock) {
+			if(gameAdapter == null) {
+				gameAdapter = gameAdapterProvider.get();
 			}
 		}
 		

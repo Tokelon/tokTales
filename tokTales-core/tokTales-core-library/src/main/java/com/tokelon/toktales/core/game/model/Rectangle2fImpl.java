@@ -207,6 +207,7 @@ public class Rectangle2fImpl implements IMutableRectangle2f {
 		}
 		IRectangle2f that = (IRectangle2f) obj;
 		
+		// TODO: Choose error to compare with?
 		return left == that.left() && top == that.top()
 				&& right == that.right() && bottom == that.bottom();
 	}

@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.game.screen.order.RenderRunner;
 
 public class TestRenderOrder {
 
+
 	public static void main(String[] args) {
 		
 		RenderOrder renderOrder = new RenderOrder();
@@ -112,7 +113,7 @@ public class TestRenderOrder {
 				if(idxLayerStack != stack) {
 					throw new IllegalStateException(String.format("Expected stack %s but was %s", stack, idxLayerStack));
 				}
-				if(idxLayerName != layerName) {
+				if(!idxLayerName.equals(layerName)) {
 					throw new IllegalStateException(String.format("Expected name %s but was %s", layerName, idxLayerName));
 				}
 
@@ -140,6 +141,5 @@ public class TestRenderOrder {
 			return description;
 		}
 	}
-	
 	
 }
