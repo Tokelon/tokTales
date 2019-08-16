@@ -3,8 +3,24 @@ group "com.tokelon.toktales"
 version "0.0.6"
 
 
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0"
+	}
+}
+
+
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java-library'
+
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: "com.github.spotbugs"
 
 
 sourceSets {
@@ -88,4 +104,40 @@ eclipse.classpath.file.withXml { xml ->
 	if(con) {
 		con.@exported = 'true'
 	}
+}
+
+
+checkstyle {
+	toolVersion = '8.23' // important - old versions might not support config
+	ignoreFailures = true
+	
+	configFile rootProject.file('../tokTales-master/config/checkstyle/checkstyle.xml') // adjust if needed
+	
+	/* Remove * to enable Checkstyle */
+	checkstyleMain.enabled = false
+	checkstyleTest.enabled = false
+	/**/
+}
+
+pmd {
+	toolVersion = '6.17.0' // important - old versions might not support config
+	ignoreFailures = true
+	
+	//ruleSetConfig = resources.text.fromFile(rootProject.file('../tokTales-master/config/pmd/pmd.xml'))
+	ruleSetFiles = files('../../tokTales-master/config/pmd/pmd.xml')
+	
+	/* Remove * to enable PMD */
+	pmdMain.enabled = false
+	pmdTest.enabled = false
+	/**/
+}
+
+spotbugs {
+	toolVersion = '3.1.12' // important - old versions might not support config
+	ignoreFailures = true
+	
+	/* Remove * to enable Spotbugs */
+	spotbugsMain.enabled = false
+	spotbugsTest.enabled = false
+	/**/
 }
