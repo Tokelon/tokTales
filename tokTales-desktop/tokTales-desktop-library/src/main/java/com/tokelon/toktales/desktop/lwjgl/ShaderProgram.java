@@ -1,8 +1,6 @@
 package com.tokelon.toktales.desktop.lwjgl;
 
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -12,13 +10,16 @@ import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.core.content.IDisposable;
 
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 public class ShaderProgram implements IDisposable {
 
 	
 	private boolean disposed = false;
 
 	
-	private Map<String, Integer> uniforms;
+	private TObjectIntMap<String> uniforms;
 	
 	private FloatBuffer uniformMatrixBuffer;
 	
@@ -35,7 +36,7 @@ public class ShaderProgram implements IDisposable {
 			throw new LWJGLException("Error creating GL Program: " +programId);
 		}
 		
-		uniforms = new HashMap<String, Integer>();
+		uniforms = new TObjectIntHashMap<>();
 		uniformMatrixBuffer = MemoryUtil.memAllocFloat(16);
 	}
 	
@@ -106,9 +107,6 @@ public class ShaderProgram implements IDisposable {
 	
 	public synchronized void setUniform(String uniformName, Matrix4f value) {
 		// Dump the matrix into a float buffer
-		
-		//FloatBuffer uniformMatrixBuffer = BufferUtils.createFloatBuffer(16);
-		
 		value.get(uniformMatrixBuffer);
 		
 		GL20.glUniformMatrix4fv(uniforms.get(uniformName), false, uniformMatrixBuffer);

@@ -10,7 +10,7 @@ import java.util.Set;
 public class DefaultSurfaceHandler implements ISurfaceHandler {
 
 	
-	private final Map<ISurface, Boolean> surfaceMap;
+	private final Map<ISurface, Boolean> surfaceMap; // Replace with different structure?
 	
 	private final Set<ISurfaceCallback> callbackSet;
 	
@@ -81,6 +81,5 @@ public class DefaultSurfaceHandler implements ISurfaceHandler {
 			}
 		}
 	}
-
 	
 }

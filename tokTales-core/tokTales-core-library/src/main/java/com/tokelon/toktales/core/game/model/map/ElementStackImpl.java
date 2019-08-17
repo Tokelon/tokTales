@@ -1,15 +1,12 @@
 package com.tokelon.toktales.core.game.model.map;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 
 public class ElementStackImpl implements IElementStack {
-
-	private Map<Integer, IMapElement> stack = new HashMap<Integer, IMapElement>();
-
 	// TODO: Implement
+
+	//private Map<Integer, IMapElement> stack = new HashMap<Integer, IMapElement>();
+
 	
 	
 	@Override
@@ -47,9 +44,5 @@ public class ElementStackImpl implements IElementStack {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	
-	
-	
 	
 }

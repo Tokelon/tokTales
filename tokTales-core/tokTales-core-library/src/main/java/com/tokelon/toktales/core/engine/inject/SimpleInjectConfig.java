@@ -28,23 +28,22 @@ public class SimpleInjectConfig implements IInjectConfig {
 
 
 	/**
-	 * 
 	 * @param stage
 	 * @return This object.
 	 */
-	 public SimpleInjectConfig setDefaultStage(Stage stage) {
-		 this.defaultStage = stage;
-		 return this;
-	 }
+	public SimpleInjectConfig setDefaultStage(Stage stage) {
+		this.defaultStage = stage;
+		return this;
+	}
 
-	 @Override
-	 public Stage getDefaultStage() {
-		 return defaultStage;
-	 }
+	@Override
+	public Stage getDefaultStage() {
+		return defaultStage;
+	}
 
-	 @Override
-	 public Collection<Module> getModules() {
-		 return moduleCollection;
-	 }
+	@Override
+	public Collection<Module> getModules() {
+		return moduleCollection;
+	}
 
 }

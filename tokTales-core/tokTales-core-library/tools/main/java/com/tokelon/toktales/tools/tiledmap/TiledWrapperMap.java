@@ -26,6 +26,9 @@ import com.tokelon.toktales.tools.tiledmap.model.ITiledMapLayer;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapObjectgroup;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapProperties;
 
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 public class TiledWrapperMap implements IBlockMap {
 
 	private static final int STARTING_LEVEL = 1;
@@ -53,7 +56,7 @@ public class TiledWrapperMap implements IBlockMap {
 	private final ResourceSet resourceSet = new ResourceSet();
 	
 	private final Map<String, IMapLayer> layerNameMap;
-	private final Map<String, Integer> layerLevelMap;
+	private final TObjectIntMap<String> layerLevelMap;
 	
 	private final ObjectContainer<IMapObject> objectContainer = new ObjectContainer<>();
 	
@@ -83,7 +86,7 @@ public class TiledWrapperMap implements IBlockMap {
 		this.levelReference = new TiledMapLevelReference(finalLevelCount);	// TODO: Important - Implement level reference correctly!
 		this.layers = new MapLayerImpl[finalLevelCount];
 		this.layerNameMap = new HashMap<String, IMapLayer>();
-		this.layerLevelMap = new HashMap<String, Integer>();
+		this.layerLevelMap = new TObjectIntHashMap<>();
 	}
 	
 	

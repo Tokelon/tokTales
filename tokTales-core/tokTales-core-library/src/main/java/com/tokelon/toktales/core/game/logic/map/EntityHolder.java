@@ -1,14 +1,16 @@
 package com.tokelon.toktales.core.game.logic.map;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.tokelon.toktales.core.game.model.map.entities.IMapEntity;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 public class EntityHolder implements IEntityHolder {
 
-	private final Map<Integer, IMapEntity> entityMap = new HashMap<Integer, IMapEntity>();
+
+	private final TIntObjectMap<IMapEntity> entityMap = new TIntObjectHashMap<>();
 	
 	private int idCounter = 1;
 	
@@ -38,8 +40,7 @@ public class EntityHolder implements IEntityHolder {
 	
 	@Override
 	public Iterator<IMapEntity> iterator() {
-		return entityMap.values().iterator();			// TODO: Important - This needs synchronizing
+		return entityMap.valueCollection().iterator(); // TODO: Important - This needs synchronizing
 	}
-
 	
 }

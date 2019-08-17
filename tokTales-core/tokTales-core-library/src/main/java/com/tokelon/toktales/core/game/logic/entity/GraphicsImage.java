@@ -21,10 +21,10 @@ public class GraphicsImage implements IGraphicsImage {
 	private IGameAnimation imageAnimation;
 	private final Map<String, IGameAnimation> imageAnimationMap;
 	private long initAnimationTime = 0L;
-	private final Map<String, Long> initAnimationTimeMap;
-	
+	private final Map<String, Long> initAnimationTimeMap; // TODO: Replace with other structure?
 	
 	public GraphicsImage() {
+		// TODO: Do these need to be synchronized?
 		imageStaticGraphicMap = Collections.synchronizedMap(new HashMap<String, IBaseGraphic>(0));
 		imageAnimationMap = Collections.synchronizedMap(new HashMap<String, IGameAnimation>(0));
 		initAnimationTimeMap = Collections.synchronizedMap(new HashMap<String, Long>(0));
@@ -180,6 +180,5 @@ public class GraphicsImage implements IGraphicsImage {
 	public IGameAnimation removeAssignedAnimation(String name) {
 		return imageAssignedAnimationMap.remove(name);
 	}
-
 	
 }

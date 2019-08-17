@@ -1,16 +1,12 @@
 package com.tokelon.toktales.core.util;
 
-import java.util.HashSet;
-import java.util.Set;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 public class AttributedImpl implements IAttributed {
 
-	
 
-	// TODO: Check - Boxing type
-	
-	private final Set<Integer> attributes = new HashSet<Integer>(); 
-	
+	private final TIntSet attributes = new TIntHashSet();
 	
 	@Override
 	public boolean isAttributed(int attributeCode) {

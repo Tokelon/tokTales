@@ -14,127 +14,127 @@ import java9.util.stream.StreamSupport;
 
 public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
 	// TODO: Test configure and constructor parameter filters
-	
-	
+
+
 	private boolean isConfigured = false;
-	
-    private Stage defaultStage = Stage.PRODUCTION;
-    
-    private List<Module> configModules = new ArrayList<>();
-    
-    private List<Class<? extends Module>> configFilterModules = new ArrayList<>();
-    
-    
-    public HierarchicalInjectConfig() {
-    	configure();
-    }
-    
-    @SafeVarargs
+
+	private Stage defaultStage = Stage.PRODUCTION;
+
+	private List<Module> configModules = new ArrayList<>();
+
+	private List<Class<? extends Module>> configFilterModules = new ArrayList<>();
+
+
+	public HierarchicalInjectConfig() {
+		configure();
+	}
+
+	@SafeVarargs
 	public HierarchicalInjectConfig(Class<? extends Module>... filterModules) {
-    	configFilterModules.addAll(Arrays.asList(filterModules));
-    	configure();
+		configFilterModules.addAll(Arrays.asList(filterModules));
+		configure();
 	}
-    
-    public HierarchicalInjectConfig(Collection<Class<? extends Module>> filterModules) {
-    	configFilterModules.addAll(filterModules);
-    	configure();
+
+	public HierarchicalInjectConfig(Collection<Class<? extends Module>> filterModules) {
+		configFilterModules.addAll(filterModules);
+		configure();
 	}
 
 
-    /** Called when this inject config is created.
+	/** Called when this inject config is created.
 	 * <p>
 	 * This is where you would call methods to configure your modules.<br>
 	 * Note that at this point you cannot rely on this config being initialized.
 	 * <p>
 	 */
-    protected void configure() {
-    	if(isConfigured) {
-    		throw new IllegalStateException("Config has already been configured");
-    	}
-    	
-    	isConfigured = true;
-    }
-    
-    
-    @Override
+	protected void configure() {
+		if(isConfigured) {
+			throw new IllegalStateException("Config has already been configured");
+		}
+
+		isConfigured = true;
+	}
+
+
+	@Override
 	public HierarchicalInjectConfig extend(Module... modules) {
-        return extend(Arrays.asList(modules));
-    }
-    
-    @Override
+		return extend(Arrays.asList(modules));
+	}
+
+	@Override
 	public HierarchicalInjectConfig extend(Collection<Module> modules) {
-    	Collection<Module> filteredModules = filterModules(modules);
-        configModules.addAll(filteredModules);
-        return this;
-    }
-    
-    
-    @Override
+		Collection<Module> filteredModules = filterModules(modules);
+		configModules.addAll(filteredModules);
+		return this;
+	}
+
+
+	@Override
 	public HierarchicalInjectConfig override(Module... modules) {
-        return override(Arrays.asList(modules));
-    }
-    
-    @Override
+		return override(Arrays.asList(modules));
+	}
+
+	@Override
 	public HierarchicalInjectConfig override(Collection<Module> modules) {
-    	Collection<Module> filteredModules = filterModules(modules);
-        if(configModules.isEmpty()) {
-            configModules.addAll(filteredModules);
-        }
-        else {
-            Module overrideModule = Modules.override(configModules).with(filteredModules);
-            
-            configModules = new ArrayList<>();
-            configModules.add(overrideModule);    
-        }
-        
-        return this;
-    }
-    
-    
-    @Override
-    public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<? extends Module>... modules) {
-    	return filter(Arrays.asList(modules));
-    }
-    
-    @Override
-    public IHierarchicalInjectConfig filter(Collection<Class<? extends Module>> modules) {
-    	configFilterModules.addAll(modules);
-    	return this;
-    }
+		Collection<Module> filteredModules = filterModules(modules);
+		if(configModules.isEmpty()) {
+			configModules.addAll(filteredModules);
+		}
+		else {
+			Module overrideModule = Modules.override(configModules).with(filteredModules);
 
-    
-    protected Collection<Module> filterModules(Collection<Module> modules) {
-    	if(modules.isEmpty()) {
-    		return modules;
-    	}
-    	
-    	List<Module> result = StreamSupport.stream(modules)
-    	.filter(m -> StreamSupport.stream(configFilterModules).noneMatch(c -> c.isInstance(m)))
-    	.collect(Collectors.toList());
+			configModules = new ArrayList<>();
+			configModules.add(overrideModule);    
+		}
 
-    	return result;
-    }
+		return this;
+	}
 
 
-    @Override
+	@Override
+	public IHierarchicalInjectConfig filter(@SuppressWarnings("unchecked") Class<? extends Module>... modules) {
+		return filter(Arrays.asList(modules));
+	}
+
+	@Override
+	public IHierarchicalInjectConfig filter(Collection<Class<? extends Module>> modules) {
+		configFilterModules.addAll(modules);
+		return this;
+	}
+
+
+	protected Collection<Module> filterModules(Collection<Module> modules) {
+		if(modules.isEmpty()) {
+			return modules;
+		}
+
+		List<Module> result = StreamSupport.stream(modules)
+				.filter(m -> StreamSupport.stream(configFilterModules).noneMatch(c -> c.isInstance(m)))
+				.collect(Collectors.toList());
+
+		return result;
+	}
+
+
+	@Override
 	public HierarchicalInjectConfig setDefaultStage(Stage stage) {
-        this.defaultStage = stage;
-        return this;
-    }
-    
-    @Override
-    public Stage getDefaultStage() {
-        return defaultStage;
-    }
-    
-    @Override
-    public Collection<Module> getModules() {
-        return configModules;
-    }
-    
-    @Override
-    public Collection<Class<? extends Module>> getFilterModules() {
-    	return configFilterModules;
-    }
-    
+		this.defaultStage = stage;
+		return this;
+	}
+
+	@Override
+	public Stage getDefaultStage() {
+		return defaultStage;
+	}
+
+	@Override
+	public Collection<Module> getModules() {
+		return configModules;
+	}
+
+	@Override
+	public Collection<Class<? extends Module>> getFilterModules() {
+		return configFilterModules;
+	}
+
 }

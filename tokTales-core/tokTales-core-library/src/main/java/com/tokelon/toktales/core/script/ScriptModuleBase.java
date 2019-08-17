@@ -1,23 +1,21 @@
 package com.tokelon.toktales.core.script;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.tools.script.IScriptModule;
 
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 public class ScriptModuleBase {
 
-	// For one source
-	public static final int DEFAULT_MAX_ERRORS_LOGGED = 3;
-	
-	
-	
-	private final Map<String, Integer> errorCountMap;
+
+	public static final int DEFAULT_MAX_ERRORS_LOGGED = 3; // For one source
 	
 	private int maxErrorsLogged = DEFAULT_MAX_ERRORS_LOGGED;
 	
+	
+	private final TObjectIntMap<String> errorCountMap; // Does this need to be synchronized?
+
 	private final IScriptModule module;
 	
 	public ScriptModuleBase(IScriptModule scriptModule) {
@@ -27,7 +25,7 @@ public class ScriptModuleBase {
 		
 		this.module = scriptModule;
 		
-		errorCountMap = Collections.synchronizedMap(new HashMap<String, Integer>());
+		this.errorCountMap = new TObjectIntHashMap<>();
 	}
 	
 	
@@ -63,7 +61,5 @@ public class ScriptModuleBase {
 	protected IScriptModule getScriptModule() {
 		return module;
 	}
-	
-	
 	
 }

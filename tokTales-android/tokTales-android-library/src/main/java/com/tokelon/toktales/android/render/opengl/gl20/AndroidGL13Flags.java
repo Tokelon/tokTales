@@ -1,55 +1,53 @@
 package com.tokelon.toktales.android.render.opengl.gl20;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.tokelon.toktales.core.render.opengl.IGLFlags;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 
 import android.opengl.GLES20;
+import gnu.trove.map.hash.TIntIntHashMap;
 
 abstract class AndroidGL13Flags implements IGLFlags {
 
 	
-	protected static final Map<Integer, Integer> GL13_FLAG_MAP = new HashMap<>();
-	
+	protected static final TIntIntHashMap GL13_FLAG_MAP = new TIntIntHashMap(150, 1f, Integer.MAX_VALUE, Integer.MIN_VALUE);
+
 	static {
-	    /** Accepted by the {@code value} parameter of GetIntegerv, GetBooleanv, GetFloatv, and GetDoublev. */
+		/** Accepted by the {@code value} parameter of GetIntegerv, GetBooleanv, GetFloatv, and GetDoublev. */
 		GL13_FLAG_MAP.put(IGL13.GL_NUM_COMPRESSED_TEXTURE_FORMATS, GLES20.GL_NUM_COMPRESSED_TEXTURE_FORMATS);
 		GL13_FLAG_MAP.put(IGL13.GL_COMPRESSED_TEXTURE_FORMATS, GLES20.GL_COMPRESSED_TEXTURE_FORMATS);
-	    /**
-	     * When the {@code pname} parameter of TexGendv, TexGenfv, and TexGeniv is TEXTURE_GEN_MODE, then the array {@code params} may also contain NORMAL_MAP
-	     * or REFLECTION_MAP. Accepted by the {@code cap} parameter of Enable, Disable, IsEnabled, and by the {@code pname} parameter of GetBooleanv,
-	     * GetIntegerv, GetFloatv, and GetDoublev, and by the {@code target} parameter of BindTexture, GetTexParameterfv, GetTexParameteriv, TexParameterf,
-	     * TexParameteri, TexParameterfv, and TexParameteriv.
-	     */
+		/**
+		 * When the {@code pname} parameter of TexGendv, TexGenfv, and TexGeniv is TEXTURE_GEN_MODE, then the array {@code params} may also contain NORMAL_MAP
+		 * or REFLECTION_MAP. Accepted by the {@code cap} parameter of Enable, Disable, IsEnabled, and by the {@code pname} parameter of GetBooleanv,
+		 * GetIntegerv, GetFloatv, and GetDoublev, and by the {@code target} parameter of BindTexture, GetTexParameterfv, GetTexParameteriv, TexParameterf,
+		 * TexParameteri, TexParameterfv, and TexParameteriv.
+		 */
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP, GLES20.GL_TEXTURE_CUBE_MAP);
-	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev. */
+		/** Accepted by the {@code pname} parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev. */
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_BINDING_CUBE_MAP, GLES20.GL_TEXTURE_BINDING_CUBE_MAP);
-	    /**
-	     * Accepted by the {@code target} parameter of GetTexImage, GetTexLevelParameteriv, GetTexLevelParameterfv, TexImage2D, CopyTexImage2D, TexSubImage2D, and
-	     * CopySubTexImage2D.
-	     */
+		/**
+		 * Accepted by the {@code target} parameter of GetTexImage, GetTexLevelParameteriv, GetTexLevelParameterfv, TexImage2D, CopyTexImage2D, TexSubImage2D, and
+		 * CopySubTexImage2D.
+		 */
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, GLES20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
-	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
+		/** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
 		GL13_FLAG_MAP.put(IGL13.GL_MAX_CUBE_MAP_TEXTURE_SIZE, GLES20.GL_MAX_CUBE_MAP_TEXTURE_SIZE);
-	    /**
-	     * Accepted by the {@code cap} parameter of Enable, Disable, and IsEnabled, and by the {@code pname} parameter of GetBooleanv, GetIntegerv, GetFloatv, and
-	     * GetDoublev.
-	     */
+		/**
+		 * Accepted by the {@code cap} parameter of Enable, Disable, and IsEnabled, and by the {@code pname} parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+		 * GetDoublev.
+		 */
 		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_ALPHA_TO_COVERAGE, GLES20.GL_SAMPLE_ALPHA_TO_COVERAGE);
 		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_COVERAGE, GLES20.GL_SAMPLE_COVERAGE);
-	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
+		/** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
 		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_BUFFERS, GLES20.GL_SAMPLE_BUFFERS);
 		GL13_FLAG_MAP.put(IGL13.GL_SAMPLES, GLES20.GL_SAMPLES);
 		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_COVERAGE_VALUE, GLES20.GL_SAMPLE_COVERAGE_VALUE);
 		GL13_FLAG_MAP.put(IGL13.GL_SAMPLE_COVERAGE_INVERT, GLES20.GL_SAMPLE_COVERAGE_INVERT);
-	    /** Accepted by the {@code texture} parameter of ActiveTexture and MultiTexCoord. */
+		/** Accepted by the {@code texture} parameter of ActiveTexture and MultiTexCoord. */
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE0, GLES20.GL_TEXTURE0);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE1, GLES20.GL_TEXTURE1);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE2, GLES20.GL_TEXTURE2);
@@ -82,7 +80,7 @@ abstract class AndroidGL13Flags implements IGLFlags {
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE29, GLES20.GL_TEXTURE29);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE30, GLES20.GL_TEXTURE30);
 		GL13_FLAG_MAP.put(IGL13.GL_TEXTURE31, GLES20.GL_TEXTURE31);
-	    /** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
+		/** Accepted by the {@code pname} parameter of GetBooleanv, GetDoublev, GetIntegerv, and GetFloatv. */
 		GL13_FLAG_MAP.put(IGL13.GL_ACTIVE_TEXTURE, GLES20.GL_ACTIVE_TEXTURE);
 	}
 	
