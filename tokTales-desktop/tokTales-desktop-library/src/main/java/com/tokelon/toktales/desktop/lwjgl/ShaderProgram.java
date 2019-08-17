@@ -6,26 +6,29 @@ import java.util.Map;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryUtil;
 
-public class ShaderProgram {
+import com.tokelon.toktales.core.content.IDisposable;
+
+public class ShaderProgram implements IDisposable {
 
 	
-	private final Map<String, Integer> uniforms;
+	private boolean disposed = false;
+
 	
-	private final FloatBuffer uniformMatrixBuffer;
+	private Map<String, Integer> uniforms;
+	
+	private FloatBuffer uniformMatrixBuffer;
+	
+	private int vertexShaderId;
+	private int fragmentShaderId;
 	
 	private final int programId;
 	
-	private int vertexShaderId;
-	
-	private int fragmentShaderId;
-	
 	
 	public ShaderProgram() throws LWJGLException {
-		
 		programId = GL20.glCreateProgram();
 		
 		if(programId == 0) {
@@ -33,7 +36,7 @@ public class ShaderProgram {
 		}
 		
 		uniforms = new HashMap<String, Integer>();
-		uniformMatrixBuffer = BufferUtils.createFloatBuffer(16);
+		uniformMatrixBuffer = MemoryUtil.memAllocFloat(16);
 	}
 	
 	
@@ -139,5 +142,17 @@ public class ShaderProgram {
 		}
 	}
 	
+	
+	@Override
+	public void dispose() {
+		if(!disposed) {
+			disposed = true;
+			
+			MemoryUtil.memFree(uniformMatrixBuffer);
+			uniformMatrixBuffer = null;
+			
+			uniforms = null;
+		}
+	}
 	
 }
