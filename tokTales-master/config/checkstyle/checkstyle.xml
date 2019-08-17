@@ -155,7 +155,7 @@
     <module name="OverloadMethodsDeclarationOrder"/>
     <module name="VariableDeclarationUsageDistance"/>
     <module name="CustomImportOrder">
-      <property name="customImportOrderRules" value="STATIC###STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE"/>
+      <property name="customImportOrderRules" value="STATIC###STANDARD_JAVA_PACKAGE###SAME_PACKAGE(3)###THIRD_PARTY_PACKAGE"/>
       <property name="sortImportsInGroupAlphabetically" value="true"/>
     </module>
     <module name="MethodParamPad"/>
