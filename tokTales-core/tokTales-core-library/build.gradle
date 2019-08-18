@@ -95,6 +95,14 @@ dependencies {
 	
 	// Trove
 	api 'net.sf.trove4j:trove4j:3.0.3'
+	
+	// SLF4J
+	api 'org.slf4j:slf4j-api:1.7.28'
+	/* Add binding in project for actual logging:
+	implementation 'org.slf4j:slf4j-log4j12:1.7.28' // Log4j
+	implementation 'org.slf4j:slf4j-simple:1.7.28' // Simple
+	implementation 'org.slf4j:slf4j-nop:1.7.28' // NOOP
+	*/
 }
 
 
