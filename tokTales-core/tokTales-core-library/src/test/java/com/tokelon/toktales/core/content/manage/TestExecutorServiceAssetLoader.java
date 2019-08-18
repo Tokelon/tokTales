@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.StandardLogger;
+import com.tokelon.toktales.core.engine.log.SLF4JLogger;
 
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.IntFunction;
@@ -23,7 +23,7 @@ class TestExecutorServiceAssetLoader {
 		System.out.println("TestExecutorServiceAssetLoader started");
 		
 		TestDecoder testDecoder = new TestDecoder();
-		TestLoader testLoader = new TestLoader(new StandardLogger(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
+		TestLoader testLoader = new TestLoader(new SLF4JLogger(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
 		
 		
 		int tasks = 10;
