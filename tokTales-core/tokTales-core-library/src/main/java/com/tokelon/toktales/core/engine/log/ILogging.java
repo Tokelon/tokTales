@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.engine.log;
 
 public interface ILogging {
+	// Add ILoggerNamer property?
 
 
 	public ILogger getLogger(String name);

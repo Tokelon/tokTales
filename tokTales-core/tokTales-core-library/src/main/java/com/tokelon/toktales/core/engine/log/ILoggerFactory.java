@@ -8,10 +8,4 @@ interface ILoggerFactory extends org.slf4j.ILoggerFactory {
 	
 	public ILogger getLogger(Class<?> clazz);
 	
-	
-	public org.slf4j.Logger getFacadeLogger(String name);
-	public org.slf4j.Logger getFacadeLogger(Class<?> clazz);
-	
-	public org.slf4j.ILoggerFactory getFacadeLoggerFactory();
-	
 }

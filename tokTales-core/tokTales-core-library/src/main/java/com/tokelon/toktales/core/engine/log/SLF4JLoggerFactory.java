@@ -6,15 +6,12 @@ public class SLF4JLoggerFactory implements ILoggerFactory {
 
 
 	private final org.slf4j.ILoggerFactory facadeLoggerFactory;
+	private final ILoggerNamer loggerNamer;
 
 	@Inject
-	public SLF4JLoggerFactory(org.slf4j.ILoggerFactory facadeLoggerFactory) {
+	public SLF4JLoggerFactory(org.slf4j.ILoggerFactory facadeLoggerFactory, ILoggerNamer loggerNamer) {
 		this.facadeLoggerFactory = facadeLoggerFactory;
-	}
-	
-	
-	protected String getLoggerNameFromClass(Class<?> clazz) {
-		return clazz.getName();
+		this.loggerNamer = loggerNamer;
 	}
 	
 	
@@ -25,23 +22,7 @@ public class SLF4JLoggerFactory implements ILoggerFactory {
 
 	@Override
 	public ILogger getLogger(Class<?> clazz) {
-		return new SLF4JLogger(facadeLoggerFactory.getLogger(getLoggerNameFromClass(clazz)));
-	}
-
-
-	@Override
-	public org.slf4j.Logger getFacadeLogger(String name) {
-		return facadeLoggerFactory.getLogger(name);
-	}
-
-	@Override
-	public org.slf4j.Logger getFacadeLogger(Class<?> clazz) {
-		return facadeLoggerFactory.getLogger(getLoggerNameFromClass(clazz));
+		return new SLF4JLogger(facadeLoggerFactory.getLogger(loggerNamer.getNameFromClass(clazz)));
 	}
 	
-	@Override
-	public org.slf4j.ILoggerFactory getFacadeLoggerFactory() {
-		return facadeLoggerFactory;
-	}
-
 }

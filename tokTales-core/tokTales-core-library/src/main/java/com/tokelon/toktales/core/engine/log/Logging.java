@@ -6,10 +6,14 @@ public class Logging implements ILogging {
 
 
 	private final ILoggerFactory loggerFactory;
+	private final org.slf4j.ILoggerFactory facadeLoggerFactory;
+	private final ILoggerNamer loggerNamer;
 
 	@Inject
-	public Logging(ILoggerFactory loggerFactory) {
+	public Logging(ILoggerFactory loggerFactory, org.slf4j.ILoggerFactory facadeLoggerFactory, ILoggerNamer loggerNamer) {
 		this.loggerFactory = loggerFactory;
+		this.facadeLoggerFactory = facadeLoggerFactory;
+		this.loggerNamer = loggerNamer;
 	}
 	
 	
@@ -20,7 +24,7 @@ public class Logging implements ILogging {
 
 	@Override
 	public ILogger getLogger(Class<?> clazz) {
-		return loggerFactory.getLogger(clazz);
+		return loggerFactory.getLogger(clazz); // Use logger namer?
 	}
 
 	@Override
@@ -31,17 +35,17 @@ public class Logging implements ILogging {
 
 	@Override
 	public org.slf4j.Logger getFacadeLogger(String name) {
-		return loggerFactory.getFacadeLogger(name);
+		return facadeLoggerFactory.getLogger(name);
 	}
 
 	@Override
 	public org.slf4j.Logger getFacadeLogger(Class<?> clazz) {
-		return loggerFactory.getFacadeLogger(clazz);
+		return facadeLoggerFactory.getLogger(loggerNamer.getNameFromClass(clazz));
 	}
 
 	@Override
 	public org.slf4j.ILoggerFactory getFacadeLoggerFactory() {
-		return loggerFactory.getFacadeLoggerFactory();
+		return facadeLoggerFactory;
 	}
 
 }

@@ -1,11 +1,12 @@
 package com.tokelon.toktales.core.engine.log;
 
 public class LoggingManager {
+	// TODO: Add facade methods?
 
 
 	protected LoggingManager() {}
 
-	private static ILoggingFactory loggingFactory = new SLF4JLoggingFactory();
+	private static ILoggingFactory loggingFactory = new SLF4JLoggingFactory(new DefaultLoggerNamer());
 	private static ILogging logging = loggingFactory.create();
 	
 	

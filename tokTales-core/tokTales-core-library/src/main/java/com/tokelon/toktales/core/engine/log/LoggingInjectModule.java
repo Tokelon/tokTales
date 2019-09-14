@@ -14,6 +14,7 @@ public class LoggingInjectModule extends AbstractInjectModule {
 		
 		bindInGameScopeAndForNotScoped(ILoggerFactory.class, SLF4JLoggerFactory.class);
 		
+		bindInEngineScope(ILoggerNamer.class, DefaultLoggerNamer.class);
 		
 		bind(org.slf4j.ILoggerFactory.class).toInstance(org.slf4j.LoggerFactory.getILoggerFactory()); // Bind as provider?
 	}
