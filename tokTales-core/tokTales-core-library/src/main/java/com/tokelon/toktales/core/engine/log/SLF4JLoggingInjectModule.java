@@ -9,10 +9,6 @@ public class SLF4JLoggingInjectModule extends AbstractInjectModule {
 	protected void configure() {
 		super.configure();
 		
-		bindInGameScopeAndForNotScoped(ITokLogger.class, SLF4JTokLogger.class);
-		bindInGameScopeAndForNotScoped(ITokLoggerFactory.class, SLF4JTokLoggerFactory.class);
-
-		
 		bindInGameScopeAndForNotScoped(ILogging.class, Logging.class);
 		bindInGameScopeAndForNotScoped(ILoggingFactory.class, SLF4JLoggingFactory.class);
 		
