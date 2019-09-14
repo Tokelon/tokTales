@@ -22,9 +22,8 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapStateRe
 
 public class AndroidLocalMapStateRenderer extends LocalMapStateRenderer {
 	// TODO: Merge with LocalMapStateRenderer if it makes sense
-	
-	public static final String TAG = "AndroidLocalMapStateRenderer";
-	
+
+
 	private final ILocalMapGamestate gamestate;
 	
 	@Inject

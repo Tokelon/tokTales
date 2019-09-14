@@ -557,7 +557,7 @@ class TaleProcess {
 	private boolean loadMapIntoGame(IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
 		
 		// TODO: Refactor?
-		DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver(taleScene);
+		DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver(engineContext.getLogging(), taleScene);
 		
 		try {
 			receiver.receiveMap(map);

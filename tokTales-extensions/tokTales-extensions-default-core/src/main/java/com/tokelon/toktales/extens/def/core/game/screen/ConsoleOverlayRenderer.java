@@ -39,6 +39,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	
 	private CharRenderer charRenderer;
 	
+	private final ILogging logging;
 	private final ILogger logger;
 	private final IRenderService renderService;
 	private final ICodepointAssetManager codepointManager;
@@ -52,6 +53,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IConsoleController> consoleControllerSupplier
 	) {
+		this.logging = logging;
 		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.codepointManager = codepointManager;
@@ -79,7 +81,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	
 	@Override
 	protected void onContextCreated() {
-		charRenderer = new CharRenderer(renderService.getRenderAccess(), textureCoordinatorSupplier.get(), codepointManager);
+		charRenderer = new CharRenderer(logging, renderService.getRenderAccess(), textureCoordinatorSupplier.get(), codepointManager);
 		charRenderer.contextCreated();
 	}
 

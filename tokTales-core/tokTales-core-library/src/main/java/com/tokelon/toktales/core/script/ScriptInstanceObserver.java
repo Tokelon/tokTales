@@ -12,8 +12,6 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
  */
 public class ScriptInstanceObserver<S> extends ScriptInstanceBase implements IObserver<S> {
 
-	
-	public static final String TAG = "ScriptInstanceObserver";
 
 	public static final String OBSERVER_METHOD_HAS_INTEREST = "hasInterest";
 	public static final String OBSERVER_METHOD_SUBJECT_CHANGED = "subjectChanged";
@@ -40,11 +38,11 @@ public class ScriptInstanceObserver<S> extends ScriptInstanceBase implements IOb
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, OBSERVER_METHOD_HAS_INTEREST, "hasInterest() did not return Boolean");
+				reportError(OBSERVER_METHOD_HAS_INTEREST, "hasInterest() did not return Boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, OBSERVER_METHOD_HAS_INTEREST, "hasInterest() failed to run: " +e.getMessage());
+			reportError(OBSERVER_METHOD_HAS_INTEREST, "hasInterest() failed to run:", e);
 			return false;
 		}
 	}
@@ -60,7 +58,7 @@ public class ScriptInstanceObserver<S> extends ScriptInstanceBase implements IOb
 			getScriptInstance().callMethod(OBSERVER_METHOD_SUBJECT_CHANGED, subject, change);
 			
 		} catch (ScriptErrorException e) {
-			reportError(TAG, OBSERVER_METHOD_SUBJECT_CHANGED, "subjectChanged() failed to run: " +e.getMessage());
+			reportError(OBSERVER_METHOD_SUBJECT_CHANGED, "subjectChanged() failed to run:", e);
 		}
 	}
 	

@@ -14,6 +14,7 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyRegistry;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
@@ -89,6 +90,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private CharRenderer charRenderer;
 
 	
+	private final ILogging logging;
 	private final ILogger logger;
 	private final IEngine engine;
 	private final IGame game;
@@ -107,6 +109,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 			Supplier<IWorldspace> worlspaceSupplier
 	) {
 		
+		this.logging = engineContext.getLogging();
 		this.logger = engineContext.getLogging().getLogger(getClass());
 		this.engine = engineContext.getEngine();
 		this.game = engineContext.getGame();
@@ -128,7 +131,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		shapeRenderer = new ShapeRenderer(renderAccess);
 		shapeRenderer.contextCreated();
 		
-		charRenderer = new CharRenderer(renderAccess, textureCoordinatorSupplier.get(), contentManager.getCodepointAssetManager());
+		charRenderer = new CharRenderer(logging, renderAccess, textureCoordinatorSupplier.get(), contentManager.getCodepointAssetManager());
 		charRenderer.contextCreated();
 	}
 

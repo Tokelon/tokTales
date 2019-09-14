@@ -9,8 +9,7 @@ import javax.inject.Inject;
 public class DefaultTextureCoordinator implements ITextureCoordinator {
 	// TODO: Add optional logging
 
-	public static final String TAG = "DefaultTextureCoordinator";
-	
+
 	private static final int RESERVED_INDICES_COUNT = 2; // 0 and the managing index
 	private static final int TEXTURE_UNIT_STARTING_CAPACITY = 8;
 	

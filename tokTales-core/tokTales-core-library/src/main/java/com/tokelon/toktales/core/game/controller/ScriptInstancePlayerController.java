@@ -7,8 +7,7 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class ScriptInstancePlayerController extends ScriptInstanceBase implements IPlayerController {
 
-	public static final String TAG = "ScriptInstancePlayerController";
-	
+
 	public static final String METHOD_SETUP = "setup";
 	public static final String METHOD_CONTROLLER_RELOAD = "controllerReload"; // TODO: fix
 	public static final String METHOD_ACTION = "action";
@@ -49,7 +48,7 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 		try {
 			getScriptInstance().callMethod(METHOD_SETUP, cm);
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_SETUP, "setup() failed to run: " +e.getMessage());
+			reportError(METHOD_SETUP, "setup() failed to run:", e);
 		}
 	}
 	
@@ -58,7 +57,7 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 		try {
 			getScriptInstance().callMethod(METHOD_CONTROLLER_RELOAD);
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_CONTROLLER_RELOAD, "onControllerChange() failed to run: " +e.getMessage());
+			reportError(METHOD_CONTROLLER_RELOAD, "onControllerChange() failed to run:", e);
 		}
 	}
 	
@@ -68,7 +67,7 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 			// TODO: This might not work because it will pass 2 arguments one the action and two the args array
 			getScriptInstance().callMethod(METHOD_ACTION, action, args);
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_ACTION, "action() failed to run: " +e.getMessage());
+			reportError(METHOD_ACTION, "action() failed to run:", e);
 		}
 	}
 
@@ -82,12 +81,12 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 				return (IPlayer) result;
 			}
 			else {
-				reportError(TAG, METHOD_GET_PLAYER, "getPlayer did not return IPlayer");
+				reportError(METHOD_GET_PLAYER, "getPlayer did not return IPlayer");
 				return null;
 			}
 			
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_GET_PLAYER, "getPlayer() failed to run: " +e.getMessage());
+			reportError(METHOD_GET_PLAYER, "getPlayer() failed to run:", e);
 			return null;
 		}
 	}
@@ -101,11 +100,11 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, METHOD_PLAYER_LOOK, "playerLook() did not return boolean");
+				reportError(METHOD_PLAYER_LOOK, "playerLook() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_PLAYER_LOOK, "playerLook() failed to run: " +e.getMessage());
+			reportError(METHOD_PLAYER_LOOK, "playerLook() failed to run:", e);
 			return false;
 		}
 	}
@@ -119,11 +118,11 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, METHOD_PLAYER_START_MOVING, "playerStartMoving() did not return boolean");
+				reportError(METHOD_PLAYER_START_MOVING, "playerStartMoving() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_PLAYER_START_MOVING, "playerStartMoving() failed to run: " +e.getMessage());
+			reportError(METHOD_PLAYER_START_MOVING, "playerStartMoving() failed to run:", e);
 			return false;
 		}
 	}
@@ -137,11 +136,11 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, METHOD_PLAYER_STOP_MOVING, "playerStopMoving() did not return boolean");
+				reportError(METHOD_PLAYER_STOP_MOVING, "playerStopMoving() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_PLAYER_STOP_MOVING, "playerStopMoving() failed to run: " +e.getMessage());
+			reportError(METHOD_PLAYER_STOP_MOVING, "playerStopMoving() failed to run:", e);
 			return false;
 		}
 	}
@@ -155,11 +154,11 @@ public class ScriptInstancePlayerController extends ScriptInstanceBase implement
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, METHOD_PLAYER_JUMP, "playerJump() did not return boolean");
+				reportError(METHOD_PLAYER_JUMP, "playerJump() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, METHOD_PLAYER_JUMP, "playerJump() failed to run: " +e.getMessage());
+			reportError(METHOD_PLAYER_JUMP, "playerJump() failed to run:", e);
 			return false;
 		}
 	}

@@ -20,9 +20,7 @@ import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 public class ShapeRenderer extends AbstractRenderer implements IShapeRenderer {
 
-	public static final String TAG = "ShapeRenderer";
-	
-	
+
 	private final ShapePaint paint = new ShapePaint();
 	
 	private final PointModel pointModel = new PointModel();
@@ -423,6 +421,5 @@ public class ShapeRenderer extends AbstractRenderer implements IShapeRenderer {
 		public int lineCenterAlignment = 0;
 		
 	}
-
 	
 }

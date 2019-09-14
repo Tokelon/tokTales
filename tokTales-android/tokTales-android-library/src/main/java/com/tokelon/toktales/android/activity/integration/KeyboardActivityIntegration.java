@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public class KeyboardActivityIntegration implements IKeyboardActivityIntegration {
-
 	/* TODO: Implement an open keyboard method,
 	 * and a listener for keyboard events that calls the master input handler for ICharInputCallback
 	 */
@@ -16,7 +15,6 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 	private Activity activity;
 
 	private final Handler handler;
-	
 	
 	public KeyboardActivityIntegration() {
 		this.handler = new Handler();
@@ -90,6 +88,5 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 		TokTales.getLog().d(TAG, "gotFocus: " +gotFocus);
 		*/
 	}
-	
 	
 }

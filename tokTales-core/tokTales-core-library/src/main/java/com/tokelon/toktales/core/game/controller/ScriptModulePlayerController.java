@@ -7,8 +7,7 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class ScriptModulePlayerController extends ScriptModuleBase implements IPlayerController {
 
-	public static final String TAG = "ScriptModulePlayerController";
-	
+
 	public static final String FUNCTION_SETUP = "setup";
 	public static final String FUNCTION_CONTROLLER_RELOAD = "controllerReload"; // TODO: Fix
 	public static final String FUNCTION_ACTION = "action";
@@ -49,7 +48,7 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 		try {
 			getScriptModule().callFunction(FUNCTION_SETUP, cm);
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_SETUP, "setup() failed to run: " +e.getMessage());
+			reportError(FUNCTION_SETUP, "setup() failed to run:", e);
 		}
 	}
 	
@@ -57,7 +56,7 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 		try {
 			getScriptModule().callFunction(FUNCTION_CONTROLLER_RELOAD);
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_CONTROLLER_RELOAD, "controllerReload() failed to run: " +e.getMessage());
+			reportError(FUNCTION_CONTROLLER_RELOAD, "controllerReload() failed to run:", e);
 		}
 	}
 	
@@ -67,7 +66,7 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 			// TODO: This might not work because it will pass 2 arguments one the action and two the args array
 			getScriptModule().callFunction(FUNCTION_ACTION, action, args);
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_ACTION, "action() failed to run: " +e.getMessage());
+			reportError(FUNCTION_ACTION, "action() failed to run:", e);
 		}
 	}
 
@@ -81,12 +80,12 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 				return (IPlayer) result;
 			}
 			else {
-				reportError(TAG, FUNCTION_GET_PLAYER, "getPlayer did not return IPlayer");
+				reportError(FUNCTION_GET_PLAYER, "getPlayer did not return IPlayer");
 				return null;
 			}
 			
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_GET_PLAYER, "getPlayer() failed to run: " +e.getMessage());
+			reportError(FUNCTION_GET_PLAYER, "getPlayer() failed to run:", e);
 			return null;
 		}
 	}
@@ -100,11 +99,11 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, FUNCTION_PLAYER_LOOK, "playerLook() did not return boolean");
+				reportError(FUNCTION_PLAYER_LOOK, "playerLook() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_PLAYER_LOOK, "playerLook() failed to run: " +e.getMessage());
+			reportError(FUNCTION_PLAYER_LOOK, "playerLook() failed to run:", e);
 			return false;
 		}
 	}
@@ -118,11 +117,11 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, FUNCTION_PLAYER_START_MOVING, "playerStartMoving() did not return boolean");
+				reportError(FUNCTION_PLAYER_START_MOVING, "playerStartMoving() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_PLAYER_START_MOVING, "playerStartMoving() failed to run: " +e.getMessage());
+			reportError(FUNCTION_PLAYER_START_MOVING, "playerStartMoving() failed to run:", e);
 			return false;
 		}
 	}
@@ -136,11 +135,11 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, FUNCTION_PLAYER_STOP_MOVING, "playerStopMoving() did not return boolean");
+				reportError(FUNCTION_PLAYER_STOP_MOVING, "playerStopMoving() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_PLAYER_STOP_MOVING, "playerStopMoving() failed to run: " +e.getMessage());
+			reportError(FUNCTION_PLAYER_STOP_MOVING, "playerStopMoving() failed to run:", e);
 			return false;
 		}
 	}
@@ -154,11 +153,11 @@ public class ScriptModulePlayerController extends ScriptModuleBase implements IP
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, FUNCTION_PLAYER_JUMP, "playerJump() did not return boolean");
+				reportError(FUNCTION_PLAYER_JUMP, "playerJump() did not return boolean");
 				return false;
 			}
 		} catch (ScriptErrorException e) {
-			reportError(TAG, FUNCTION_PLAYER_JUMP, "playerJump() failed to run: " +e.getMessage());
+			reportError(FUNCTION_PLAYER_JUMP, "playerJump() failed to run:", e);
 			return false;
 		}
 	}

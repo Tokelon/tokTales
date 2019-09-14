@@ -27,12 +27,14 @@ public class TestingProcess {
 
 
 	private final IEngine engine;
+	private final ILogging logging;
 	private final ILogger logger;
 	private final IGame game;
 	private final IGameState gamestate;
 	
 	public TestingProcess(IEngine engine, ILogging logging, IGame game, IGameState gamestate) {
 		this.engine = engine;
+		this.logging = logging;
 		this.logger = logging.getLogger(getClass());
 		this.game = game;
 		this.gamestate = gamestate;
@@ -68,7 +70,7 @@ public class TestingProcess {
 			
 			IBlockMap loadedMap = loader.getLoadedMap();
 			
-			DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver((ITaleGamescene) gamestate.getActiveScene());
+			DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver(logging, (ITaleGamescene) gamestate.getActiveScene());
 			receiver.receiveMap(loadedMap);
 			
 

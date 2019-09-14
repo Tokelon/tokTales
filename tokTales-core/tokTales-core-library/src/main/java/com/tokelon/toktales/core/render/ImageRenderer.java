@@ -7,8 +7,6 @@ import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 
-	public static final String TAG = "ImageRenderer";
-	
 
 	private final ManagedTextureModel model = new ManagedTextureModel();
 	

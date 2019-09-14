@@ -32,9 +32,8 @@ import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer.TextBoxR
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleGamestate extends BaseGamestate<IGameScene> implements IConsoleGamestate {
-	
-	public static final String TAG = "ConsoleGamestate";
-	
+
+
 	public static final String ASSET_KEY_ID_FONT_MAIN = "CONSOLE_GAMESTATE-ASSET_KEY_ID_FONT_MAIN";
 
 	

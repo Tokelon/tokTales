@@ -12,9 +12,7 @@ import com.tokelon.toktales.extens.def.desktop.game.states.integration.DesktopCo
 
 public class DesktopLocalMapInputHandler extends DesktopConsoleIntegrationInputHandler implements ILocalMapInputHandler {
 
-	public static final String TAG = "DesktopLocalMapInputHandler";
-	
-	
+
 	private final ILocalMapGamestate gamestate;
 
 	private String lastKeyDownMove = "";

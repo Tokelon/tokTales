@@ -1,7 +1,9 @@
 package com.tokelon.toktales.core.game.controller.map;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.controller.AbstractController;
 import com.tokelon.toktales.core.game.logic.ActionScheduler;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
@@ -12,22 +14,21 @@ import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
 
 public class MapController extends AbstractController implements IMapController {
-
-	public static final String TAG = "MapController";
-	
+	// TODO: Refactor or replace this mess
 	
 	// TODO: Implement the action stack so that actions on the map are being saved and executed all at one time
 	//private final LinkedBlockingQueue<IMapAction> actionStack = new LinkedBlockingQueue<IMapAction>();
-	
-	private final ActionScheduler actionScheduler = new ActionScheduler();
-	private final ActionTakerImpl actionTaker = new ActionTakerImpl();
-	
-	
+
+	private final ActionScheduler actionScheduler;
+	private final ActionTakerImpl actionTaker;
+
 	private final IBlockMap map;
 	
 	@Inject
-	public MapController(IBlockMap blockMap) {
-		map = blockMap;
+	public MapController(ILogging logging, IBlockMap blockMap) {
+		this.map = blockMap;
+		this.actionScheduler = new ActionScheduler(logging);
+		this.actionTaker = new ActionTakerImpl();
 	}
 
 	
@@ -177,10 +178,16 @@ public class MapController extends AbstractController implements IMapController 
 	
 	
 	public static class MapControllerFactory implements IMapControllerFactory {
+		private final Provider<ILogging> loggingProvider;
 
+		@Inject
+		public MapControllerFactory(Provider<ILogging> loggingProvider) {
+			this.loggingProvider = loggingProvider;
+		}
+		
 		@Override
 		public IMapController create(IBlockMap map) {
-			return new MapController(map);
+			return new MapController(loggingProvider.get(), map);
 		}
 	}
 

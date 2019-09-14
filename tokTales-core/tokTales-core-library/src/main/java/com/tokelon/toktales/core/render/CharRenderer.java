@@ -9,6 +9,8 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
@@ -16,9 +18,7 @@ import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
-	public static final String TAG = "CharRenderer";
-	
-	
+
 	private ITextureFont font;
 	//private IRGBAColor color;
 	
@@ -39,11 +39,13 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	
 	private IRenderDriver fontDriver;
 	
+	private final ILogger logger;
 	private final IRenderAccess renderAccess;
 	private final ICodepointAssetManager codepointManager;
 	
 	@Inject
-	public CharRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator, ICodepointAssetManager codepointManager) {
+	public CharRenderer(ILogging logging, IRenderAccess renderAccess, ITextureCoordinator textureCoordinator, ICodepointAssetManager codepointManager) {
+		this.logger = logging.getLogger(getClass());
 		this.renderAccess = renderAccess;
 		this.codepointManager = codepointManager;
 		
@@ -99,12 +101,13 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	
 	public void drawCodepoint(int codepoint) {
 		if(!hasView()) {
+			logger.warnOnce("Cannot draw without view");
 			assert false : "Cannot draw without view";
 			return;
 		}
 		
 		if(font == null) {
-			//logger.e(TAG, "Cannot draw: no font"); // TODO: Only log this once per font?
+			logger.warnOnce("Cannot draw: no font");
 			return;
 		}
 		

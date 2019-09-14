@@ -14,10 +14,10 @@ public class ScriptModuleBase {
 	
 	private int maxErrorsLogged = DEFAULT_MAX_ERRORS_LOGGED;
 	
-	private static final ILogger logger = LoggingManager.getLogger(ScriptModuleBase.class);
-	
 	
 	private final TObjectIntMap<String> errorCountMap; // Does this need to be synchronized?
+
+	private final ILogger logger;
 
 	private final IScriptModule module;
 	
@@ -28,6 +28,8 @@ public class ScriptModuleBase {
 		
 		this.module = scriptModule;
 		
+		this.logger = LoggingManager.getLogger(getClass());
+
 		this.errorCountMap = new TObjectIntHashMap<>();
 	}
 	
@@ -40,7 +42,10 @@ public class ScriptModuleBase {
 		return errorCountMap.get(source);
 	}
 	
-	
+
+	protected ILogger getLogger() {
+		return logger;
+	}
 	
 	protected void reportError(String source) {
 		if(!errorCountMap.containsKey(source)) {
@@ -48,14 +53,18 @@ public class ScriptModuleBase {
 		}
 	}
 	
-	protected void reportError(String tag, String source, String error) {
+	protected void reportError(String source, String error) {
+		reportError(source, error, null);
+	}
+	
+	protected void reportError(String source, String error, Throwable throwable) {
 		if(!errorCountMap.containsKey(source)) {
 			errorCountMap.put(source, 1);
 		}
 		
 		int count = errorCountMap.get(source);
 		if(++count <= maxErrorsLogged) {
-			logger.error("{}: {}", tag, error);
+			logger.error("Error reported from {}: {}", source, error, throwable);
 		}
 		
 		errorCountMap.put(source, count);

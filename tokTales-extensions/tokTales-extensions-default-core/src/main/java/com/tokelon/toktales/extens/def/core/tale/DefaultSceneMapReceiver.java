@@ -1,6 +1,7 @@
 package com.tokelon.toktales.extens.def.core.tale;
 
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.controller.map.MapController;
 import com.tokelon.toktales.core.game.logic.map.IMapReceiver;
 import com.tokelon.toktales.core.game.logic.map.MapException;
@@ -16,9 +17,11 @@ public class DefaultSceneMapReceiver implements IMapReceiver {
 	// TODO: Rename to TaleSceneMapReceiver or if possible replace -> Move into TaleGamescene?
 
 	
+	private final ILogging logging;
 	private final ITaleGamescene gamescene;
 	
-	public DefaultSceneMapReceiver(ITaleGamescene gamescene) {
+	public DefaultSceneMapReceiver(ILogging logging, ITaleGamescene gamescene) {
+		this.logging = logging;
 		this.gamescene = gamescene;
 	}
 	
@@ -40,7 +43,7 @@ public class DefaultSceneMapReceiver implements IMapReceiver {
 		
 
 		
-		MapController mapContr = new MapController(map);
+		MapController mapContr = new MapController(logging, map);
 		gamescene.setMap(mapContr);
 		
 		

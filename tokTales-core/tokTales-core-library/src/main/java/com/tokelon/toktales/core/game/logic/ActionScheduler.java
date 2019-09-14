@@ -7,15 +7,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.util.SynchronizedPool;
 import com.tokelon.toktales.core.util.SynchronizedPool.PoolObjectFactory;
 
 public class ActionScheduler implements IActionScheduler {
+	// TODO: Important - Make a method for increasing (and resetting) the action counter
+	// And avoid overflow
 
-	public static final String TAG = "ActionScheduler";
-	
-	
-	
+
 	private final ReentrantLock lock = new ReentrantLock();
 	
 
@@ -33,8 +34,11 @@ public class ActionScheduler implements IActionScheduler {
 	private Thread currentActionThread;
 	
 	
-	// TODO: Important - Make a method for increasing (and resetting) the action counter
-	// And avoid overflow
+	private final ILogger logger;
+	
+	public ActionScheduler(ILogging logging) {
+		this.logger = logging.getLogger(getClass());
+	}
 	
 
 	@Override
@@ -106,7 +110,7 @@ public class ActionScheduler implements IActionScheduler {
 							}
 							else {
 								//Prog.getLog().w(TAG, "Waiting action taker was interrupted. Ignoring");
-								System.out.println(String.format("%s | WARNING: Waiting action taker was interrupted. Ignoring", TAG));
+								logger.warn("WARNING: Waiting action taker was interrupted. Ignoring");
 							}
 						}
 
@@ -126,7 +130,7 @@ public class ActionScheduler implements IActionScheduler {
 							}
 							else {
 								//Prog.getLog().w(TAG, "Waiting action taker was interrupted. Ignoring");
-								System.out.println(String.format("%s | WARNING: Waiting action taker was interrupted. Ignoring", TAG));
+								logger.warn("WARNING: Waiting action taker was interrupted. Ignoring");
 							}
 						}
 
@@ -154,9 +158,7 @@ public class ActionScheduler implements IActionScheduler {
 			 */
 			lock.unlock();
 			//Prog.gHub().gLog().d(TAG, "After UPPER lock");
-
 		}
-
 	}
 
 	
@@ -212,9 +214,7 @@ public class ActionScheduler implements IActionScheduler {
 			 */
 			lock.unlock();
 			//Prog.gHub().gLog().d(TAG, "After LOWER lock");
-
 		}
-		
 	}
 
 	

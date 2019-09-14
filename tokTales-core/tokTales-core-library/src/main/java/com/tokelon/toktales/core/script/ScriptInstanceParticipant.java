@@ -12,8 +12,6 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
  */
 public class ScriptInstanceParticipant<S> extends ScriptInstanceObserver<S> implements IParticipant<S> {
 
-	
-	public static final String TAG = "ScriptInstanceParticipant";
 
 	public static final String PARTICIPANT_METHOD_ON_SUBJECT_CHANGE = "onSubjectChange";
 	
@@ -39,15 +37,14 @@ public class ScriptInstanceParticipant<S> extends ScriptInstanceObserver<S> impl
 				return (Boolean) result;
 			}
 			else {
-				reportError(TAG, PARTICIPANT_METHOD_ON_SUBJECT_CHANGE, "onSubjectChange() did not return Boolean");
+				reportError(PARTICIPANT_METHOD_ON_SUBJECT_CHANGE, "onSubjectChange() did not return Boolean");
 				return true;
 			}
 		}
 		catch(ScriptErrorException e) {
-			reportError(TAG, PARTICIPANT_METHOD_ON_SUBJECT_CHANGE, "onSubjectChange() failed to run: " +e.getMessage());
+			reportError(PARTICIPANT_METHOD_ON_SUBJECT_CHANGE, "onSubjectChange() failed to run:", e);
 			return true;
 		}
 	}
-	
 	
 }
