@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.engine.log;
 
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 
-public class SLF4JLoggingInjectModule extends AbstractInjectModule {
+public class LoggingInjectModule extends AbstractInjectModule {
 
 
 	@Override
