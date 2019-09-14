@@ -30,6 +30,13 @@ public class SLF4JLogger implements ILogger {
 	}
 
 	@Override
+	public void traceOnce(String message) {
+		if(logger.isTraceEnabled() && !logCount.increment(message)) {
+			logger.trace(message);
+		}
+	}
+	
+	@Override
 	public void traceOnce(String message, Object arg) {
 		if(logger.isTraceEnabled() && !logCount.increment(message)) {
 			logger.trace(message, arg);
@@ -50,6 +57,13 @@ public class SLF4JLogger implements ILogger {
 		}
 	}
 
+	@Override
+	public void traceOnceForId(String id, String message) {
+		if(logger.isTraceEnabled() && !logCount.increment(id)) {
+			logger.trace(message);
+		}
+	}
+	
 	@Override
 	public void traceOnceForId(String id, String message, Object arg) {
 		if(logger.isTraceEnabled() && !logCount.increment(id)) {
@@ -133,6 +147,13 @@ public class SLF4JLogger implements ILogger {
 	}
 	
 	@Override
+	public void debugOnce(String message) {
+		if(logger.isDebugEnabled() && !logCount.increment(message)) {
+			logger.debug(message);
+		}
+	}
+	
+	@Override
 	public void debugOnce(String message, Object arg) {
 		if(logger.isDebugEnabled() && !logCount.increment(message)) {
 			logger.debug(message, arg);
@@ -150,6 +171,13 @@ public class SLF4JLogger implements ILogger {
 	public void debugOnce(String message, Object... args) {
 		if(logger.isDebugEnabled() && !logCount.increment(message)) {
 			logger.debug(message, args);
+		}
+	}
+	
+	@Override
+	public void debugOnceForId(String id, String message) {
+		if(logger.isDebugEnabled() && !logCount.increment(id)) {
+			logger.debug(message);
 		}
 	}
 
@@ -236,6 +264,13 @@ public class SLF4JLogger implements ILogger {
 	}
 
 	@Override
+	public void infoOnce(String message) {
+		if(logger.isInfoEnabled() && !logCount.increment(message)) {
+			logger.info(message);
+		}
+	}
+	
+	@Override
 	public void infoOnce(String message, Object arg) {
 		if(logger.isInfoEnabled() && !logCount.increment(message)) {
 			logger.info(message, arg);
@@ -256,6 +291,13 @@ public class SLF4JLogger implements ILogger {
 		}
 	}
 
+	@Override
+	public void infoOnceForId(String id, String message) {
+		if(logger.isInfoEnabled() && !logCount.increment(id)) {
+			logger.info(message);
+		}
+	}
+	
 	@Override
 	public void infoOnceForId(String id, String message, Object arg) {
 		if(logger.isInfoEnabled() && !logCount.increment(id)) {
@@ -339,6 +381,13 @@ public class SLF4JLogger implements ILogger {
 	}
 	
 	@Override
+	public void warnOnce(String message) {
+		if(logger.isWarnEnabled() && !logCount.increment(message)) {
+			logger.warn(message);
+		}
+	}
+	
+	@Override
 	public void warnOnce(String message, Object arg) {
 		if(logger.isWarnEnabled() && !logCount.increment(message)) {
 			logger.warn(message, arg);
@@ -359,6 +408,13 @@ public class SLF4JLogger implements ILogger {
 		}
 	}
 
+	@Override
+	public void warnOnceForId(String id, String message) {
+		if(logger.isWarnEnabled() && !logCount.increment(id)) {
+			logger.warn(message);
+		}
+	}
+	
 	@Override
 	public void warnOnceForId(String id, String message, Object arg) {
 		if(logger.isWarnEnabled() && !logCount.increment(id)) {
@@ -440,6 +496,13 @@ public class SLF4JLogger implements ILogger {
 	public boolean isErrorEnabled() {
 		return logger.isErrorEnabled();
 	}
+	
+	@Override
+	public void errorOnce(String message) {
+		if(logger.isErrorEnabled() && !logCount.increment(message)) {
+			logger.error(message);
+		}
+	}
 
 	@Override
 	public void errorOnce(String message, Object arg) {
@@ -462,6 +525,13 @@ public class SLF4JLogger implements ILogger {
 		}
 	}
 
+	@Override
+	public void errorOnceForId(String id, String message) {
+		if(logger.isErrorEnabled() && !logCount.increment(id)) {
+			logger.error(message);
+		}
+	}
+	
 	@Override
 	public void errorOnceForId(String id, String message, Object arg) {
 		if(logger.isErrorEnabled() && !logCount.increment(id)) {
