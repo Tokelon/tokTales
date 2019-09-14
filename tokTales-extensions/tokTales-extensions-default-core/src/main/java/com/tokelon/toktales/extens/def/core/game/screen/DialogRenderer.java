@@ -4,6 +4,7 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.states.GameStateSuppliers;
@@ -21,10 +22,8 @@ import com.tokelon.toktales.extens.def.core.render.TextRenderer;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class DialogRenderer extends AbstractRenderer implements IDialogRenderer {
-	
-	public static final String TAG = "DialogRenderer";
 
-	
+
 	private TextRenderer textRenderer;
 	private ShapeRenderer shapeRenderer;
 	
@@ -39,13 +38,13 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	private final Supplier<IDialogController> dialogControllerSupplier;
 	
 	public DialogRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			ICodepointAssetManager codepointAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IDialogController> dialogControllerSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.codepointAssetManager = codepointAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
@@ -96,7 +95,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 	public void drawFull(INamedOptions options) {
 		IDialogController dialogController = dialogControllerSupplier.get();
 		if(dialogController == null) {
-			logger.i(TAG, "Draw was called but no dialog is available");
+			logger.info("Draw was called but no dialog is available");
 			return;
 		}
 		
@@ -169,7 +168,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 				Supplier<IDialogController> dialogControllerSupplier
 		) {
 			return new DialogRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					engineContext.getGame().getContentManager().getCodepointAssetManager(),
 					textureCoordinatorSupplier,
@@ -181,7 +180,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 		@Override
 		public DialogRenderer createForGamestate(IGameState gamestate) {
 			return new DialogRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
@@ -192,7 +191,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 		@Override
 		public DialogRenderer createForGamestate(IGameState gamestate, Supplier<IDialogController> dialogControllerSupplier) {
 			return new DialogRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),

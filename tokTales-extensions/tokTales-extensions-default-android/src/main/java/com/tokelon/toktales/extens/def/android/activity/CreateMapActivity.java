@@ -1,6 +1,7 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.extens.def.android.R;
 
 import android.app.Activity;
@@ -13,7 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class CreateMapActivity extends Activity {
-	
+
+
 	public static final String ACTIVITY_RESULT_MAP_NAME = "ACTIVITY_RESULT_MAP_NAME";
 	public static final String ACTIVITY_RESULT_MAP_WIDTH = "ACTIVITY_RESULT_MAP_WIDTH";
 	public static final String ACTIVITY_RESULT_MAP_HEIGHT = "ACTIVITY_RESULT_MAP_HEIGHT";
@@ -23,10 +25,13 @@ public class CreateMapActivity extends Activity {
 	private EditText editTextWidth;
 	private EditText editTextHeight;
 
+	private ILogger logger;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		logger = TokTales.getLogging().getLogger(getClass());
 		
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View rootView = layoutInflater.inflate(R.layout.activity_create_map, null);
@@ -54,7 +59,7 @@ public class CreateMapActivity extends Activity {
 		public void onClick(View v) {
 			String nameVal = editTextName.getText().toString();
 			if(nameVal.trim().equals("")) {
-				TokTales.getLog().d("Invalid name given");
+				logger.debug("Invalid name given");
 				return;
 			}
 			
@@ -68,7 +73,7 @@ public class CreateMapActivity extends Activity {
 				width = Integer.parseInt(widthVal);
 				height = Integer.parseInt(heightVal);
 			} catch(NumberFormatException nfe) {
-				TokTales.getLog().d("Invalid size value given");
+				logger.debug("Invalid size value given");
 				return;
 			}
 			
@@ -81,7 +86,6 @@ public class CreateMapActivity extends Activity {
 			
 			finish();
 		}
-		
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.tokelon.toktales.extens.def.core.game.logic;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.states.InjectGameState;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
@@ -14,10 +15,9 @@ import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 @InjectGameState
 public class TaleConsoleInterpreter implements IConsoleInterpreter {
 	
-	public static final String TAG = "DesktopConsoleGamestateInterpreter";
-	
-	
+
 	private IConsoleGamestate consoleGamestate;
+	private ILogger logger;
 	
 	private final ITaleLoader taleLoader;
 	
@@ -29,6 +29,7 @@ public class TaleConsoleInterpreter implements IConsoleInterpreter {
 	@InjectGameState
 	protected void injectGamestate(IConsoleGamestate gamestate) {
 		this.consoleGamestate = gamestate;
+		this.logger = gamestate.getLogging().getLogger(getClass());
 	}
 	
 	
@@ -65,7 +66,7 @@ public class TaleConsoleInterpreter implements IConsoleInterpreter {
 			consoleGamestate.getGame().getStateControl().changeState(stateName);
 		}
 		catch(TaleException e) {
-			consoleGamestate.getLog().e(TAG, "Loading tale failed: " + e);
+			logger.error("Loading tale failed:", e);
 			console.print("Loading tale failed");
 		}
 		

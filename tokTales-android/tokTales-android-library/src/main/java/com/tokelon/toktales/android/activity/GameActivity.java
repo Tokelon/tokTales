@@ -10,6 +10,7 @@ import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegr
 import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 import android.annotation.SuppressLint;
@@ -35,8 +36,7 @@ import android.widget.LinearLayout;
 
 public class GameActivity extends AbstractIntegratedActivity implements IConsoleActivity, IDebugActivity {
 
-	public static final String TAG = "GameActivity";
-	
+
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "GameActivity_Integration_SurfaceView";
 	public static final String ACTIVITY_INTEGRATION_GAME = "GameActivity_Integration_Game";
 
@@ -52,12 +52,13 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 	private SurfaceViewIntegration surfaceViewIntegration;
 	
-	
+	private ILogger logger;
+
 	@Override
 	protected Map<String, IActivityIntegration> createActivityIntegrations() {
 		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLogging(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
 		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		
 		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
@@ -71,6 +72,8 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		logger = TokTales.getLogging().getLogger(getClass());
+		
 		setToFullscreen();
 		initDialog();
 		initContent();
@@ -82,7 +85,6 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	/* Init methods */
 	
 	private void initContent() {
-		
 		LinearLayout layout = new LinearLayout(this);
 		
 		mRenderView = new RenderGLSurfaceView(this);
@@ -127,7 +129,8 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	/* Lifecycle methods */
 	
 	
-	@SuppressLint("NewApi") @Override
+	@SuppressLint("NewApi")
+	@Override
 	public void onWindowFocusChanged(boolean hasFocus) { 
 		super.onWindowFocusChanged(hasFocus);
 
@@ -212,7 +215,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 		super.onConfigurationChanged(newConfig);
 		
 		// Stop Activity from recreating
-		TokTales.getLog().i(TAG, "TaleActivity configuration changed");
+		logger.info("TaleActivity configuration changed");
 	}
 	
 	
@@ -263,7 +266,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 		
 		IKeyboardActivityIntegration keyboardIntegration = getIntegrator().getIntegrationByType(IKeyboardActivityIntegration.class);
 		if(keyboardIntegration == null) {
-			TokTales.getLog().e(TAG, "No integration for IKeyboardIntegration");
+			logger.error("No integration for IKeyboardIntegration");
 		}
 		else {
 			keyboardIntegration.showKeyboard(mTextView);
@@ -288,7 +291,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 		@Override
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			TokTales.getLog().d(TAG, "Hardware input from key: " +keyCode);
+			logger.debug("Hardware input from key: {}", keyCode);
 			return false;
 		}
 		

@@ -46,9 +46,7 @@ import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 class TaleProcess {
 	// TODO: Refactor internal structure and error handling
 	// Implement as a procedure?
-	
-	
-	public static final String TAG = "TaleProcess";
+
 
 	private static final String TALE_MAIN_FILE_ENDING = ".tok";
 	private static final String TALE_CONFIG_FILE_ENDING = ".conf";
@@ -62,7 +60,7 @@ class TaleProcess {
 	private ITaleGamescene gamesceneResult;
 	
 	private final IEngineContext engineContext;
-	private final ILogger log;
+	private final ILogger logger;
 	private final IEngine engine;
 	private final IGame game;
 
@@ -70,7 +68,7 @@ class TaleProcess {
 	
 	public TaleProcess(IEngineContext engineContext, String taleApplicationPath) {
 		this.engineContext = engineContext;
-		this.log = engineContext.getLog();
+		this.logger = engineContext.getLogging().getLogger(getClass());
 		this.engine = engineContext.getEngine();
 		this.game = engineContext.getGame();
 		
@@ -98,7 +96,7 @@ class TaleProcess {
 			fileNames = storageService.listAppDirOnExternal(taleLocation);
 			
 		} catch (StorageException e) {
-			log.e(TAG, "List Tale directory failed: " +e.getMessage());
+			logger.error("List Tale directory failed:", e);
 			return;
 		}
 		
@@ -114,7 +112,7 @@ class TaleProcess {
 		
 		
 		if(mainFileName == null) {
-			log.e(TAG, "No main Tale file found");
+			logger.error("No main Tale file found");
 			return;
 		}
 		
@@ -128,7 +126,7 @@ class TaleProcess {
 		InputStream configFileIn = storageService.tryReadAppFileOnExternal(taleLocation, configFileName);
 		
 		if(configFileIn != null) {
-			log.i(TAG, "Tale main config file found: " +configFileName);
+			logger.info("Tale main config file found: {}", configFileName);
 			
 			
 			CiniConfigStreamReader reader = new CiniConfigStreamReader();
@@ -138,15 +136,15 @@ class TaleProcess {
 				MutableCiniConfig ciniConfig = reader.readConfig(configFileIn);
 				
 				
-				log.i(TAG, "Checking config...");
+				logger.info("Checking config...");
 
 				mainConfig = new CiniMainConfig(ciniConfig);
 				
-				log.i(TAG, "Config was loaded.");
+				logger.info("Config was loaded.");
 			} catch (ConfigFormatException cfe) {
-				log.w(TAG, "Bad config file: " +cfe.getMessage());
+				logger.warn("Bad config file:", cfe);
 			} catch (ConfigDataException cde) {
-				log.w(TAG, "Unsupported config: " +cde.getMessage());
+				logger.warn("Unsupported config:", cde);
 			}
 			finally {
 				try {
@@ -155,7 +153,7 @@ class TaleProcess {
 			}
 			
 			if(mainConfig == null) {
-				log.i(TAG, "No main config was loaded.");
+				logger.info("No main config was loaded.");
 			}
 			else {
 				// TODO: 096 Load a tale specific config and not the main config
@@ -172,13 +170,13 @@ class TaleProcess {
 			taleScene = loadTale(storageService, taleLocation, mainFileName);
 			gamesceneResult = taleScene;
 		} catch (TaleException te) {
-			log.e(TAG, "Loading Tale failed. Tale error: " +te);
+			logger.error("Loading Tale failed. Tale error:", te);
 		} catch (StorageException se) {
-			log.e(TAG, "Loading Tale failed. IO error: " +se);
+			logger.error("Loading Tale failed. IO error:", se);
 		} catch (ConfigFormatException cfe) {
-			log.e(TAG, "Loading Tale failed. Config format error: " +cfe);
+			logger.error("Loading Tale failed. Config format error:", cfe);
 		} catch (ConfigDataException cde) {
-			log.e(TAG, "Loading Tale failed. Config data error: " +cde);
+			logger.error("Loading Tale failed. Config data error:", cde);
 		}
 		
 		
@@ -195,7 +193,7 @@ class TaleProcess {
 		// Check if there is a script file
 		InputStream scriptFileIn = storageService.tryReadAppFileOnExternal(taleLocation, scriptFileName);
 		if(scriptFileIn != null) {
-			log.i(TAG, "Tale main script file found: " +configFileName);
+			logger.info("Tale main script file found: {}", configFileName);
 			
 			IScriptModule taleModule;
 			try {
@@ -236,20 +234,20 @@ class TaleProcess {
 				*/
 				
 			} catch (ScriptErrorException e) {
-				log.w(TAG, "Script failed to load: " +e.getMessage());
+				logger.warn("Script failed to load:", e);
 			}
 			
 			
 		}
 		
 		
-		log.d(TAG, "Reading Tale finished");
+		logger.debug("Reading Tale finished");
 	}
 
 	
 	
 	private ITaleGamescene loadTale(IStorageService storageService, LocationImpl taleLocation, String mainFileName) throws TaleException, StorageException, ConfigFormatException, ConfigDataException {
-		log.d(TAG, "Reading Tale: Started");
+		logger.debug("Reading Tale: Started");
 		
 		
 		// Load main Tale file
@@ -267,19 +265,19 @@ class TaleProcess {
 		String initialSceneCodename = taleConfig.getConfigTaleInitialSceneCodename().trim();
 		if(initialSceneCodename.isEmpty()) {
 			sceneResult = engineContext.getInjector().getInstance(ITaleGamescene.class);
-			log.i(TAG, "Loaded default scene implementation");
+			logger.info("Loaded default scene implementation");
 		}
 		else {
 		    String sceneClassName = initialSceneCodename + TALE_SCENE_CLASS_POSTFIX;
 
 		    try {
 		        Class<?> sceneClass = Class.forName(sceneClassName);
-		        log.i(TAG, "Loading initial scene with class: " +sceneClass.getName());
+		        logger.info("Loading initial scene with class: {}", sceneClass.getName());
 		        
 		        if(ITaleGamescene.class.isAssignableFrom(sceneClass)) {
 		        	try {
 		        		sceneResult = (ITaleGamescene) engineContext.getInjector().getInstance(sceneClass);
-		        		log.i(TAG, "Loaded scene with implementation: " + sceneResult.getClass().getName());
+		        		logger.info("Loaded scene with implementation: {}", sceneResult.getClass().getName());
 		        	}
 		        	catch (Exception e) {
 		        		throw new TaleException(e);
@@ -300,17 +298,17 @@ class TaleProcess {
 		LocationImpl mapsLocation = new LocationImpl(taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesMapDirectory()));
 		String initialMapfileName = taleConfig.getConfigTaleInitialMapfileName();
 		if(initialMapfileName.trim().isEmpty()) {
-			log.e(TAG, "Loading Tale failed: No initial map");
+			logger.error("Loading Tale failed: No initial map");
 			return null;
 		}
 		
 
-		log.d(TAG, "Loading initial map...");
+		logger.debug("Loading initial map...");
 		// Read the initial map
 		IBlockMap initialMap = readTiledMap(mapsLocation, initialMapfileName);
 		
 		if(initialMap == null) {
-			log.e(TAG, "Loading Tale failed: Could not read initial map");
+			logger.error("Loading Tale failed: Could not read initial map");
 			return null;
 		}
 		else {
@@ -319,7 +317,7 @@ class TaleProcess {
 			// Load the map into our map manager
 			boolean res = loadMapIntoGame(initialMap, taleConfig, taleLocation, sceneResult);
 			if(!res) {
-				log.e(TAG, "Loading Tale failed: Could not load map into game");
+				logger.error("Loading Tale failed: Could not load map into game");
 				return null;
 			}
 		}
@@ -422,7 +420,7 @@ class TaleProcess {
 		
 		
 		if(animFilename.trim().isEmpty()) {
-			log.w(TAG, "No animation file for code: " +animCode);
+			logger.warn("No animation file for code: {}", animCode);
 			
 			actor.getGraphicsImage().assignAnimation(animCode, null);
 			return;
@@ -431,7 +429,7 @@ class TaleProcess {
 		
 		InputStream animIn = storageService.tryReadAppFileOnExternal(animLocation, animFilename);
 		if(animIn == null) {
-			log.w(TAG, String.format("Failed to read animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
+			logger.warn("Failed to read animation file: {} at ({})", animFilename, animLocation.getLocationPath().getPath());
 			
 			actor.getGraphicsImage().assignAnimation(animCode, null);
 			return;
@@ -440,7 +438,7 @@ class TaleProcess {
 		
 		IGameAnimation animation = loadAnimation(animIn, ciniReader, aniTime);
 		if(animation == null) {
-			log.w(TAG, String.format("Failed to load animation file: %s at (%s)", animFilename, animLocation.getLocationPath().getPath()));
+			logger.warn("Failed to load animation file: {} at ({})", animFilename, animLocation.getLocationPath().getPath());
 
 			actor.getGraphicsImage().assignAnimation(animCode, null);
 			return;
@@ -508,9 +506,9 @@ class TaleProcess {
 			return animation;
 
 		} catch (ConfigFormatException cfe) {
-			log.w(TAG, "Invalid format: " +cfe.getMessage());
+			logger.warn("Invalid format:", cfe);
 		} catch (ConfigDataException cde) {
-			log.w(TAG, "Invalid data: " +cde.getMessage());
+			logger.warn("Invalid data:", cde);
 		}
 
 
@@ -522,20 +520,20 @@ class TaleProcess {
 	private IBlockMap readTiledMap(LocationImpl location, String fileName) {
 		
 		// Tiled Map loader
-		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(engine.getStorageService(), game.getWorld());
+		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(engineContext.getLogging(), engine.getStorageService(), game.getWorld());
 		
 		
 		try {
 			loader.setTarget(location, fileName);
 			
 		} catch (StorageException se) {
-			log.e(TAG, "StorageException while configuring loader: " +se.getMessage());
+			logger.error("StorageException while configuring loader:", se);
 			return null;
 		}
 		
 		
 		
-		log.d(TAG, "Reading Tiled map: Started");
+		logger.debug("Reading Tiled map: Started");
 
 		try {
 			loader.runComplete();
@@ -544,11 +542,11 @@ class TaleProcess {
 			return loader.getLoadedMap();
 			
 		} catch (MapFormatException mfe) {
-			log.e(TAG, "MapFormatException at loading map: " +mfe.getMessage());
+			logger.error("MapFormatException at loading map:", mfe);
 		} catch (IOException ioe) {
-			log.e(TAG, "IOException at loading map: " +ioe.getMessage());
+			logger.error("IOException at loading map:", ioe);
 		} catch (MapLoaderException mle) {
-			log.e(TAG, "MapLoaderException at loading map: " +mle.getMessage());
+			logger.error("MapLoaderException at loading map:", mle);
 		}
 		
 		return null;

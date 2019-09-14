@@ -8,6 +8,7 @@ import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
@@ -47,9 +48,7 @@ import com.tokelon.toktales.tools.tiledmap.TiledMapElementTypes;
 
 public class MapRenderer implements IMapRenderer {
 
-	public static final String TAG = "MapRenderer";
-	
-	
+
 	private final Matrix4f matrixProjection = new Matrix4f();
 	private final Matrix4f matrixView = new Matrix4f();
 	private final Matrix4f matrixProjectionAndView = new Matrix4f();
@@ -78,14 +77,14 @@ public class MapRenderer implements IMapRenderer {
 	private final Supplier<IMapController> mapControllerSupplier;
 
 	public MapRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
 			IWorld world,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IMapController> mapControllerSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.spriteAssetManager = spriteAssetManager;
 		this.world = world;
@@ -170,7 +169,7 @@ public class MapRenderer implements IMapRenderer {
 	public void drawLayer(INamedOptions options, String layerName) {
 		IMapController mapController = mapControllerSupplier.get();
 		if(mapController == null) {
-			logger.i(TAG, "Draw was called but no map is available");
+			logger.info("Draw was called but no map is available");
 			return;
 		}
 		
@@ -301,9 +300,8 @@ public class MapRenderer implements IMapRenderer {
 			// Ignore
 		}
 		else {
-			logger.logOnce('w', TAG + element.getClass(), TAG, "Cannot draw element: " +element);
+			logger.warnOnceForId(element.getClass().getName(), "Cannot draw element: {}", element);
 		}
-		
 	}
 
 	
@@ -383,7 +381,7 @@ public class MapRenderer implements IMapRenderer {
 				Supplier<IMapController> mapControllerSupplier
 		) {
 			return new MapRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					world,
@@ -396,7 +394,7 @@ public class MapRenderer implements IMapRenderer {
 		@Override
 		public MapRenderer createForGamestate(IGameState gamestate) {
 			return new MapRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					gamestate.getGame().getWorld(),
@@ -408,7 +406,7 @@ public class MapRenderer implements IMapRenderer {
 		@Override
 		public MapRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
 			return new MapRenderer(
-					typedGamestate.getLog(),
+					typedGamestate.getLogging(),
 					typedGamestate.getEngine(),
 					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					typedGamestate.getGame().getWorld(),

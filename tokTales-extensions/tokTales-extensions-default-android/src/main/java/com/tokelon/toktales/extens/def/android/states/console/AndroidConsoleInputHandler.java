@@ -4,6 +4,7 @@ import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
@@ -14,14 +15,14 @@ import com.tokelon.toktales.extens.def.core.game.states.console.IConsoleGamestat
 @InjectGameState
 public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScreenButtonCallback {
 
-	public static final String TAG = "AndroidConsoleInputHandler";
 
-	
 	private IConsoleGamestate consoleGamestate;
+	private ILogger logger;
 	
 	@InjectGameState
 	protected void passGamestate(IConsoleGamestate gamestate) {
 		this.consoleGamestate = gamestate;
+		this.logger = gamestate.getLogging().getLogger(getClass());
 	}
 
 	
@@ -59,7 +60,7 @@ public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScre
 		try {
 			uiService.getExtensionByTypeOrFail(IConsoleUIExtension.class).openConsoleInput(consoleGamestate.getConsoleController());
 		} catch (EngineException e) {
-			consoleGamestate.getLog().e(TAG, "Error opening console input: " + e.getMessage());
+			logger.error("Error opening console input:", e);
 		}
 	}
 	
@@ -69,7 +70,7 @@ public class AndroidConsoleInputHandler implements IGameStateInputHandler, IScre
 		try {
 			uiService.getExtensionByTypeOrFail(IDebugUIExtension.class).openContextMenu();
 		} catch (EngineException e) {
-			consoleGamestate.getLog().e(TAG, "Error opening context menu: " + e.getMessage());
+			logger.error("Error opening context menu:", e);
 		}
 	}
 

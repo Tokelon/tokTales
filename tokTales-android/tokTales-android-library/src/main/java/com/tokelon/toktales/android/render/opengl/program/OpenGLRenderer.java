@@ -14,7 +14,7 @@ import com.tokelon.toktales.android.render.tools.UIConfiguration;
 import com.tokelon.toktales.android.render.tools.UIControl;
 import com.tokelon.toktales.android.render.tools.UIOverlay;
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
@@ -32,7 +32,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	// TODO: Refactor all this!
 	// TODO: Maybe pack all the GL viewport functionality into a separate class like GLViewport or MasterViewport
 
-	
+
 	public static final String DEFAULT_SURFACE_NAME = "OpenGLRenderer_Surface";
 	
 	private static final int CLEAR_COLOR = Color.BLACK;
@@ -71,8 +71,8 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	private final IEngine mEngine;
 
 	@Inject
-	public OpenGLRenderer(ILogger logger, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
-		if(logger == null || game == null || engine == null) {
+	public OpenGLRenderer(ILogging logging, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
+		if(logging == null || game == null || engine == null || eventPoolFactory == null) {
 			throw new NullPointerException();
 		}
 		
@@ -80,14 +80,14 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 		this.mEngine = engine;
 		
 		
-		mUIGLRenderer = new UIRenderer(this);
+		mUIGLRenderer = new UIRenderer(logging, this);
 
-		glErrorUtils = new GLErrorUtils(logger, new AndroidGL11(), checkGL);
+		glErrorUtils = new GLErrorUtils(logging, new AndroidGL11(), checkGL);
 		
 
 		// TODO: Important - Refactor! Do somewhere else! Check for cast! And fix the UIControl and buttons logic!
 		IAndroidInputService androidInputService = (IAndroidInputService) engine.getInputService();
-		mUIControl = new UIControl(this, androidInputService.getMainInputDispatch().getInputProducer(), eventPoolFactory);
+		mUIControl = new UIControl(logging, this, androidInputService.getMainInputDispatch().getInputProducer(), eventPoolFactory);
 
 		// TODO: Extract this
 		inputDriver = new AndroidInputDriver(mUIControl);

@@ -28,7 +28,6 @@ public class DefaultSceneMapReceiver implements IMapReceiver {
 
 		IBlockMapConfig config = map.getConfig();
 		if(config.getConfigMapSpawnX() >= map.getHorizontalSize() || config.getConfigMapSpawnY() >= map.getVerticalSize()) {
-			TokTales.getLog().e("MapManager", "Loading map failed: Map config defines invalid spawn point");
 			throw new MapException("Loading map failed: Map config defines invalid spawn point");
 		}
 		

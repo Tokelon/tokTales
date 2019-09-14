@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
 import com.tokelon.toktales.core.game.IGame;
@@ -41,8 +42,6 @@ import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFa
 public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	// TODO: Adjust documentations to new inject logic
 
-	public static final String BASE_TAG = "BaseGamestate";
-
 	public static final String INITIAL_SCENE_NAME = "base_gamestate_initial_scene";
 	
 	
@@ -57,7 +56,8 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	/* Injected base objects */
 	private IEngineContext engineContext;
 	private IEngine engine;
-	private ILogger log;
+	private ILogging logging;
+	private ILogger logger;
 	private IGame game;
 	
 	private IParameterInjector gamestateInjector;
@@ -353,7 +353,8 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	) {
 		this.engineContext = defaultEngineContext;
 		this.engine = defaultEngineContext.getEngine();
-		this.log = defaultEngineContext.getLog();
+		this.logging = defaultEngineContext.getLogging();
+		this.logger = defaultEngineContext.getLogging().getLogger(getClass()); // Add scene type to logger name?
 		this.game = defaultEngineContext.getGame();
 
 		setGamestateInput(defaultGamestateInput);
@@ -415,7 +416,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		// Register input handler
 		IGameStateInput stateInput = getStateInput();
 		IGameStateInputHandler stateInputHandler = getStateInputHandler();
-		getLog().d(getTag(), String.format("Registering state input handler [%s] to state input [%s]", stateInputHandler, stateInput));
+		getLogger().debug("Registering state input handler [{}] to state input [{}]", stateInputHandler, stateInput);
 		stateInputHandler.register(stateInput);
 	}
 	
@@ -602,7 +603,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 			assigned = assignSceneTyped(name, typedScene);
 		}
 		else {
-			getLog().e(getTag(), String.format("Failed to assign scene with name '%s'. Type [%s] is not a subtype of scene type [%s]", name, scene.getClass(), getSceneTypeToken()));
+			getLogger().error("Failed to assign scene with name '{}'. Type [{}] is not a subtype of scene type [{}]", name, scene.getClass(), getSceneTypeToken());
 			assigned = false;
 		}
 		
@@ -644,7 +645,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 			}
 		}
 		else {
-			getLog().e(getTag(), String.format("Failed to assign scene with name '%s'. Type [%s] is not a subtype of scene type [%s]", name, sceneAssignment.getSceneType(), getSceneTypeToken()));
+			getLogger().error("Failed to assign scene with name '{}'. Type [{}] is not a subtype of scene type [{}]", name, sceneAssignment.getSceneType(), getSceneTypeToken());
 			assigned = false;
 		}
 		
@@ -667,7 +668,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 			getIntegrator().onSceneAssign(name, scene);
 		}
 		else {
-			getLog().w(getTag(), String.format("Failed to assign scene. Scene [%s] assign() returned false", scene.getClass()));
+			getLogger().warn("Failed to assign scene. Scene [{}] assign() returned false", scene.getClass());
 		}
 		
 		return assigned;
@@ -723,8 +724,13 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 
 	@Override
-	public ILogger getLog() {
-		return log;
+	public ILogging getLogging() {
+		return logging;
+	}
+	
+	@Override
+	public ILogger getLogger() {
+		return logger;
 	}
 
 	@Override
@@ -815,15 +821,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		return stateSceneProvider;
 	}
 
-	
-	/** Override to return you custom tag.
-	 * 
-	 * @return The tag for this state.
-	 */
-	protected String getTag() {
-		return BASE_TAG;
-	}
-	
 
 	/**
 	 * @return The current surface, or null if there is none.

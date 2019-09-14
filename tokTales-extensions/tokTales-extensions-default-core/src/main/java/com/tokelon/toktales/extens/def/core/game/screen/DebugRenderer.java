@@ -41,9 +41,8 @@ import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.tools.registry.IBasicRegistry;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
-	
-	public static final String TAG = "DebugRenderer";
-	
+
+
 	public static final String ASSET_KEY_ID_FONT_MAIN = "DEBUG_RENDERER-ASSET_KEY_ID_FONT_MAIN";
 
 	
@@ -108,7 +107,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 			Supplier<IWorldspace> worlspaceSupplier
 	) {
 		
-		this.logger = engineContext.getLog();
+		this.logger = engineContext.getLogging().getLogger(getClass());
 		this.engine = engineContext.getEngine();
 		this.game = engineContext.getGame();
 		this.contentManager = contentManager;

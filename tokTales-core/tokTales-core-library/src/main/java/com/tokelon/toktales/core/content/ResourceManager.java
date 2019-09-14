@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IListing;
@@ -26,7 +27,6 @@ import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
 
 public class ResourceManager implements IResourceManager {
 
-	private static final String TAG = ResourceManager.class.getSimpleName();
 
 	public static final String LOOSE_RESOURCES_IDENTIFIER = "resource_manager_loose_resources_identifier"; 
 	public static final String TEMP_RESOURCES_IDENTIFIER = "resource_manager_temp_resources_identifier";
@@ -45,12 +45,12 @@ public class ResourceManager implements IResourceManager {
 	
 	
 	@Inject
-	public ResourceManager(ILogger logger, IContentService contentService, IStorageService storageService) {
-		if(logger == null || contentService == null || storageService == null) {
+	public ResourceManager(ILogging logging, IContentService contentService, IStorageService storageService) {
+		if(logging == null || contentService == null || storageService == null) {
 			throw new NullPointerException();
 		}
 		
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.contentService = contentService;
 		this.storageService = storageService;
 		
@@ -99,11 +99,9 @@ public class ResourceManager implements IResourceManager {
 				
 				batch.addListing(res, listing);
 			} catch (ContentException e) {
-				
-				logger.w(TAG, "Bad resource (internal). Ignoring: " +res.getName() +" (" +e.getMessage() +")");
+				logger.warn("Bad resource (internal). Ignoring: {}", res.getName(), e);
 			} catch (StorageException e) {
-
-				logger.w(TAG, "Bad resource (external). Ignoring: " +res.getName() +" (" +e.getMessage() +")");
+				logger.warn("Bad resource (external). Ignoring: {}", res.getName(), e);
 			}			
 		}
 		
@@ -359,7 +357,6 @@ public class ResourceManager implements IResourceManager {
 
 	
 	/*
-
 	// TODO: Maybe put in different interface, say "dynamic functions" or something
 	@Override
 	public void addResource(IResource resource, boolean save) {
@@ -392,7 +389,5 @@ public class ResourceManager implements IResourceManager {
 	}
 
 	*/
-
-
 
 }

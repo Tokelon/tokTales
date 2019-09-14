@@ -15,7 +15,8 @@ import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.content.IContentUtils;
 import com.tokelon.toktales.core.content.sprite.ISprite;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.prog.annotation.Experimental;
 import com.tokelon.toktales.core.prog.annotation.Unmaintained;
@@ -35,10 +36,8 @@ import android.opengl.GLES20;
 @Unmaintained
 @Experimental
 public class GLSpriteFontDriver implements IRenderDriver {
-	
-	public static final String TAG = "GLSpriteFontDriver";
-	
-	
+
+
 	private static final String VS_Sprite = 
 			"uniform mat4 uMVPMatrix;" +
 			"uniform mat4 uModelMatrix;" +
@@ -71,13 +70,14 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	private ShaderProgram mShader;
 	
-	private GLSpriteMesh spriteMesh;
+	private final GLSpriteMesh spriteMesh;
 	
-
+	private final ILogger logger;
 	private final IContentUtils contentUtils;
 	
 	@Inject
-	public GLSpriteFontDriver(IContentUtils contentUtils) {
+	public GLSpriteFontDriver(ILogging logging, IContentUtils contentUtils) {
+		this.logger = logging.getLogger(getClass());
 		this.contentUtils = contentUtils;
 		
 		textureMap = new HashMap<>();
@@ -99,7 +99,6 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	@Override
 	public void create() {
 		
-		
 		try {
 			mShader = new ShaderProgram();
 			
@@ -118,7 +117,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			mShader.createAttribute("a_vTexCoord");
 		}
 		catch (OpenGLException oglex) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " + oglex.getMessage());
+			logger.error("Failed to create shader program:", oglex);
 			return;
 		}
 	}

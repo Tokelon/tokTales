@@ -15,10 +15,8 @@ import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateIn
 import com.tokelon.toktales.test.core.game.states.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
 
 public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T> implements IEngineGamestate {
-	
-	private static final String TAG = "EngineGamestate";
-	
-	
+
+
 	private final IEngineGamestateRenderFactory stateRenderFactory;
 	private final IEngineGamestateControlHandlerFactory stateControlHandlerFactory;
 	private final IEngineGamestateInputHandlerFactory stateInputHandlerFactory;
@@ -73,12 +71,6 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 		IGameStateInputHandler stateInputHandler = stateInputHandlerFactory.create(this);
 		
 		super.initStateDependencies(stateRender, stateInputHandler, defaultControlScheme, stateControlHandler);
-	}
-
-
-	@Override
-	protected String getTag() {
-		return TAG + "_" + BASE_TAG;
 	}
 
 	

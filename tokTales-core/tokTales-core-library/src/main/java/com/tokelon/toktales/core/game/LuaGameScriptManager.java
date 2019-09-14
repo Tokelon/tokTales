@@ -9,6 +9,7 @@ import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
 import com.tokelon.toktales.tools.script.lua.ILuaClass;
 import com.tokelon.toktales.tools.script.lua.ILuaObject;
@@ -16,10 +17,8 @@ import com.tokelon.toktales.tools.script.lua.LuaScriptEnvironment;
 
 @ThreadSafe
 public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameScriptManager {
-	
-	public static final String TAG = "LuaGameScriptManager";
 
-	
+
 	private static final String SCRIPT_LOAD_MODULE =
 			"function LoadModule(modulename, module)\n" +
 			"  _G[modulename] = module\n" +
@@ -35,8 +34,10 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 	private final ILogger logger;
 	
 	@Inject
-	public LuaGameScriptManager(ILogger logger) {
-		this.logger = logger;
+	public LuaGameScriptManager(ILogging logging) {
+		super(logging);
+		
+		this.logger = logging.getLogger(getClass());
 		
 		luaMappings = new HashMap<ILuaClass<?>, ILuaObject>();
 		loadModuleFunction = initLoadModuleFunction();
@@ -54,7 +55,7 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 			lmfunc = getScriptState().getGlobals().get(FUNCTION_LOAD_MODULE);
 		}
 		catch (LuaError le) {
-			logger.e(TAG, "Failed call load module script | " +le.getMessage());
+			logger.error("Failed call load module script:", le);
 		}
 
 		return lmfunc;
@@ -82,15 +83,12 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 		
 		try {
 			loadModuleFunction.call(luaValueModuleName, luaValueObject);
-
 			
 			luaMappings.put(luaClass, luaObject);
 		}
 		catch (LuaError le) {
-			logger.e(TAG, "Failed to pass Object to Lua | " +le.getMessage());
+			logger.error("Failed to pass Object to Lua:", le);
 		}
-		
 	}
-	
 	
 }

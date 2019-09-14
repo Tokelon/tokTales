@@ -3,20 +3,21 @@ package com.tokelon.toktales.extens.def.core.game.states.localmap;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IControlHandler.EmptyControlHandler;
 
 public class LocalMapControlHandler extends EmptyControlHandler implements ILocalMapControlHandler {
-	
-	public static final String TAG = "LocalMapControlHandler";
-	
-	private final ILocalMapGamestate gamestate;
 
+
+	private final ILocalMapGamestate gamestate;
+	private final ILogger logger;
 	
 	@Inject
 	public LocalMapControlHandler(@Assisted ILocalMapGamestate gamestate) {
 		this.gamestate = gamestate;
+		this.logger = gamestate.getLogging().getLogger(getClass());
 	}
 
 	
@@ -100,7 +101,7 @@ public class LocalMapControlHandler extends EmptyControlHandler implements ILoca
 			try {
 				uiService.getExtensionByTypeOrFail(IDebugUIExtension.class).openContextMenu();
 			} catch (EngineException e) {
-				gamestate.getLog().e(TAG, "Error opening context menu: " + e.getMessage());
+				logger.error("Error opening context menu:", e);
 			}
 		}
 		

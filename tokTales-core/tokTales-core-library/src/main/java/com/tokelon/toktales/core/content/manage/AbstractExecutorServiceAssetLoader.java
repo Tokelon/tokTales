@@ -13,12 +13,12 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 
 import java9.util.concurrent.CompletableFuture;
 
 public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IExecutorServiceAssetLoader<T, K, O> {
-	
-	public static final String BASE_TAG = "AbstractExecutorServiceAssetLoader";
+
 
 	private boolean logDebug = false;
 	
@@ -36,17 +36,17 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	private final IAssetDecoder<? extends T, K, O> loaderDecoder;
 	private final Provider<ExecutorService> loaderExecutorServiceProvider;
 
-	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
+	protected AbstractExecutorServiceAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
 		// Remove this constructor and force executor service injection?
-		this(logger, readerManager, decoder, new DefaultExecutorServiceProvider());
+		this(logging, readerManager, decoder, new DefaultExecutorServiceProvider());
 	}
 
-	protected AbstractExecutorServiceAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
+	protected AbstractExecutorServiceAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
 		if(decoder == null || executorServiceProvider == null) {
 			throw new NullPointerException();
 		}
 
-		this.loaderLogger = logger;
+		this.loaderLogger = logging.getLogger(getClass());
 		this.loaderReaderManager = readerManager;
 		this.loaderDecoder = decoder;
 		this.loaderExecutorServiceProvider = executorServiceProvider;
@@ -80,9 +80,6 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 		return logDebug;
 	}
 	
-	public String getTag() {
-		return BASE_TAG;
-	}
 	
 	@Override
 	public Provider<ExecutorService> getExecutorServiceProvider() {
@@ -110,11 +107,11 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 		executorLock.lock();
 		try {
 			this.currentExecutorService = getExecutorServiceProvider().get();
-			getLogger().i(getTag(), "Starting asset loader with executor service: " + getCurrentExecutorService());
+			getLogger().info("Starting asset loader with executor service: {}", getCurrentExecutorService());
 			
 			List<Runnable> waitingTasks = getWaitingTasks();
 			synchronized (waitingTasks) {
-				getLogger().i(getTag(), String.format("Adding %d waiting tasks to executor service", waitingTasks.size()));
+				getLogger().info("Adding {} waiting tasks to executor service", waitingTasks.size());
 				
 				for(Runnable task: waitingTasks) {
 					CompletableFuture.runAsync(task, getCurrentExecutorService());
@@ -133,14 +130,14 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 		executorLock.lock();
 		try {
 			if(getCurrentExecutorService() == null) {
-				getLogger().i(getTag(), "Stop was called but no executor service is running");
+				getLogger().warn("Stop was called but no executor service is running");
 				return;
 			}
 
 			List<Runnable> unfinishedTasks = getCurrentExecutorService().shutdownNow();
 			getWaitingTasks().addAll(unfinishedTasks);
 			
-			getLogger().i(getTag(), String.format("Stopping asset loader and collecting %d unfinished tasks", unfinishedTasks.size()));
+			getLogger().info("Stopping asset loader and collecting {} unfinished tasks", unfinishedTasks.size());
 		}
 		finally {
 			executorLock.unlock();
@@ -163,7 +160,7 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 			} catch (ContentException ce) {
 				wrapperFuture.completeExceptionally(ce);
 			} catch (RuntimeException re) { 
-				getLogger().e(getTag(), "Loader task threw RuntimeException: " + re);
+				getLogger().error("Loader task threw RuntimeException:", re);
 				wrapperFuture.completeExceptionally(re);
 			} //catch (InterruptedException ie) // Needed?
 		};
@@ -210,12 +207,12 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 		synchronized (pendingFutures) {
 			CompletableFuture<T> cachedFuture = pendingFutures.get(key);
 			if(cachedFuture != null) {
-				if(isLogDebugEnabled()) getLogger().d(getTag(), "Loader future already exists for key: " + key);
+				if(isLogDebugEnabled()) getLogger().debug("Loader future already exists for key: {}", key);
 				return cachedFuture;
 			}
 
 			
-			if(isLogDebugEnabled()) getLogger().d(getTag(), String.format("Creating loader task for [key=%s, options=%s, reader=%s, decoder=%s]", key, options, reader, decoder));
+			if(isLogDebugEnabled()) getLogger().debug("Creating loader task for [key={}, options={}, reader={}, decoder={}]", key, options, reader, decoder);
 			ILoaderTask<T> loaderTask = createLoaderTask(key, options, reader, decoder);
 			
 			CompletableFuture<T> wrapperFuture = new CompletableFuture<>();
@@ -226,11 +223,11 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 				ExecutorService executorService = getCurrentExecutorService();
 				if(executorService == null) {
 					getWaitingTasks().add(taskRunner);
-					if(isLogDebugEnabled()) getLogger().d(getTag(), "Loader task was added to waiting list for key: " + key);
+					if(isLogDebugEnabled()) getLogger().debug("Loader task was added to waiting list for key: {}", key);
 				}
 				else {
 					CompletableFuture.runAsync(taskRunner, executorService);
-					if(isLogDebugEnabled()) getLogger().d(getTag(), "Loader task was started with executor for key: " + key);
+					if(isLogDebugEnabled()) getLogger().debug("Loader task was started with executor for key: {}", key);
 				}
 			}
 			finally {
@@ -239,17 +236,17 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 			
 			// Always add to pending futures, whether it's waiting or in queue
 			pendingFutures.put(key, wrapperFuture);
-			if(isLogDebugEnabled()) getLogger().d(getTag(), "Loader future was added for key: " + key);
+			if(isLogDebugEnabled()) getLogger().debug("Loader future was added for key: {}", key);
 
 			// Will be run by the current thread if already finished, otherwise by the thread that calls complete()
 			wrapperFuture.whenComplete((result, exception) -> {
 				pendingFutures.remove(key); // Remove pending task regardless of result
 				
 				if(exception == null) {
-					if(isLogDebugEnabled()) getLogger().d(getTag(), "Loader wrapper future completed for key: " + key);
+					if(isLogDebugEnabled()) getLogger().debug("Loader wrapper future completed for key: {}", key);
 				}
 				else {
-					getLogger().w(getTag(), "Loader wrapper future completed with exception: " + exception);
+					getLogger().warn("Loader wrapper future completed with exception:", exception);
 				}
 			});
 

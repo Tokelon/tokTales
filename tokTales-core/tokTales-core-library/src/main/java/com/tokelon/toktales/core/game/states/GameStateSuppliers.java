@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.game.states;
 
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
@@ -10,12 +12,12 @@ import com.tokelon.toktales.core.values.ControllerValues;
 
 public class GameStateSuppliers {
 
-	public static final String TAG = "GameStateSuppliers";
-	
+
 	protected GameStateSuppliers() {
 		throw new UnsupportedOperationException();
 	}
 	
+	private static final ILogger logger = LoggingManager.getLogger(GameStateSuppliers.class);
 	
 	
 	
@@ -41,11 +43,11 @@ public class GameStateSuppliers {
 		return () -> {
 			IController controller = gamestate.getActiveScene().getControllerManager().getController(controllerId);
 			if(controller == null) {
-				gamestate.getLog().e(TAG, String.format("Cannot supply: No controller for id [%s] is available at this time", controllerId));
+				logger.error("Cannot supply: No controller for id [{}] is available at this time", controllerId);
 				return null;
 			}
 			else if(!controllerType.isInstance(controller)) {
-				gamestate.getLog().e(TAG, String.format("Cannot supply: Controller for id [%s] is not of type [%s]", controllerId, controllerType));
+				logger.error("Cannot supply: Controller for id [{}] is not of type [{}]", controllerId, controllerType);
 				return null;
 			}
 			

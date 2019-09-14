@@ -6,6 +6,8 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 import android.app.Application;
@@ -13,13 +15,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
-import android.util.Log;
 
 public class TokTalesApp extends Application {
 
-	public static final String TAG = "TokTalesApp";
-	public static final String APP_TAG = "Engine Launcher";
 
+	private static final ILogger logger = LoggingManager.getLogger(TokTalesApp.class);
+	
 	public static final String META_DATA_KEY_GAME_ADAPTER_CLASS = "com.tokelon.toktales.android.game_adapter_class";
 	public static final String META_DATA_KEY_INJECT_CONFIG_CLASS = "com.tokelon.toktales.android.inject_config_class";
 	
@@ -30,7 +31,7 @@ public class TokTalesApp extends Application {
 	 * @throws EngineException If an exceptions is thrown while launching the engine.
 	 */
 	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
-		Log.d(APP_TAG, "Default engine launcher used. Checking meta-data for launch configuration...");
+		logger.debug("Default engine launcher used. Checking meta-data for launch configuration...");
 		
 		Class<? extends IGameAdapter> metaGameAdapterClass = null;
 		Class<? extends IHierarchicalInjectConfig> metaInjectConfigClass = null;
@@ -38,49 +39,49 @@ public class TokTalesApp extends Application {
 			ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
 
 			if(ai.metaData == null) {
-				Log.e(TAG, "Failed to get meta-data from application info: meta-data was null");
+				logger.error("Failed to get meta-data from application info: meta-data was null");
 			}
 			else {
-				Log.d(APP_TAG, "Looking for game adapter entry...");
+				logger.debug("Looking for game adapter entry...");
 				metaGameAdapterClass = loadClassFromApplicationInfo(IGameAdapter.class, META_DATA_KEY_GAME_ADAPTER_CLASS, ai);
 				
-				Log.d(APP_TAG, "Looking for inject config entry...");
+				logger.debug("Looking for inject config entry...");
 				metaInjectConfigClass = loadClassFromApplicationInfo(IHierarchicalInjectConfig.class, META_DATA_KEY_INJECT_CONFIG_CLASS, ai);
 			}
 		} catch (NameNotFoundException e) {
-			Log.e(TAG, "Failed to get meta-data from application info: " + e);
+			logger.error("Failed to get meta-data from application info:", e);
 		}
 		
 		
 		IEngineLauncher launcher = defaultLauncher;
 		if(metaInjectConfigClass == null) {
-			Log.i(APP_TAG, "The default inject config will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
+			logger.info("The default inject config will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
 		}
 		else {
 			try {
-				Log.d(APP_TAG, "Instantiating inject config of type " + metaInjectConfigClass);
+				logger.debug("Instantiating inject config of type {}", metaInjectConfigClass);
 				IHierarchicalInjectConfig injectConfig = metaInjectConfigClass.newInstance();
 				
 				launcher = new AndroidEngineLauncher(injectConfig, getApplicationContext());
-				Log.i(APP_TAG, "Engine launcher will use inject config of type: " + metaInjectConfigClass);
+				logger.info("Engine launcher will use inject config of type: {}", metaInjectConfigClass);
 			} catch (InstantiationException e) {
-				Log.e(TAG, "Failed to create inject config. Make sure you provide a public no-args constructor. Error: " + e);
+				logger.error("Failed to create inject config. Make sure you provide a public no-args constructor. Error:", e);
 			} catch (IllegalAccessException e) {
-				Log.e(TAG, "Failed to access inject config constructor. Make sure your class is public and has a public no-args constructor. Error: " + e);
+				logger.error("Failed to access inject config constructor. Make sure your class is public and has a public no-args constructor. Error:", e);
 			}
 		}
 		
 		Class<? extends IGameAdapter> gameAdapterClass = EmptyGameAdapter.class;
 		if(metaGameAdapterClass == null) {
-			Log.i(APP_TAG, "The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
+			logger.info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
 		}
 		else {
-			Log.i(APP_TAG, "Engine launcher will use game adapter of type: " + metaGameAdapterClass);
+			logger.info("Engine launcher will use game adapter of type: {}", metaGameAdapterClass);
 			gameAdapterClass = metaGameAdapterClass;
 		}
 		
 		
-		Log.i(APP_TAG, "Launching engine...");
+		logger.info("Launching engine...");
 		launcher.launch(gameAdapterClass);
 	}
 	
@@ -98,10 +99,10 @@ public class TokTalesApp extends Application {
 		
 		Object infoValue = info.metaData.get(metaDataKey);
 		if(infoValue == null) {
-			Log.d(APP_TAG, String.format("No meta-data for key %s found", metaDataKey));
+			logger.debug("No meta-data for key {} found", metaDataKey);
 		}
 		else if(!(infoValue instanceof String)) {
-			Log.e(TAG, String.format("Invalid datatype for key %s: %s. Expected a string.", metaDataKey, infoValue.getClass()));
+			logger.error("Invalid datatype for key {}: {}. Expected a string.", metaDataKey, infoValue.getClass());
 		}
 		else {
 			String infoClassName = (String) infoValue;
@@ -111,10 +112,10 @@ public class TokTalesApp extends Application {
 					result = (Class<T>) infoClass;
 				}
 				else {
-					Log.e(TAG, String.format("Invalid class for key %s: %s Provided class must be assignable from %s.", metaDataKey, infoClass.getName(), typeNeeded));
+					logger.error("Invalid class for key {}: {} Provided class must be assignable from {}.", metaDataKey, infoClass.getName(), typeNeeded);
 				}
 			} catch (ClassNotFoundException e) {
-				Log.e(TAG, String.format("Class not found for key %s: %s", metaDataKey, e));
+				logger.error("Class not found for key {}:", metaDataKey, e);
 			}
 		}
 		
@@ -133,7 +134,7 @@ public class TokTalesApp extends Application {
 		} catch (EngineException e) {
 			// TODO: What to do here?
 			// Set an error in TokTales and maybe show dialog and then exit?
-			e.printStackTrace();
+			logger.error("Error while launching engine:", e);
 		}
 	}
 	
@@ -157,7 +158,7 @@ public class TokTalesApp extends Application {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		
-		TokTales.getLog().d(TAG, "App configuration has changed");
+		logger.debug("App configuration has changed");
 	}
 	
 	

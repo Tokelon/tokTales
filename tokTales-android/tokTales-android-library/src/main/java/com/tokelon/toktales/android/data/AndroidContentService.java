@@ -12,6 +12,7 @@ import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -21,23 +22,21 @@ import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 import android.content.Context;
 
 public class AndroidContentService extends AbstractEngineService implements IContentService {
-	
-	public static final String TAG = "AndroidContentService";
 
-	
+
 	private final Context globalContext;
 	private final ILogger logger;
 	
-	public AndroidContentService(ILogger logger, Context globalContext) {
-		this.logger = logger;
+	public AndroidContentService(ILogging logging, Context globalContext) {
+		this.logger = logging.getLogger(getClass());
 		this.globalContext = globalContext;
 	}
 	
 	@Inject
-	public AndroidContentService(ILogger logger, Context globalContext, @ContentServiceExtensions Map<String, IServiceExtension> extensions) {
+	public AndroidContentService(ILogging logging, Context globalContext, @ContentServiceExtensions Map<String, IServiceExtension> extensions) {
 		super(extensions);
 		
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.globalContext = globalContext;
 	}
 	
@@ -98,7 +97,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		try {
 			return readAppFileOnAssets(location, fileName);
 		} catch (ContentException e) {
-			logger.i(TAG, "Failed to read app file on assets: " + e);
+			logger.info("Failed to read app file on assets:", e);
 			return null;
 		}
 	}

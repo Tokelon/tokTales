@@ -49,7 +49,7 @@ public class LocalMapGamescene extends ExtendedGamescene implements ILocalMapGam
 		}
 		else {
 			// if the default control handler is incompatible, we replace it with the default one, to avoid having it be different from our custom one
-			getLog().e(getTag(), String.format("The control handler of type [%s] is not compatible with [%s] and will be overriden by the default control handler", defaultControlHandler.getClass(), ILocalMapControlHandler.class));
+			getLogger().error("The control handler of type [{}] is not compatible with [{}] and will be overriden by the default control handler", defaultControlHandler.getClass(), ILocalMapControlHandler.class);
 			controlHandler = customControlHandler;
 		}
 		

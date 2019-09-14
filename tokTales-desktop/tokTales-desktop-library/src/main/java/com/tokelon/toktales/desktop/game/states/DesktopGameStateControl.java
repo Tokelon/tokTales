@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.states.GameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
@@ -25,8 +25,8 @@ public class DesktopGameStateControl extends GameStateControl {
 	private final DesktopGamestateInputForwarder inputForwarder;
 	
 	@Inject
-	public DesktopGameStateControl(ILogger logger, IDesktopInputService inputService) {
-		super(logger);
+	public DesktopGameStateControl(ILogging logging, IDesktopInputService inputService) {
+		super(logging);
 	
 		this.inputForwarder = new DesktopGamestateInputForwarder();
 		inputService.getMainInputDispatch().getInputConsumer().registerInputCallback(inputForwarder);

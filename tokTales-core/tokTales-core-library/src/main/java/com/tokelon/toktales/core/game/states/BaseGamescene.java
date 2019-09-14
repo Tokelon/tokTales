@@ -9,6 +9,7 @@ import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.model.ICamera;
@@ -19,8 +20,6 @@ import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFa
  */
 @RequiresInjection
 public class BaseGamescene implements IGameScene {
-
-	public static final String BASE_TAG = "BaseGamescene";
 
 
 	private static final float DEFAULT_CAMERA_WIDTH = 640;
@@ -38,7 +37,8 @@ public class BaseGamescene implements IGameScene {
 	
 	private IEngineContext engineContext;
 	private IEngine engine;
-	private ILogger log;
+	private ILogging logging;
+	private ILogger logger;
 	private IGame game;
 	
 	/* Scene objects */
@@ -110,7 +110,8 @@ public class BaseGamescene implements IGameScene {
 		
 		this.engineContext = context;
 		this.engine = context.getEngine();
-		this.log = context.getLog();
+		this.logging = context.getLogging();
+		this.logger = context.getLogging().getLogger(getClass());
 		this.game = context.getGame();
 	}
 	
@@ -197,8 +198,7 @@ public class BaseGamescene implements IGameScene {
 
 		ICamera camera = getSceneCamera();
 		camera.setSize(cameraWidth, cameraHeight);
-		getLog().i(getTag(), String.format("Camera size was set to default %.2fx%.2f", cameraWidth, cameraHeight));
-
+		getLogger().info(String.format("Camera size was set to default %.2fx%.2f", cameraWidth, cameraHeight));
 	}
 	
 	
@@ -211,7 +211,7 @@ public class BaseGamescene implements IGameScene {
 
 		
 		long dt = System.currentTimeMillis() - startTime;
-		if(logUpdateTime && startTime % 1000 > 0 && startTime % 1000 < 200) getLog().d(getTag(), "Gamestate Update Time: " +dt);		
+		if(logUpdateTime && startTime % 1000 > 0 && startTime % 1000 < 200) getLogger().debug("Gamestate Update Time: {}", dt);		
 	}
 	
 
@@ -258,8 +258,12 @@ public class BaseGamescene implements IGameScene {
 		return engine;
 	}
 
-	protected ILogger getLog() {
-		return log;
+	protected ILogging getLogging() {
+		return logging;
+	}
+	
+	protected ILogger getLogger() {
+		return logger;
 	}
 
 	protected IGame getGame() {
@@ -273,15 +277,6 @@ public class BaseGamescene implements IGameScene {
 	 */
 	protected IParameterInjector getGamesceneInjector() {
 		return gamesceneInjector;
-	}
-	
-	
-	/** Override to return you custom tag.
-	 * 
-	 * @return The tag for this state.
-	 */
-	protected String getTag() {
-		return BASE_TAG;
 	}
 
 	

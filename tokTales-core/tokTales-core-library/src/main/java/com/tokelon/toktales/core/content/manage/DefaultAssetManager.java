@@ -2,26 +2,24 @@ package com.tokelon.toktales.core.content.manage;
 
 import javax.inject.Inject;
 
-import com.google.common.base.Throwables;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 
 import java9.util.concurrent.CompletableFuture;
 
 public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 
-	private static final String TAG = "DefaultAssetManager";
-	
-	
+
 	private final ILogger logger;
 	private final ISpecialAssetManager<T> specialAssetManager;
 	private final IAssetStore<T, K> assetStore;
 	private final IAssetLoader<T, K, O> assetLoader;
 
 	@Inject
-	public DefaultAssetManager(ILogger logger, ISpecialAssetManager<T> specialAssetManager, IAssetStore<T, K> assetStore, IAssetLoader<T, K, O> assetLoader) {
-		this.logger = logger;
+	public DefaultAssetManager(ILogging logging, ISpecialAssetManager<T> specialAssetManager, IAssetStore<T, K> assetStore, IAssetLoader<T, K, O> assetLoader) {
+		this.logger = logging.getLogger(getClass());
 		this.specialAssetManager = specialAssetManager;
 		this.assetStore = assetStore;
 		this.assetLoader = assetLoader;
@@ -61,7 +59,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	private CompletableFuture<T> handleAssetFuture(K key, CompletableFuture<T> future) {
 		return future
 		.exceptionally((exception) -> {
-			getLogger().e(TAG, String.format("Asset future completed exceptionally for [key=%s]: %s", key, Throwables.getStackTraceAsString(exception)));
+			getLogger().error("Asset future completed exceptionally for [key={}]:", key, exception); //Throwables.getStackTraceAsString(exception)
 			
 			T assetResult = getSpecialAssetManager().getSpecialAssetLoadError();
 			getStore().insert(key, assetResult);
@@ -98,7 +96,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetIfKeyValid(K key, String tag) {
 		if(key == null) {
-			getLogger().logOnce('w', tag, TAG, "Asset key was null for tag: " + tag);
+			getLogger().warnOnceForId(tag, "Asset key was null for tag: {}", tag);
 			return null;
 		}
 		
@@ -108,7 +106,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetIfKeyValid(K key, O options, String tag) {
 		if(key == null) {
-			getLogger().logOnce('w', tag, TAG, "(With Options) Asset key was null for tag: " + tag);
+			getLogger().warnOnceForId(tag, "(With Options) Asset key was null for tag: {}", tag);
 			return null;
 		}
 		
@@ -138,7 +136,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		try {
 			result = handleAssetResult(key, getLoader().load(key));
 		} catch (ContentException e) {
-			getLogger().e(TAG, String.format("Asset loading failed for [key=%s]: %s", key, e));
+			getLogger().error("Asset loading failed for [key={}]:", key, e);
 		}
 		
 		return result;
@@ -155,7 +153,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		try {
 			result = handleAssetResult(key, getLoader().load(key, options));
 		} catch (ContentException e) {
-			getLogger().e(TAG, String.format("Asset loading failed for [key=%s, options=%s]: %s", key, options, e));
+			getLogger().error("Asset loading failed for [key={}, options={}]:", key, options, e);
 		}
 		
 		return result;
@@ -164,7 +162,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetLoadIfNeededIfKeyValid(K key, String tag) {
 		if(key == null) {
-			getLogger().logOnce('w', tag, TAG, "(Load if Needed) Asset key was null for tag: " + tag);
+			getLogger().warnOnceForId(tag, "(Load if Needed) Asset key was null for tag: {}", tag);
 			return null;
 		}
 		
@@ -174,7 +172,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetLoadIfNeededIfKeyValid(K key, O options, String tag) {
 		if(key == null) {
-			getLogger().logOnce('w', tag, TAG, "(Load if Needed) (With Options) Asset key was null for tag: " + tag);
+			getLogger().warnOnceForId(tag, "(Load if Needed) (With Options) Asset key was null for tag: {}", tag);
 			return null;
 		}
 		

@@ -6,21 +6,20 @@ import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 
 public class AndroidInitialGamestateInputHandler implements IAndroidGameStateInputHandler {
 	// TODO: Is this needed? Otherwise delete
-	
-	public static final String TAG = "AndroidInitialGamestateInputHandler";
-	
-	
+
+
 	private final ILogger logger;
 	private final IUIService uiService;
 	
 	@Inject
-	public AndroidInitialGamestateInputHandler(ILogger logger, IUIService uiService) {
-		this.logger = logger;
+	public AndroidInitialGamestateInputHandler(ILogging logging, IUIService uiService) {
+		this.logger = logging.getLogger(getClass());
 		this.uiService = uiService;
 	}
 
@@ -55,7 +54,6 @@ public class AndroidInitialGamestateInputHandler implements IAndroidGameStateInp
 
 
 	private void buttonAPressed() {
-
 		// Nothing
 	}
 
@@ -63,7 +61,7 @@ public class AndroidInitialGamestateInputHandler implements IAndroidGameStateInp
 		try {
 			uiService.getExtensionByTypeOrFail(IDebugUIExtension.class).openContextMenu();
 		} catch (EngineException e) {
-			logger.e(TAG, "Error opening context menu: " + e.getMessage());
+			logger.error("Error opening context menu", e);
 		}
 	}
 

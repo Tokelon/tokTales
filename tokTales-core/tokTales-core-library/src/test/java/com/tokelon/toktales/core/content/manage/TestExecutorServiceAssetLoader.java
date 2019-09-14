@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Provider;
 
-import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.SLF4JLogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.IntFunction;
@@ -23,7 +23,7 @@ class TestExecutorServiceAssetLoader {
 		System.out.println("TestExecutorServiceAssetLoader started");
 		
 		TestDecoder testDecoder = new TestDecoder();
-		TestLoader testLoader = new TestLoader(new SLF4JLogger(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
+		TestLoader testLoader = new TestLoader(LoggingManager.getLogging(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
 		
 		
 		int tasks = 10;
@@ -103,7 +103,6 @@ class TestExecutorServiceAssetLoader {
 	
 	
 	private static class TestLoader extends AbstractExecutorServiceAssetLoader<AssetObject, AssetKey, AssetOptions> {
-		public static final String TAG = "TestLoader";
 		
 		public static final boolean ENABLE_LOG_DEBUG = false;
 		
@@ -112,14 +111,14 @@ class TestExecutorServiceAssetLoader {
 		
 		private int counter = 0;
 		
-		public TestLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder) {
-			super(logger, readerManager, decoder);
+		public TestLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder) {
+			super(logging, readerManager, decoder);
 			
 			setLogDebugEnabled(ENABLE_LOG_DEBUG);
 		}
 		
-		public TestLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
-			super(logger, readerManager, decoder, executorServiceProvider);
+		public TestLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+			super(logging, readerManager, decoder, executorServiceProvider);
 			
 			setLogDebugEnabled(ENABLE_LOG_DEBUG);
 		}
@@ -130,10 +129,6 @@ class TestExecutorServiceAssetLoader {
 			return EMPTY_OPTIONS;
 		}
 		
-		@Override
-		public String getTag() {
-			return super.getTag() + "_" + TAG;
-		}
 		
 		@Override
 		public AssetObject load(AssetKey key, AssetOptions options, IAssetReader assetReader, IAssetDecoder<? extends AssetObject, AssetKey, AssetOptions> decoder) {

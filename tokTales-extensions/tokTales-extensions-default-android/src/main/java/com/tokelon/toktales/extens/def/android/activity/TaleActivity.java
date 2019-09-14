@@ -20,6 +20,7 @@ import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.extens.def.android.R;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
@@ -51,9 +52,7 @@ import android.widget.LinearLayout;
 
 public class TaleActivity extends AbstractIntegratedActivity implements IConsoleActivity, IDebugActivity {
 
-	public static final String TAG = "TaleActivity";
-	
-	
+
 	public static final String ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH = "ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH";
 	
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "TaleActivity_Integration_SurfaceView";
@@ -75,6 +74,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	private SurfaceViewIntegration surfaceViewIntegration;
 	private SimpleRequestPermissionsIntegration requestPermissionsIntegration;
 
+	private ILogger logger;
 	private IEngineContext engineContext;
 	private ITaleLoader taleLoader;
 	
@@ -82,6 +82,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader) {
 		this.engineContext = engineContext;
 		this.taleLoader = taleLoader;
+		this.logger = engineContext.getLogging().getLogger(getClass());
 	}
 	
 	
@@ -90,13 +91,13 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		// injectDependencies has not run at this point
 		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLogging(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
 		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		
 		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
 		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
 		
-		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLog(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLogging(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
 		integrations.put(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
 		return integrations;
@@ -124,7 +125,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		String taleAppPath = getIntent().getStringExtra(ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH);
 		if(taleAppPath == null) {
-			engineContext.getLog().e(TAG, "Intent is missing data");
+			logger.error("Intent is missing data");
 			finish();
 		}
 		else {
@@ -158,7 +159,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 			taleLoader.loadTaleIntoGame(taleApplicationPath, sceneName, stateName);
 			engineContext.getGame().getStateControl().changeState(stateName);
 		} catch (TaleException e) {
-			engineContext.getLog().e(TAG, "Loading tale failed: " + e);
+			logger.error("Loading tale failed:", e);
 		}
 		
 	}
@@ -297,7 +298,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		IKeyboardActivityIntegration keyboardIntegration = getIntegrator().getIntegrationByType(IKeyboardActivityIntegration.class);
 		if(keyboardIntegration == null) {
-			engineContext.getLog().e(TAG, "No integration for IKeyboardIntegration");
+			logger.error("No integration for IKeyboardIntegration");
 		}
 		else {
 			keyboardIntegration.showKeyboard(textView);	
@@ -332,7 +333,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		super.onConfigurationChanged(newConfig);
 		
 		// Stop Activity from recreating
-		engineContext.getLog().i(TAG, "TaleActivity configuration changed");
+		logger.info("TaleActivity configuration changed");
 	}
 	
 

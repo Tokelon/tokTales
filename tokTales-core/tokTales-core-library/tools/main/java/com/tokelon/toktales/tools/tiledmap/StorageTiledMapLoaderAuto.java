@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.logic.map.IMapLoader;
@@ -26,12 +27,8 @@ import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
 import com.tokelon.toktales.tools.tiledmap.model.TiledMapTilesetImpl;
 
 public class StorageTiledMapLoaderAuto implements IMapLoader {
-	
-	public static final String TAG = "TiledMapLoader";
 
-	private final IStorageService storageService;
-	private final IWorld world;
-	
+
 	private InputStream mapIn;
 	private IApplicationLocation mapfilelocation;
 	private String mapfilename;
@@ -42,9 +39,13 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 	
 
 	private boolean initialized = false;
+
+	private final ILogger logger;
+	private final IStorageService storageService;
+	private final IWorld world;
 	
-	
-	public StorageTiledMapLoaderAuto(IStorageService storageService, IWorld world) {
+	public StorageTiledMapLoaderAuto(ILogging logging, IStorageService storageService, IWorld world) {
+		this.logger = logging.getLogger(getClass());
 		this.storageService = storageService;
 		this.world = world;
 	}
@@ -112,7 +113,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 				}
 			}
 		} catch (StorageException e) {
-			TokTales.getLog().w(TAG, "Failed to list files for location: " +mapfilelocation);
+			logger.warn("Failed to list files for location: {}", mapfilelocation, e);
 		}
 
 		
@@ -121,7 +122,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 		
 		// If a config file was found, load it
 		if(configFile != null) {
-			TokTales.getLog().i(TAG, "Found map config file: " +configFile.getName());
+			logger.info("Found map config file: {}", configFile.getName());
 			
 			
 			// METHOD A
@@ -129,13 +130,13 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 			try {
 				configLoader.setTarget(mapfilelocation, configFile.getName());
 				
-				TokTales.getLog().i(TAG, "Loading map config...");
+				logger.info("Loading map config...");
 				ciniConfig = configLoader.loadConfig();
 				
 			} catch (StorageException stoex) {
-				TokTales.getLog().w(TAG, "Failed to open config file.");
+				logger.warn("Failed to open config file:", stoex);
 			} catch (ConfigFormatException conforex) {
-				TokTales.getLog().w(TAG, "Bad config file: " +conforex.getMessage());
+				logger.warn("Bad config file:", conforex);
 			}
 			
 			
@@ -164,24 +165,24 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 		
 		// If a config was loaded, check it
 		if(ciniConfig != null) {
-			TokTales.getLog().i(TAG, "Checking map config...");
+			logger.info("Checking map config...");
 			
 			try {
 				tiledMapConfig = new TiledMapCiniConfig(ciniConfig);
 				
 			} catch (ConfigDataException condatex) {
-				TokTales.getLog().w(TAG, "Unsupported config: " +condatex.getMessage());
+				logger.warn("Unsupported config:", condatex);
 			}
 
 		}
 		
 		
 		if(tiledMapConfig == null) {
-			TokTales.getLog().w(TAG, "No map config will be loaded.");
+			logger.warn("No map config will be loaded.");
 			mapConfig = TiledMapCiniConfig.defaultConfig();
 		}
 		else {
-			TokTales.getLog().i(TAG, "Map config was loaded: " +configFile.getName());
+			logger.info("Map config was loaded: {}", configFile.getName());
 			mapConfig = tiledMapConfig;
 		}
 		
@@ -206,7 +207,9 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 		finally {
 			try {
 				mapIn.close();
-			} catch(IOException e) { /* Nothing? */ }
+			} catch(IOException e) {
+				logger.warn("close threw exception", e);
+			}
 		}
 		
 		loadedMap = readMap;
@@ -286,10 +289,10 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 				
 				String externalSource = tileset.getSource();	// Can this be null?
 				if(externalSource.trim().isEmpty()) {
-					TokTales.getLog().w(TAG, "WARNING: External tileset has no valid source. Tileset will be ignored: " +externalSource);
+					logger.warn("WARNING: External tileset has no valid source. Tileset will be ignored: {}", externalSource);
 					
 					// Remove broken tileset from map
-					TokTales.getLog().w(TAG, "Removing broken tileset: " +externalSource);
+					logger.warn("Removing broken tileset: {}", externalSource);
 					mapTilesetsIt.remove();
 					continue;
 				}
@@ -300,10 +303,10 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 				String tilesetFilename = f.getName();
 				
 				if(tilesetFilename.isEmpty()) {
-					TokTales.getLog().w(TAG, "WARNING: External tileset source has no name. Tileset will be ignored: " +externalSource);
+					logger.warn("WARNING: External tileset source has no name. Tileset will be ignored: {}", externalSource);
 					
 					// Remove broken tileset from map
-					TokTales.getLog().w(TAG, "Removing broken tileset: " +externalSource);
+					logger.warn("Removing broken tileset: {}", externalSource);
 					mapTilesetsIt.remove();
 					continue;
 				}
@@ -320,17 +323,17 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 				try {
 					tilesetInput = storageService.readAppFileOnExternal(tilesetLocation, tilesetFilename);
 				} catch (StorageException e) {
-					TokTales.getLog().w(TAG, "WARNING: External tileset source (" +externalSource +") could not be read. Tileset will be ignored: " +externalSource);
+					logger.warn("WARNING: External tileset source could not be read. Tileset will be ignored: {}", externalSource);
 					
 					// Remove broken tileset from map
-					TokTales.getLog().w(TAG, "Removing broken tileset: " +externalSource);
+					logger.warn("Removing broken tileset: {}", externalSource);
 					mapTilesetsIt.remove();
 					continue;
 				}
 				
 				
 				
-				TokTales.getLog().i(TAG, "Loading external tileset... : " +externalSource);
+				logger.info("Loading external tileset... : {}", externalSource);
 				
 				TiledMapTilesetImpl externalTileset = tilesetReader.readTileset(tilesetInput);
 				externalTileset.setFirstGIDForExternal(tileset.getFirstGID());

@@ -3,6 +3,7 @@ package com.tokelon.toktales.extens.def.android.states.integration;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.extens.def.core.game.states.integration.ConsoleIntegrationControlHandler;
@@ -10,12 +11,14 @@ import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleInte
 
 public class AndroidConsoleIntegrationControlHandler extends ConsoleIntegrationControlHandler {
 
-	public static final String TAG = "AndroidConsoleIntegrationControlHandler";
-	
+
+	private final ILogger logger;
 	
 	@Inject
 	public AndroidConsoleIntegrationControlHandler(@Assisted IConsoleIntegration consoleIntegration) {
 		super(consoleIntegration);
+		
+		logger = consoleIntegration.getGamestate().getLogging().getLogger(getClass());
 	}
 	
 	
@@ -29,7 +32,7 @@ public class AndroidConsoleIntegrationControlHandler extends ConsoleIntegrationC
 			try {
 				uiService.getExtensionByTypeOrFail(IConsoleUIExtension.class).openConsoleInput(getConsoleController());
 			} catch (EngineException e) {
-				getConsoleIntegration().getGamestate().getLog().e(TAG, "Error opening console input: " + e.getMessage());
+				logger.error("Error opening console input:", e);
 			}
 		}
 		

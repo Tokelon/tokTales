@@ -10,7 +10,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.IPoint2f;
@@ -24,8 +25,9 @@ import com.tokelon.toktales.core.values.ControllerValues;
 
 @InjectGameScene
 public class Worldspace implements IWorldspace {
-	
-	public static final String TAG = "Worldspace";
+
+
+	private static final ILogger logger = LoggingManager.getLogger(Worldspace.class); // Inject instead?
 	
 	
 	private final Map<String, IGameEntity> entityMap;
@@ -108,7 +110,7 @@ public class Worldspace implements IWorldspace {
 	public boolean putEntity(String id, IGameEntity entity) {
 		IGameEntity previousEntity = entityMap.remove(id);
 		if(previousEntity != null) {
-			TokTales.getLog().w(TAG, String.format("Overriding entity for id: %s | [was:%s, is:%s]", id, previousEntity, entity));
+			logger.warn("Overriding entity for id: {} | [was:{}, is:{}]", id, previousEntity, entity); // TODO: Inefficient logging?
 			previousEntity.deassignWorldspace();
 		}
 		
@@ -126,7 +128,7 @@ public class Worldspace implements IWorldspace {
 		IGameEntity entity = entityMap.remove(id);
 
 		if(entity == null) {
-			TokTales.getLog().w(TAG, "Removing entity failed. No entity for id: " +id);
+			logger.warn("Removing entity failed. No entity for id: {}", id);
 		}
 		
 		//entityIDList.remove(id);	// Workaround

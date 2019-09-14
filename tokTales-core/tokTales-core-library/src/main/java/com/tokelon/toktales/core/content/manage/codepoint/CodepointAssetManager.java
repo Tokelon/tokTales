@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.util.SynchronizedPool;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 
@@ -21,8 +21,8 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 	
 	@Inject
-	public CodepointAssetManager(ILogger logger, ISpecialAssetManager<ICodepointAsset> specialAssetManager, IAssetStore<ICodepointAsset, ICodepointAssetKey> assetStore, IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> assetLoader) {
-		super(logger, specialAssetManager, assetStore, assetLoader);
+	public CodepointAssetManager(ILogging logging, ISpecialAssetManager<ICodepointAsset> specialAssetManager, IAssetStore<ICodepointAsset, ICodepointAssetKey> assetStore, IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> assetLoader) {
+		super(logging, specialAssetManager, assetStore, assetLoader);
 	}
 
 

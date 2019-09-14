@@ -12,7 +12,8 @@ import com.tokelon.toktales.android.render.tools.IButtonOverlayView;
 import com.tokelon.toktales.android.render.tools.ICrossControlOverlayView;
 import com.tokelon.toktales.android.render.tools.IUIOverlay;
 import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.RenderException;
@@ -24,9 +25,7 @@ import android.opengl.GLES20;
 
 public class UIRenderer implements ISegmentRenderer {
 
-	public static final String TAG  = "UIRenderer";
-	
-	
+
 	private static final String COLOR_S = "#077570";
 	private static final String COLOR_L = "#075075";
 	private static final String COLOR_E = "#750735";
@@ -102,8 +101,6 @@ public class UIRenderer implements ISegmentRenderer {
 	private FloatBuffer verticesBufferButtonSET;
 	
 	
-	private final IUIOverlayProvider mOverlayProvider;
-	
 	private final Rect rectControlLeft = new Rect();
 	private final Rect rectControlUp = new Rect();
 	private final Rect rectControlRight = new Rect();
@@ -117,9 +114,11 @@ public class UIRenderer implements ISegmentRenderer {
 	
 	private IViewTransformer viewTransformer;
 	
+	private final ILogger logger;
+	private final IUIOverlayProvider mOverlayProvider;
 	
-	
-	public UIRenderer(IUIOverlayProvider overlayProvider) {
+	public UIRenderer(ILogging logging, IUIOverlayProvider overlayProvider) {
+		this.logger = logging.getLogger(getClass());
 		this.mOverlayProvider = overlayProvider;
 	}
 	
@@ -159,7 +158,7 @@ public class UIRenderer implements ISegmentRenderer {
 			mCOCShader.createUniform("uMVPMatrix");
 			
 		} catch(OpenGLException oglex) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " + oglex.getMessage());
+			logger.error("Failed to create shader program:", oglex);
 			return;
 		}
 		

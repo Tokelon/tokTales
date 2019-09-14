@@ -11,9 +11,7 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamesta
 
 public class TaleGamestate extends LocalMapGamestate implements ITaleGamestate {
 
-	public static final String SUB_TAG = "TaleGamestate";
-	
-	
+
 	@Inject
 	public TaleGamestate(
 			ILocalMapStateRendererFactory stateRendererFactory,
@@ -23,12 +21,6 @@ public class TaleGamestate extends LocalMapGamestate implements ITaleGamestate {
 			ILocalMapConsoleIntepreter consoleInterpreter
 	) {
 		super(stateRendererFactory, inputHandlerFactory, controlScheme, controlHandlerFactory, consoleInterpreter);
-	}
-
-
-	@Override
-	protected String getTag() {
-		return SUB_TAG + "_" + BASE_TAG;
 	}
 	
 }

@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaThread;
@@ -12,7 +14,8 @@ import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
 import com.tokelon.toktales.tools.script.IExtendableResourceFinder;
 import com.tokelon.toktales.tools.script.IScript;
@@ -22,20 +25,17 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 @ThreadSafe
 public class LuaScriptEnvironment implements IScriptEnvironment {
+	// TODO: Expose debug functionality to outside or disable it
 
-	public static final String TAG = "LuaScriptEnvironment";
-	
-	
-	
-	/* TODO: Expose debug functionality to outside or disable it
-	 * 
-	 */
-	
 	
 	private final LuaScriptState mScriptState;
+
+
+	private ILogger logger;
 	
-	
-	public LuaScriptEnvironment() {
+	@Inject
+	public LuaScriptEnvironment(ILogging logging) {
+		this.logger = logging.getLogger(getClass());
 		
 		mScriptState = new LuaScriptState();
 		
@@ -48,15 +48,11 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 		mScriptState.getGlobals().get("debug").set("debugEnable", new DebugDebugEnable());
 		mScriptState.getGlobals().get("debug").set("debugDisable", new DebugDebugDisable());
 	}
-	
 
 	
 	protected synchronized LuaScriptState getScriptState() {
-		
 		return mScriptState;
 	}
-	
-
 	
 	
 	@Override
@@ -227,7 +223,7 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 			String event = arg1.tojstring();
 			if(event.equals("line")) {
 				String lineNum = arg2.tojstring();
-				TokTales.getLog().d(TAG, "Line: " +lineNum);
+				logger.debug("Line: {}", lineNum);
 				
 				LuaThread runningThread = mScriptState.getGlobals().running;
 				Object callstack = runningThread.callstack;
@@ -242,11 +238,11 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 					if(!returnValues.isnil(1)) {
 						if(returnValues.arg1().isfunction()) {
 							returns.put(returnValues.arg1().tojstring(), null);
-							TokTales.getLog().d(TAG, String.format("%d: %s", stackCounter, returnValues.arg1()));
+							logger.debug("{}: {}", stackCounter, returnValues.arg1());
 						}
 						else {
 							returns.put(returnValues.arg(1).tojstring(), returnValues.arg(2));
-							TokTales.getLog().d(TAG, String.format("%d: %s = %s", stackCounter, returnValues.arg(1), returnValues.arg(2)));
+							logger.debug("{}: {} = {}", stackCounter, returnValues.arg(1), returnValues.arg(2));
 						}
 					}
 					
@@ -261,7 +257,5 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 			return null;
 		}
 	}
-	
-	
 
 }

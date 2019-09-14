@@ -7,13 +7,12 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGameLogicManager;
 
 public class GameControl implements IGameControl {
-	
-	public static final String TAG = "GameControl";
-	
-	
+
+
 	//private final Set<IGameListener> gameListeners;
 	
 	private final Set<IGameModeListener> gameModeListeners = new HashSet<IGameModeListener>();
@@ -30,8 +29,8 @@ public class GameControl implements IGameControl {
 	private final IGameLogicManager logicManager;
 
 	@Inject
-	public GameControl(ILogger logger, IGameLogicManager logicManager) {
-		this.logger = logger;
+	public GameControl(ILogging logging, IGameLogicManager logicManager) {
+		this.logger = logging.getLogger(getClass());
 		this.logicManager = logicManager;
 	}
 	
@@ -51,114 +50,114 @@ public class GameControl implements IGameControl {
 	@Override
 	public void createGame() {
 		if(gameStatus == GameStatus.CREATED) {
-			logger.d(TAG, "Game is already created");
+			logger.debug("Game is already created");
 			return;
 		}
 		if(gameStatus != GameStatus.DESTROYED) {
 			throw new GameStatusException("Cannot create game with status: " + gameStatus);
 		}
 
-		logger.d(TAG, "Game is being created...");
+		logger.debug("Game is being created...");
 
 		logicManager.onGameCreate();
 
 		changeStatusTo(GameStatus.CREATED);
-		logger.i(TAG, "Game was created");
+		logger.info("Game was created");
 	}
 	
 	
 	@Override
 	public synchronized void startGame() {
 		if(gameStatus == GameStatus.STARTED) {
-			logger.d(TAG, "Game is already started");
+			logger.debug("Game is already started");
 			return;
 		}
 		if(gameStatus != GameStatus.CREATED && gameStatus != GameStatus.STOPPED) {
 			throw new GameStatusException("Cannot start game with status: " + gameStatus);
 		}
 		
-		logger.d(TAG, "Game is starting...");
+		logger.debug("Game is starting...");
 		
 		logicManager.onGameStart();
 		
 		changeStatusTo(GameStatus.STARTED);
-		logger.i(TAG, "Game was started");
+		logger.info("Game was started");
 	}
 
 
 	@Override
 	public synchronized void resumeGame() {
 		if(gameStatus == GameStatus.RUNNING) {
-			logger.d(TAG, "Game is already running");
+			logger.debug("Game is already running");
 			return;
 		}
 		if(gameStatus != GameStatus.STARTED && gameStatus != GameStatus.PAUSED) {
 			throw new GameStatusException("Cannot resume game with status: " + gameStatus);
 		}
 		
-		logger.d(TAG, "Game is resuming...");
+		logger.debug("Game is resuming...");
 		
 		logicManager.onGameResume();
 		
 		changeStatusTo(GameStatus.RUNNING);
-		logger.i(TAG, "Game was resumed");
+		logger.info("Game was resumed");
 	}
 	
 	
 	@Override
 	public synchronized void pauseGame() {
 		if(gameStatus == GameStatus.PAUSED) {
-			logger.d(TAG, "Game is already paused");
+			logger.debug("Game is already paused");
 			return;
 		}
 		if(gameStatus != GameStatus.RUNNING) {
 			throw new GameStatusException("Cannot pause game with status: " + gameStatus);
 		}
 		
-		logger.d(TAG, "Game is pausing...");
+		logger.debug("Game is pausing...");
 		
 		logicManager.onGamePause();
 		
 		changeStatusTo(GameStatus.PAUSED);
-		logger.i(TAG, "Game was paused");
+		logger.info("Game was paused");
 	}
 
 	
 	@Override
 	public synchronized void stopGame() {
 		if(gameStatus == GameStatus.STOPPED) {
-			logger.d(TAG, "Game is already stopped");
+			logger.debug("Game is already stopped");
 			return;
 		}
 		if(gameStatus != GameStatus.STARTED && gameStatus != GameStatus.PAUSED) {
 			throw new GameStatusException("Cannot stop game with status: " + gameStatus);
 		}
 		
-		logger.d(TAG, "Game is stopping...");
+		logger.debug("Game is stopping...");
 	
 		logicManager.onGameStop();
 		
 		changeStatusTo(GameStatus.STOPPED);
-		logger.i(TAG, "Game was stopped");
+		logger.info("Game was stopped");
 	}
 
 
 	@Override
 	public void destroyGame() {
 		if(gameStatus == GameStatus.DESTROYED) {
-			logger.d(TAG, "Game is already destroyed");
+			logger.debug("Game is already destroyed");
 			return;
 		}
 		if(gameStatus != GameStatus.CREATED && gameStatus != GameStatus.STOPPED) {
 			throw new GameStatusException("Cannot destroy game with status: " + gameStatus);
 		}
 		
-		logger.d(TAG, "Game is being destroyed...");
+		logger.debug("Game is being destroyed...");
 
 		logicManager.onGameDestroy();
 		
 		changeStatusTo(GameStatus.DESTROYED);
-		logger.i(TAG, "Game was destroyed");
+		logger.info("Game was destroyed");
 	}
 	
 	
@@ -190,10 +189,10 @@ public class GameControl implements IGameControl {
 	
 	@Override
 	public synchronized void enterMode(String mode) {
-		logger.d(TAG, "Game is entering mode: " + mode);
+		logger.debug("Game is entering mode: {}", mode);
 		
 		if(modesEnabled.contains(mode)) {
-			logger.d(TAG, "Game mode is already active: " + mode);
+			logger.debug("Game mode is already active: {}", mode);
 			return;
 		}
 		
@@ -203,15 +202,15 @@ public class GameControl implements IGameControl {
 			gml.gameModeChanged(mode, true);
 		}
 		
-		logger.i(TAG, "Game has entered mode: " + mode);
+		logger.info("Game has entered mode: {}", mode);
 	}
 
 	@Override
 	public synchronized void exitMode(String mode) {
-		logger.d(TAG, "Game is exiting mode: " + mode);
+		logger.debug("Game is exiting mode: {}", mode);
 
 		if(!modesEnabled.contains(mode)) {
-			logger.d(TAG, "Game mode is not yet active: " + mode);
+			logger.debug("Game mode is not yet active: {}", mode);
 			return;
 		}
 		
@@ -221,7 +220,7 @@ public class GameControl implements IGameControl {
 			gml.gameModeChanged(mode, false);
 		}
 		
-		logger.i(TAG, "Game has exited mode: " + mode);
+		logger.info("Game has exited mode: {}", mode);
 	}
 
 

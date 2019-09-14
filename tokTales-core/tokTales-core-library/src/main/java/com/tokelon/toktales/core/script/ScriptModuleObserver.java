@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.script;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.logic.observers.IObserver;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
@@ -12,13 +13,13 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
  * @param <S>
  */
 public class ScriptModuleObserver<S> implements IObserver<S> {
-	
-	
-	public static final String TAG = "ScriptModuleObserver";
+
 
 	public static final String OBSERVER_FUNCTION_HAS_INTEREST = "hasInterest";
 	public static final String OBSERVER_FUNCTION_SUBJECT_CHANGED = "subjectChanged";
-	
+
+	private static final ILogger logger = LoggingManager.getLogger(ScriptModuleObserver.class);
+
 	
 	private final int maxErrorsLogged = 3;
 	private int counterHasInterest = 0;
@@ -41,7 +42,6 @@ public class ScriptModuleObserver<S> implements IObserver<S> {
 	
 	@Override
 	public boolean hasInterest(S subject, String change) {
-		
 		try {
 			Object result = module.callFunction(OBSERVER_FUNCTION_HAS_INTEREST, subject, change);
 			
@@ -50,14 +50,14 @@ public class ScriptModuleObserver<S> implements IObserver<S> {
 			}
 			else {
 				if(++counterHasInterest <= maxErrorsLogged) {
-					TokTales.getLog().e(TAG, "hasInterest() did not return Boolean");
+					logger.error("hasInterest() did not return Boolean");
 				}
 				
 				return false;
 			}
 		} catch (ScriptErrorException e) {
 			if(++counterHasInterest <= maxErrorsLogged) {
-				TokTales.getLog().e(TAG, "hasInterest() failed to run: " +e.getMessage());
+				logger.error("hasInterest() failed to run:", e);
 			}
 			
 			return false;
@@ -76,10 +76,9 @@ public class ScriptModuleObserver<S> implements IObserver<S> {
 			
 		} catch (ScriptErrorException e) {
 			if(++counterSubjectChanged <= maxErrorsLogged) {
-				TokTales.getLog().e(TAG, "subjectChanged() failed to run: " +e.getMessage());
+				logger.error("subjectChanged() failed to run:", e);
 			}
 		}
 	}
-	
 
 }

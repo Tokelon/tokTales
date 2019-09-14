@@ -24,9 +24,6 @@ import com.tokelon.toktales.core.values.ControllerValues;
 public class ExtendedGamescene extends BaseGamescene implements IExtendedGameScene {
 	// Register DefaultControllersSetterInterceptor on controller manager as default?
 	
-	public static final String EXTENDED_TAG = "ExtendedGamescene";
-	
-	
 	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
 
 	
@@ -168,7 +165,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		/* Register map render order if needed */
 		if(initialMapRenderRegistrationPending) {
 			initialMapRenderRegistrationPending = false;
-			getLog().w(getTag(), "Registering map render callbacks to previously unavailable gamestate");
+			getLogger().warn("Registering map render callbacks to previously unavailable gamestate");
 
 			unregisterMapRenderCallbacks(getGamestate());
 			registerMapRenderCallbacks(getGamestate(), getMapController());
@@ -211,7 +208,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	protected void onMapControllerChange(IMapController mapController) {
 		IGameState gamestate = getGamestate();
 		if(gamestate == null) {
-			getLog().i(getTag(), "Cannot register map render callbacks: no gamestate assigned yet");
+			getLogger().info("Cannot register map render callbacks: no gamestate assigned yet");
 			initialMapRenderRegistrationPending = true;
 			return;
 		}
@@ -273,13 +270,6 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	public IMapController getMapController() {
 		return sceneMapController;
 	}
-	
-	
-	@Override
-	protected String getTag() {
-		return EXTENDED_TAG + "_" + BASE_TAG; //super.getTag()?
-	}
-	
 	
 
 	/** Sets the scene worldspace.

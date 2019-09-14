@@ -1,12 +1,15 @@
 package com.tokelon.toktales.android.engine.ui;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.engine.ServiceException;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 
@@ -15,19 +18,20 @@ import android.text.TextWatcher;
 
 public class AndroidConsoleUIExtension implements IConsoleUIExtension {
 
-	public static final String TAG = "AndroidUIConsoleModule";
+
+	private IAndroidUIService uiService; // UI service will be attached
 	
+	private final ILogger logger;
 	
-	private IAndroidUIService mUIService;
-	
-	public AndroidConsoleUIExtension() {
-		// UI service will be attached
+	@Inject
+	public AndroidConsoleUIExtension(ILogging logging) {
+		logger = logging.getLogger(getClass());
 	}
 	
 	
 	@Override
 	public void openConsoleInput(IConsoleController consoleController) throws EngineException {
-		IIntegratedActivity currentActivity = mUIService.getUserInterface().getCurrentActivity();
+		IIntegratedActivity currentActivity = uiService.getUserInterface().getCurrentActivity();
 		
 		if(currentActivity instanceof IConsoleActivity) {
 			((IConsoleActivity)currentActivity).getConsoleInput(new ConsoleTextWatcher(consoleController));
@@ -37,7 +41,6 @@ public class AndroidConsoleUIExtension implements IConsoleUIExtension {
 		}
 	}
 
-	
 	
 
 	private class ConsoleTextWatcher implements TextWatcher {
@@ -63,7 +66,7 @@ public class AndroidConsoleUIExtension implements IConsoleUIExtension {
 		@Override
 		public void afterTextChanged(Editable s) {
 			String newText = s.toString();
-			TokTales.getLog().d(TAG, newText);
+			logger.debug(newText);
 			
 			consoleController.clear();
 
@@ -92,8 +95,7 @@ public class AndroidConsoleUIExtension implements IConsoleUIExtension {
 			throw new ServiceException(IAndroidUIService.class.getSimpleName() + " is required for this extension to work");
 		}
 		
-		mUIService = (IAndroidUIService) service;
+		uiService = (IAndroidUIService) service;
 	}
-
 
 }

@@ -15,7 +15,7 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.SLF4JLogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.model.Camera;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.states.BaseGamescene;
@@ -78,8 +78,8 @@ public class TestCoreStateSceneTypeConstraints {
 			return new Camera();
 		}
 		@Override
-		protected ILogger getLog() {
-			return new SLF4JLogger();
+		protected ILogger getLogger() {
+			return LoggingManager.getLogger(getClass());
 		}
 	}
 	

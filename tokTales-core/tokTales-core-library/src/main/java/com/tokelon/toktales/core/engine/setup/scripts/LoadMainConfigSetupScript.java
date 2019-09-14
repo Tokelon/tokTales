@@ -16,32 +16,26 @@ import com.tokelon.toktales.tools.config.ConfigFormatException;
 import com.tokelon.toktales.tools.config.MutableCiniConfig;
 
 public class LoadMainConfigSetupScript implements ISetupScript {
-	
-	public static final String TAG = "LoadMainConfigSetupScript";
 
-	
-	private static final String MAIN_CONFIG_FILE_NAME = "main.conf";
+
+	public static final String MAIN_CONFIG_FILE_NAME = "main.conf";
 	
 	
 	@Override
 	public void run(IEngineContext context) throws EngineException {
-		
-		IMainConfig mainConfig = loadConfig(context.getEngine().getStorageService(), context.getLog());
+		IMainConfig mainConfig = loadConfig(context.getEngine().getStorageService(), context.getLogging().getLogger(getClass()), MAIN_CONFIG_FILE_NAME);
 		context.getGame().getConfigManager().loadConfig(IConfigManager.MAIN_CONFIG, mainConfig);
 	}
 	
 
-	private IMainConfig loadConfig(IStorageService storageService, ILogger logger) {
-
-		String mainConfigFileName = MAIN_CONFIG_FILE_NAME;
-
+	private IMainConfig loadConfig(IStorageService storageService, ILogger logger, String mainConfigFileName) {
 		InputStream configFileIn = storageService.tryReadAppFileOnExternal(storageService.getRootLocation(), mainConfigFileName);
 
 
 		IMainConfig mainConfig = null;
 
 		if(configFileIn != null) {
-			logger.i(TAG, "Found main config file: " +mainConfigFileName);
+			logger.info("Found main config file: {}", mainConfigFileName);
 
 
 			MutableCiniConfig ciniConfig;
@@ -50,25 +44,27 @@ public class LoadMainConfigSetupScript implements ISetupScript {
 				ciniConfig = reader.readConfig(configFileIn);
 
 
-				logger.i(TAG, "Checking main config...");
+				logger.info("Checking main config...");
 				mainConfig = new CiniMainConfig(ciniConfig);
-				logger.i(TAG, "Main config was loaded: " +mainConfigFileName);
+				logger.info("Main config was loaded: {}", mainConfigFileName);
 			}
 			catch (ConfigFormatException cofoex) {
-				logger.w(TAG, "Bad config file: " +cofoex.getMessage());
+				logger.warn("Bad config file:", cofoex);
 			} catch (ConfigDataException codaex) {
-				logger.w(TAG, "Unsupported config: " +codaex.getMessage());
+				logger.warn("Unsupported config:", codaex);
 			}
 			finally {
 				try {
 					configFileIn.close();
-				} catch (IOException e) { /* Nothing to see here... */ }
+				} catch (IOException e) {
+					logger.warn("close() threw exception", e);
+				}
 			}
 		}
 
 
 		if(mainConfig == null) {
-			logger.w(TAG, "No main config was loaded. The default will be used");
+			logger.warn("No main config was loaded. The default will be used");
 			mainConfig = new CiniMainConfig();
 		}
 

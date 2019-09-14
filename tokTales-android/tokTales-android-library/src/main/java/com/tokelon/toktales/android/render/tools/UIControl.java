@@ -11,7 +11,8 @@ import com.tokelon.toktales.android.input.events.AndroidScreenPressInputProducer
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent.ScreenButtonInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent.ScreenPointerInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent.ScreenPressInputEvent;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
@@ -19,8 +20,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 
 public class UIControl implements Runnable {		// Make interface for this ?
-
-	public static final String TAG = "UIControl";
 
 
 	private static final int EVENT_POOL_CAPACITY_SCREEN_BUTTON_INPUT = 10;
@@ -56,13 +55,15 @@ public class UIControl implements Runnable {		// Make interface for this ?
 	
 	private IScreenViewport uiViewport; // TODO: Extract this, the UIControl should not care about the viewport
 
+	private final ILogger logger;
 	private final IUIOverlayProvider mOverlayProvider;
 	
-	public UIControl(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
+	public UIControl(ILogging logging, IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
 		if(overlayProvider == null || inputProducer == null) {
 			throw new NullPointerException();
 		}
 		
+		this.logger = logging.getLogger(getClass());
 		this.mOverlayProvider = overlayProvider;
 		
 		this.androidScreenButtonInputProducer = new AndroidScreenButtonInputProducer(inputProducer, eventPoolFactory.create(() -> new ScreenButtonInputEvent(), EVENT_POOL_CAPACITY_SCREEN_BUTTON_INPUT, EVENT_POOL_INITIAL_SIZE_SCREEN_BUTTON_INPUT));
@@ -285,7 +286,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 				if(actionMasked == MotionEvent.ACTION_MOVE) {
 					// Iterate through all pointers with action move
 
-					if(logDebug) TokTales.getLog().d(TAG, String.format("MULTI MOVE Event [pointerCount=%d]", pointerCount));
+					if(logDebug) logger.debug("MULTI MOVE Event [pointerCount={}]", pointerCount);
 					
 					for(int i=0; i < pointerCount; i++) {
 						int moveX = (int) MotionEventCompat.getX(event, i);
@@ -293,7 +294,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						
 						int moveId = MotionEventCompat.getPointerId(event, i);
 
-						if(logDebug) TokTales.getLog().d(TAG, String.format("MULTI MOVE [actionIndex=%d, pointerId=%d, x=%d, y=%d", i, moveId, moveX, moveY));
+						if(logDebug) logger.debug("MULTI MOVE [actionIndex={}, pointerId={}, x={}, y={}", i, moveId, moveX, moveY);
 
 						androidScreenPointerInputProducer.invoke(moveId, actionTok, moveX, moveY);
 					}
@@ -308,7 +309,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 					int screeny = (int) MotionEventCompat.getY(event, actionIndex);
 					
 					
-					if(logDebug) TokTales.getLog().d(TAG, String.format("MULTI TOUCH Event [action=%d, actionIndex=%d, pointerId=%d, x=%d, y=%d]", actionMasked, actionIndex, pointerId, screenx, screeny));
+					if(logDebug) logger.debug("MULTI TOUCH Event [action={}, actionIndex={}, pointerId={}, x={}, y={}]", actionMasked, actionIndex, pointerId, screenx, screeny);
 					
 					androidScreenPointerInputProducer.invoke(pointerId, actionTok, screenx, screeny);
 				}
@@ -321,7 +322,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 				int screeny = (int) MotionEventCompat.getY(event, pointerIndex);
 				
 				
-				if(logDebug) TokTales.getLog().d(TAG, String.format("SINGLE TOUCH Event [action=%d, pointerIndex=%d, pointerId=%d, x=%d, y=%d]", actionMasked, pointerIndex, pointerId, screenx, screeny));
+				if(logDebug) logger.debug("SINGLE TOUCH Event [action={}, pointerIndex={}, pointerId={}, x={}, y={}]", actionMasked, pointerIndex, pointerId, screenx, screeny);
 
 				androidScreenPointerInputProducer.invoke(pointerId, actionTok, screenx, screeny);
 			}
@@ -554,7 +555,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 				// We have to use our pointer id to find all the data we need
 				int currentPointerIndex = MotionEventCompat.findPointerIndex(motionEvent, mCurrentPointerId);
 				if(currentPointerIndex == -1) {
-					TokTales.getLog().w(TAG, "Warning (MultPtr): Action MOVE with a valid pointer had no pointer index for the current pointer id");
+					logger.warn("Warning (MultPtr): Action MOVE with a valid pointer had no pointer index for the current pointer id");
 					return;
 				}
 				
@@ -656,7 +657,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						
 						// Covered by onTouchMultiMove()
 						// Should this even be called?
-						TokTales.getLog().w(TAG, "Warning (MultPtr): onTouch called with MultiPointerMove");
+						logger.warn("Warning (MultPtr): onTouch called with MultiPointerMove");
 						
 						
 						// We always need to return false in this case because the other pointers have to run for this as well
@@ -684,11 +685,11 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						else {
 							// Should not happen!
 							// There should be a valid pointer in this case
-							TokTales.getLog().w(TAG, "Warning (MultPtr): Action UP/CANCEL inside a control with no valid pointer!");
+							logger.warn("Warning (MultPtr): Action UP/CANCEL inside a control with no valid pointer!");
 						}
 					}
 					else {
-						TokTales.getLog().d(TAG, "Warning (MultPtr): Some other action just happened (NoValidPtr): " +action);
+						logger.debug("Warning (MultPtr): Some other action just happened (NoValidPtr): {}", action);
 					}
 					
 				}
@@ -700,7 +701,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 
 						// Covered by onTouchMultiMove()
 						// Should this even be called?
-						TokTales.getLog().w(TAG, "Warning (MultPtr): onTouch called with MultiPointerMove");
+						logger.warn("Warning (MultPtr): onTouch called with MultiPointerMove");
 						
 						
 						// We always need to return false in this case because the other pointers have to run for this as well
@@ -712,14 +713,14 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						
 						if(action == MotionEvent.ACTION_POINTER_DOWN) {
 							// Should not happen!
-							TokTales.getLog().w(TAG, "Warning (MultPtr): Action DOWN with a valid pointer!");
+							logger.warn("Warning (MultPtr): Action DOWN with a valid pointer!");
 						}
 						else if(action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
 							
 							// These should not happen because we would have had an ACTION_MOVE before these
 							if(button == IUIOverlay.BUTTON_NONE) {
 								// Should not happen!
-								TokTales.getLog().w(TAG, "Warning (MultPtr): Action UP/CANCEL with a valid pointer outside of buttons!");
+								logger.warn("Warning (MultPtr): Action UP/CANCEL with a valid pointer outside of buttons!");
 							}
 							else {
 								deleteCurrentPointer();
@@ -763,7 +764,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						else {
 							// Should not happen!
 							// There should be a valid pointer in this case
-							TokTales.getLog().w(TAG, "Warning (SinglPtr): Action UP/CANCEL inside a control with no valid pointer!");
+							logger.warn("Warning (SinglPtr): Action UP/CANCEL inside a control with no valid pointer!");
 						}
 					}
 				}
@@ -804,12 +805,12 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						}
 						else if(action == MotionEvent.ACTION_DOWN) {
 							// Should not happen!
-							TokTales.getLog().w(TAG, "Warning (SinglPtr): Action DOWN with a valid pointer!");
+							logger.warn("Warning (SinglPtr): Action DOWN with a valid pointer!");
 						}
 						else if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
 							if(button == IUIOverlay.BUTTON_NONE) {
 								// Should not happen!
-								TokTales.getLog().w(TAG, "Warning (SinglPtr): Action UP/CANCEL with a valid pointer outside of buttons");
+								logger.warn("Warning (SinglPtr): Action UP/CANCEL with a valid pointer outside of buttons");
 							}
 							else {
 								deleteCurrentPointer();
@@ -819,7 +820,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 					}
 					else {
 						// Must not happen!!
-						TokTales.getLog().w(TAG, "Warning (SinglPtr): Valid pointer and does not match the given pointer!");
+						logger.warn("Warning (SinglPtr): Valid pointer and does not match the given pointer!");
 					}
 				}
 				
@@ -870,7 +871,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 				// We have to use our pointer id to find all the data we need
 				int currentPointerIndex = MotionEventCompat.findPointerIndex(motionEvent, mCurrentPointerId);
 				if(currentPointerIndex == -1) {
-					TokTales.getLog().w(TAG, "Warning (MultPtr): Action MOVE with a valid pointer had no pointer index for the current pointer id");
+					logger.warn("Warning (MultPtr): Action MOVE with a valid pointer had no pointer index for the current pointer id");
 					return;
 				}
 				
@@ -986,7 +987,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						
 						// Covered by onTouchMultiMove()
 						// Should this even be called?
-						TokTales.getLog().w(TAG, "Warning (MultPtr): onTouch called with MultiPointerMove");
+						logger.warn("Warning (MultPtr): onTouch called with MultiPointerMove");
 						
 						
 						// We always need to return false in this case because the other pointers have to run for this as well
@@ -1022,11 +1023,11 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						else {
 							// Should not happen!
 							// There should be a valid pointer in this case
-							TokTales.getLog().w(TAG, "Warning (MultPtr): Action UP/CANCEL inside a control with no valid pointer!");
+							logger.warn("Warning (MultPtr): Action UP/CANCEL inside a control with no valid pointer!");
 						}
 					}
 					else {
-						TokTales.getLog().d(TAG, "Warning (MultPtr): Some other action just happened (NoValidPtr): " +action);
+						logger.debug("Warning (MultPtr): Some other action just happened (NoValidPtr): {}", action);
 					}
 					
 				}
@@ -1038,7 +1039,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 
 						// Covered by onTouchMultiMove()
 						// Should this even be called?
-						TokTales.getLog().w(TAG, "Warning (MultPtr): onTouch called with MultiPointerMove");
+						logger.warn("Warning (MultPtr): onTouch called with MultiPointerMove");
 						
 						
 						// We always need to return false in this case because the other pointers have to run for this as well
@@ -1050,18 +1051,18 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						
 						if(action == MotionEvent.ACTION_POINTER_DOWN) {
 							// Should not happen!
-							TokTales.getLog().w(TAG, "Warning (MultPtr): Action DOWN with a valid pointer!");
+							logger.warn("Warning (MultPtr): Action DOWN with a valid pointer!");
 						}
 						else if(action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
 							
 							// These should not happen because we would have had an ACTION_MOVE before these
 							if(control == ICrossControlOverlayView.CROSS_OUTSIDE) {
 								// Should not happen!
-								TokTales.getLog().w(TAG, "Warning (MultPtr): Action UP/CANCEL with a valid pointer outside of cross!");
+								logger.warn("Warning (MultPtr): Action UP/CANCEL with a valid pointer outside of cross!");
 							}
 							else if(control == ICrossControlOverlayView.CROSS_CONTROL_NONE) {
 								// Should not happen!
-								TokTales.getLog().w(TAG, "Warning (MultPtr): Action UP/CANCEL with a valid pointer outside of control!");
+								logger.warn("Warning (MultPtr): Action UP/CANCEL with a valid pointer outside of control!");
 							}
 							else {
 								deleteCurrentPointer();
@@ -1110,7 +1111,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						else {
 							// Should not happen!
 							// There should be a valid pointer in this case
-							TokTales.getLog().w(TAG, "Warning (SinglPtr): Action UP/CANCEL inside a control with no valid pointer!");
+							logger.warn("Warning (SinglPtr): Action UP/CANCEL inside a control with no valid pointer!");
 						}
 					}
 				}
@@ -1154,17 +1155,17 @@ public class UIControl implements Runnable {		// Make interface for this ?
 						}
 						else if(action == MotionEvent.ACTION_DOWN) {
 							// Should not happen!
-							TokTales.getLog().w(TAG, "Warning (SinglPtr): Action DOWN with a valid pointer!");
+							logger.warn("Warning (SinglPtr): Action DOWN with a valid pointer!");
 						}
 						else if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
 							
 							if(control == ICrossControlOverlayView.CROSS_OUTSIDE) {
 								// Should not happen!
-								TokTales.getLog().w(TAG, "Warning (SinglPtr): Action UP/CANCEL with a valid pointer outside of cross!");
+								logger.warn("Warning (SinglPtr): Action UP/CANCEL with a valid pointer outside of cross!");
 							}
 							else if(control == ICrossControlOverlayView.CROSS_CONTROL_NONE) {
 								// Should not happen!
-								TokTales.getLog().w(TAG, "Warning (SinglPtr): Action UP/CANCEL with a valid pointer outside of control!");
+								logger.warn("Warning (SinglPtr): Action UP/CANCEL with a valid pointer outside of control!");
 							}
 							else {
 								deleteCurrentPointer();
@@ -1175,7 +1176,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 					}
 					else {
 						// Must not happen!!
-						TokTales.getLog().w(TAG, "Warning (SinglPtr): Valid pointer and does not match the given pointer!");
+						logger.warn("Warning (SinglPtr): Valid pointer and does not match the given pointer!");
 					}
 				}
 				

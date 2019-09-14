@@ -19,7 +19,8 @@ import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.content.sprite.ISprite;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITexture;
@@ -38,9 +39,7 @@ import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
 public class GLSpriteDriver implements IRenderDriver {
 
-	public static final String TAG = "GLSpriteDriver";
 
-	
 	private static final String VS_Sprite = 
 			"#version 330\n" +
 			"layout(location = 0) in vec3 vPosition;\n" +
@@ -71,17 +70,20 @@ public class GLSpriteDriver implements IRenderDriver {
 	
 	
 	
-	private final FloatBuffer textureCoordinateBuffer;
-
-	private final Map<ISprite, ITextureRegion> textureMap;
-
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
 	
+	private final FloatBuffer textureCoordinateBuffer;
+
+	private final Map<ISprite, ITextureRegion> textureMap;
+
+	private final ILogger logger;
 	
 	@Inject
-	public GLSpriteDriver() {
+	public GLSpriteDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
+
 		textureMap = new HashMap<>(); // Custom load factor etc?
 
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
@@ -105,7 +107,7 @@ public class GLSpriteDriver implements IRenderDriver {
 			mShader.createUniform("samplerTexture");
 			
 		} catch (LWJGLException e) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " +e.getMessage());
+			logger.error("Failed to create shader program:", e);
 			return;
 		}
 		

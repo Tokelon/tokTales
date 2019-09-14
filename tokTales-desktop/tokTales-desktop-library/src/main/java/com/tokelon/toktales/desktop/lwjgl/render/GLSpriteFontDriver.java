@@ -20,7 +20,8 @@ import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.content.IContentUtils;
 import com.tokelon.toktales.core.content.sprite.ISprite;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.core.prog.annotation.Experimental;
 import com.tokelon.toktales.core.prog.annotation.Unmaintained;
@@ -41,9 +42,7 @@ import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 @Experimental
 public class GLSpriteFontDriver implements IRenderDriver {
 
-	public static final String TAG = "GLSpriteFontDriver";
 
-	
 	private static final String VS_Sprite = 
 			"#version 330\n" +
 			"layout(location = 0) in vec3 vPosition;\n" +
@@ -73,18 +72,19 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
 	
-	
-	private final Map<ISprite, ITexture> textureMap;
+
+	private ShaderProgram mShader;
 
 	private GLSpriteMesh spriteMesh;
 	
-	private ShaderProgram mShader;
+	private final Map<ISprite, ITexture> textureMap;
 	
-	
+	private final ILogger logger;
 	private final IContentUtils contentUtils;
 	
 	@Inject
-	public GLSpriteFontDriver(IContentUtils contentUtils) {
+	public GLSpriteFontDriver(ILogging logging, IContentUtils contentUtils) {
+		this.logger = logging.getLogger(getClass());
 		this.contentUtils = contentUtils;
 		
 		textureMap = new HashMap<>();
@@ -111,7 +111,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 			mShader.createUniform("colorOver");
 			
 		} catch (LWJGLException e) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " +e.getMessage());
+			logger.error("Failed to create shader program:", e);
 			return;
 		}
 		

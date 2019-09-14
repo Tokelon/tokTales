@@ -11,7 +11,7 @@ import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.states.GameStateControl;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 
@@ -21,8 +21,8 @@ public class AndroidGameStateControl extends GameStateControl {
 	private final AndroidGamestateInputForwarder inputForwarder;
 	
 	@Inject
-	public AndroidGameStateControl(ILogger logger, IAndroidInputService inputService) {
-		super(logger);
+	public AndroidGameStateControl(ILogging logging, IAndroidInputService inputService) {
+		super(logging);
 		
 		this.inputForwarder = new AndroidGamestateInputForwarder();
 		inputService.getMainInputDispatch().getInputConsumer().registerInputCallback(inputForwarder);

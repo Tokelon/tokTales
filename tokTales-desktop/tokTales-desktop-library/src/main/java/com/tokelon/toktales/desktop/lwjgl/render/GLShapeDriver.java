@@ -22,7 +22,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.RenderException;
@@ -38,12 +39,9 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
 public class GLShapeDriver implements IRenderDriver {
-
-	public static final String TAG = "GLShapeDriver";
-
 	// TODO: Optimize all object creation (look for "new")
-	
-	
+
+
 	private static final String VS_Shape = 
 			"#version 330\n" +
 			"layout(location = 0) in vec3 vPosition;\n" +
@@ -66,7 +64,7 @@ public class GLShapeDriver implements IRenderDriver {
 	private static final String MATRIX_MODEL_NAME = "uModelMatrix";
 	private static final String COLOR_OVER_NAME = "colorOver";
 	
-	private static final float Z_INDEX = -1.05f;	// TODO: Important - Fix static z
+	private static final float Z_INDEX = -1.05f; // TODO: Important - Fix static z
 	
 	
 	private final FloatBuffer lineNativeCoordinateBuffer;
@@ -88,9 +86,12 @@ public class GLShapeDriver implements IRenderDriver {
 	
 	private ShaderProgram mShader;
 	
+	private final ILogger logger;
 	
 	@Inject
-	public GLShapeDriver() {
+	public GLShapeDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
+
 		lineNativeCoordinateBuffer = BufferUtils.createFloatBuffer(6);
 		lineCoordinateBuffer = BufferUtils.createFloatBuffer(12);
 		pointCoordinateBuffer = BufferUtils.createFloatBuffer(3);
@@ -116,7 +117,7 @@ public class GLShapeDriver implements IRenderDriver {
 			mShader.createUniform(COLOR_OVER_NAME);
 			
 		} catch (LWJGLException e) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " +e.getMessage());
+			logger.error("Failed to create shader program:", e);
 			return;
 		}
 		
@@ -226,7 +227,8 @@ public class GLShapeDriver implements IRenderDriver {
 
 		
 		int lineWidth = (int)lineModel.getTargetWidth();
-		float dPositive, dNegative;
+		float dPositive;
+		float dNegative;
 		if(lineModel.getTargetAlignment() == ILineModel.ALIGNMENT_INNER) {
 			dPositive = lineWidth;
 			dNegative = 0f;

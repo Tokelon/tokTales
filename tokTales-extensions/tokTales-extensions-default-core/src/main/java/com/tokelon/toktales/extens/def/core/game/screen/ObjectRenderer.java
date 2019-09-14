@@ -12,6 +12,7 @@ import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.IPolyline2f.IExtendablePolyline2f;
@@ -48,8 +49,6 @@ import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer {
-
-	public static final String TAG = "ObjectRenderer";
 
 
 	private final Rectangle2fImpl spriteCoordinates = new Rectangle2fImpl();
@@ -96,13 +95,13 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	private final Supplier<IMapController> mapControllerSupplier;
 	
 	public ObjectRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IMapController> mapControllerSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.spriteAssetManager = spriteAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
@@ -182,7 +181,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	public void drawLayer(INamedOptions options, String layerName) {
 		IMapController mapController = mapControllerSupplier.get();
 		if(mapController == null) {
-			logger.i(TAG, "Draw was called but no Map is available");
+			logger.info("Draw was called but no Map is available");
 			return;
 		}
 		
@@ -409,7 +408,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 				Supplier<IMapController> mapControllerSupplier		
 		) {
 			return new ObjectRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					textureCoordinatorSupplier,
@@ -421,7 +420,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		@Override
 		public ObjectRenderer createForGamestate(IGameState gamestate) {
 			return new ObjectRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
@@ -432,7 +431,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		@Override
 		public ObjectRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> gamestate) {
 			return new ObjectRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),

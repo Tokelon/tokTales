@@ -8,13 +8,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 
 public class GameSceneControl<T extends IGameScene> implements IModifiableGameSceneControl<T> {
-	
-	public static final String TAG = "GameSceneControl";
-	
-	
+
+
 	// synchronize?
 	private final Map<String, T> scenes;
 	private final Map<String, T> unmodifiableScenes;
@@ -25,8 +24,8 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	private final ILogger logger;
 	
 	@Inject
-	public GameSceneControl(ILogger logger) {
-		this.logger = logger;
+	public GameSceneControl(ILogging logging) {
+		this.logger = logging.getLogger(getClass());
 		
 		this.scenes = new HashMap<String, T>();
 		this.unmodifiableScenes = Collections.unmodifiableMap(scenes);
@@ -64,7 +63,7 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	public void changeScene(String name) {
 		T newScene = scenes.get(name);
 		if(newScene == null) {
-			logger.e(TAG, "Cannot change scene: no scene for name " + name);
+			logger.error("Cannot change scene: no scene for name {}", name);
 			assert false : "no scene for name " + name;
 			return;
 		}
@@ -77,7 +76,7 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		
 
 		//logger.d(TAG, String.format("Scene change in [%s]", this));
-		logger.i(TAG, String.format("Scene was changed: '%s' -> '%s' | [%s] -> [%s]", activeSceneName, name, activeScene, newScene));
+		logger.info("Scene was changed: '{}' -> '{}' | [{}] -> [{}]", activeSceneName, name, activeScene, newScene);
 
 		activeScene = newScene;
 		activeSceneName = name;
@@ -97,7 +96,7 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 		//scene.onAssign(); // Do this in BaseGamestate, right?
 		
 		//logger.d(TAG, String.format("Scene addition in [%s]", this));
-		logger.i(TAG, String.format("Scene was added: '%s' | [%s]", name, scene));
+		logger.info("Scene was added: '{}' | [{}]", name, scene);
 	}
 
 	@Override
@@ -127,10 +126,10 @@ public class GameSceneControl<T extends IGameScene> implements IModifiableGameSc
 	
 	
 	public static class GameSceneControlFactory implements IGameSceneControlFactory {
-		private final Provider<ILogger> loggerProvider;
+		private final Provider<ILogging> loggerProvider;
 
 		@Inject
-		public GameSceneControlFactory(Provider<ILogger> loggerProvider) {
+		public GameSceneControlFactory(Provider<ILogging> loggerProvider) {
 			this.loggerProvider = loggerProvider;
 		}
 		

@@ -7,6 +7,7 @@ import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -24,9 +25,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class LoadTaleActivity extends AbstractIntegratedActivity {
+	// TODO: Refactor to use DI
 
-	public static final String TAG = "LoadTaleActivity";
-	
 	public static final String ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS = "LoadTaleActivity_Integration_RequestPermissions";
 	
 	public static final String ACTIVITY_RESULT_TALE_DIR_APP_PATH = "ACTIVITY_RESULT_TALE_DIR_APP_PATH";
@@ -34,6 +34,8 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 	private static final String TALES_LOCATION_PATH = "Tales";	// TODO: Static location! Implement with configs
 	private static final IApplicationLocation talesLocation = new LocationImpl(TALES_LOCATION_PATH);
 	
+	
+	private ILogger logger;
 	
 	private ListView taleListView;
 	private String[] taleList;
@@ -44,7 +46,7 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 	protected Map<String, IActivityIntegration> createActivityIntegrations() {
 		Map<String, IActivityIntegration> integrations = new HashMap<>(); // do not use default integrations returned by superclass
 		
-		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLog(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLogging(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
 		integrations.put(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
 		return integrations;
@@ -55,6 +57,8 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		logger = TokTales.getLogging().getLogger(getClass());
+
 		init();
 		
 		setContentView(taleListView);
@@ -75,7 +79,7 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 			taleListView.setOnItemClickListener(new ListClickListener());
 			
 		} catch (StorageException se) {
-			TokTales.getLog().e(TAG, "List directory Tales location failed: " +se.getMessage());
+			logger.error("List directory Tales location failed:", se);
 		}
 		
 	}
@@ -94,7 +98,7 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 		
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			TokTales.getLog().d(TAG, "Tale selected: " +position);
+			logger.debug("Tale selected: {}", position);
 			
 			
 			String taleDirName = taleList[position];

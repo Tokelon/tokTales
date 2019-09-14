@@ -4,20 +4,23 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
 
 public class TaleLoader implements ITaleLoader {
 
-	
+
 	private final IEngineContext engineContext;
 	private final Provider<ITaleGamestate> taleGamestateProvider;
+	private final ILogger logger;
 	
 	@Inject
 	public TaleLoader(IEngineContext engineContext, Provider<ITaleGamestate> taleGamestateProvider) {
 		this.engineContext = engineContext;
 		this.taleGamestateProvider = taleGamestateProvider;
+		this.logger = engineContext.getLogging().getLogger(getClass());
 	}
 	
 	
@@ -41,7 +44,7 @@ public class TaleLoader implements ITaleLoader {
 			throw new TaleException("Loading tale failed | Scene and state are incompatible");
 		}
 		
-		engineContext.getLog().i("Loading tale into gamestate succeeded");
+		logger.info("Loading tale into gamestate succeeded");
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class TaleLoader implements ITaleLoader {
 			throw new TaleException("Loading tale failed | Scene and state are incompatible");
 		}
 		
-		engineContext.getLog().i("Loading tale into engine succeeded");
+		logger.info("Loading tale into engine succeeded");
 	}
 
 }

@@ -10,7 +10,7 @@ import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.inject.annotation.services.StorageServiceExtensions;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.IStorageService.IStorageServiceFactory;
 import com.tokelon.toktales.core.engine.storage.StorageException;
@@ -19,18 +19,16 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 
 public class DesktopContentService extends AbstractEngineService implements IContentService {
-	
-	public static final String TAG = "DesktopContentService";
-	
-	
+
+
 	private final IStorageService assetStorageService;
 
-	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot) {
+	public DesktopContentService(ILogging logging, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot) {
 		this.assetStorageService = storageServiceFactory.create(assetRoot);
 	}
 	
 	@Inject
-	public DesktopContentService(ILogger logger, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot, @ContentServiceExtensions Map<String, IServiceExtension> contentExtensions, @StorageServiceExtensions Map<String, IServiceExtension> storageExtensions) {
+	public DesktopContentService(ILogging logging, IStorageServiceFactory storageServiceFactory, @AssetRoot String assetRoot, @ContentServiceExtensions Map<String, IServiceExtension> contentExtensions, @StorageServiceExtensions Map<String, IServiceExtension> storageExtensions) {
 		super(contentExtensions);
 		
 		this.assetStorageService = storageServiceFactory.create(assetRoot, storageExtensions);

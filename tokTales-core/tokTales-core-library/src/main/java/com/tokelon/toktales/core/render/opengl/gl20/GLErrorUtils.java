@@ -9,15 +9,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 import com.tokelon.toktales.core.render.opengl.OpenGLErrorException;
 
 public class GLErrorUtils implements IGLErrorUtils {
-	
-	public static final String TAG = "GLErrorUtils";
 
-	
+
 	private static final List<IGLError> emptyErrorList = Collections.unmodifiableList(new ArrayList<>());
 	
 	private boolean enableErrorChecking = false; // Implementation default must be false
@@ -26,8 +25,8 @@ public class GLErrorUtils implements IGLErrorUtils {
 	private final IGL11 gl11;
 
 	@Inject
-	public GLErrorUtils(ILogger logger, IGL11 gl11, @GLErrorCheckingEnabled boolean enabled) {
-		this.logger = logger;
+	public GLErrorUtils(ILogging logging, IGL11 gl11, @GLErrorCheckingEnabled boolean enabled) {
+		this.logger = logging.getLogger(getClass());
 		this.gl11 = gl11;
 		
 		this.enableErrorChecking = enabled;
@@ -65,7 +64,8 @@ public class GLErrorUtils implements IGLErrorUtils {
 		
 		StringBuilder strBuilder = null;
 		
-		int lastError, errorCount = 0;
+		int lastError;
+		int errorCount = 0;
 		while((lastError = gl11.glGetError()) != IGL11.GL_NO_ERROR) {
 			// Initialize
 			if(errorCount == 0) {
@@ -85,7 +85,7 @@ public class GLErrorUtils implements IGLErrorUtils {
 			new Throwable().printStackTrace(new PrintWriter(sw));
 			
 			strBuilder.append(sw.toString());
-			logger.e(TAG, strBuilder.toString());
+			logger.error(strBuilder.toString());
 		}
 		
 		

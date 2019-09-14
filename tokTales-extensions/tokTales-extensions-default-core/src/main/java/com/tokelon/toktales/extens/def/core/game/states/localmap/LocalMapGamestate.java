@@ -9,7 +9,6 @@ import com.tokelon.toktales.core.config.IFileConfig.OnConfigChangeListener;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
@@ -34,8 +33,7 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapStateR
 
 public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> implements ILocalMapGamestate {
 
-	public static final String SUB_TAG = "LocalMapGamestate";
-	
+
 	public static final String ASSET_KEY_ID_FONT_MAIN = "LOCAL_MAP_GAMESTATE-ASSET_KEY_ID_FONT_MAIN";
 
 	
@@ -205,7 +203,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 
 			
 			int drawDT = (int) (System.currentTimeMillis() - drawStart);
-			if(logDrawTime) TokTales.getLog().d(getTag(), "Draw Time MS = " + drawDT);
+			if(logDrawTime) getLogger().debug("Draw Time MS = {}", drawDT);
 		}
 		finally {
 			mapController.getActionScheduler().finishAction(actionTaker);
@@ -215,18 +213,12 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 		if(fpsModeEnabled) {
 			int fps = frameTool.countFps();
 			if(fps != -1) {
-				TokTales.getLog().d(getTag(), "FPS: " +fps);
+				getLogger().debug("FPS: {}", fps);
 			}
 		}
 		
 		int renderDT = (int) (System.currentTimeMillis() - renderStart);
-		if(logRenderTime) TokTales.getLog().d(getTag(), "Render Time MS = " + renderDT);
-	}
-	
-	
-	@Override
-	protected String getTag() {
-		return SUB_TAG + "_" + BASE_TAG;
+		if(logRenderTime) getLogger().debug("Render Time MS = {}", renderDT);
 	}
 
 

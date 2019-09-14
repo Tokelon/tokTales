@@ -1,15 +1,55 @@
 package com.tokelon.toktales.core.engine.log;
 
-public interface ILogger {
-	// TODO: Remove overloads with tag because they are inefficient
+import org.slf4j.Logger;
 
+public interface ILogger extends Logger {
+
+
+	public void traceOnce(String message, Object arg);
+	public void traceOnce(String message, Object arg1, Object arg2);
+	public void traceOnce(String message, Object... args);
 	
-	/* Standard Logger
-	System.out.printf("d | %s : %s", tag, message);
-	System.out.println();
+	public void traceOnceForId(String id, String message, Object arg);
+	public void traceOnceForId(String id, String message, Object arg1, Object arg2);
+	public void traceOnceForId(String id, String message, Object... args);
 	
-	System.out.printf("d | %s : " + format.replaceAll("{}", "%s"), name, arg);
-	 */
+	
+	public void debugOnce(String message, Object arg);
+	public void debugOnce(String message, Object arg1, Object arg2);
+	public void debugOnce(String message, Object... args);
+	
+	public void debugOnceForId(String id, String message, Object arg);
+	public void debugOnceForId(String id, String message, Object arg1, Object arg2);
+	public void debugOnceForId(String id, String message, Object... args);
+	
+	
+	public void infoOnce(String message, Object arg);
+	public void infoOnce(String message, Object arg1, Object arg2);
+	public void infoOnce(String message, Object... args);
+	
+	public void infoOnceForId(String id, String message, Object arg);
+	public void infoOnceForId(String id, String message, Object arg1, Object arg2);
+	public void infoOnceForId(String id, String message, Object... args);
+	
+	
+	public void warnOnce(String message, Object arg);
+	public void warnOnce(String message, Object arg1, Object arg2);
+	public void warnOnce(String message, Object... args);
+	
+	public void warnOnceForId(String id, String message, Object arg);
+	public void warnOnceForId(String id, String message, Object arg1, Object arg2);
+	public void warnOnceForId(String id, String message, Object... args);
+	
+	
+	public void errorOnce(String message, Object arg);
+	public void errorOnce(String message, Object arg1, Object arg2);
+	public void errorOnce(String message, Object... args);
+	
+	public void errorOnceForId(String id, String message, Object arg);
+	public void errorOnceForId(String id, String message, Object arg1, Object arg2);
+	public void errorOnceForId(String id, String message, Object... args);
+	
+	
 	
 	/*
 	public enum LogLevel {
@@ -19,85 +59,25 @@ public interface ILogger {
 		TRACE
 	}
 
-
+	
+	public boolean isLogLevelEnabled(LogLevel level);
+	
 	public void log(LogLevel level, String message);
-	public void log(LogLevel level, String tag, String message);
-
 	public void log(LogLevel level, String format, Object arg);
 	public void log(LogLevel level, String format, Object arg1, Object arg2);
 	public void log(LogLevel level, String format, Object... args);
 	public void log(LogLevel level, String message, Throwable cause);
-	public void log(LogLevel level, String tag, String format, Object arg);
-	public void log(LogLevel level, String tag, String format, Object arg1, Object arg2);
-	public void log(LogLevel level, String tag, String format, Object... args);
-	public void log(LogLevel level, String tag, String message, Throwable cause);
+	
+	public void logN(LogLevel loglevel, String id, String message, Object arg);
+	public void logEveryN(LogLevel loglevel, String id, String message, Object arg);
+	
+	public void logOnce(LogLevel loglevel, String id, String message, Object arg);
+	public void logOnce(LogLevel loglevel, String id, String message, Object arg1, Object arg2);
+	public void logOnce(LogLevel loglevel, String id, String message, Object... args);
+	
+	public void logOnce(LogLevel loglevel, String id, ILoggingContext, String message, Object arg);
+	public void logOnce(LogLevel loglevel, String id, ILoggingContext, String message, Object arg1, Object arg2);
+	public void logOnce(LogLevel loglevel, String id, ILoggingContext, String message, Object... args);
 	*/
-
-	
-	public String getName();
-	
-	public boolean isErrorEnabled();
-	public boolean isInfoEnabled();
-	public boolean isDebugEnabled();
-	public boolean isTraceEnabled();
-
-	
-	public void d(String message);
-	public void d(String tag, String message);
-
-	public void d(String format, Object arg);
-	public void d(String format, Object arg1, Object arg2);
-	public void d(String format, Object... args);
-	public void d(String message, Throwable cause);
-	public void d(String tag, String format, Object arg);
-	public void d(String tag, String format, Object arg1, Object arg2);
-	public void d(String tag, String format, Object... args);
-	public void d(String tag, String message, Throwable cause);
-	
-
-	public void e(String message);
-	public void e(String tag, String message);
-	
-	public void e(String format, Object arg);
-	public void e(String format, Object arg1, Object arg2);
-	public void e(String format, Object... args);
-	public void e(String message, Throwable cause);
-	public void e(String tag, String format, Object arg);
-	public void e(String tag, String format, Object arg1, Object arg2);
-	public void e(String tag, String format, Object... args);
-	public void e(String tag, String message, Throwable cause);
-
-	
-	public void w(String message);
-	public void w(String tag, String message);
-
-	public void w(String format, Object arg);
-	public void w(String format, Object arg1, Object arg2);
-	public void w(String format, Object... args);
-	public void w(String message, Throwable cause);
-	public void w(String tag, String format, Object arg);
-	public void w(String tag, String format, Object arg1, Object arg2);
-	public void w(String tag, String format, Object... args);
-	public void w(String tag, String message, Throwable cause);
-	
-	
-	public void i(String message);
-	public void i(String tag, String message);
-	
-	public void i(String format, Object arg);
-	public void i(String format, Object arg1, Object arg2);
-	public void i(String format, Object... args);
-	public void i(String message, Throwable cause);
-	public void i(String tag, String format, Object arg);
-	public void i(String tag, String format, Object arg1, Object arg2);
-	public void i(String tag, String format, Object... args);
-	public void i(String tag, String message, Throwable cause);
-
-	
-	
-	
-	public void logOnce(char loglevel, String id, String tag, String message);
-	
-	//public void logN(char loglevel, String id, String tag, String message, int maxN);
 
 }

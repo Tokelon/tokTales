@@ -6,24 +6,23 @@ import com.tokelon.toktales.android.render.opengl.IGLRenderView;
 import com.tokelon.toktales.android.render.opengl.program.OpenGLRenderer;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 public class SurfaceViewIntegration implements ISurfaceViewIntegration {
-	
-	private static final String TAG = "SurfaceViewIntegration";
 
-	
+
 	private IGLRenderView renderView;
 	
 	private final ILogger logger;
 	private final OpenGLRenderer renderer;
 	
 	@Inject
-	public SurfaceViewIntegration(ILogger logger, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
-		this.logger = logger;
+	public SurfaceViewIntegration(ILogging logging, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
+		this.logger = logging.getLogger(getClass());
 		
-		renderer = new OpenGLRenderer(logger, engine, game, eventPoolFactory);
+		renderer = new OpenGLRenderer(logging, engine, game, eventPoolFactory);
 	}
 	
 	
@@ -43,10 +42,10 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	@Override
 	public void onActivityPause(IIntegratedActivity activity) {
 		if(renderView == null) {
-			logger.w(TAG, "No render view set: cannot pause");
+			logger.warn("No render view set: cannot pause");
 		}
 		else {
-			logger.i(TAG, "Render view was paused");
+			logger.info("Render view was paused");
 			renderView.onPause();
 		}
 	}
@@ -54,10 +53,10 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	@Override
 	public void onActivityResume(IIntegratedActivity activity) {
 		if(renderView == null) {
-			logger.w(TAG, "No render view set: cannot resume");
+			logger.warn("No render view set: cannot resume");
 		}
 		else {
-			logger.i(TAG, "Render view was resumed");
+			logger.info("Render view was resumed");
 			renderView.onResume();
 		}
 	}

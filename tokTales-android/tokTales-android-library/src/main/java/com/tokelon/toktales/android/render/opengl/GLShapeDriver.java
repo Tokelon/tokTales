@@ -12,7 +12,8 @@ import org.joml.Vector3f;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.RenderException;
@@ -28,12 +29,9 @@ import com.tokelon.toktales.core.util.options.INamedOptions;
 import android.opengl.GLES20;
 
 public class GLShapeDriver implements IRenderDriver {
-
-	public static final String TAG = "GLShapeDriver";
-
 	// TODO: Optimize all object creation (look for "new")
 
-	
+
 	private static final String VS_Shape = 
 			"uniform mat4 uMVPMatrix;" +
 			"uniform mat4 uModelMatrix;" +
@@ -56,23 +54,26 @@ public class GLShapeDriver implements IRenderDriver {
 	private static final String COLOR_OVER_NAME = "colorOver";
 	private static final String POSITION_NAME = "vPosition";
 	
-	private static final float Z_INDEX = -1.05f;	// TODO: Important - Fix static z
+	private static final float Z_INDEX = -1.05f; // TODO: Important - Fix static z
 	
 
-	private GLMeshlike lineMesh;
-	private GLMeshlike pointMesh;
-	private GLMeshlike triangleMesh;
-	private GLMeshlike rectangleFillMesh;
-	
+	private final GLMeshlike lineMesh;
+	private final GLMeshlike pointMesh;
+	private final GLMeshlike triangleMesh;
+	private final GLMeshlike rectangleFillMesh;
+
 	private final DrawLineStruct drawLineStruct = new DrawLineStruct();
 	
 	private final LineModel rectLineModel = new LineModel();
 	
 	private ShaderProgram mShader;
 	
+	private final ILogger logger;
 	
 	@Inject
-	public GLShapeDriver() {
+	public GLShapeDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
+
 		//lineNativeCoordinateBuffer = BufferUtils.createFloatBuffer(6);
 		//lineCoordinateBuffer = BufferUtils.createFloatBuffer(12);
 		//pointCoordinateBuffer = BufferUtils.createFloatBuffer(3);
@@ -129,7 +130,7 @@ public class GLShapeDriver implements IRenderDriver {
 			mShader.createAttribute(POSITION_NAME);
 			
 		} catch (OpenGLException e) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " +e.getMessage());
+			logger.error("Failed to create shader program:", e);
 			return;
 		}
 	}
@@ -418,7 +419,8 @@ public class GLShapeDriver implements IRenderDriver {
 			rectLineModel.setTargetWidth(outlineWidth);
 
 			
-			int hFill, vFill;
+			int hFill;
+			int vFill;
 			int targetLineAlignment;
 			if(rectangleModel.getOutlineType() == IRectangleModel.OUTLINE_TYPE_INNER) {
 				targetLineAlignment = ILineModel.ALIGNMENT_INNER;

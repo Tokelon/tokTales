@@ -3,8 +3,8 @@ package com.tokelon.toktales.extens.def.desktop.game.states;
 import java.io.IOException;
 
 import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.logic.map.MapException;
@@ -24,21 +24,20 @@ import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
 public class TestingProcess {
 	// TODO: Remove/Rename and move
-	
-	public static final String TAG = "TestingProcess";
 
-	
+
 	private final IEngine engine;
-	private final ILogger log;
+	private final ILogger logger;
 	private final IGame game;
 	private final IGameState gamestate;
 	
-	public TestingProcess(IEngine engine, ILogger log, IGame game, IGameState gamestate) {
+	public TestingProcess(IEngine engine, ILogging logging, IGame game, IGameState gamestate) {
 		this.engine = engine;
-		this.log = log;
+		this.logger = logging.getLogger(getClass());
 		this.game = game;
 		this.gamestate = gamestate;
 	}
+	
 	
 	private IGame getGame() {
 		return game;
@@ -47,7 +46,7 @@ public class TestingProcess {
 
 	
 	public void loadTiledMap(String mapFileName) {
-		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(engine.getStorageService(), game.getWorld());
+		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(gamestate.getLogging(), engine.getStorageService(), game.getWorld());
 		
 		
 		try {
@@ -55,13 +54,13 @@ public class TestingProcess {
 			loader.setTarget(mapLocation, mapFileName);
 			
 		} catch (StorageException se) {
-			TokTales.getLog().e(TAG, "StorageException while configuring loader: " +se.getMessage());
+			logger.error("StorageException while configuring loader:", se);
 			return;
 		}
 		
 		
 		
-		TokTales.getLog().d(TAG, "Loading Tiled map: Started");
+		logger.debug("Loading Tiled map: Started");
 
 		try {
 			loader.runComplete();
@@ -106,19 +105,17 @@ public class TestingProcess {
 			//game.getStateControl().changeStateTo(TokelonGameStates.STATE_LOCAL_MAP);
 
 		} catch (MapFormatException mfe) {
-			TokTales.getLog().e(TAG, "MapFormatException at loading map: " +mfe.getMessage());
+			logger.error("MapFormatException at loading map:", mfe);
 		} catch (IOException ioe) {
-			TokTales.getLog().e(TAG, "IOException at loading map: " +ioe.getMessage());
+			logger.error("IOException at loading map:", ioe);
 		} catch (MapLoaderException mle) {
-			TokTales.getLog().e(TAG, "MapLoaderException at loading map: " +mle.getMessage());
+			logger.error("MapLoaderException at loading map:", mle);
 		} catch (MapException e) {
-			TokTales.getLog().e(TAG, "Loading map cancelled");
+			logger.error("Loading map cancelled:", e);
 		}
 		finally {
-
-			TokTales.getLog().d(TAG, "Loading map: Finished");
+			logger.debug("Loading map: Finished");
 		}
-		
 	}
 	
 }

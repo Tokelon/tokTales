@@ -10,12 +10,13 @@ import org.joml.Matrix4f;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 import com.tokelon.toktales.core.render.model.IRenderModel;
@@ -25,9 +26,7 @@ import com.tokelon.toktales.core.util.options.INamedOptions;
 import android.opengl.GLES20;
 
 public class GLBitmapDriver implements IRenderDriver {
-	
-	private static final String TAG = "GLBitmapDriver";
-	
+
 
 	private static final String VS_Bitmap = 
 			"uniform mat4 uMVPMatrix;" +
@@ -58,11 +57,13 @@ public class GLBitmapDriver implements IRenderDriver {
 	
 	private ShaderProgram mShader;
 	
-	private GLSpriteMesh bitmapMesh;
+	private final GLSpriteMesh bitmapMesh;
 
+	private final ILogger logger;
 	
 	@Inject
-	public GLBitmapDriver() {
+	public GLBitmapDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
 		
 		float[] vertices = new float[]
 				{
@@ -95,7 +96,7 @@ public class GLBitmapDriver implements IRenderDriver {
 			mShader.createAttribute(TEXTURE_COORDINATE_NAME);
 		}
 		catch (OpenGLException oglex) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " + oglex.getMessage());
+			logger.error("Failed to create shader program:", oglex);
 			return;
 		}
 	}

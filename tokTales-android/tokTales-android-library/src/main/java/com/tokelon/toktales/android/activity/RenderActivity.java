@@ -107,7 +107,7 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	protected Map<String, IActivityIntegration> createActivityIntegrations() {
 		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLog(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
+		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLogging(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
 		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		
 		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());

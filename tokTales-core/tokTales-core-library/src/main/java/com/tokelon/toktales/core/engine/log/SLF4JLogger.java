@@ -1,45 +1,131 @@
 package com.tokelon.toktales.core.engine.log;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 public class SLF4JLogger implements ILogger {
 
 
-	public static final String DEFAULT_TAG = "Log";
-
-	private static final Logger defaultLogger = LoggerFactory.getLogger(SLF4JLogger.class);
+	private final TObjectIntMap<String> logCount = new TObjectIntHashMap<>(); // Make lazy?
 	
-
 	private final Logger logger;
 	
-	public SLF4JLogger() {
-		this.logger = defaultLogger;
+	public SLF4JLogger(Logger logger) {
+		this.logger = logger;
 	}
 	
-	public SLF4JLogger(String name) {
-		this.logger = LoggerFactory.getLogger(name);
-	}
-	
-	public SLF4JLogger(Class<?> clazz) {
-		this.logger = LoggerFactory.getLogger(clazz);
-	}
-	
-	
+
 	@Override
 	public String getName() {
 		return logger.getName();
 	}
 	
+
 	@Override
-	public boolean isErrorEnabled() {
-		return logger.isErrorEnabled();
+	public boolean isTraceEnabled() {
+		return logger.isTraceEnabled();
+	}
+
+	@Override
+	public void traceOnce(String message, Object arg) {
+		if(logger.isTraceEnabled() && !logCount.increment(message)) {
+			logger.trace(message, arg);
+		}
+	}
+
+	@Override
+	public void traceOnce(String message, Object arg1, Object arg2) {
+		if(logger.isTraceEnabled() && !logCount.increment(message)) {
+			logger.trace(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void traceOnce(String message, Object... args) {
+		if(logger.isTraceEnabled() && !logCount.increment(message)) {
+			logger.trace(message, args);
+		}
+	}
+
+	@Override
+	public void traceOnceForId(String id, String message, Object arg) {
+		if(logger.isTraceEnabled() && !logCount.increment(id)) {
+			logger.trace(message, arg);
+		}
+	}
+
+	@Override
+	public void traceOnceForId(String id, String message, Object arg1, Object arg2) {
+		if(logger.isTraceEnabled() && !logCount.increment(id)) {
+			logger.trace(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void traceOnceForId(String id, String message, Object... args) {
+		if(logger.isTraceEnabled() && !logCount.increment(id)) {
+			logger.trace(message, args);
+		}
 	}
 	
 	@Override
-	public boolean isInfoEnabled() {
-		return logger.isInfoEnabled();
+	public void trace(String msg) {
+		logger.trace(msg);
 	}
+
+	@Override
+	public void trace(String format, Object arg) {
+		logger.trace(format, arg);
+	}
+
+	@Override
+	public void trace(String format, Object arg1, Object arg2) {
+		logger.trace(format, arg1, arg2);
+	}
+
+	@Override
+	public void trace(String format, Object... arguments) {
+		logger.trace(format, arguments);
+	}
+
+	@Override
+	public void trace(String msg, Throwable t) {
+		logger.trace(msg, t);
+	}
+
+	@Override
+	public boolean isTraceEnabled(Marker marker) {
+		return logger.isTraceEnabled(marker);
+	}
+
+	@Override
+	public void trace(Marker marker, String msg) {
+		logger.trace(marker, msg);
+	}
+
+	@Override
+	public void trace(Marker marker, String format, Object arg) {
+		logger.trace(marker, format, arg);
+	}
+
+	@Override
+	public void trace(Marker marker, String format, Object arg1, Object arg2) {
+		logger.trace(marker, format, arg1, arg2);
+	}
+
+	@Override
+	public void trace(Marker marker, String format, Object... argArray) {
+		logger.trace(marker, format, argArray);
+	}
+
+	@Override
+	public void trace(Marker marker, String msg, Throwable t) {
+		logger.trace(marker, msg, t);
+	}
+
 	
 	@Override
 	public boolean isDebugEnabled() {
@@ -47,219 +133,409 @@ public class SLF4JLogger implements ILogger {
 	}
 	
 	@Override
-	public boolean isTraceEnabled() {
-		return logger.isTraceEnabled();
-	}
-	
-	
-	@Override
-	public void d(String message) {
-		logger.debug("{}: {}", DEFAULT_TAG, message);
-	}
-	
-	@Override
-	public void d(String tag, String message) {
-		logger.debug("{}: {}", tag, message);
-	}
-	
-	@Override
-	public void d(String format, Object arg) {
-		logger.debug(format, arg);
-	}
-	
-	@Override
-	public void d(String format, Object arg1, Object arg2) {
-		logger.debug(format, arg1, arg2);		
-	}
-	
-	@Override
-	public void d(String format, Object... args) {
-		logger.debug(format, args);
-	}
-	
-	@Override
-	public void d(String message, Throwable cause) {
-		logger.debug(message, cause);
-	}
-	
-	@Override
-	public void d(String tag, String format, Object arg) {
-		logger.debug("{}: " + format, tag, arg);
-	}
-	
-	@Override
-	public void d(String tag, String format, Object arg1, Object arg2) {
-		logger.debug("{}: " + format, tag, arg1, arg2);
-	}
-	
-	@Override
-	public void d(String tag, String format, Object... args) {
-		logger.debug(tag + ": " + format, args);
-	}
-	
-	@Override
-	public void d(String tag, String message, Throwable cause) {
-		logger.debug(tag + ": " + message, cause);
-	}
-	
-	
-	@Override
-	public void e(String message) {
-		logger.error("{}: {}", DEFAULT_TAG, message);
-	}
-	
-	@Override
-	public void e(String tag, String message) {
-		logger.error("{}: {}", tag, message);
-	}
-	
-	@Override
-	public void e(String format, Object arg) {
-		logger.error(format, arg);
-	}
-	
-	@Override
-	public void e(String format, Object arg1, Object arg2) {
-		logger.error(format, arg1, arg2);		
-	}
-	
-	@Override
-	public void e(String format, Object... args) {
-		logger.error(format, args);
-	}
-	
-	@Override
-	public void e(String message, Throwable cause) {
-		logger.error(message, cause);
-	}
-	
-	@Override
-	public void e(String tag, String format, Object arg) {
-		logger.error("{}: " + format, tag, arg);
-	}
-	
-	@Override
-	public void e(String tag, String format, Object arg1, Object arg2) {
-		logger.error("{}: " + format, tag, arg1, arg2);
-	}
-	
-	@Override
-	public void e(String tag, String format, Object... args) {
-		logger.error(tag + ": " + format, args);
-	}
-	
-	@Override
-	public void e(String tag, String message, Throwable cause) {
-		logger.error(tag + ": " + message, cause);
-	}
-	
-	
-	@Override
-	public void w(String message) {
-		logger.warn("{}: {}", DEFAULT_TAG, message);
-	}
-	
-	@Override
-	public void w(String tag, String message) {
-		logger.warn("{}: {}", tag, message);
-	}
-	
-	@Override
-	public void w(String format, Object arg) {
-		logger.warn(format, arg);
-	}
-	
-	@Override
-	public void w(String format, Object arg1, Object arg2) {
-		logger.warn(format, arg1, arg2);		
-	}
-	
-	@Override
-	public void w(String format, Object... args) {
-		logger.warn(format, args);
-	}
-	
-	@Override
-	public void w(String message, Throwable cause) {
-		logger.warn(message, cause);
-	}
-	
-	@Override
-	public void w(String tag, String format, Object arg) {
-		logger.warn("{}: " + format, tag, arg);
-	}
-	
-	@Override
-	public void w(String tag, String format, Object arg1, Object arg2) {
-		logger.warn("{}: " + format, tag, arg1, arg2);
-	}
-	
-	@Override
-	public void w(String tag, String format, Object... args) {
-		logger.warn(tag + ": " + format, args);
-	}
-	
-	@Override
-	public void w(String tag, String message, Throwable cause) {
-		logger.warn(tag + ": " + message, cause);
-	}
-	
-	
-	@Override
-	public void i(String message) {
-		logger.info("{}: {}", DEFAULT_TAG, message);
-	}
-	
-	@Override
-	public void i(String tag, String message) {
-		logger.info("{}: {}", tag, message);
+	public void debugOnce(String message, Object arg) {
+		if(logger.isDebugEnabled() && !logCount.increment(message)) {
+			logger.debug(message, arg);
+		}
 	}
 
 	@Override
-	public void i(String format, Object arg) {
+	public void debugOnce(String message, Object arg1, Object arg2) {
+		if(logger.isDebugEnabled() && !logCount.increment(message)) {
+			logger.debug(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void debugOnce(String message, Object... args) {
+		if(logger.isDebugEnabled() && !logCount.increment(message)) {
+			logger.debug(message, args);
+		}
+	}
+
+	@Override
+	public void debugOnceForId(String id, String message, Object arg) {
+		if(logger.isDebugEnabled() && !logCount.increment(id)) {
+			logger.debug(message, arg);
+		}
+	}
+
+	@Override
+	public void debugOnceForId(String id, String message, Object arg1, Object arg2) {
+		if(logger.isDebugEnabled() && !logCount.increment(id)) {
+			logger.debug(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void debugOnceForId(String id, String message, Object... args) {
+		if(logger.isDebugEnabled() && !logCount.increment(id)) {
+			logger.debug(message, args);
+		}
+	}
+
+	@Override
+	public void debug(String msg) {
+		logger.debug(msg);
+	}
+
+	@Override
+	public void debug(String format, Object arg) {
+		logger.debug(format, arg);
+	}
+
+	@Override
+	public void debug(String format, Object arg1, Object arg2) {
+		logger.debug(format, arg1, arg2);
+	}
+
+	@Override
+	public void debug(String format, Object... arguments) {
+		logger.debug(format, arguments);
+	}
+
+	@Override
+	public void debug(String msg, Throwable t) {
+		logger.debug(msg, t);
+	}
+
+	@Override
+	public boolean isDebugEnabled(Marker marker) {
+		return logger.isDebugEnabled(marker);
+	}
+
+	@Override
+	public void debug(Marker marker, String msg) {
+		logger.debug(marker, msg);
+	}
+
+	@Override
+	public void debug(Marker marker, String format, Object arg) {
+		logger.debug(marker, format, arg);
+	}
+
+	@Override
+	public void debug(Marker marker, String format, Object arg1, Object arg2) {
+		logger.debug(marker, format, arg1, arg2);
+	}
+
+	@Override
+	public void debug(Marker marker, String format, Object... arguments) {
+		logger.debug(marker, format, arguments);
+	}
+
+	@Override
+	public void debug(Marker marker, String msg, Throwable t) {
+		logger.debug(marker, msg, t);
+	}
+
+	
+	@Override
+	public boolean isInfoEnabled() {
+		return logger.isInfoEnabled();
+	}
+
+	@Override
+	public void infoOnce(String message, Object arg) {
+		if(logger.isInfoEnabled() && !logCount.increment(message)) {
+			logger.info(message, arg);
+		}
+	}
+
+	@Override
+	public void infoOnce(String message, Object arg1, Object arg2) {
+		if(logger.isInfoEnabled() && !logCount.increment(message)) {
+			logger.info(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void infoOnce(String message, Object... args) {
+		if(logger.isInfoEnabled() && !logCount.increment(message)) {
+			logger.info(message, args);
+		}
+	}
+
+	@Override
+	public void infoOnceForId(String id, String message, Object arg) {
+		if(logger.isInfoEnabled() && !logCount.increment(id)) {
+			logger.info(message, arg);
+		}
+	}
+
+	@Override
+	public void infoOnceForId(String id, String message, Object arg1, Object arg2) {
+		if(logger.isInfoEnabled() && !logCount.increment(id)) {
+			logger.info(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void infoOnceForId(String id, String message, Object... args) {
+		if(logger.isInfoEnabled() && !logCount.increment(id)) {
+			logger.info(message, args);
+		}
+	}
+	
+	@Override
+	public void info(String msg) {
+		logger.info(msg);
+	}
+
+	@Override
+	public void info(String format, Object arg) {
 		logger.info(format, arg);
 	}
+
+	@Override
+	public void info(String format, Object arg1, Object arg2) {
+		logger.info(format, arg1, arg2);
+	}
+
+	@Override
+	public void info(String format, Object... arguments) {
+		logger.info(format, arguments);
+	}
+
+	@Override
+	public void info(String msg, Throwable t) {
+		logger.info(msg, t);
+	}
+
+	@Override
+	public boolean isInfoEnabled(Marker marker) {
+		return logger.isInfoEnabled(marker);
+	}
+
+	@Override
+	public void info(Marker marker, String msg) {
+		logger.info(marker, msg);
+	}
+
+	@Override
+	public void info(Marker marker, String format, Object arg) {
+		logger.info(marker, format, arg);
+	}
+
+	@Override
+	public void info(Marker marker, String format, Object arg1, Object arg2) {
+		logger.info(marker, format, arg1, arg2);
+	}
+
+	@Override
+	public void info(Marker marker, String format, Object... arguments) {
+		logger.info(marker, format, arguments);
+	}
+
+	@Override
+	public void info(Marker marker, String msg, Throwable t) {
+		logger.info(marker, msg, t);
+	}
+
 	
 	@Override
-	public void i(String format, Object arg1, Object arg2) {
-		logger.info(format, arg1, arg2);		
+	public boolean isWarnEnabled() {
+		return logger.isWarnEnabled();
 	}
 	
 	@Override
-	public void i(String format, Object... args) {
-		logger.info(format, args);
+	public void warnOnce(String message, Object arg) {
+		if(logger.isWarnEnabled() && !logCount.increment(message)) {
+			logger.warn(message, arg);
+		}
+	}
+
+	@Override
+	public void warnOnce(String message, Object arg1, Object arg2) {
+		if(logger.isWarnEnabled() && !logCount.increment(message)) {
+			logger.warn(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void warnOnce(String message, Object... args) {
+		if(logger.isWarnEnabled() && !logCount.increment(message)) {
+			logger.warn(message, args);
+		}
+	}
+
+	@Override
+	public void warnOnceForId(String id, String message, Object arg) {
+		if(logger.isWarnEnabled() && !logCount.increment(id)) {
+			logger.warn(message, arg);
+		}
+	}
+
+	@Override
+	public void warnOnceForId(String id, String message, Object arg1, Object arg2) {
+		if(logger.isWarnEnabled() && !logCount.increment(id)) {
+			logger.warn(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void warnOnceForId(String id, String message, Object... args) {
+		if(logger.isWarnEnabled() && !logCount.increment(id)) {
+			logger.warn(message, args);
+		}
 	}
 	
 	@Override
-	public void i(String message, Throwable cause) {
-		logger.info(message, cause);
+	public void warn(String msg) {
+		logger.warn(msg);
 	}
+
+	@Override
+	public void warn(String format, Object arg) {
+		logger.warn(format, arg);
+	}
+
+	@Override
+	public void warn(String format, Object... arguments) {
+		logger.warn(format, arguments);
+	}
+
+	@Override
+	public void warn(String format, Object arg1, Object arg2) {
+		logger.warn(format, arg1, arg2);
+	}
+
+	@Override
+	public void warn(String msg, Throwable t) {
+		logger.warn(msg, t);
+	}
+
+	@Override
+	public boolean isWarnEnabled(Marker marker) {
+		return logger.isWarnEnabled(marker);
+	}
+
+	@Override
+	public void warn(Marker marker, String msg) {
+		logger.warn(marker, msg);
+	}
+
+	@Override
+	public void warn(Marker marker, String format, Object arg) {
+		logger.warn(marker, format, arg);
+	}
+
+	@Override
+	public void warn(Marker marker, String format, Object arg1, Object arg2) {
+		logger.warn(marker, format, arg1, arg2);
+	}
+
+	@Override
+	public void warn(Marker marker, String format, Object... arguments) {
+		logger.warn(marker, format, arguments);
+	}
+
+	@Override
+	public void warn(Marker marker, String msg, Throwable t) {
+		logger.warn(marker, msg, t);
+	}
+
 	
 	@Override
-	public void i(String tag, String format, Object arg) {
-		logger.info("{}: " + format, tag, arg);
+	public boolean isErrorEnabled() {
+		return logger.isErrorEnabled();
 	}
-	
+
 	@Override
-	public void i(String tag, String format, Object arg1, Object arg2) {
-		logger.info("{}: " + format, tag, arg1, arg2);
+	public void errorOnce(String message, Object arg) {
+		if(logger.isErrorEnabled() && !logCount.increment(message)) {
+			logger.error(message, arg);
+		}
 	}
-	
+
 	@Override
-	public void i(String tag, String format, Object... args) {
-		logger.info(tag + ": " + format, args);
+	public void errorOnce(String message, Object arg1, Object arg2) {
+		if(logger.isErrorEnabled() && !logCount.increment(message)) {
+			logger.error(message, arg1, arg2);
+		}
 	}
-	
+
 	@Override
-	public void i(String tag, String message, Throwable cause) {
-		logger.info(tag + ": " + message, cause);
+	public void errorOnce(String message, Object... args) {
+		if(logger.isErrorEnabled() && !logCount.increment(message)) {
+			logger.error(message, args);
+		}
 	}
-	
-	
+
 	@Override
-	public void logOnce(char loglevel, String id, String tag, String message) {
-		// TODO: Implement
-		// Map String to int: increment and only log if 0 (same with logN)
+	public void errorOnceForId(String id, String message, Object arg) {
+		if(logger.isErrorEnabled() && !logCount.increment(id)) {
+			logger.error(message, arg);
+		}
 	}
-	
+
+	@Override
+	public void errorOnceForId(String id, String message, Object arg1, Object arg2) {
+		if(logger.isErrorEnabled() && !logCount.increment(id)) {
+			logger.error(message, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void errorOnceForId(String id, String message, Object... args) {
+		if(logger.isErrorEnabled() && !logCount.increment(id)) {
+			logger.error(message, args);
+		}
+	}
+
+	@Override
+	public void error(String msg) {
+		logger.error(msg);
+	}
+
+	@Override
+	public void error(String format, Object arg) {
+		logger.error(format, arg);
+	}
+
+	@Override
+	public void error(String format, Object arg1, Object arg2) {
+		logger.error(format, arg1, arg2);
+	}
+
+	@Override
+	public void error(String format, Object... arguments) {
+		logger.error(format, arguments);
+	}
+
+	@Override
+	public void error(String msg, Throwable t) {
+		logger.error(msg, t);
+	}
+
+	@Override
+	public boolean isErrorEnabled(Marker marker) {
+		return logger.isErrorEnabled(marker);
+	}
+
+	@Override
+	public void error(Marker marker, String msg) {
+		logger.error(marker, msg);
+	}
+
+	@Override
+	public void error(Marker marker, String format, Object arg) {
+		logger.error(marker, format, arg);
+	}
+
+	@Override
+	public void error(Marker marker, String format, Object arg1, Object arg2) {
+		logger.error(marker, format, arg1, arg2);
+	}
+
+	@Override
+	public void error(Marker marker, String format, Object... arguments) {
+		logger.error(marker, format, arguments);
+	}
+
+	@Override
+	public void error(Marker marker, String msg, Throwable t) {
+		logger.error(marker, msg, t);
+	}
+
 }

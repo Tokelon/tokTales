@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
@@ -38,9 +39,7 @@ import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class EntityRenderer implements IEntityRenderer {
 
-	public static final String TAG = "EntityRenderer";
-	
-	
+
 	public static final String OPTION_MAP_LAYER = "map_layer";
 	public static final String OPTION_DRAW_DEPTH = "draw_depth";
 
@@ -75,13 +74,13 @@ public class EntityRenderer implements IEntityRenderer {
 	private final Supplier<IWorldspace> worldspaceSupplier;
 
 	public EntityRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IWorldspace> worldspaceSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.spriteAssetManager = spriteAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
@@ -170,7 +169,7 @@ public class EntityRenderer implements IEntityRenderer {
 		
 		IWorldspace worldspace = worldspaceSupplier.get();
 		if(worldspace == null) {
-			logger.i(TAG, "Draw was called but no worldspace is available");
+			logger.info("Draw was called but no worldspace is available");
 			return;
 		}
 		
@@ -182,7 +181,7 @@ public class EntityRenderer implements IEntityRenderer {
 	public void drawFull(INamedOptions options) {
 		IWorldspace worldspace = worldspaceSupplier.get();
 		if(worldspace == null) {
-			logger.i(TAG, "Draw was called but no worldspace is available");
+			logger.info("Draw was called but no worldspace is available");
 			return;
 		}
 		
@@ -273,7 +272,7 @@ public class EntityRenderer implements IEntityRenderer {
 			}
 			else {
 				// I dont even know
-				logger.w(TAG, "Cannot draw: Unknown graphic type");
+				logger.warn("Cannot draw: Unknown graphic type");
 			}
 			
 			
@@ -298,7 +297,7 @@ public class EntityRenderer implements IEntityRenderer {
 				Supplier<IWorldspace> worldspaceSupplier		
 		) {
 			return new EntityRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					textureCoordinatorSupplier,
@@ -310,7 +309,7 @@ public class EntityRenderer implements IEntityRenderer {
 		@Override
 		public EntityRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worldspaceSupplier) {
 			return new EntityRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
@@ -321,7 +320,7 @@ public class EntityRenderer implements IEntityRenderer {
 		@Override
 		public EntityRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
 			return new EntityRenderer(
-					typedGamestate.getLog(),
+					typedGamestate.getLogging(),
 					typedGamestate.getEngine(),
 					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),

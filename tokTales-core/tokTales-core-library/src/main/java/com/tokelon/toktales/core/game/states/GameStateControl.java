@@ -6,12 +6,11 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 
 public class GameStateControl implements IGameStateControl {
 
-	public static final String TAG = "GameStateControl";
-	
-	
+
 	private boolean enableLogAccessState = false;
 	private boolean enableLogAccessCurrentState = false;
 	
@@ -27,8 +26,8 @@ public class GameStateControl implements IGameStateControl {
 	private final ILogger logger;
 
 	@Inject
-	public GameStateControl(ILogger logger) {
-		this.logger = logger;
+	public GameStateControl(ILogging logging) {
+		this.logger = logging.getLogger(getClass());
 	}
 	
 	
@@ -67,9 +66,8 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public synchronized void changeState(String stateName) {
 		if(!hasState(stateName)) {
-			String error = "Failed to change state. No state for name: " + stateName;
-			logger.e(TAG, error);
-			assert false : error;
+			logger.error("Failed to change state. No state for name: {}", stateName);
+			assert false : "Failed to change state. No state for name: " + stateName;;
 			return;
 		}
 		
@@ -80,7 +78,7 @@ public class GameStateControl implements IGameStateControl {
 		IGameState newState = states.get(stateName);
 
 		//logger.d(TAG, String.format("State change in [%s]", this));
-		logger.i(TAG, String.format("State was changed: '%s' -> '%s' | [%s] -> [%s]", currentStateName, stateName, currentState, newState));
+		logger.info("State was changed: '{}' -> '{}' | [{}] -> [{}]", currentStateName, stateName, currentState, newState);
 		
 		currentState = newState;
 		currentStateName = stateName;
@@ -99,7 +97,7 @@ public class GameStateControl implements IGameStateControl {
 		state.onEngage();
 		
 		//logger.d(TAG, String.format("State addition in [%s]", this));
-		logger.i(TAG, String.format("State was added: '%s' | [%s]", name, state));
+		logger.info("State was added: '{}' | [{}]", name, state);
 	}
 	
 	
@@ -123,18 +121,19 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public synchronized IGameState getState(String stateName) {
 		if(logAcessState) {
-			logger.d(TAG, "Access to state: " +stateName);
+			logger.debug("Access to state: {}", stateName);
 			
 			StringBuilder sb = new StringBuilder();
 			for(StackTraceElement el: Thread.currentThread().getStackTrace()) {
 				
 				String els = el.toString();
 				if(els.contains("com.tokelon.toktales")) {
-					sb.append(els + "\n");
+					sb.append(els);
+					sb.append('\n');
 				}
 			}
 			
-			logger.d(TAG, sb.toString());
+			logger.debug(sb.toString());
 		}
 		
 		
@@ -146,18 +145,19 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public IGameState getActiveState() {
 		if(logAcessCurrentState) {
-			logger.d(TAG, "Access to current state (" +currentStateName +")");
+			logger.debug("Access to current state ({})", currentStateName);
 			
 			StringBuilder sb = new StringBuilder();
 			for(StackTraceElement el: Thread.currentThread().getStackTrace()) {
 				
 				String els = el.toString();
 				if(els.contains("com.tokelon.toktales")) {
-					sb.append(els + "\n");
+					sb.append(els);
+					sb.append('\n');
 				}
 			}
 			
-			logger.d(TAG, sb.toString());
+			logger.debug(sb.toString());
 		}
 		
 		

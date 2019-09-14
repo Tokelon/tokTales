@@ -7,12 +7,11 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.ITextureManager;
 
 public class ContentManager implements IContentManager {
 
-	private static final String TAG = ContentManager.class.getSimpleName();
-	
 
 	private final ILogger logger;
 	private final IResourceManager managerResource;
@@ -24,7 +23,7 @@ public class ContentManager implements IContentManager {
 	
 	@Inject
 	public ContentManager(
-			ILogger logger,
+			ILogging logging,
 			IResourceManager resourceManager,
 			IBitmapAssetManager bitmapAssetManager,
 			ISpriteAssetManager spriteAssetManager,
@@ -32,7 +31,7 @@ public class ContentManager implements IContentManager {
 			ITextureFontAssetManager fontManager,
 			ICodepointAssetManager codepointManager
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.managerResource = resourceManager;
 		this.bitmapAssetManager = bitmapAssetManager;
 		this.spriteAssetManager = spriteAssetManager;
@@ -44,7 +43,7 @@ public class ContentManager implements IContentManager {
 	
 	@Override
 	public void startLoaders() {
-		logger.i(TAG, "Starting content loaders");
+		logger.info("Starting content loaders");
 		bitmapAssetManager.getLoader().start();
 		spriteAssetManager.getLoader().start();
 		fontManager.getLoader().start();
@@ -53,7 +52,7 @@ public class ContentManager implements IContentManager {
 	
 	@Override
 	public void stopLoaders() {
-		logger.i(TAG, "Stopping content loaders");
+		logger.info("Stopping content loaders");
 		bitmapAssetManager.getLoader().stop();
 		spriteAssetManager.getLoader().stop();
 		fontManager.getLoader().stop();

@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.script;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.logic.observers.IParticipant;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
@@ -13,11 +14,11 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
  */
 public class ScriptModuleParticipant<S> extends ScriptModuleObserver<S> implements IParticipant<S> {
 
-	
-	public static final String TAG = "ScriptModuleParticipant";
 
 	public static final String PARTICIPANT_FUNCTION_ON_SUBJECT_CHANGE = "onSubjectChange";
 	
+	private static final ILogger logger = LoggingManager.getLogger(ScriptModuleParticipant.class);
+
 	
 	private final int maxErrorsLogged = 3;
 	private int counterOnSubjectChange = 0;
@@ -48,7 +49,7 @@ public class ScriptModuleParticipant<S> extends ScriptModuleObserver<S> implemen
 			}
 			else {
 				if(++counterOnSubjectChange <= maxErrorsLogged) {
-					TokTales.getLog().e(TAG, "onSubjectChange() did not return Boolean");
+					logger.error("onSubjectChange() did not return Boolean");
 				}
 				
 				return true;
@@ -56,13 +57,11 @@ public class ScriptModuleParticipant<S> extends ScriptModuleObserver<S> implemen
 		}
 		catch(ScriptErrorException e) {
 			if(++counterOnSubjectChange <= maxErrorsLogged) {
-				TokTales.getLog().e(TAG, "onSubjectChange() failed to run: " +e.getMessage());	
+				logger.error("onSubjectChange() failed to run:", e);	
 			}
 			
 			return true;
 		}
 	}
 	
-	
-
 }

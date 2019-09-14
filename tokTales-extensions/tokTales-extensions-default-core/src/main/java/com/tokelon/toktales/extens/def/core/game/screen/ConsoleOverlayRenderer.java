@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.Camera;
@@ -26,9 +27,7 @@ import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {
 
-	public static final String TAG = "ConsoleOverlayRenderer";
 
-	
 	private float startX;
 	private float startY;
 	
@@ -47,13 +46,13 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	private final Supplier<IConsoleController> consoleControllerSupplier;
 	
 	public ConsoleOverlayRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			ICodepointAssetManager codepointManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IConsoleController> consoleControllerSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.codepointManager = codepointManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
@@ -125,7 +124,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	public void drawFull(INamedOptions options) {
 		IConsoleController consoleController = consoleControllerSupplier.get();
 		if(consoleController == null) {
-			logger.i(TAG, "Draw was called but no console is available");
+			logger.info("Draw was called but no console is available");
 			return;
 		}
 		
@@ -224,7 +223,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 				Supplier<IConsoleController> consoleControllerSupplier
 		) {
 			return new ConsoleOverlayRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					codepointManager,
 					textureCoordinatorSupplier,
@@ -236,7 +235,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		@Override
 		public ConsoleOverlayRenderer createForGamestate(IGameState gamestate, ICodepointAssetManager codepointManager) {
 			return new ConsoleOverlayRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					codepointManager,
 					() -> gamestate.getStateRender().getTextureCoordinator(),
@@ -247,7 +246,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		@Override
 		public ConsoleOverlayRenderer createForGamestate(IGameState gamestate, ICodepointAssetManager codepointManager, Supplier<IConsoleController> consoleControllerSupplier) {
 			return new ConsoleOverlayRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					codepointManager,
 					() -> gamestate.getStateRender().getTextureCoordinator(),

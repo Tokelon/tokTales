@@ -8,6 +8,7 @@ import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.graphic.GameGraphicTypes;
@@ -35,9 +36,7 @@ import com.tokelon.toktales.core.values.RenderDriverOptions;
 
 public class PlayerRenderer implements IPlayerRenderer {
 
-	public static final String TAG = "PlayerRenderer";
-	
-	
+
 	public static final String OPTION_MAP_LAYER = "map_layer";
 	public static final String OPTION_DRAW_DEPTH = "draw_depth";
 
@@ -72,13 +71,13 @@ public class PlayerRenderer implements IPlayerRenderer {
 	private final Supplier<IPlayerController> playerControllerSupplier;
 	
 	public PlayerRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IPlayerController> playerControllerSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
 		this.spriteAssetManager = spriteAssetManager;
 		this.textureCoordinatorSupplier = textureCoordinatorSupplier;
@@ -169,7 +168,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		
 		IPlayerController playerController = playerControllerSupplier.get();
 		if(playerController == null) {
-			logger.i(TAG, "Draw was called but no player is available");
+			logger.info("Draw was called but no player is available");
 			return;
 		}
 		
@@ -250,7 +249,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 
 		}
 		else {
-			logger.w(TAG, "Cannot draw sprite: Unknown graphic type");
+			logger.warn("Cannot draw sprite: Unknown graphic type");
 		}
 		
 		
@@ -281,7 +280,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 				Supplier<IPlayerController> playerControllerSupplier		
 		) {
 			return new PlayerRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					engineContext.getGame().getContentManager().getSpriteAssetManager(),
 					textureCoordinatorSupplier,
@@ -293,7 +292,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		@Override
 		public PlayerRenderer createForGamestate(IGameState gamestate) {
 			return new PlayerRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> gamestate.getStateRender().getTextureCoordinator(),
@@ -304,7 +303,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 		@Override
 		public PlayerRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate) {
 			return new PlayerRenderer(
-					typedGamestate.getLog(),
+					typedGamestate.getLogging(),
 					typedGamestate.getEngine(),
 					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					() -> typedGamestate.getStateRender().getTextureCoordinator(),

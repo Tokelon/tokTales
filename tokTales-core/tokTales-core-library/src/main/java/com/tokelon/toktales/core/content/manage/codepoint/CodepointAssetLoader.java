@@ -11,24 +11,23 @@ import com.tokelon.toktales.core.content.manage.IAssetReader;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
-import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> {
-	
-	public static final String TAG = "CodepointAssetLoader";
-	
+
+
 	public static final INamedOptions EMPTY_OPTIONS = new NamedOptionsImpl();
 	
 	
-	public CodepointAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
-		super(logger, readerManager, decoder);
+	public CodepointAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
+		super(logging, readerManager, decoder);
 	}
 	
 	@Inject
-	public CodepointAssetLoader(ILogger logger, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
-		super(logger, readerManager, decoder, executorServiceProvider);
+	public CodepointAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
+		super(logging, readerManager, decoder, executorServiceProvider);
 	}
 
 	
@@ -37,10 +36,6 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 		return EMPTY_OPTIONS;
 	}
 	
-	@Override
-	public String getTag() {
-		return TAG;
-	}
 
 	
 	@Override

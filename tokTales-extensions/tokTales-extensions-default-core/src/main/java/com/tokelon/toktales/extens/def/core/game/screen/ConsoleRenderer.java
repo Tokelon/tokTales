@@ -10,6 +10,7 @@ import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.IConsole;
@@ -37,9 +38,7 @@ import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
 
 public class ConsoleRenderer implements ISegmentRenderer {
 
-	public static final String TAG = "ConsoleRenderer";
 
-	
 	public static final float CHAR_HOR_DISTANCE_MODIFIER_BASED_ON_TILESIZE = 0;//- 0.25f;
 	
 	private final Matrix4f matrixProjection = new Matrix4f();
@@ -71,14 +70,14 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	private final Supplier<IConsoleController> consoleControllerSupplier;
 	
 	public ConsoleRenderer(
-			ILogger logger,
+			ILogging logging,
 			IEngine engine,
 			IWorld world,
 			ICodepointAssetManager codepointAssetManager,
 			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
 			Supplier<IConsoleController> consoleControllerSupplier
 	) {
-		this.logger = logger;
+		this.logger = logging.getLogger(getClass());
 		this.codepointAssetManager = codepointAssetManager;
 		this.renderService = engine.getRenderService();
 		this.world = world;
@@ -166,7 +165,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		
 		IConsoleController consoleController = consoleControllerSupplier.get();
 		if(consoleController == null) {
-			logger.i(TAG, "Draw was called but no console is available");
+			logger.info("Draw was called but no console is available");
 			return;
 		}
 		
@@ -378,7 +377,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 				Supplier<IConsoleController> consoleControllerSupplier
 		) {
 			return new ConsoleRenderer(
-					engineContext.getLog(),
+					engineContext.getLogging(),
 					engineContext.getEngine(),
 					engineContext.getGame().getWorld(),
 					engineContext.getGame().getContentManager().getCodepointAssetManager(),
@@ -389,7 +388,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		
 		public ConsoleRenderer createForGamestate(IGameState gamestate) {
 			return new ConsoleRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getWorld(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
@@ -400,7 +399,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		
 		public ConsoleRenderer createForGamestate(IGameState gamestate, Supplier<IConsoleController> consoleControllerSupplier) {
 			return new ConsoleRenderer(
-					gamestate.getLog(),
+					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getWorld(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),

@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.script;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.tools.script.IScriptInstance;
 
 import gnu.trove.map.TObjectIntMap;
@@ -13,6 +14,8 @@ public class ScriptInstanceBase {
 	
 	private int maxErrorsLogged = DEFAULT_MAX_ERRORS_LOGGED;
 	
+	private static final ILogger logger = LoggingManager.getLogger(ScriptInstanceBase.class);
+
 	
 	private final TObjectIntMap<String> errorCountMap; // Does this need to be synchronized?
 	
@@ -52,7 +55,7 @@ public class ScriptInstanceBase {
 		
 		int count = errorCountMap.get(source);
 		if(++count <= maxErrorsLogged) {
-			TokTales.getLog().e(tag, error);
+			logger.error("{}: {}", tag, error);
 		}
 		
 		errorCountMap.put(source, count);

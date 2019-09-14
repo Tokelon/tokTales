@@ -7,6 +7,8 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.input.IInputService;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
@@ -19,7 +21,9 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	// TODO: Additional window properties, like visible resisable etc.
 	// Better: Make window object available through a solid interface
 
-	public static final String TAG = "LWJGLEngineLauncher";
+	
+	private static final ILogger logger = LoggingManager.getLogger(LWJGLEngineLauncher.class);
+
 	
 	private int windowWidth = 1280;
 	private int windowHeight = 720;
@@ -57,7 +61,7 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 						inputDriver = new GLFWInputDriver(lwMainWindow, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
 					}
 					else {
-						engineContext.getLog().e(TAG, "Input driver could not be created: Input service is not compatible with input driver. Input service must be of type " + IDesktopInputService.class);
+						logger.error("Input driver could not be created: Input service is not compatible with input driver. Input service must be of type {}", IDesktopInputService.class);
 						//throw new EngineException("Input service must be of type " + IDesktopInputService.class);
 					}
 					

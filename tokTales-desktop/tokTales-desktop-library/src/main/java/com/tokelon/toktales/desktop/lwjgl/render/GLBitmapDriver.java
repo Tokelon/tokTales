@@ -16,12 +16,13 @@ import javax.inject.Provider;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 import com.tokelon.toktales.core.render.model.IRenderModel;
@@ -32,8 +33,6 @@ import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
 public class GLBitmapDriver implements IRenderDriver {
 
-	public static final String TAG = "GLBitmapDriver";
-	
 
 	private static final String VS_Bitmap = 
 			"#version 330\n" +
@@ -62,15 +61,18 @@ public class GLBitmapDriver implements IRenderDriver {
 	private static final String SAMPLER_TEXTURE_NAME = "samplerTexture";
 	
 
-	private final FloatBuffer textureCoordinateBuffer;
 
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
 	
+	private final ILogger logger;
+	private final FloatBuffer textureCoordinateBuffer;
 	
 	@Inject
-	public GLBitmapDriver() {
+	public GLBitmapDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
+		
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
 	
@@ -92,7 +94,7 @@ public class GLBitmapDriver implements IRenderDriver {
 			mShader.createUniform(SAMPLER_TEXTURE_NAME);
 			
 		} catch(LWJGLException ex) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " +ex.getMessage());
+			logger.error("Failed to create shader program:", ex);
 			return;
 		}
 		

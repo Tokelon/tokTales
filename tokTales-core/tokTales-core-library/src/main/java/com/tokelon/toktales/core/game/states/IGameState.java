@@ -3,6 +3,7 @@ package com.tokelon.toktales.core.game.states;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
@@ -123,9 +124,14 @@ public interface IGameState {
 	public IEngine getEngine();
 	
 	/**
-	 * @return The log.
+	 * @return The logging.
 	 */
-	public ILogger getLog();
+	public ILogging getLogging();
+
+	/**
+	 * @return The logger.
+	 */
+	public ILogger getLogger();
 	
 	/**
 	 * @return The engine context.

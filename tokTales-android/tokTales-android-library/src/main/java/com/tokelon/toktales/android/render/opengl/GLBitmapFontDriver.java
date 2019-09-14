@@ -10,13 +10,14 @@ import org.joml.Matrix4f;
 
 import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
 import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
@@ -26,11 +27,8 @@ import com.tokelon.toktales.core.util.options.INamedOptions;
 import android.opengl.GLES20;
 
 public class GLBitmapFontDriver implements IRenderDriver {
-	
-	public static final String TAG = "GLBitmapFontDriver";
-	
-	
-	
+
+
 	private static final String VS_Sprite = 
 			"uniform mat4 uMVPMatrix;" +
 			"uniform mat4 uModelMatrix;" +
@@ -59,10 +57,13 @@ public class GLBitmapFontDriver implements IRenderDriver {
 
 	private ShaderProgram mShader;
 	
-	private GLSpriteMesh spriteMesh;
+	private final GLSpriteMesh spriteMesh;
 
+	private final ILogger logger;
+	
 	@Inject
-	public GLBitmapFontDriver() {
+	public GLBitmapFontDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
 
 		float[] vertices = new float[]
 				{
@@ -99,7 +100,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 			mShader.createAttribute("a_vTexCoord");
 		}
 		catch (OpenGLException oglex) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " + oglex.getMessage());
+			logger.error("Failed to create shader program:", oglex);
 			return;
 		}
 		

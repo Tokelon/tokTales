@@ -16,13 +16,14 @@ import javax.inject.Provider;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
@@ -33,10 +34,7 @@ import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 
 public class GLBitmapFontDriver implements IRenderDriver {
 
-	public static final String TAG = "GLBitmapFontDriver";
 
-	
-	
 	private static final String VS_Sprite = 
 			"#version 330\n" +
 			"layout(location = 0) in vec3 vPosition;\n" +
@@ -62,17 +60,20 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	
 	
 	
-	private final FloatBuffer textureCoordinateBuffer;
 	
 	private GLSpriteMesh spriteMesh;
 	
 	private ShaderProgram mShader;
 	
-	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
+	private final Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
 	
+	private final ILogger logger;
+	private final FloatBuffer textureCoordinateBuffer;
 	
 	@Inject
-	public GLBitmapFontDriver() {
+	public GLBitmapFontDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
+
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
 	
@@ -95,7 +96,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 			mShader.createUniform("colorOver");
 			
 		} catch (LWJGLException e) {
-			TokTales.getLog().e(TAG, "Failed to create shader program: " +e.getMessage());
+			logger.error("Failed to create shader program:", e);
 			return;
 		}
 		

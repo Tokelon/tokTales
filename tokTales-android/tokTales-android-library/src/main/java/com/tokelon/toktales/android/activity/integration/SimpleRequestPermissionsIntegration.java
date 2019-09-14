@@ -1,18 +1,18 @@
 package com.tokelon.toktales.android.activity.integration;
 
+import java.util.ArrayList;
+
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
+
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.tokelon.toktales.core.engine.log.ILogger;
-
-import java.util.ArrayList;
-
 public class SimpleRequestPermissionsIntegration implements IActivityIntegration {
-	
-	public static final String TAG = "SimpleRequestPermissionsIntegration";
-	
+
+
 	public static final int DEFAULT_PERMISSIONS_REQUEST_CODE = 1;
 	
 	
@@ -20,12 +20,12 @@ public class SimpleRequestPermissionsIntegration implements IActivityIntegration
 	private final int requestCode;
 	private final String[] permissions;
 	
-	public SimpleRequestPermissionsIntegration(ILogger logger, String... permissions) {
-		this(logger, DEFAULT_PERMISSIONS_REQUEST_CODE, permissions);
+	public SimpleRequestPermissionsIntegration(ILogging logging, String... permissions) {
+		this(logging, DEFAULT_PERMISSIONS_REQUEST_CODE, permissions);
 	}
 	
-	public SimpleRequestPermissionsIntegration(ILogger logger, int requestCode, String... permissions) {
-		this.logger = logger;
+	public SimpleRequestPermissionsIntegration(ILogging logging, int requestCode, String... permissions) {
+		this.logger = logging.getLogger(getClass());
 		this.requestCode = requestCode;
 		this.permissions = permissions;
 	}
@@ -37,7 +37,7 @@ public class SimpleRequestPermissionsIntegration implements IActivityIntegration
 	}
 	
 	protected void checkPermissions(Activity activity) {
-		logger.d(TAG, "Checking permissions...");
+		logger.debug("Checking permissions...");
 		
 		ArrayList<String> neededPermissions = new ArrayList<>();
 		for (String permission: permissions) {
@@ -47,10 +47,10 @@ public class SimpleRequestPermissionsIntegration implements IActivityIntegration
 		}
 		
 		if(neededPermissions.isEmpty()) {
-			logger.i(TAG, "All permissions granted");
+			logger.info("All permissions granted");
 		}
 		else {
-			logger.i(TAG, "Requesting permissions: " + neededPermissions);
+			logger.info("Requesting permissions: {}", neededPermissions);
 			ActivityCompat.requestPermissions(activity,	neededPermissions.toArray(new String[neededPermissions.size()]), requestCode);
 		}
 	}
@@ -75,11 +75,11 @@ public class SimpleRequestPermissionsIntegration implements IActivityIntegration
 				}
 				
 				if(!deniedPermissions.isEmpty()) {
-					logger.e(TAG, "Following permissions were denied: " + deniedPermissions);
+					logger.error("Following permissions were denied: {}" + deniedPermissions);
 				}
 			}
 			else {
-				logger.e(TAG, "Permission request was cancelled");
+				logger.error("Permission request was cancelled");
 			}
 		}
 	}
