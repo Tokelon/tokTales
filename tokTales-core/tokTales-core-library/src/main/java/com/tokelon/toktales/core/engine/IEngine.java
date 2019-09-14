@@ -2,7 +2,6 @@ package com.tokelon.toktales.core.engine;
 
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.input.IInputService;
-import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
@@ -20,8 +19,6 @@ public interface IEngine {
 	public IUIService getUIService();
 	
 	public IContentService getContentService();
-	
-	public ILogService getLogService();
 	
 	public IStorageService getStorageService();
 	

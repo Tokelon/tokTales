@@ -4,18 +4,16 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.input.IInputService;
-import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 
 public class Engine implements IEngine {
 
-	
+
 	private IEnvironment mEnvironment;
 	private IUIService mUIService;
 	private IContentService mContentService;
-	private ILogService mLogService;
 	private IStorageService mStorageService;
 	private IRenderService mRenderService;
 	private IInputService mInputService;
@@ -25,22 +23,19 @@ public class Engine implements IEngine {
 			IEnvironment environment,
 			IUIService uiService,
 			IContentService contentService,
-			ILogService logService,
 			IStorageService storageService,
 			IRenderService renderService,
 			IInputService inputService
-			) {
-		
+	) {
 		this.mEnvironment = environment;
 		this.mUIService = uiService;
 		this.mContentService = contentService;
-		this.mLogService = logService;
 		this.mStorageService = storageService;
 		this.mRenderService = renderService;
 		this.mInputService = inputService;
 	}
 	
-		
+	
 	
 	@Override
 	public IEnvironment getEnvironment() {
@@ -58,11 +53,6 @@ public class Engine implements IEngine {
 	}
 
 	@Override
-	public ILogService getLogService() {
-		return mLogService;
-	}
-
-	@Override
 	public IStorageService getStorageService() {
 		return mStorageService;
 	}
@@ -76,6 +66,5 @@ public class Engine implements IEngine {
 	public IInputService getInputService() {
 		return mInputService;
 	}
-	
 	
 }

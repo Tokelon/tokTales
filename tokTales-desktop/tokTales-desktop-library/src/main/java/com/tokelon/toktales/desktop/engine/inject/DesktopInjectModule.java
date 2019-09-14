@@ -6,7 +6,6 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
-import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
@@ -25,7 +24,6 @@ import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputConsumer.IDeskto
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputDispatch;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer.IDesktopInputProducerFactory;
 import com.tokelon.toktales.desktop.main.DesktopEnvironment;
-import com.tokelon.toktales.desktop.main.DesktopLogService;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 import com.tokelon.toktales.desktop.ui.DesktopUIService;
@@ -46,7 +44,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		/* Engine bindings */
 		
 		bindInEngineScope(IEnvironment.class, DesktopEnvironment.class);
-		bindInEngineScope(ILogService.class, DesktopLogService.class);
 		bindInEngineScope(IUIService.class, DesktopUIService.class);
 		bindInEngineScope(IContentService.class, DesktopContentService.class);
 		bindInEngineScope(IStorageService.class, DesktopStorageService.class);

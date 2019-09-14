@@ -17,7 +17,6 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.engine.input.IInputService;
-import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -42,7 +41,6 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 
 	// TODO: Move these into configure? Do not have statically
 	private static final IEnvironment environmentMock = mock(IEnvironment.class);
-	private static final ILogService logServiceMock = mock(ILogService.class);
 	private static final IUIService uiServiceMock = mock(IUIService.class);
 	private static final IContentService contentServiceMock = mock(IContentService.class);
 	private static final IStorageService storageServiceMock = mock(IStorageService.class);
@@ -75,7 +73,6 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		bind(IEnvironment.class).toInstance(environmentMock);
-		bind(ILogService.class).toInstance(logServiceMock);
 		bind(IUIService.class).toInstance(uiServiceMock);
 		bind(IContentService.class).toInstance(contentServiceMock);
 		bind(IStorageService.class).toInstance(storageServiceMock);

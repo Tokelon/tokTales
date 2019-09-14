@@ -8,7 +8,6 @@ import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegr
 import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration;
 import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
-import com.tokelon.toktales.android.app.AndroidLogService;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
@@ -33,7 +32,6 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
-import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
@@ -55,7 +53,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		/* Engine bindings */
 		
 		bindInEngineScope(IEnvironment.class, AndroidEnvironment.class);
-		bindInEngineScope(ILogService.class, AndroidLogService.class);
 		bind(IUIService.class).to(IAndroidUIService.class);
 		 bindInEngineScope(IAndroidUIService.class, AndroidUIService.class);
 		bindInEngineScope(IContentService.class, AndroidContentService.class);

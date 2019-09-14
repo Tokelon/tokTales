@@ -20,7 +20,6 @@ import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.engine.input.IInputService;
-import com.tokelon.toktales.core.engine.log.ILogService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
@@ -44,7 +43,7 @@ public final class InjectionTestHelper {
 	public static final Class<?>[] CORE_EXPECTED_BINDING_TYPES =
 		{
 				IEnvironment.class, IContentService.class, IInputService.class,
-				ILogService.class, IRenderService.class, IStorageService.class, IUIService.class,
+				IRenderService.class, IStorageService.class, IUIService.class,
 				IGameAdapter.class,
 				IGameStateInput.class,
 				IGL11.class, IGL13.class, IGL14.class, IGL15.class, IGL20.class,
