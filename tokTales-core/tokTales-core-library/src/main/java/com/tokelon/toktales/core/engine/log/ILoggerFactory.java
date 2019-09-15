@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.engine.log;
 
-interface ILoggerFactory extends org.slf4j.ILoggerFactory {
+public interface ILoggerFactory extends org.slf4j.ILoggerFactory {
 
 
 	@Override
