@@ -11,9 +11,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ParameterInjector implements IParameterInjector {
 
-	
+
 	private final Class<? extends Annotation> targetAnnotationContainerClass;
 	private final Class<? extends Annotation> targetAnnotationType;
 
@@ -21,13 +25,21 @@ public class ParameterInjector implements IParameterInjector {
 	private final Annotation targetAnnotation;
 	
 	private final Object[] parameters;
+	
+	private final Logger logger;
 
 	public ParameterInjector(Class<? extends Annotation> annotationClass, Object... parameters) {
-		if(annotationClass == null) {
+		this(LoggerFactory.getILoggerFactory(), annotationClass, parameters);
+	}
+	
+	public ParameterInjector(ILoggerFactory loggerFactory, Class<? extends Annotation> annotationClass, Object... parameters) {
+		if(loggerFactory == null || annotationClass == null) {
 			throw new NullPointerException();
 		}
 
 		checkParameters(parameters);
+		
+		this.logger = loggerFactory.getLogger(getClass().getName());
 		
 		this.targetAnnotationClass = annotationClass;
 		this.parameters = parameters;
@@ -37,13 +49,19 @@ public class ParameterInjector implements IParameterInjector {
 		this.targetAnnotationType = getTargetAnnotationType();
 		this.targetAnnotationContainerClass = getPossibleContainerAnnotationClass();
 	}
-
+	
 	public ParameterInjector(Annotation annotation, Object... parameters) {
-		if(annotation == null) {
+		this(LoggerFactory.getILoggerFactory(), annotation, parameters);
+	}
+
+	public ParameterInjector(ILoggerFactory loggerFactory, Annotation annotation, Object... parameters) {
+		if(loggerFactory == null || annotation == null) {
 			throw new NullPointerException();
 		}
 		
 		checkParameters(parameters);
+		
+		this.logger = loggerFactory.getLogger(getClass().getName());
 		
 		this.targetAnnotation = annotation;
 		this.parameters = parameters;
@@ -82,12 +100,7 @@ public class ParameterInjector implements IParameterInjector {
 			classMethods = clazz.getDeclaredMethods();
 		} catch (SecurityException e) {
 			// Not much we can do here
-			System.err.println(String.format(
-					"Error injecting into object %s, could not get declared methods due to SecurityException: %s",
-					object.getClass(),
-					e.getMessage()
-					));
-			e.printStackTrace();
+			logger.error("Error injecting into object {}, could not get declared methods due to SecurityException:", object.getClass(),	e);
 			return;
 		}
 		
@@ -273,14 +286,14 @@ public class ParameterInjector implements IParameterInjector {
 						}
 					} catch (NoSuchMethodException e) {
 						// The compiler should ensure this method exists
-						System.err.println(String.format("Failed to find value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+						logger.error("Failed to find value() method for repeatable annotation of type {}:", targetAnnotationContainerClass, e);
 					} catch (SecurityException | IllegalAccessException e) {
-						System.err.println(String.format("Failed to access value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+						logger.error("Failed to access value() method for repeatable annotation of type {}:", targetAnnotationContainerClass, e);
 					} catch (IllegalArgumentException | InvocationTargetException e) {
-						System.err.println(String.format("Failed to invoke value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+						logger.error("Failed to invoke value() method for repeatable annotation of type {}:", targetAnnotationContainerClass, e);
 					} catch (ClassCastException e) {
 						// This means either the compiler screwed up really hard, or we did when checking the repeatable annotation
-						System.err.println(String.format("Failed to cast value() method for repeatable annotation of type %s: %s", targetAnnotationContainerClass, e.getMessage()));
+						logger.error("Failed to cast value() method for repeatable annotation of type {}:", targetAnnotationContainerClass, e);
 					}
 				}
 			}
@@ -342,10 +355,10 @@ public class ParameterInjector implements IParameterInjector {
 		
 		if(result == null && !repeatableSupported) {
 			// If lookup with Repeatable failed and there was no result for CompatRepeatable, output warning
-			System.out.println(String.format(
+			logger.debug(
 					"(ParameterInjector) Warning: This platform does not support java.lang.annotation.Repeatable. "
 					+ "Make sure to use CompatRepeatable on repeatable annotations. If you already do, you can ignore this message."
-			));	
+			);
 		}
 		
 		return result;

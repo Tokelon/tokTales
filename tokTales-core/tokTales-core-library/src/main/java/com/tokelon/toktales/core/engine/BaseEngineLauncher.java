@@ -2,13 +2,17 @@ package com.tokelon.toktales.core.engine;
 
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 public class BaseEngineLauncher implements IEngineLauncher {
 
-	
+
+	private final ILogger logger;
 	private final IHierarchicalInjectConfig injectConfig;
 	private final IEngineLooper looper;
 
@@ -19,7 +23,18 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param injectConfig
 	 */
 	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig) {
-		this(injectConfig, () -> {});
+		this(LoggingManager.getLoggerFactory(), injectConfig, () -> {});
+	}
+	
+	/** Constructor with a logger factory and and inject config.
+	 * <p>
+	 * A no-op looper will be used.
+	 * 
+	 * @param loggerFactory
+	 * @param injectConfig
+	 */
+	protected BaseEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig) {
+		this(loggerFactory, injectConfig, () -> {});
 	}
 	
 	/** Constructor with an inject config and a looper.
@@ -28,10 +43,25 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param looper
 	 */
 	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
-	    this.injectConfig = injectConfig;
-	    this.looper = looper;
+		this(LoggingManager.getLoggerFactory(), injectConfig, looper);
 	}
 	
+	/** Constructor with a logger factory, an inject config and a looper.
+	 * 
+	 * @param loggerFactory
+	 * @param injectConfig
+	 * @param looper
+	 */
+	public BaseEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
+		this.logger = loggerFactory.getLogger(getClass());
+		this.injectConfig = injectConfig;
+		this.looper = looper;
+	}
+	
+	
+	public ILogger getLogger() {
+		return logger;
+	}
 	
 	public IHierarchicalInjectConfig getInjectConfig() {
 		return injectConfig;
@@ -77,8 +107,8 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	protected IEngineContext createEngine(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
 		// Inject game adapter
 		injectConfig.extend(new BaseSetupInjectModule(adapter));
-		
-	    // Create engine context
+
+		// Create engine context
 		IEngineContext engineContext = setup.create(injectConfig);
 
 		// Return the result

@@ -1,12 +1,12 @@
 package com.tokelon.toktales.core.config;
 
 import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.MutableCiniConfig;
 import com.tokelon.toktales.tools.config.ICiniConfig.IMutableCiniConfig;
+import com.tokelon.toktales.tools.config.MutableCiniConfig;
 
 public class CiniMainConfig extends CiniFileConfig implements IMainConfig {
-	
-	
+
+
 	public static final String VALUE_CONFIG_TYPE_MAIN = "Main";
 	public static final String VALUE_CONFIG_VERSION__02 = "0.2";
 	
@@ -36,7 +36,7 @@ public class CiniMainConfig extends CiniFileConfig implements IMainConfig {
 		
 		int res = parseCameraCreationType(valueString);
 		if(res < 0) {
-			System.err.println(String.format("Config value %s is not a valid value. Fallback to default value: %s", valueString, DEFAULT_VALUE_PROP_DISPLAY_CAMERA_CREATION_TYPE));
+			getLogger().warn("Config value {} is not a valid value. Fallback to default value: {}", valueString, DEFAULT_VALUE_PROP_DISPLAY_CAMERA_CREATION_TYPE);
 			res = parseCameraCreationType(DEFAULT_VALUE_PROP_DISPLAY_CAMERA_CREATION_TYPE);
 		}
 		return res;
@@ -106,6 +106,5 @@ public class CiniMainConfig extends CiniFileConfig implements IMainConfig {
 		
 		return cini;
 	}
-	
 	
 }

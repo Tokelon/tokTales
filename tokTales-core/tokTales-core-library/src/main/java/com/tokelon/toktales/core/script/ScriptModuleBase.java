@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.script;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.tools.script.IScriptModule;
 
@@ -18,17 +19,19 @@ public class ScriptModuleBase {
 	private final TObjectIntMap<String> errorCountMap; // Does this need to be synchronized?
 
 	private final ILogger logger;
-
 	private final IScriptModule module;
 	
 	public ScriptModuleBase(IScriptModule scriptModule) {
-		if(scriptModule == null) {
+		this(LoggingManager.getLoggerFactory(), scriptModule);
+	}
+	
+	public ScriptModuleBase(ILoggerFactory loggerFactory, IScriptModule scriptModule) {
+		if(loggerFactory == null || scriptModule == null) {
 			throw new NullPointerException();
 		}
-		
+
+		this.logger = loggerFactory.getLogger(getClass());
 		this.module = scriptModule;
-		
-		this.logger = LoggingManager.getLogger(getClass());
 
 		this.errorCountMap = new TObjectIntHashMap<>();
 	}

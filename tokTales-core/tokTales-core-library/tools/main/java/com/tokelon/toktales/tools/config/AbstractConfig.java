@@ -1,15 +1,34 @@
 package com.tokelon.toktales.tools.config;
 
-public abstract class AbstractConfig {
-	
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public abstract class AbstractConfig {
+
+
+	private final Logger logger;
+	
+	public AbstractConfig() {
+		this(LoggerFactory.getILoggerFactory());
+	}
+	
+	public AbstractConfig(ILoggerFactory loggerFactory) {
+		this.logger = loggerFactory.getLogger(getClass().getName());
+	}
+	
+	
+	public Logger getLogger() {
+		return logger;
+	}
+	
+	
 	/**
-	 * 
 	 * @param value
 	 * @return
 	 * @throws ConfigDataException If value is null.
 	 */
-	protected static String parseStringOrError(String value) throws ConfigDataException {
+	protected String parseStringOrError(String value) throws ConfigDataException {
 		if(value == null) {
 			throw new ConfigDataException("Config value null is not a valid String");
 		}
@@ -18,9 +37,9 @@ public abstract class AbstractConfig {
 		}
 	}
 	
-	protected static String parseString(String value, String defaultValue) {
+	protected String parseString(String value, String defaultValue) {
 		if(value == null) {
-			System.err.println(String.format("Config value null is not a valid String. Fallback to default value: %s", defaultValue));
+			logger.warn("Config value null is not a valid String. Fallback to default value: {}", defaultValue);
 			return defaultValue;
 		}
 		else {
@@ -28,9 +47,9 @@ public abstract class AbstractConfig {
 		}
 	}
 	
-	protected static String parseString(String value, String defaultValue, boolean logError) {
+	protected String parseString(String value, String defaultValue, boolean logError) {
 		if(value == null) {
-			if(logError) System.err.println(String.format("Config value null is not a valid String. Fallback to default value: %s", defaultValue));
+			if(logError) logger.warn("Config value null is not a valid String. Fallback to default value: {}", defaultValue);
 			return defaultValue;
 		}
 		else {
@@ -41,12 +60,11 @@ public abstract class AbstractConfig {
 	
 	
 	/**
-	 * 
 	 * @param value
 	 * @return
 	 * @throws ConfigDataException If parsing fails.
 	 */
-	protected static int parseIntOrError(String value) throws ConfigDataException {
+	protected int parseIntOrError(String value) throws ConfigDataException {
 		try {
 			return Integer.parseInt(value);
 		}
@@ -55,22 +73,22 @@ public abstract class AbstractConfig {
 		}
 	}
 
-	protected static int parseInt(String value, int defaultValue) {
+	protected int parseInt(String value, int defaultValue) {
 		try {
 			return Integer.parseInt(value);
 		}
 		catch(NumberFormatException nfe) {
-			System.err.println(String.format("Config value \"%s\" is not a valid int. Fallback to default value: %d", value, defaultValue));
+			logger.warn("Config value \"{}\" is not a valid int. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 	}
 	
-	protected static int parseInt(String value, int defaultValue, boolean logError) {
+	protected int parseInt(String value, int defaultValue, boolean logError) {
 		try {
 			return Integer.parseInt(value);
 		}
 		catch(NumberFormatException nfe) {
-			if(logError) System.err.println(String.format("Config value \"%s\" is not a valid int. Fallback to default value: %d", value, defaultValue));
+			if(logError) logger.warn("Config value \"{}\" is not a valid int. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 		
@@ -78,12 +96,11 @@ public abstract class AbstractConfig {
 	
 	
 	/**
-	 * 
 	 * @param value
 	 * @return
 	 * @throws ConfigDataException If parsing fails.
 	 */
-	protected static long parseLong(String value) throws ConfigDataException {
+	protected long parseLong(String value) throws ConfigDataException {
 		try {
 			return Long.parseLong(value);
 		}
@@ -92,34 +109,33 @@ public abstract class AbstractConfig {
 		}
 	}
 	
-	protected static long parseLong(String value, long defaultValue) {
+	protected long parseLong(String value, long defaultValue) {
 		try {
 			return Long.parseLong(value);
 		}
 		catch(NumberFormatException nfe) {
-			System.err.println(String.format("Config value \"%s\" is not a valid long. Fallback to default value: %d", value, defaultValue));
+			logger.warn("Config value \"{}\" is not a valid long. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 	}
 	
-	protected static long parseLong(String value, long defaultValue, boolean logError) {
+	protected long parseLong(String value, long defaultValue, boolean logError) {
 		try {
 			return Long.parseLong(value);
 		}
 		catch(NumberFormatException nfe) {
-			if(logError) System.err.println(String.format("Config value \"%s\" is not a valid long. Fallback to default value: %d", value, defaultValue));
+			if(logError) logger.warn("Config value \"{}\" is not a valid long. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 	}
 	
 	
 	/**
-	 * 
 	 * @param value
 	 * @return True if, ignoring case, value equals "true" and false if, ignoring case, value equals "false".
 	 * @throws ConfigDataException If parsing fails.
 	 */
-	protected static boolean parseBoolean(String value) throws ConfigDataException {
+	protected boolean parseBoolean(String value) throws ConfigDataException {
 		if(value == null) {
 			throw new ConfigDataException("Config value null is not a valid boolean");
 		}
@@ -136,9 +152,9 @@ public abstract class AbstractConfig {
 	}
 	
 	
-	protected static boolean parseBoolean(String value, boolean defaultValue) {
+	protected boolean parseBoolean(String value, boolean defaultValue) {
 		if(value == null) {
-			System.err.println("Config value null is not a valid boolean");
+			logger.warn("Config value null is not a valid boolean");
 			return defaultValue;
 		}
 		
@@ -149,14 +165,14 @@ public abstract class AbstractConfig {
 			return false;
 		}
 		else {
-			System.err.println(String.format("Config value \"%s\" is not a valid boolean. Fallback to default value: %b", value, defaultValue));
+			logger.warn("Config value \"{}\" is not a valid boolean. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 	}
 	
-	protected static boolean parseBoolean(String value, boolean defaultValue, boolean logError) {
+	protected boolean parseBoolean(String value, boolean defaultValue, boolean logError) {
 		if(value == null) {
-			if(logError) System.err.println("Config value null is not a valid boolean");
+			if(logError) logger.warn("Config value null is not a valid boolean");
 			return defaultValue;
 		}
 		
@@ -167,7 +183,7 @@ public abstract class AbstractConfig {
 			return false;
 		}
 		else {
-			if(logError) System.err.println(String.format("Config value \"%s\" is not a valid boolean. Fallback to default value: %b", value, defaultValue));
+			if(logError) logger.warn("Config value \"{}\" is not a valid boolean. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 	}
@@ -175,12 +191,11 @@ public abstract class AbstractConfig {
 	
 	
 	/**
-	 * 
 	 * @param value
 	 * @return
 	 * @throws ConfigDataException If parsing fails.
 	 */
-	protected static float parseFloat(String value) throws ConfigDataException {
+	protected float parseFloat(String value) throws ConfigDataException {
 		try {
 			return Float.parseFloat(value);			// For some reason this can also throw a NullpointerException along with the regular NumberFormatException
 		}
@@ -192,42 +207,41 @@ public abstract class AbstractConfig {
 		}
 	}
 	
-	protected static float parseFloat(String value, float defaultValue) {
+	protected float parseFloat(String value, float defaultValue) {
 		try {
 			return Float.parseFloat(value);
 		}
 		catch(NumberFormatException nfe) {
-			System.err.println(String.format("Config value \"%s\" is not a valid float. Fallback to default value: %f", value, defaultValue));
+			logger.warn("Config value \"{}\" is not a valid float. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 		catch(NullPointerException npe) {
-			System.err.println("Config value null is not a valid float");
+			logger.warn("Config value null is not a valid float");
 			return defaultValue;
 		}
 	}
 	
-	protected static float parseFloat(String value, float defaultValue, boolean logError) {
+	protected float parseFloat(String value, float defaultValue, boolean logError) {
 		try {
 			return Float.parseFloat(value);
 		}
 		catch(NumberFormatException nfe) {
-			if(logError) System.err.println(String.format("Config value \"%s\" is not a valid float. Fallback to default value: %f", value, defaultValue));
+			if(logError) logger.warn("Config value \"{}\" is not a valid float. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 		catch(NullPointerException npe) {
-			if(logError) System.err.println("Config value null is not a valid float");
+			if(logError) logger.warn("Config value null is not a valid float");
 			return defaultValue;
 		}
 	}
 	
 	
 	/**
-	 * 
 	 * @param value
 	 * @return
 	 * @throws ConfigDataException If parsing fails.
 	 */
-	protected static double parseDouble(String value) throws ConfigDataException {
+	protected double parseDouble(String value) throws ConfigDataException {
 		try {
 			return Double.parseDouble(value);
 		}
@@ -239,30 +253,30 @@ public abstract class AbstractConfig {
 		}
 	}
 	
-	protected static double parseDouble(String value, double defaultValue) {
+	protected double parseDouble(String value, double defaultValue) {
 		try {
 			return Double.parseDouble(value);
 		}
 		catch(NumberFormatException nfe) {
-			System.err.println(String.format("Config value \"%s\" is not a valid double. Fallback to default value: %f", value, defaultValue));
+			logger.warn("Config value \"{}\" is not a valid double. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 		catch(NullPointerException npe) {
-			System.err.println("Config value null is not a valid double");
+			logger.warn("Config value null is not a valid double");
 			return defaultValue;
 		}
 	}
 	
-	protected static double parseDouble(String value, double defaultValue, boolean logError) {
+	protected double parseDouble(String value, double defaultValue, boolean logError) {
 		try {
 			return Double.parseDouble(value);
 		}
 		catch(NumberFormatException nfe) {
-			if(logError) System.err.println(String.format("Config value \"%s\" is not a valid double. Fallback to default value: %f", value, defaultValue));
+			if(logError) logger.warn("Config value \"{}\" is not a valid double. Fallback to default value: {}", value, defaultValue);
 			return defaultValue;
 		}
 		catch(NullPointerException npe) {
-			if(logError) System.err.println("Config value null is not a valid double");
+			if(logError) logger.warn("Config value null is not a valid double");
 			return defaultValue;
 		}
 	}

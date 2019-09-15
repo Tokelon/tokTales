@@ -6,14 +6,40 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.inject.IInjectConfig;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 public abstract class AbstractInjectSetup implements IEngineSetup {
 
-	
+
 	// Default setup mode is production
 	private SetupMode setupMode = SetupMode.PRODUCTION;
 	
+	private final ILogger logger;
+	
+	/** Default constructor.
+	 */
+	protected AbstractInjectSetup() {
+		this(LoggingManager.getLoggerFactory());
+	}
+
+	/** Constructor with a logger factory.
+	 * 
+	 * @param loggerFactory
+	 */
+	protected AbstractInjectSetup(ILoggerFactory loggerFactory) {
+		this.logger = loggerFactory.getLogger(getClass());
+	}
+	
+	
+	/**
+	 * @return A logger for this setup.
+	 */
+	protected ILogger getLogger() {
+		return logger;
+	}
 
 	/** Implement your custom setup logic here.
 	 * <p>
@@ -27,8 +53,8 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 	
 	@Override
 	public IEngineContext create(IHierarchicalInjectConfig injectConfig) throws EngineException {
-		System.out.println("Engine creation started");
-		System.out.println("Engine setup is running in mode " + setupMode);
+		logger.info("Engine creation started");
+		logger.info("Engine setup is running in mode {}", setupMode);
 		
 		Injector injector = createInjector(injectConfig, setupMode);
 		IEngineContext engineContext = createEngineContext(injector);
@@ -58,37 +84,34 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 
 	protected Injector createInjector(IInjectConfig injectConfig, SetupMode mode) throws EngineException {
 		Stage stage = mode == SetupMode.DEVELOPMENT ? Stage.DEVELOPMENT : Stage.PRODUCTION;
-		System.out.println("Determined injector stage as " + stage);
+		logger.info("Determined injector stage as {}", stage);
 		
-		System.out.print("Creating engine injector..... ");
+		logger.info("Creating engine injector...");
 		long before = System.currentTimeMillis();
 
 		Injector injector = injectConfig.createInjector(stage);
 		
-		System.out.printf("Injector creation took %d ms", (System.currentTimeMillis() - before));
-		System.out.println();
+		logger.info("...injector creation took {} ms", (System.currentTimeMillis() - before));
 		return injector;
 	}
 
 	protected IEngineContext createEngineContext(Injector injector) {
-		System.out.println("Creating engine context... ");
+		logger.info("Creating engine context...");
 		long before = System.currentTimeMillis();
 		
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 		
-		System.out.printf("...engine context creation took %d ms", (System.currentTimeMillis() - before));
-		System.out.println();
+		logger.info("...engine context creation took {} ms", (System.currentTimeMillis() - before));
 		return engineContext;
 	}
 	
 	protected IGameAdapter createGameAdapter(Injector injector) {
-		System.out.println("Creating game adapter... ");
+		logger.info("Creating game adapter...");
 		long before = System.currentTimeMillis();
 
 		IGameAdapter gameAdapter = injector.getInstance(IGameAdapter.class);
 		
-		System.out.printf("...game adapter creation took %d ms", (System.currentTimeMillis() - before));
-		System.out.println();
+		logger.info("...game adapter creation took {} ms", (System.currentTimeMillis() - before));
 		return gameAdapter;
 	}
 	

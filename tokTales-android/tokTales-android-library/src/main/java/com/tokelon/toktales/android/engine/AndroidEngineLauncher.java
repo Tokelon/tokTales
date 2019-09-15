@@ -6,6 +6,7 @@ import com.tokelon.toktales.core.engine.BaseEngineLauncher;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
@@ -25,9 +26,23 @@ public class AndroidEngineLauncher extends BaseEngineLauncher {
 	 */
 	public AndroidEngineLauncher(IHierarchicalInjectConfig injectConfig, Context applicationContext) {
 		super(injectConfig);
-		
-        this.appContext = applicationContext;
-    }
+
+		this.appContext = applicationContext;
+	}
+
+	/** Constructor with a logger factory, an inject config and an application context.
+	 * 
+	 * @param loggerFactory
+	 * @param injectConfig
+	 * @param applicationContext
+	 * 
+	 * @see MasterAndroidInjectConfig
+	 */
+	public AndroidEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig, Context applicationContext) {
+		super(loggerFactory, injectConfig);
+
+		this.appContext = applicationContext;
+	}
 
 	
 	
