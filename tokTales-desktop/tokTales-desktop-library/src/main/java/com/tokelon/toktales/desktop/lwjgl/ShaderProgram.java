@@ -9,13 +9,17 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.core.content.IDisposable;
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
 
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 public class ShaderProgram implements IDisposable {
+	// TODO: Dispose where used
 
-	
+
 	private boolean disposed = false;
 
 	
@@ -28,12 +32,19 @@ public class ShaderProgram implements IDisposable {
 	
 	private final int programId;
 	
+	private final ILogger logger;
 	
 	public ShaderProgram() throws LWJGLException {
+		this(LoggingManager.getLoggerFactory());
+	}
+	
+	public ShaderProgram(ILoggerFactory loggerFactory) throws LWJGLException {
+		logger = loggerFactory.getLogger(getClass());
+		
 		programId = GL20.glCreateProgram();
 		
 		if(programId == 0) {
-			throw new LWJGLException("Error creating GL Program: " +programId);
+			throw new LWJGLException("Error creating GL Program: " + programId);
 		}
 		
 		uniforms = new TObjectIntHashMap<>();
@@ -51,10 +62,9 @@ public class ShaderProgram implements IDisposable {
 	
 	
 	private int createShader(String shaderCode, int shaderType) throws LWJGLException {
-		
 		int shaderId = GL20.glCreateShader(shaderType);
 		if(shaderId == 0) {
-			throw new LWJGLException("Error creating Shader: " +shaderId);
+			throw new LWJGLException("Error creating Shader: " + shaderId);
 		}
 		
 		GL20.glShaderSource(shaderId, shaderCode);
@@ -71,17 +81,16 @@ public class ShaderProgram implements IDisposable {
 	
 	
 	public void link() throws LWJGLException {
-		
 		GL20.glLinkProgram(programId);
+		
 		if(GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 			throw new LWJGLException("Error linking Program: " + GL20.glGetProgramInfoLog(programId));
 		}
 		
 		GL20.glValidateProgram(programId);
 		if(GL20.glGetProgrami(programId, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
-			System.err.println("Warning validating Shader code: " + GL20.glGetProgramInfoLog(programId));
+			logger.warn("Warning validating Shader code: {}", GL20.glGetProgramInfoLog(programId));
 		}
-		
 	}
 	
 	
@@ -96,7 +105,6 @@ public class ShaderProgram implements IDisposable {
 	
 	
 	public void createUniform(String uniformName) throws LWJGLException {
-		
 		int uniformLocation = GL20.glGetUniformLocation(programId, uniformName);
 		if(uniformLocation < 0) {
 			throw new LWJGLException("Could not find uniform: " + uniformName);
@@ -122,7 +130,6 @@ public class ShaderProgram implements IDisposable {
 	
 	
 	public void cleanup() {
-		
 		unbind();
 		
 		if(programId != 0) {

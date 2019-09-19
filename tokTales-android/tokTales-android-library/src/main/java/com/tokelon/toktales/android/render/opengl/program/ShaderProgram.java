@@ -7,11 +7,16 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
+import com.tokelon.toktales.core.engine.log.LoggingManager;
+
 import android.opengl.GLES20;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 public class ShaderProgram {
+	// Implement IDisposable?
 
 
 	private int vertexShaderId;
@@ -24,8 +29,15 @@ public class ShaderProgram {
 
 	private final int programId;
 
-	
+	private final ILogger logger;
+
 	public ShaderProgram() throws OpenGLException {
+		this(LoggingManager.getLoggerFactory());
+	}
+	
+	public ShaderProgram(ILoggerFactory loggerFactory) throws OpenGLException {
+		logger = loggerFactory.getLogger(getClass());
+		
 		programId = GLES20.glCreateProgram();
 		
 		if(programId == 0) {
@@ -55,7 +67,7 @@ public class ShaderProgram {
 		// Create shader with GLES20.GL_FRAGMENT_SHADER or GLES20.GL_VERTEX_SHADER
 		int shaderId = GLES20.glCreateShader(shaderType);
 		if(shaderId == 0) {
-			throw new OpenGLException("Error creating Shader: " +shaderId);
+			throw new OpenGLException("Error creating Shader: " + shaderId);
 		}
 		
 		// Add source code to the shader
@@ -92,9 +104,8 @@ public class ShaderProgram {
 		int[] validateStatus = new int[1];
 		GLES20.glGetProgramiv(programId, GLES20.GL_VALIDATE_STATUS, validateStatus, 0);
 		if(validateStatus[0] == GLES20.GL_FALSE) {
-			System.err.println("Warning validating Shader code: " + GLES20.glGetProgramInfoLog(programId));
+			logger.warn("Warning validating Shader code: {}", GLES20.glGetProgramInfoLog(programId));
 		}
-
 	}
 	
 	

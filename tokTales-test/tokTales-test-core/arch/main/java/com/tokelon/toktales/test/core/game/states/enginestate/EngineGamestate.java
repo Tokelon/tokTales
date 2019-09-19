@@ -33,8 +33,6 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 		this.stateRenderFactory = renderFactory;
 		this.stateControlHandlerFactory = controlHandlerFactory;
 		this.stateInputHandlerFactory = inputHandlerFactory;
-		
-		System.out.println(String.format("EngineGamestate of type [%s] has parameter T of type [%s, %s]", this.getClass(), getSceneTypeToken().getType(), getSceneTypeToken().getRawType()));
 	}
 	
 	// Testing
@@ -51,8 +49,6 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 		this.stateRenderFactory = renderFactory;
 		this.stateControlHandlerFactory = controlHandlerFactory;
 		this.stateInputHandlerFactory = inputHandlerFactory;
-		
-		System.out.println(String.format("EngineGamestate of type [%s] has parameter T of type [%s, %s]", this.getClass(), getSceneTypeToken().getType(), getSceneTypeToken().getRawType()));
 	}
 	
 	
@@ -71,6 +67,8 @@ public class EngineGamestate<T extends IEngineGamescene> extends BaseGamestate<T
 		IGameStateInputHandler stateInputHandler = stateInputHandlerFactory.create(this);
 		
 		super.initStateDependencies(stateRender, stateInputHandler, defaultControlScheme, stateControlHandler);
+		
+		getLogger().debug("EngineGamestate of type [{}] has parameter T of type [{}, {}]", this.getClass(), getSceneTypeToken().getType(), getSceneTypeToken().getRawType());
 	}
 
 	

@@ -138,12 +138,12 @@ public class TiledMapXML implements ITiledMap {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		// ONLY called if class implements Serializable!
 		
-		System.out.println("readObject was called for object: " +this);
+		//System.out.println("readObject was called for object: " +this);
 	}
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		// ONLY called if class implements Serializable!
 		
-		System.out.println("writeObject was called for object: " +this);
+		//System.out.println("writeObject was called for object: " +this);
 	}
 	
 	
