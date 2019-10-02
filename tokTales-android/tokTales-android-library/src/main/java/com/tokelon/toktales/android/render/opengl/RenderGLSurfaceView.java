@@ -17,7 +17,7 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 	
 	private IOpenGLRenderer mainRenderer;
 
-	private WrapperGLRenderer mWrapperRenderer;
+	private DelegateGLRenderer mWrapperRenderer;
 	
 	public RenderGLSurfaceView(Context context) {
 		super(context);
@@ -41,7 +41,7 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 		
 		
 		
-		mWrapperRenderer = new WrapperGLRenderer();
+		mWrapperRenderer = new DelegateGLRenderer();
 		setRenderer(mWrapperRenderer);
 		
 		

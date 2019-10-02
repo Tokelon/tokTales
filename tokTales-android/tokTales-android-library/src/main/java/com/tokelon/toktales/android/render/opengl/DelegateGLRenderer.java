@@ -7,9 +7,10 @@ import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer;
 
 import android.opengl.GLSurfaceView.Renderer;
 
-public class WrapperGLRenderer implements Renderer {
+public class DelegateGLRenderer implements Renderer {
 
-	private IOpenGLRenderer mMainRenderer;
+
+	private IOpenGLRenderer mainRenderer; // TODO: Make volatile?
 	
 	private boolean surfaceCreated = false;
 	private boolean surfaceChanged = false;
@@ -25,7 +26,7 @@ public class WrapperGLRenderer implements Renderer {
 	 * @param mainRenderer The renderer to forward calls to.
 	 */
 	public void setMainRenderer(IOpenGLRenderer mainRenderer) {
-		this.mMainRenderer = mainRenderer;
+		this.mainRenderer = mainRenderer;
 		
 		if(mainRenderer != null) {
 			if(surfaceCreated) {
@@ -55,8 +56,8 @@ public class WrapperGLRenderer implements Renderer {
 		surfaceCreated = true;
 		surfaceChanged = false;
 		
-		if(mMainRenderer != null) {
-			mMainRenderer.onSurfaceCreated();
+		if(mainRenderer != null) {
+			mainRenderer.onSurfaceCreated();
 		}
 	}
 
@@ -67,8 +68,8 @@ public class WrapperGLRenderer implements Renderer {
 		
 		surfaceChanged = true;
 		
-		if(mMainRenderer != null) {
-			mMainRenderer.onSurfaceChanged(width, height);
+		if(mainRenderer != null) {
+			mainRenderer.onSurfaceChanged(width, height);
 		}
 	}
 
@@ -77,8 +78,8 @@ public class WrapperGLRenderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		// Do something ?
 		
-		if(mMainRenderer != null) {
-			mMainRenderer.onDrawFrame();
+		if(mainRenderer != null) {
+			mainRenderer.onDrawFrame();
 		}
 	}
 	
