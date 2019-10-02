@@ -32,6 +32,8 @@ import com.tokelon.toktales.android.input.dispatch.IAndroidInputConsumer.IAndroi
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputDispatch;
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer.IAndroidInputProducerFactory;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderService;
+import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
+import com.tokelon.toktales.android.render.tools.UIControl;
 import com.tokelon.toktales.android.states.AndroidGameStateInput;
 import com.tokelon.toktales.android.states.AndroidInitialGamestateInputHandler;
 import com.tokelon.toktales.android.states.IAndroidGameStateInput;
@@ -106,6 +108,9 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IAndroidGameStateInput.class).to(AndroidGameStateInput.class);
 		
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
+		
+		
+		bind(IUIControlFactory.class).to(UIControl.UIControlFactory.class);
 	}
 	
 }

@@ -3,6 +3,9 @@ package com.tokelon.toktales.android.render.tools;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.inject.Inject;
+
+import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.android.input.events.AndroidScreenButtonInputProducer;
@@ -19,7 +22,7 @@ import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 
-public class UIControl implements Runnable {		// Make interface for this ?
+public class UIControl implements IUIControl {
 
 
 	private static final int EVENT_POOL_CAPACITY_SCREEN_BUTTON_INPUT = 10;
@@ -72,18 +75,20 @@ public class UIControl implements Runnable {		// Make interface for this ?
 	}
 
 	
+	@Override
 	public void setViewport(IScreenViewport viewport) {
 		this.uiViewport = viewport;
 	}
 	
 	
-	
+	@Override
 	public synchronized void startControl() {
 		running = true;
 		thread = new Thread(this);
 		thread.start();
 	}
 	
+	@Override
 	public synchronized void stopControl() {
 		running = false;
 		//thread.join()	 // Wait for the thread to end ?
@@ -121,7 +126,7 @@ public class UIControl implements Runnable {		// Make interface for this ?
 	
 	
 	
-	
+	@Override
 	public boolean onTouch(MotionEvent event) {		// NOT THREAD SAFE | Needs synchronized to be thread-safe
 
 		/* TODO: Implement returning boolean for listeners,
@@ -1186,6 +1191,33 @@ public class UIControl implements Runnable {		// Make interface for this ?
 			return true;
 		}
 		
+	}
+	
+	
+	
+	public static class UIControlFactory implements IUIControlFactory {
+		private final ILogging logging;
+		private final IObjectPoolFactory eventPoolFactory;
+		private final IAndroidInputService androidInputService;
+
+		@Inject
+		public UIControlFactory(ILogging logging, IObjectPoolFactory eventPoolFactory, IAndroidInputService androidInputService) {
+			this.logging = logging;
+			this.eventPoolFactory = eventPoolFactory;
+			this.androidInputService = androidInputService;
+		}
+		
+		
+		@Override
+		public IUIControl create(IUIOverlayProvider overlayProvider) {
+			IAndroidInputProducer inputProducer = androidInputService.getMainInputDispatch().getInputProducer();
+			return new UIControl(logging, overlayProvider, inputProducer, eventPoolFactory);
+		}
+
+		@Override
+		public IUIControl create(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer) {
+			return new UIControl(logging, overlayProvider, inputProducer, eventPoolFactory);
+		}
 	}
 	
 }
