@@ -2,11 +2,25 @@ package com.tokelon.toktales.android.engine.inject;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.DefaultIntegratorBuilder;
+import com.tokelon.toktales.android.activity.integration.GameIntegration;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
+import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
+import com.tokelon.toktales.android.activity.integration.IGameIntegration;
+import com.tokelon.toktales.android.activity.integration.IInjectActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration.IKeyboardActivityIntegrationFactory;
+import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
+import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration;
+import com.tokelon.toktales.android.activity.integration.InjectorIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration.KeyboardActivityIntegrationFactory;
+import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration.SimpleRequestPermissionsIntegrationFactory;
+import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
+import com.tokelon.toktales.android.activity.integration.UIServiceIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.input.AndroidInputService;
@@ -67,15 +81,26 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		  bind(IAndroidInputProducerFactory.class).to(AndroidInputProducer.AndroidInputProducerFactory.class);
 		  bind(IAndroidInputConsumerFactory.class).to(AndroidInputConsumer.AndroidInputConsumerFactory.class);
 		
+		bindInGameScopeAndForNotScoped(IUserInterface.class, UserInterface.class);
+		
 		
 		/* Other bindings */
 		
 		install(new FactoryModuleBuilder()
 				.implement(IActivityIntegrator.class, ActivityIntegrator.class)
 				.build(IActivityIntegratorFactory.class));
-		bind(IUIServiceIntegration.class).to(IUIServiceIntegration.UIServiceIntegration.class);
+		
+		bind(IActivityIntegratorBuilder.class).to(IInjectActivityIntegratorBuilder.class);
+		bind(IInjectActivityIntegratorBuilder.class).to(InjectorIntegratorBuilder.class);
+		bind(IDefaultActivityIntegratorBuilder.class).to(DefaultIntegratorBuilder.class);
+		
+		bind(IUIServiceIntegration.class).to(UIServiceIntegration.class);
 		bind(IKeyboardActivityIntegration.class).to(KeyboardActivityIntegration.class);
-		bind(IUserInterface.class).to(UserInterface.class); // Maybe bind to Game scope
+		bind(IKeyboardActivityIntegrationFactory.class).to(KeyboardActivityIntegrationFactory.class);
+		bind(ISimpleRequestPermissionsIntegrationFactory.class).to(SimpleRequestPermissionsIntegrationFactory.class);
+		bind(ISurfaceViewIntegration.class).to(SurfaceViewIntegration.class);
+		bind(IGameIntegration.class).to(GameIntegration.class);
+		
 		
 		bind(IGameStateInput.class).to(IAndroidGameStateInput.class);
 		bind(IAndroidGameStateInput.class).to(AndroidGameStateInput.class);

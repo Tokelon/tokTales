@@ -1,17 +1,16 @@
 package com.tokelon.toktales.android.activity;
 
-import java.util.Map;
+import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
-import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
+import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
+import com.tokelon.toktales.core.engine.log.ILogging;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -50,29 +49,40 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	private ProxyTextWatcher textViewProxyTextWatcher;
 	
 
-	private SurfaceViewIntegration surfaceViewIntegration;
-	
 	private ILogger logger;
-
+	private ISurfaceViewIntegration surfaceViewIntegration;
+	private IGameIntegration gameIntegration;
+	
+	
+	public GameActivity() {
+		super(ActivityHelper.createDefaultActivityIntegratorBuilder());
+	}
+	
+	public GameActivity(IActivityIntegratorBuilder integratorBuilder) {
+		super(integratorBuilder);
+	}
+	
+	@Inject
+	protected void injectDependencies(ILogging logging, ISurfaceViewIntegration surfaceViewIntegration, IGameIntegration gameIntegration) {
+		this.logger = logging.getLogger(getClass());
+		this.surfaceViewIntegration = surfaceViewIntegration;
+		this.gameIntegration = gameIntegration;
+	}
+	
 	@Override
-	protected Map<String, IActivityIntegration> createActivityIntegrations() {
-		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
+	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, gameIntegration);
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLogging(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
-		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		
-		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
-		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
-		
-		return integrations;
+		return super.buildIntegrator(builder);
 	}
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ActivityHelper.injectActivityDependencies(this);
+
 		super.onCreate(savedInstanceState);
-		
-		logger = TokTales.getLogging().getLogger(getClass());
 		
 		setToFullscreen();
 		initDialog();
@@ -294,7 +304,6 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 			logger.debug("Hardware input from key: {}", keyCode);
 			return false;
 		}
-		
 	}
 
 }

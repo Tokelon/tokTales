@@ -1,13 +1,15 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.inject.Inject;
 
 import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
-import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.android.activity.ActivityHelper;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
+import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration;
+import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
@@ -25,7 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class LoadTaleActivity extends AbstractIntegratedActivity {
-	// TODO: Refactor to use DI
+
 
 	public static final String ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS = "LoadTaleActivity_Integration_RequestPermissions";
 	
@@ -34,30 +36,43 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 	private static final String TALES_LOCATION_PATH = "Tales";	// TODO: Static location! Implement with configs
 	private static final IApplicationLocation talesLocation = new LocationImpl(TALES_LOCATION_PATH);
 	
-	
-	private ILogger logger;
-	
+
 	private ListView taleListView;
 	private String[] taleList;
 	
-	private SimpleRequestPermissionsIntegration requestPermissionsIntegration;
+	private ILogger logger;
+	private IStorageService storageService;
+	private ISimpleRequestPermissionsIntegration requestPermissionsIntegration;
+	
+	
+	public LoadTaleActivity() {
+		super(ActivityHelper.createActivityIntegratorBuilder()); // Does not use default integrations
+	}
+	
+	public LoadTaleActivity(IActivityIntegratorBuilder integratorBuilder) {
+		super(integratorBuilder);
+	}
+	
+	@Inject
+	protected void injectDependencies(ILogging logging, IStorageService storageService, ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory) {
+		this.logger = logging.getLogger(getClass());
+		this.storageService = storageService;
+		this.requestPermissionsIntegration = requestPermissionsIntegrationFactory.create(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+	}
 	
 	@Override
-	protected Map<String, IActivityIntegration> createActivityIntegrations() {
-		Map<String, IActivityIntegration> integrations = new HashMap<>(); // do not use default integrations returned by superclass
+	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+		builder.addIntegration(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
-		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLogging(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		integrations.put(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
-		
-		return integrations;
+		return super.buildIntegrator(builder);
 	}
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ActivityHelper.injectActivityDependencies(this);
+
 		super.onCreate(savedInstanceState);
-		
-		logger = TokTales.getLogging().getLogger(getClass());
 
 		init();
 		
@@ -69,7 +84,6 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 		taleListView = new ListView(this);
 		
 		// TODO: Implement listing tales only after permission has been granted
-		IStorageService storageService = TokTales.getEngine().getStorageService();
 		try {
 			taleList = storageService.listAppDirOnExternal(talesLocation);
 			
@@ -77,11 +91,9 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.entry_list, R.id.textViewListEntry, taleList);
 			taleListView.setAdapter(adapter);
 			taleListView.setOnItemClickListener(new ListClickListener());
-			
 		} catch (StorageException se) {
 			logger.error("List directory Tales location failed:", se);
 		}
-		
 	}
 	
 	@Override

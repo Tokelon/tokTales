@@ -1,54 +1,41 @@
 package com.tokelon.toktales.android.activity;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
-import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration.UIServiceIntegration;
-import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.SimpleIntegratorBuilder;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 
 public abstract class AbstractIntegratedActivity extends Activity implements IIntegratedActivity {
-	
-	public static final String ACTIVITY_INTEGRATION_UI_SERVICE = "AbstractIntegratedActivity_Integration_UIService";
-	public static final String ACTIVITY_INTEGRATION_KEYBOARD = "AbstractIntegratedActivity_Integration_Keyboard";
 
+
+	private IActivityIntegrator integrator;
 	
-	private final Map<String, IActivityIntegration> integrationsMap;
-	private final IActivityIntegrator integrator;
-	
+	private final IActivityIntegratorBuilder initialIntegratorBuilder;
 
 	public AbstractIntegratedActivity() {
-		integrationsMap = createActivityIntegrations();
-		integrator = ActivityHelper.createActivityIntegrator(this, integrationsMap.values());
+		this.initialIntegratorBuilder = null;
+	}
+	
+	public AbstractIntegratedActivity(IActivityIntegratorBuilder integratorBuilder) {
+		this.initialIntegratorBuilder = integratorBuilder;
 	}
 	
 	
+	protected IActivityIntegratorBuilder createIntegrationBuilder() {
+		return initialIntegratorBuilder == null ? new SimpleIntegratorBuilder() : initialIntegratorBuilder;
+	}
 	
-	/**
-	 * @return A map containing all integrations that are used in this activity, with their names as keys.
-	 */
-	protected Map<String, IActivityIntegration> getActivityIntegrations() {
-		return integrationsMap;
+	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+		return builder.build(this);
 	}
-
-	/**
-	 * @return A map containing all integrations that should be used in this activity, with their names as keys.
-	 */
-	protected Map<String, IActivityIntegration> createActivityIntegrations() {
-		HashMap<String, IActivityIntegration> map = new HashMap<>();
-		
-		map.put(ACTIVITY_INTEGRATION_UI_SERVICE, new UIServiceIntegration());
-		map.put(ACTIVITY_INTEGRATION_KEYBOARD, new KeyboardActivityIntegration(new Handler()));
-		
-		return map;
+	
+	protected void initializeIntegrations() {
+		integrator = buildIntegrator(createIntegrationBuilder());
 	}
-
+	
 	
 	@Override
 	public Activity asActivity() {
@@ -59,13 +46,14 @@ public abstract class AbstractIntegratedActivity extends Activity implements IIn
 	public IActivityIntegrator getIntegrator() {
 		return integrator;
 	}
-
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		initializeIntegrations(); // Call this before super.onCreate() ?
+		
 		integrator.onCreate();
 	}
 	
@@ -79,7 +67,7 @@ public abstract class AbstractIntegratedActivity extends Activity implements IIn
 	@Override
 	protected void onResume() {
 		super.onResume();
-				
+		
 		integrator.onResume();
 	}
 
@@ -104,6 +92,5 @@ public abstract class AbstractIntegratedActivity extends Activity implements IIn
 		
 		integrator.onDestroy();
 	}
-
 	
 }

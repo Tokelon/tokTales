@@ -1,7 +1,5 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
@@ -10,18 +8,17 @@ import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
 import com.tokelon.toktales.android.activity.SettingsActivity;
-import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
-import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration;
-import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
+import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration;
+import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
+import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.extens.def.android.R;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
@@ -71,45 +68,49 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	private ProxyTextWatcher textViewProxyTextWatcher;
 
 	
-	private SurfaceViewIntegration surfaceViewIntegration;
-	private SimpleRequestPermissionsIntegration requestPermissionsIntegration;
 
 	private ILogger logger;
 	private IEngineContext engineContext;
 	private ITaleLoader taleLoader;
+	private ISurfaceViewIntegration surfaceViewIntegration;
+	private IGameIntegration gameIntegration;
+	private ISimpleRequestPermissionsIntegration requestPermissionsIntegration;
+
 	
-	@Inject
-	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader) {
-		this.engineContext = engineContext;
-		this.taleLoader = taleLoader;
-		this.logger = engineContext.getLogging().getLogger(getClass());
+	public TaleActivity() {
+		super(ActivityHelper.createDefaultActivityIntegratorBuilder());
 	}
 	
+	public TaleActivity(IActivityIntegratorBuilder integratorBuilder) {
+		super(integratorBuilder);
+	}
+
+	@Inject
+	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader, ISurfaceViewIntegration surfaceViewIntegration, IGameIntegration gameIntegration, ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory) {
+		this.logger = engineContext.getLogging().getLogger(getClass());
+		this.engineContext = engineContext;
+		this.taleLoader = taleLoader;
+		this.surfaceViewIntegration = surfaceViewIntegration;
+		this.gameIntegration = gameIntegration;
+		this.requestPermissionsIntegration = requestPermissionsIntegrationFactory.create(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+	}
 	
 	@Override
-	protected Map<String, IActivityIntegration> createActivityIntegrations() {
-		// injectDependencies has not run at this point
-		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
+	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLogging(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
-		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		
-		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
-		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
-		
-		requestPermissionsIntegration = new SimpleRequestPermissionsIntegration(TokTales.getLogging(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		integrations.put(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
-		
-		return integrations;
+		return super.buildIntegrator(builder);
 	}
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		// Inject dependencies
+		// Inject dependencies - before integrator is built
 		ActivityHelper.injectActivityDependencies(this);
+		
+		super.onCreate(savedInstanceState);
 		
 		
 		// Set activity to fullscreen
@@ -148,7 +149,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		 * 
 		 */
 		// Removes any old listeners for the main config
-		IConfigManager configManager = (IConfigManager) TokTales.getGame().getConfigManager();
+		IConfigManager configManager = (IConfigManager) engineContext.getGame().getConfigManager();
 		configManager.getConfig(IConfigManager.MAIN_CONFIG).removeAllListeners();
 
 		

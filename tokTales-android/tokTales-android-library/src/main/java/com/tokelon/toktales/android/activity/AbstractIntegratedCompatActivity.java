@@ -1,55 +1,42 @@
 package com.tokelon.toktales.android.activity;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
-import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration.UIServiceIntegration;
-import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.SimpleIntegratorBuilder;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 public abstract class AbstractIntegratedCompatActivity extends AppCompatActivity implements IIntegratedActivity {
-	
-	public static final String ACTIVITY_INTEGRATION_UI_SERVICE = "AbstractIntegratedCompatActivity_Integration_UIService";
-	public static final String ACTIVITY_INTEGRATION_KEYBOARD = "AbstractIntegratedCompatActivity_Integration_Keyboard";
 
+
+	private IActivityIntegrator integrator;
 	
-	private final Map<String, IActivityIntegration> integrationsMap;
-	private final IActivityIntegrator integrator;
-	
+	private final IActivityIntegratorBuilder initialIntegratorBuilder;
 
 	public AbstractIntegratedCompatActivity() {
-		integrationsMap = createActivityIntegrations();
-		integrator = ActivityHelper.createActivityIntegrator(this, integrationsMap.values());
+		this.initialIntegratorBuilder = null;
 	}
 	
-	
-	
-	/**
-	 * @return A map containing all integrations that are used in this activity, with their names as keys.
-	 */
-	protected Map<String, IActivityIntegration> getActivityIntegrations() {
-		return integrationsMap;
+	public AbstractIntegratedCompatActivity(IActivityIntegratorBuilder integratorBuilder) {
+		this.initialIntegratorBuilder = integratorBuilder;
 	}
 
-	/**
-	 * @return A map containing all integrations that should be used in this activity, with their names as keys.
-	 */
-	protected Map<String, IActivityIntegration> createActivityIntegrations() {
-		HashMap<String, IActivityIntegration> map = new HashMap<>();
-		
-		map.put(ACTIVITY_INTEGRATION_UI_SERVICE, new UIServiceIntegration());
-		map.put(ACTIVITY_INTEGRATION_KEYBOARD, new KeyboardActivityIntegration(new Handler()));
-		
-		return map;
-	}
 
+	protected IActivityIntegratorBuilder createIntegrationBuilder() {
+		return initialIntegratorBuilder == null ? new SimpleIntegratorBuilder() : initialIntegratorBuilder;
+	}
+	
+	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+		return builder.build(this);
+	}
+	
+	protected void initializeIntegrations() {
+		integrator = buildIntegrator(createIntegrationBuilder());
+	}
+	
 	
 	@Override
 	public Activity asActivity() {
@@ -62,11 +49,12 @@ public abstract class AbstractIntegratedCompatActivity extends AppCompatActivity
 	}
 
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		initializeIntegrations(); // Call this before super.onCreate() ?
+		
 		integrator.onCreate();
 	}
 	
@@ -80,7 +68,7 @@ public abstract class AbstractIntegratedCompatActivity extends AppCompatActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-				
+		
 		integrator.onResume();
 	}
 
@@ -105,6 +93,5 @@ public abstract class AbstractIntegratedCompatActivity extends AppCompatActivity
 		
 		integrator.onDestroy();
 	}
-
 	
 }

@@ -7,6 +7,8 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
+import com.tokelon.toktales.android.activity.integration.IInjectActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 import com.tokelon.toktales.core.engine.TokTales;
 
@@ -25,6 +27,27 @@ public final class ActivityHelper {
 	public static void injectActivityDependencies(Activity activity) {
 		Injector injector = TokTales.getInjector();
 		injector.injectMembers(activity);
+	}
+	
+	
+	/** Creates an integrator builder that will utility injection.
+	 * 
+	 * <b>If there are any declared dependencies in integrations passed to the builder they will be injected.</b>
+	 * 
+	 * @return A new integrator builder.
+	 */
+	public static IInjectActivityIntegratorBuilder createActivityIntegratorBuilder() {
+		return TokTales.getInjector().getInstance(IInjectActivityIntegratorBuilder.class);
+	}
+
+	/** Creates a default integrator builder that will utilize injection.
+	 * 
+	 * <b>If there are any declared dependencies in integrations passed to the builder they will be injected.</b>
+	 * 
+	 * @return A new default integrator builder.
+	 */
+	public static IDefaultActivityIntegratorBuilder createDefaultActivityIntegratorBuilder() {
+		return TokTales.getInjector().getInstance(IDefaultActivityIntegratorBuilder.class);
 	}
 	
 	
@@ -92,6 +115,5 @@ public final class ActivityHelper {
 		IActivityIntegratorFactory activityIntegratorFactory = injector.getInstance(IActivityIntegratorFactory.class);
 		return activityIntegratorFactory.create(activity, integrations);
 	}
-	
 	
 }

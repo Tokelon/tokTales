@@ -1,15 +1,13 @@
 package com.tokelon.toktales.android.activity;
 
-import java.util.Map;
+import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
-import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
+import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
-import com.tokelon.toktales.core.engine.TokTales;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -101,25 +99,38 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	
 	private Button mInteractButton;
 	
-	private SurfaceViewIntegration surfaceViewIntegration;
+	private ISurfaceViewIntegration surfaceViewIntegration;
+	private IGameIntegration gameIntegration;
 	
-	@Override
-	protected Map<String, IActivityIntegration> createActivityIntegrations() {
-		Map<String, IActivityIntegration> integrations = super.createActivityIntegrations();
-		
-		surfaceViewIntegration = new SurfaceViewIntegration(TokTales.getLogging(), TokTales.getEngine(), TokTales.getGame(), TokTales.getInjector().getInstance(IObjectPoolFactory.class));
-		integrations.put(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		
-		IGameIntegration gameIntegration = new GameIntegration(TokTales.getGame());
-		integrations.put(ACTIVITY_INTEGRATION_GAME, gameIntegration);
-		
-		return integrations;
+	
+	public RenderActivity() {
+		super(ActivityHelper.createDefaultActivityIntegratorBuilder());
 	}
 	
+	public RenderActivity(IActivityIntegratorBuilder integratorBuilder) {
+		super(integratorBuilder);
+	}
+	
+
+	@Inject
+	protected void injectDependencies(ISurfaceViewIntegration surfaceViewIntegration, IGameIntegration gameIntegration) {
+		this.surfaceViewIntegration = surfaceViewIntegration;
+		this.gameIntegration = gameIntegration;
+	}
+	
+	@Override
+	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		
+		return super.buildIntegrator(builder);
+	}
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ActivityHelper.injectActivityDependencies(this);
+
 		super.onCreate(savedInstanceState); // TODO: Call this after assignment?
 		
 		setContentView(R.layout.activity_render);

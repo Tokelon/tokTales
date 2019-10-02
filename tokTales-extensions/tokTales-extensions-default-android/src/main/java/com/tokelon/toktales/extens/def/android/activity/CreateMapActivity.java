@@ -1,10 +1,13 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import javax.inject.Inject;
+
+import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
+import com.tokelon.toktales.android.activity.ActivityHelper;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.extens.def.android.R;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class CreateMapActivity extends Activity {
+public class CreateMapActivity extends AbstractIntegratedActivity {
 
 
 	public static final String ACTIVITY_RESULT_MAP_NAME = "ACTIVITY_RESULT_MAP_NAME";
@@ -27,11 +30,23 @@ public class CreateMapActivity extends Activity {
 
 	private ILogger logger;
 	
+	
+	public CreateMapActivity() {
+		super(ActivityHelper.createDefaultActivityIntegratorBuilder());
+	}
+	
+	@Inject
+	protected void injectDependencies(ILogging logging) {
+		this.logger = logging.getLogger(getClass());
+	}
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ActivityHelper.injectActivityDependencies(this);
+
 		super.onCreate(savedInstanceState);
 		
-		logger = TokTales.getLogging().getLogger(getClass());
 		
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View rootView = layoutInflater.inflate(R.layout.activity_create_map, null);

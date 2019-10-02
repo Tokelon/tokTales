@@ -1,8 +1,12 @@
 package com.tokelon.toktales.extens.def.android.activity;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.android.activity.ActivityHelper;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;
 import com.tokelon.toktales.extens.def.android.R;
@@ -25,12 +29,25 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 	private String[] maps;
 	
 	private ILogger logger;
+	private IStorageService storageService;
+	
+	
+	public LoadMapActivity() {
+		super(ActivityHelper.createDefaultActivityIntegratorBuilder());
+	}
+	
+	@Inject
+	protected void injectDependencies(ILogging logging, IStorageService storageService) {
+		this.logger = logging.getLogger(getClass());
+		this.storageService = storageService;
+	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ActivityHelper.injectActivityDependencies(this);
+
 		super.onCreate(savedInstanceState);
-		
-		logger = TokTales.getLogging().getLogger(getClass());
 		
 		init();
 
@@ -42,7 +59,7 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 		mapList = new ListView(this);
 		
 		try {
-			maps = TokTales.getEngine().getStorageService().listAppDirOnExternal(LocationsAndPlaces.LOCATION_EXTERNAL_MAPS);
+			maps = storageService.listAppDirOnExternal(LocationsAndPlaces.LOCATION_EXTERNAL_MAPS);
 			if(maps != null) {
 				initList(maps);
 			}
@@ -50,7 +67,6 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 		catch (StorageException e) {
 			logger.error("Failed to list map files", e);
 		}
-		
 	}
 	
 	
@@ -77,7 +93,6 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 			
 			finish();
 		}
-		
 	}
 	
 }
