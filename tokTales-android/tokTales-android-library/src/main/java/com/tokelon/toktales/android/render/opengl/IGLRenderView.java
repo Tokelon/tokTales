@@ -15,4 +15,7 @@ public interface IGLRenderView {
 
 	public boolean onTouchEvent(MotionEvent event);
 
+	
+	public void queueEvent(Runnable event);
+	
 }
