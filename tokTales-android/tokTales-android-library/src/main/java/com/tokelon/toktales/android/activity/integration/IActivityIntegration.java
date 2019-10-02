@@ -15,4 +15,10 @@ public interface IActivityIntegration {
 
 	public default void onActivityDestroy(IIntegratedActivity activity) { }
 	
+	
+	public interface IActivityIntegrationFactory {
+		
+		public IActivityIntegration create();
+	}
+	
 }

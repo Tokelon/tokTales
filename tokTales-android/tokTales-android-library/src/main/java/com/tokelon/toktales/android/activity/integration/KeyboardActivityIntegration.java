@@ -1,5 +1,7 @@
 package com.tokelon.toktales.android.activity.integration;
 
+import javax.inject.Inject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -16,6 +18,7 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 
 	private final Handler handler;
 	
+	@Inject
 	public KeyboardActivityIntegration() {
 		this.handler = new Handler();
 	}
@@ -38,7 +41,6 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 			
 			@Override
 			public void run() {
-
 				InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 				
 				view.setFocusable(true);
@@ -46,7 +48,6 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 				view.requestFocus();
 				
 				manager.showSoftInput(view, 0);
-				
 			}
 		});
 		
@@ -68,7 +69,6 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 	
 	@Override
 	public void hideKeyboard(final View view) {
-		
 		handler.post(new Runnable() {
 			
 			@Override
@@ -76,7 +76,6 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 				InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
 				manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-				
 			}
 		});
 
@@ -87,6 +86,20 @@ public class KeyboardActivityIntegration implements IKeyboardActivityIntegration
 		boolean gotFocus = mRenderView.requestFocus();
 		TokTales.getLog().d(TAG, "gotFocus: " +gotFocus);
 		*/
+	}
+	
+	
+	public static class KeyboardActivityIntegrationFactory implements IKeyboardActivityIntegrationFactory {
+
+		@Override
+		public IActivityIntegration create() {
+			return new KeyboardActivityIntegration();
+		}
+
+		@Override
+		public IKeyboardActivityIntegration create(Handler handler) {
+			return new KeyboardActivityIntegration(handler);
+		}
 	}
 	
 }
