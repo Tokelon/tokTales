@@ -2,6 +2,8 @@ package com.tokelon.toktales.android.activity.integration;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 
@@ -10,7 +12,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-public class SimpleRequestPermissionsIntegration implements IActivityIntegration {
+public class SimpleRequestPermissionsIntegration implements ISimpleRequestPermissionsIntegration {
 
 
 	public static final int DEFAULT_PERMISSIONS_REQUEST_CODE = 1;
@@ -63,6 +65,7 @@ public class SimpleRequestPermissionsIntegration implements IActivityIntegration
 	 * @param permissions
 	 * @param grantResults
 	 */
+	@Override
 	public void onActivityRequestPermissionsResult(IIntegratedActivity activity, int requestCode, String permissions[], int[] grantResults) {
 		// If request is cancelled, the result arrays are empty
 		if(requestCode == this.requestCode) {
@@ -81,6 +84,27 @@ public class SimpleRequestPermissionsIntegration implements IActivityIntegration
 			else {
 				logger.error("Permission request was cancelled");
 			}
+		}
+	}
+	
+	
+	public static class SimpleRequestPermissionsIntegrationFactory implements ISimpleRequestPermissionsIntegrationFactory {
+		private final ILogging logging;
+
+		@Inject
+		public SimpleRequestPermissionsIntegrationFactory(ILogging logging) {
+			this.logging = logging;
+		}
+
+		
+		@Override
+		public ISimpleRequestPermissionsIntegration create(String... permissions) {
+			return new SimpleRequestPermissionsIntegration(logging, permissions);
+		}
+
+		@Override
+		public ISimpleRequestPermissionsIntegration create(int requestCode, String... permissions) {
+			return new SimpleRequestPermissionsIntegration(logging, requestCode, permissions);
 		}
 	}
 	
