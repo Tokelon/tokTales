@@ -12,37 +12,33 @@ import android.view.MotionEvent;
  */
 public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView {
 
-	
-	private final Object mInputLock = new Object();
+
+	private final Object inputLock = new Object();
 	
 	private IOpenGLRenderer mainRenderer;
 
-	private DelegateGLRenderer mWrapperRenderer;
+	private DelegateGLRenderer delegateRenderer;
+
 	
 	public RenderGLSurfaceView(Context context) {
 		super(context);
+		
 		init(context);
 	}
 	
 	public RenderGLSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
 		init(context);
 	}
 
 	private void init(Context context) {
-		
 		// Create an OpenGL ES 2.0 context
 		setEGLContextClientVersion(2);
 
 		
-		// Call before renderer is set for immediate effect
-		// TODO: Important - OpenGL Debug Flags
-		setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
-		
-		
-		
-		mWrapperRenderer = new DelegateGLRenderer();
-		setRenderer(mWrapperRenderer);
+		delegateRenderer = new DelegateGLRenderer();
+		setRenderer(delegateRenderer);
 		
 		
 		// Call after renderer is set
@@ -52,43 +48,37 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 	
 	@Override
 	public void setMainRenderer(final IOpenGLRenderer mainRenderer) {
-		synchronized (mInputLock) {
+		synchronized (inputLock) {
 			this.mainRenderer = mainRenderer;
-			
 
-			/* To guarantee thread safety this method must be called inside the renderer thread.
-			 */
-			queueEvent(new Runnable() {
-
-				@Override
-				public void run() {
-					mWrapperRenderer.setMainRenderer(mainRenderer);
-				}
-			});
+			// To guarantee thread safety this method must be called inside the renderer thread.
+			queueEvent(() -> delegateRenderer.setMainRenderer(mainRenderer));
 		}
 	}
 	
-	
+
 	@Override
-	public void onPause() {
-		super.onPause();
-		mWrapperRenderer.onPause();
+	public void onResume() {
+		super.onResume();
 		
-		synchronized (mInputLock) {
+		//delegateRenderer.onResume(); // TODO: Use this
+		
+		synchronized (inputLock) {
 			if(mainRenderer != null) {
-				mainRenderer.onPause();
+				mainRenderer.onResume();
 			}
 		}
 	}
 	
 	@Override
-	public void onResume() {
-		super.onResume();
-		mWrapperRenderer.onResume();
+	public void onPause() {
+		super.onPause();
 		
-		synchronized (mInputLock) {
+		//delegateRenderer.onPause(); // TODO: Use this
+		
+		synchronized (inputLock) {
 			if(mainRenderer != null) {
-				mainRenderer.onResume();
+				mainRenderer.onPause();
 			}
 		}
 	}
@@ -96,9 +86,9 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		synchronized (mInputLock) {	// Possible perfomance decrease ?
+		synchronized (inputLock) {	// Possible perfomance decrease ?
 
-			if(mainRenderer != null) {
+			if(mainRenderer != null) { // TODO: Use delegate
 				return mainRenderer.onTouch(event);
 			}
 			else {

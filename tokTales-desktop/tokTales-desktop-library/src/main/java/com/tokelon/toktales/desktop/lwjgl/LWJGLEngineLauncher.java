@@ -14,6 +14,7 @@ import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
+import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 
 public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	// TODO: Additional window properties, like visible resisable etc.
@@ -63,7 +64,7 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 					renderer = new LWJGLRenderer(engineContext.getGame());
 					ISurface surface = renderer.onWindowCreated(lwMainWindow);
 
-					engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface);
+					engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
 					engineContext.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
 
 					

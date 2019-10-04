@@ -2,38 +2,42 @@ package com.tokelon.toktales.android.activity.integration;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.android.render.opengl.GLSurfaceController;
 import com.tokelon.toktales.android.render.opengl.IGLRenderView;
-import com.tokelon.toktales.android.render.opengl.program.OpenGLRenderer;
-import com.tokelon.toktales.core.engine.IEngine;
+import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer;
+import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer.IOpenGLRendererFactory;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 
 public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 
 
 	private IGLRenderView renderView;
 	
+	private IOpenGLRenderer renderer;
+	
+	
 	private final ILogger logger;
-	private final OpenGLRenderer renderer;
+	private final ILogging logging;
+	private final IOpenGLRendererFactory rendererFactory;
 	
 	@Inject
-	public SurfaceViewIntegration(ILogging logging, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
+	public SurfaceViewIntegration(ILogging logging, IOpenGLRendererFactory rendererFactory) {
 		this.logger = logging.getLogger(getClass());
-		
-		renderer = new OpenGLRenderer(logging, engine, game, eventPoolFactory);
+		this.logging = logging;
+		this.rendererFactory = rendererFactory;
 	}
 	
 	
 	@Override
 	public void setRenderSurfaceName(String surfaceName) {
-		renderer.setSurfaceName(surfaceName);
+		renderer.setSurfaceName(surfaceName); // TODO: Catch renderer null
 	}
 	
 	@Override
 	public void integrateRenderView(IGLRenderView renderView) {
 		this.renderView = renderView;
+		this.renderer = rendererFactory.create(new GLSurfaceController(renderView));
 		
 		renderView.setMainRenderer(renderer);
 	}

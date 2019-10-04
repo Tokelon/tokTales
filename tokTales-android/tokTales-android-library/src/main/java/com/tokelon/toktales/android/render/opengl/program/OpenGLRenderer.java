@@ -6,22 +6,23 @@ import org.joml.Matrix4f;
 
 import com.tokelon.toktales.android.game.screen.UIRenderer;
 import com.tokelon.toktales.android.input.AndroidInputDriver;
-import com.tokelon.toktales.android.input.IAndroidInputService;
+import com.tokelon.toktales.android.input.IAndroidInputDriver;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
+import com.tokelon.toktales.android.render.tools.IUIControl;
+import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
 import com.tokelon.toktales.android.render.tools.IUIOverlay;
 import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
 import com.tokelon.toktales.android.render.tools.UIConfiguration;
-import com.tokelon.toktales.android.render.tools.UIControl;
 import com.tokelon.toktales.android.render.tools.UIOverlay;
-import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.core.engine.render.IRenderService;
+import com.tokelon.toktales.core.engine.render.ISurfaceController;
 import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 
 import android.graphics.Color;
@@ -37,69 +38,52 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	
 	private static final int CLEAR_COLOR = Color.BLACK;
 	
-	
-	private boolean checkGL = true;
-	
-	private final Object mSurfaceLock = new Object();
+
+	private final Object surfaceLock = new Object();
 	
 	private final NamedOptionsImpl drawOptions = new NamedOptionsImpl();
 
-	private String surfaceName = DEFAULT_SURFACE_NAME;
+	
+	private boolean checkGL = true;
 
 	private boolean shouldProvideUI = true;
+
+	private String surfaceName = DEFAULT_SURFACE_NAME;
 	
-	private AccurateViewport mUIControlViewport;
-	private AccurateViewport mUIOverlayViewport;
+	
+	private AccurateViewport uiControlViewport;
+	private AccurateViewport uiOverlayViewport;
 
 	
 	private Surface currentSurface;
-	
 	private IScreenViewport currentMasterViewport;
-	
 	private UIOverlay currentUIOverlay;
 	
 
 
 	private final GLErrorUtils glErrorUtils;
+	private final UIRenderer uiRenderer;
+	private final IAndroidInputDriver androidInputDriver;
 	
-	private UIRenderer mUIGLRenderer;
-	private UIControl mUIControl;
-	
-	private AndroidInputDriver inputDriver;
+	private final IGame game;
+	private final IRenderService renderService;
+	private final IUIControl uiControl;
+	private final ISurfaceController surfaceController;
 
-	private final IGame mGame;
-	private final IEngine mEngine;
+	public OpenGLRenderer(ILogging logging, IGame game, IRenderService renderService, IUIControlFactory uiControlFactory, ISurfaceController surfaceController) {
+		this.renderService = renderService;
+		this.game = game;
+		this.uiControl = uiControlFactory.create(this);
+		this.surfaceController = surfaceController;
 
-	@Inject
-	public OpenGLRenderer(ILogging logging, IEngine engine, IGame game, IObjectPoolFactory eventPoolFactory) {
-		if(logging == null || game == null || engine == null || eventPoolFactory == null) {
-			throw new NullPointerException();
-		}
 		
-		this.mGame = game;
-		this.mEngine = engine;
-		
-		
-		mUIGLRenderer = new UIRenderer(logging, this);
-
-		glErrorUtils = new GLErrorUtils(logging, new AndroidGL11(), checkGL);
-		
-
-		// TODO: Important - Refactor! Do somewhere else! Check for cast! And fix the UIControl and buttons logic!
-		IAndroidInputService androidInputService = (IAndroidInputService) engine.getInputService();
-		mUIControl = new UIControl(logging, this, androidInputService.getMainInputDispatch().getInputProducer(), eventPoolFactory);
-
-		// TODO: Extract this
-		inputDriver = new AndroidInputDriver(mUIControl);
+		this.androidInputDriver = new AndroidInputDriver(uiControl);
+		this.uiRenderer = new UIRenderer(logging, this);
+		this.glErrorUtils = new GLErrorUtils(logging, new AndroidGL11(), checkGL);
 	}
 	
 	
-	/** Sets the name that will be used for the surface.
-	 * <p>
-	 * Only has an effect if called before {@link #onSurfaceCreated()}.
-	 * 
-	 * @param name
-	 */
+	@Override
 	public void setSurfaceName(String name) {
 		if(name == null) {
 			throw new NullPointerException();
@@ -111,16 +95,16 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	
 	@Override
 	public void onSurfaceCreated() {
-		synchronized(mSurfaceLock) {
+		synchronized(surfaceLock) {
 			glErrorUtils.assertNoGLErrors();
 			
 			// Call context created for our UI renderer
-			mUIGLRenderer.contextCreated();
+			uiRenderer.contextCreated();
 			
 			
 			// Surface Callbacks
 			currentSurface = new Surface(surfaceName, new AccurateViewport(), new Matrix4f());
-			mEngine.getRenderService().getSurfaceHandler().publishSurface(currentSurface);
+			renderService.getSurfaceHandler().publishSurface(currentSurface, surfaceController);
 			
 			
 			
@@ -151,7 +135,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	
 	@Override
 	public void onSurfaceChanged(int width, int height) {
-		synchronized(mSurfaceLock) {
+		synchronized(surfaceLock) {
 			glErrorUtils.assertNoGLErrors();
 
 			
@@ -246,38 +230,38 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 			
 			
 			// UIControl viewport (independent of master viewport)
-			mUIControlViewport = new AccurateViewport();
-			mUIControlViewport.setSize(glViewportWidth, glViewportHeight);
+			uiControlViewport = new AccurateViewport();
+			uiControlViewport.setSize(glViewportWidth, glViewportHeight);
 			// Set the inverted viewport offset values because the uiControl coordinates are 0 based
 			// So we want to do the opposite translation
-			mUIControlViewport.setOffset(-glViewportOffsetHorizontal, -glViewportOffsetVertical);
+			uiControlViewport.setOffset(-glViewportOffsetHorizontal, -glViewportOffsetVertical);
 
 			
 			// UIOverlay viewport
-			mUIOverlayViewport = new AccurateViewport();
-			mUIOverlayViewport.setSize(glViewportWidth, glViewportHeight);
+			uiOverlayViewport = new AccurateViewport();
+			uiOverlayViewport.setSize(glViewportWidth, glViewportHeight);
 
 
 			
 			/* Create UI overlay */
 			UIConfiguration uiConfig = new UIConfiguration();
 			// Pass the OVERLAY viewport
-			currentUIOverlay = UIOverlay.createFromViewportAndConfiguration(mUIOverlayViewport, uiConfig);
+			currentUIOverlay = UIOverlay.createFromViewportAndConfiguration(uiOverlayViewport, uiConfig);
 
 	
 			// Pass the CONTROL viewport
-			mUIControl.setViewport(mUIControlViewport);
+			uiControl.setViewport(uiControlViewport);
 
 			
 			// Call context changed for our UI renderer
-			DefaultViewTransformer viewTransformer = new DefaultViewTransformer(null, mUIOverlayViewport);	// Ok to pass null here?
-			mUIGLRenderer.contextChanged(viewTransformer, projMatrix);
+			DefaultViewTransformer viewTransformer = new DefaultViewTransformer(null, uiOverlayViewport);	// Ok to pass null here?
+			uiRenderer.contextChanged(viewTransformer, projMatrix);
 
 			
 			
 			// Surface Callbacks
 			currentSurface.update(currentMasterViewport, projMatrix);
-			mEngine.getRenderService().getSurfaceHandler().updateSurface(currentSurface);
+			renderService.getSurfaceHandler().updateSurface(currentSurface);
 			
 			
 			
@@ -289,15 +273,15 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	
 	@Override
 	public void onDrawFrame() {
-		mGame.getGameControl().updateGame();
+		game.getGameControl().updateGame();
 		
-		mGame.getGameControl().renderGame();
+		game.getGameControl().renderGame();
 		
 		
 		if(shouldProvideUI) {
-			mUIGLRenderer.prepare(0);	// Does nothing
+			uiRenderer.prepare(0);	// Does nothing
 			
-			mUIGLRenderer.drawFull(drawOptions);
+			uiRenderer.drawFull(drawOptions);
 		}
 	}
 
@@ -313,18 +297,18 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 		// if(new viewport) mUIControl.set(newViewport)
 		
 		
-		return mUIControl.onTouch(motionEvent);
+		return uiControl.onTouch(motionEvent);
 	}
 
 
 	@Override
 	public void onResume() {
-		mUIControl.startControl();
+		uiControl.startControl();
 	}
 
 	@Override
 	public void onPause() {
-		mUIControl.stopControl();
+		uiControl.stopControl();
 	}
 
 	
@@ -337,6 +321,27 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	@Override
 	public IUIOverlay getUIOverlay() {
 		return currentUIOverlay;
+	}
+	
+	
+	public static class OpenGLRendererFactory implements IOpenGLRendererFactory {
+		private final ILogging logging;
+		private final IGame game;
+		private final IRenderService renderService;
+		private final IUIControlFactory uiControlFactory;
+
+		@Inject
+		public OpenGLRendererFactory(ILogging logging, IGame game, IRenderService renderService, IUIControlFactory uiControlFactory) {
+			this.logging = logging;
+			this.game = game;
+			this.renderService = renderService;
+			this.uiControlFactory = uiControlFactory;
+		}
+		
+		@Override
+		public IOpenGLRenderer create(ISurfaceController surfaceController) {
+			return new OpenGLRenderer(logging, game, renderService, uiControlFactory, surfaceController);
+		}
 	}
 	
 }

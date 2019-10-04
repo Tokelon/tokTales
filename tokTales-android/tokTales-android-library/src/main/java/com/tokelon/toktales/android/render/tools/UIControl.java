@@ -61,11 +61,7 @@ public class UIControl implements IUIControl {
 	private final ILogger logger;
 	private final IUIOverlayProvider mOverlayProvider;
 	
-	public UIControl(ILogging logging, IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
-		if(overlayProvider == null || inputProducer == null) {
-			throw new NullPointerException();
-		}
-		
+	public UIControl(ILogging logging, IObjectPoolFactory eventPoolFactory, IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer) {
 		this.logger = logging.getLogger(getClass());
 		this.mOverlayProvider = overlayProvider;
 		
@@ -1211,12 +1207,12 @@ public class UIControl implements IUIControl {
 		@Override
 		public IUIControl create(IUIOverlayProvider overlayProvider) {
 			IAndroidInputProducer inputProducer = androidInputService.getMainInputDispatch().getInputProducer();
-			return new UIControl(logging, overlayProvider, inputProducer, eventPoolFactory);
+			return new UIControl(logging, eventPoolFactory, overlayProvider, inputProducer);
 		}
 
 		@Override
 		public IUIControl create(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer) {
-			return new UIControl(logging, overlayProvider, inputProducer, eventPoolFactory);
+			return new UIControl(logging, eventPoolFactory, overlayProvider, inputProducer);
 		}
 	}
 	
