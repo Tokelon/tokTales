@@ -32,6 +32,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
@@ -181,7 +182,8 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 		
 		// Our rendering view
 		renderGLView = (RenderGLSurfaceView) rootView.findViewById(glSurfaceId);
-		
+		renderGLView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR | GLSurfaceView.DEBUG_LOG_GL_CALLS); // TODO: Important - OpenGL Debug Flags
+
 		
 		// This text view is hidden but we need it to display our context menu
 		textViewBar = rootView.findViewById(R.id.textViewGLGameBar);

@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextWatcher;
@@ -97,7 +98,11 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	private void initContent() {
 		LinearLayout layout = new LinearLayout(this);
 		
+		
 		mRenderView = new RenderGLSurfaceView(this);
+		mRenderView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR | GLSurfaceView.DEBUG_LOG_GL_CALLS); // TODO: Important - OpenGL Debug Flags
+		
+		
 		mTextView = new EditText(this);
 
 		registerForContextMenu(mRenderView);

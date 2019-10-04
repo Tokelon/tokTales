@@ -6,12 +6,18 @@ import android.view.MotionEvent;
 
 public interface IGLRenderView {
 
-	
+
 	public void setMainRenderer(IOpenGLRenderer mainRenderer);
 
-	public void onPause();
+	/** Call before renderer is set for immediate effect.
+	 * 
+	 * @param debugFlags
+	 */
+	public void setDebugFlags(int debugFlags);
 
+	
 	public void onResume();
+	public void onPause();
 
 	public boolean onTouchEvent(MotionEvent event);
 
