@@ -6,8 +6,9 @@ import javax.microedition.khronos.opengles.GL10;
 import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer;
 
 import android.opengl.GLSurfaceView.Renderer;
+import android.view.MotionEvent;
 
-public class DelegateGLRenderer implements Renderer {
+public class DelegateGLRenderer implements Renderer { // implements IOpenGLRenderer?
 
 
 	private IOpenGLRenderer mainRenderer; // TODO: Make volatile?
@@ -17,7 +18,6 @@ public class DelegateGLRenderer implements Renderer {
 	
 	private int currentWidth = 0;
 	private int currentHeight = 0;
-	
 
 	
 	/** Sets the actual renderer.<br><br>
@@ -38,17 +38,32 @@ public class DelegateGLRenderer implements Renderer {
 			}
 		}
 	}
-	
-	
-	public void onPause() {
-		// Pause stuff
-	}
-	
+
 	
 	public void onResume() {
 		// Unpause stuff
+		
+		if(mainRenderer != null) {
+			mainRenderer.onResume();
+		}
 	}
 	
+	public void onPause() {
+		// Pause stuff
+		
+		if(mainRenderer != null) {
+			mainRenderer.onPause();
+		}
+	}
+	
+	
+	public boolean onTouch(MotionEvent motionEvent) {
+		if(mainRenderer != null) {
+			return mainRenderer.onTouch(motionEvent);
+		}
+		
+		return false;
+	}
 	
 	
 	@Override
@@ -82,6 +97,5 @@ public class DelegateGLRenderer implements Renderer {
 			mainRenderer.onDrawFrame();
 		}
 	}
-	
 
 }

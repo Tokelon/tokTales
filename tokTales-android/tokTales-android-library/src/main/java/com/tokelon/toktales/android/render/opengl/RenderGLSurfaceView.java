@@ -13,12 +13,8 @@ import android.view.MotionEvent;
 public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView {
 
 
-	private final Object inputLock = new Object();
-	
-	private IOpenGLRenderer mainRenderer;
-
 	private DelegateGLRenderer delegateRenderer;
-
+	
 	
 	public RenderGLSurfaceView(Context context) {
 		super(context);
@@ -45,57 +41,39 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	}
 	
-	
-	@Override
-	public void setMainRenderer(final IOpenGLRenderer mainRenderer) {
-		synchronized (inputLock) {
-			this.mainRenderer = mainRenderer;
 
-			// To guarantee thread safety this method must be called inside the renderer thread.
-			queueEvent(() -> delegateRenderer.setMainRenderer(mainRenderer));
-		}
+	@Override
+	public void setMainRenderer(IOpenGLRenderer mainRenderer) {
+		// To guarantee thread safety this method must be called inside the renderer thread.
+		queueEvent(() -> delegateRenderer.setMainRenderer(mainRenderer));
 	}
-	
+
 
 	@Override
 	public void onResume() {
+		// If main renderer not set -> throw exception?
+		
 		super.onResume();
 		
-		//delegateRenderer.onResume(); // TODO: Use this
-		
-		synchronized (inputLock) {
-			if(mainRenderer != null) {
-				mainRenderer.onResume();
-			}
-		}
+		delegateRenderer.onResume();
 	}
 	
 	@Override
 	public void onPause() {
+		// Pause delegate renderer first?
+		
 		super.onPause();
 		
-		//delegateRenderer.onPause(); // TODO: Use this
-		
-		synchronized (inputLock) {
-			if(mainRenderer != null) {
-				mainRenderer.onPause();
-			}
-		}
+		delegateRenderer.onPause();
 	}
 	
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		synchronized (inputLock) {	// Possible perfomance decrease ?
-
-			if(mainRenderer != null) { // TODO: Use delegate
-				return mainRenderer.onTouch(event);
-			}
-			else {
-				return super.onTouchEvent(event);
-				//return false;
-			}
-		}
+		// If main renderer not set ?
+		// return super.onTouchEvent(event);
+		
+		return delegateRenderer.onTouch(event);
 	}
 	
 }
