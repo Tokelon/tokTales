@@ -1,15 +1,20 @@
 package com.tokelon.toktales.tools.procedure;
 
-public interface IFunctionProcedure<O, R, P> extends IOwnedProcedure<O> {
+import com.tokelon.toktales.tools.procedure.checked.IFunctionCheckedProcedure;
+
+public interface IFunctionProcedure<O, R, P> extends IOwnedProcedure<O>, IFunctionCheckedProcedure<O, R, P> {
 
 
+	@Override
 	public R run(O owner, P parameter);
 	
 	
+	@Override
 	public default ISupplierProcedure<O, R> toSupplier(P param) {
 		return (owner) -> run(owner, param);
 	}
 	
+	@Override
 	public default IConsumerProcedure<O, P> toConsumer() {
 		return (owner, parameter) -> run(owner, parameter);
 	}
@@ -47,8 +52,9 @@ public interface IFunctionProcedure<O, R, P> extends IOwnedProcedure<O> {
 	}
 	
 
-	public interface IFunctionProcedureFactory<O, R, P> extends IOwnedProcedureFactory<O> {
+	public interface IFunctionProcedureFactory<O, R, P> extends IOwnedProcedureFactory<O>, IFunctionCheckedProcedureFactory<O, R, P> {
 		
+		@Override
 		public IFunctionProcedure<O, R, P> create();
 	}
 	

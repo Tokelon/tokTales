@@ -1,10 +1,13 @@
 package com.tokelon.toktales.tools.procedure;
 
-public interface IProcedure {
+import com.tokelon.toktales.tools.procedure.checked.ICheckedProcedure;
+
+public interface IProcedure extends ICheckedProcedure {
 
 
-	public interface IProcedureFactory {
+	public interface IProcedureFactory extends ICheckedProcedureFactory {
 		
+		@Override
 		public IProcedure create();
 	}
 	

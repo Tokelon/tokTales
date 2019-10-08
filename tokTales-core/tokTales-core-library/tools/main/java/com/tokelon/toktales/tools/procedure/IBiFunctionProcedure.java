@@ -1,28 +1,36 @@
 package com.tokelon.toktales.tools.procedure;
 
-public interface IBiFunctionProcedure<O, R, U, V> extends IOwnedProcedure<O> {
+import com.tokelon.toktales.tools.procedure.checked.IBiFunctionCheckedProcedure;
+
+public interface IBiFunctionProcedure<O, R, U, V> extends IOwnedProcedure<O>, IBiFunctionCheckedProcedure<O, R, U, V> {
 
 
+	@Override
 	public R run(O owner, U firstParam, V secondParam);
 	
 	
+	@Override
 	public default IFunctionProcedure<O, R, V> toFunctionWithFirstParam(U param1) {
 		return (owner, param) -> run(owner, param1, param);
 	}
 	
+	@Override
 	public default IFunctionProcedure<O, R, U> toFunctionWithSecondParam(V param2) {
 		return (owner, param) -> run(owner, param, param2);
 	}
 	
 	
+	@Override
 	public default ISupplierProcedure<O, R> toSupplier(U param1, V param2) {
 		return (owner) -> run(owner, param1, param2);
 	}
 	
+	@Override
 	public default IConsumerProcedure<O, V> toConsumerWithFirstParam(U param1) {
 		return (owner, param) -> run(owner, param1, param);
 	}
 	
+	@Override
 	public default IConsumerProcedure<O, U> toConsumerWithSecondParam(V param2) {
 		return (owner, param) -> run(owner, param, param2);
 	}
@@ -49,8 +57,9 @@ public interface IBiFunctionProcedure<O, R, U, V> extends IOwnedProcedure<O> {
 	}
 	
 	
-	public interface IBiFunctionProcedureFactory<O, R, U, V> extends IOwnedProcedureFactory<O> {
+	public interface IBiFunctionProcedureFactory<O, R, U, V> extends IOwnedProcedureFactory<O>, IBiFunctionCheckedProcedureFactory<O, R, U, V> {
 		
+		@Override
 		public IBiFunctionProcedure<O, R, U, V> create();
 	}
 	
