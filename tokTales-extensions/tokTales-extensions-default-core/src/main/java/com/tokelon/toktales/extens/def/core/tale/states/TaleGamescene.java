@@ -10,10 +10,11 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamescene;
+import com.tokelon.toktales.tools.procedure.checked.ISupplierCheckedProcedure;
 
 public class TaleGamescene extends LocalMapGamescene implements ITaleGamescene {
 
-	
+
 	@Inject
 	public TaleGamescene() {
 		super();
@@ -32,9 +33,10 @@ public class TaleGamescene extends LocalMapGamescene implements ITaleGamescene {
 	}
 
 
-
 	@Override
-	public void setMap(IMapController mapController) {
+	public void runSetMap(ISupplierCheckedProcedure<ITaleGamescene, IMapController> procedure) throws Exception {
+		IMapController mapController = procedure.run(this);
+		
 		// This will call onMapChange which will register map render callbacks
 		setSceneMapController(mapController);
 	}

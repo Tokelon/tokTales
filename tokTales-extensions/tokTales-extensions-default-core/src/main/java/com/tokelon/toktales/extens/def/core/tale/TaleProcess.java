@@ -555,14 +555,16 @@ class TaleProcess {
 	
 
 	private boolean loadMapIntoGame(IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
-		
-		// TODO: Refactor?
-		DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver(engineContext.getLogging(), taleScene);
+		SetMapTaleProcedure receiver = new SetMapTaleProcedure(engineContext.getLogging(), game);
 		
 		try {
-			receiver.receiveMap(map);
-		} catch (MapException e) {
+			taleScene.runSetMap((owner) -> receiver.run(owner, map));
+		} catch (MapException me) {
+			logger.error("Invalid map configuration while loading into tale:", me);
+			return false;
+		} catch (Exception re) {
 			// pass exception?
+			logger.error("Loading map into tale failed:", re);
 			return false;
 		}
 		

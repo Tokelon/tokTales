@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.game.logic.map;
 
 public class MapException extends Exception {
 
+
 	private static final long serialVersionUID = -1980670107251401636L;
 
 	public MapException() {

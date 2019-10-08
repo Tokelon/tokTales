@@ -7,7 +7,6 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.logic.map.MapException;
 import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.states.IGameState;
@@ -17,7 +16,7 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;
-import com.tokelon.toktales.extens.def.core.tale.DefaultSceneMapReceiver;
+import com.tokelon.toktales.extens.def.core.tale.SetMapTaleProcedure;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.tools.tiledmap.MapFormatException;
 import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
@@ -70,8 +69,10 @@ public class TestingProcess {
 			
 			IBlockMap loadedMap = loader.getLoadedMap();
 			
-			DefaultSceneMapReceiver receiver = new DefaultSceneMapReceiver(logging, (ITaleGamescene) gamestate.getActiveScene());
-			receiver.receiveMap(loadedMap);
+			SetMapTaleProcedure receiver = new SetMapTaleProcedure(logging, game);
+			
+			ITaleGamescene taleScene = (ITaleGamescene) gamestate.getActiveScene();
+			taleScene.runSetMap((owner) -> receiver.run(owner, loadedMap));
 			
 
 			// TODO: Somehow else
@@ -112,7 +113,7 @@ public class TestingProcess {
 			logger.error("IOException at loading map:", ioe);
 		} catch (MapLoaderException mle) {
 			logger.error("MapLoaderException at loading map:", mle);
-		} catch (MapException e) {
+		} catch (Exception e) {
 			logger.error("Loading map cancelled:", e);
 		}
 		finally {
