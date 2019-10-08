@@ -1,46 +1,46 @@
 package com.tokelon.toktales.tools.procedure.checked;
 
-public interface ISupplierCheckedProcedure<O, R> extends IOwnedCheckedProcedure<O> {
+public interface ISupplierCheckedProcedure<T, R> extends ITargetedCheckedProcedure<T> {
 
 
-	public R run(O owner) throws Exception;
+	public R run(T target) throws Exception;
 	
 	
-	public default IActionCheckedProcedure<O> toAction() {
-		return (owner) -> run(owner);
+	public default IActionCheckedProcedure<T> toAction() {
+		return (target) -> run(target);
 	}
 	
 	
-	public default ISupplierCheckedProcedure<O, R> compose(IActionCheckedProcedure<? super O> before) {
-		return (owner) -> {
-			before.run(owner);
-			return run(owner);
+	public default ISupplierCheckedProcedure<T, R> compose(IActionCheckedProcedure<? super T> before) {
+		return (target) -> {
+			before.run(target);
+			return run(target);
 		};
 	}
 	
-	public default IActionCheckedProcedure<O> andThen(IConsumerCheckedProcedure<O, ? super R> after) {
-		return (owner) -> after.run(owner, run(owner));
+	public default IActionCheckedProcedure<T> andThen(IConsumerCheckedProcedure<T, ? super R> after) {
+		return (target) -> after.run(target, run(target));
 	}
 	
-	public default ISupplierCheckedProcedure<O, R> andThen(IActionCheckedProcedure<? super O> after) {
-		return (owner) -> {
-			R result = run(owner);
-			after.run(owner);
+	public default ISupplierCheckedProcedure<T, R> andThen(IActionCheckedProcedure<? super T> after) {
+		return (target) -> {
+			R result = run(target);
+			after.run(target);
 			return result;
 		};
 	}
 	
-	public default <V> ISupplierCheckedProcedure<O, V> andThen(IFunctionCheckedProcedure<? super O, ? extends V, ? super R> after) {
-		return (owner) -> {
-			return after.run(owner, run(owner));
+	public default <V> ISupplierCheckedProcedure<T, V> andThen(IFunctionCheckedProcedure<? super T, ? extends V, ? super R> after) {
+		return (target) -> {
+			return after.run(target, run(target));
 		};
 	}
 	
 	
-	public interface ISupplierCheckedProcedureFactory<O, R> extends IOwnedCheckedProcedureFactory<O> {
+	public interface ISupplierCheckedProcedureFactory<T, R> extends ITargetedCheckedProcedureFactory<T> {
 		
 		@Override
-		public ISupplierCheckedProcedure<O, R> create();
+		public ISupplierCheckedProcedure<T, R> create();
 	}
 	
 }

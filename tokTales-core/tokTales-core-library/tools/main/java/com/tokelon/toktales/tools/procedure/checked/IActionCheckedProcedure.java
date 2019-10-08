@@ -1,30 +1,30 @@
 package com.tokelon.toktales.tools.procedure.checked;
 
-public interface IActionCheckedProcedure<O> extends IOwnedCheckedProcedure<O> {
+public interface IActionCheckedProcedure<T> extends ITargetedCheckedProcedure<T> {
 
 
-	public void run(O owner) throws Exception;
+	public void run(T target) throws Exception;
 	
 	
-	public default IActionCheckedProcedure<O> compose(IActionCheckedProcedure<? super O> before) {
-		return (owner) -> {
-			before.run(owner);
-			run(owner);
+	public default IActionCheckedProcedure<T> compose(IActionCheckedProcedure<? super T> before) {
+		return (target) -> {
+			before.run(target);
+			run(target);
 		};
 	}
 	
-	public default IActionCheckedProcedure<O> andThen(IActionCheckedProcedure<? super O> after) {
-		return (owner) -> {
-			run(owner);
-			after.run(owner);
-		}; 
+	public default IActionCheckedProcedure<T> andThen(IActionCheckedProcedure<? super T> after) {
+		return (target) -> {
+			run(target);
+			after.run(target);
+		};
 	}
 	
 	
-	public interface IActionCheckedProcedureFactory<O> extends IOwnedCheckedProcedureFactory<O> {
+	public interface IActionCheckedProcedureFactory<T> extends ITargetedCheckedProcedureFactory<T> {
 	
 		@Override
-		public IActionCheckedProcedure<O> create();
+		public IActionCheckedProcedure<T> create();
 	}
 	
 }

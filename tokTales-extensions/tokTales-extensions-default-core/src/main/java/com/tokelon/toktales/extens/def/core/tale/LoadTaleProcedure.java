@@ -74,8 +74,8 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 
 	
 	@Override
-	public ITaleGamescene run(IGame owner, String parameter) throws TaleException {
-		IGame game = owner;
+	public ITaleGamescene run(IGame target, String parameter) throws TaleException {
+		IGame game = target;
 		String taleAppPath = parameter;
 		
 		// Root directory of the Tale
@@ -511,7 +511,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		SetMapTaleProcedure receiver = new SetMapTaleProcedure(logging, game);
 		
 		try {
-			taleScene.runSetMap((owner) -> receiver.run(owner, map));
+			taleScene.runSetMap((target) -> receiver.run(target, map));
 		} catch (MapException me) {
 			logger.error("Invalid map configuration while loading into tale:", me);
 			return false;

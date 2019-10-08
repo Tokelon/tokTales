@@ -2,65 +2,65 @@ package com.tokelon.toktales.tools.procedure;
 
 import com.tokelon.toktales.tools.procedure.checked.IBiFunctionCheckedProcedure;
 
-public interface IBiFunctionProcedure<O, R, U, V> extends IOwnedProcedure<O>, IBiFunctionCheckedProcedure<O, R, U, V> {
+public interface IBiFunctionProcedure<T, R, U, V> extends ITargetedProcedure<T>, IBiFunctionCheckedProcedure<T, R, U, V> {
 
 
 	@Override
-	public R run(O owner, U firstParam, V secondParam);
+	public R run(T target, U firstParam, V secondParam);
 	
 	
 	@Override
-	public default IFunctionProcedure<O, R, V> toFunctionWithFirstParam(U param1) {
-		return (owner, param) -> run(owner, param1, param);
+	public default IFunctionProcedure<T, R, V> toFunctionWithFirstParam(U param1) {
+		return (target, param) -> run(target, param1, param);
 	}
 	
 	@Override
-	public default IFunctionProcedure<O, R, U> toFunctionWithSecondParam(V param2) {
-		return (owner, param) -> run(owner, param, param2);
+	public default IFunctionProcedure<T, R, U> toFunctionWithSecondParam(V param2) {
+		return (target, param) -> run(target, param, param2);
 	}
 	
 	
 	@Override
-	public default ISupplierProcedure<O, R> toSupplier(U param1, V param2) {
-		return (owner) -> run(owner, param1, param2);
+	public default ISupplierProcedure<T, R> toSupplier(U param1, V param2) {
+		return (target) -> run(target, param1, param2);
 	}
 	
 	@Override
-	public default IConsumerProcedure<O, V> toConsumerWithFirstParam(U param1) {
-		return (owner, param) -> run(owner, param1, param);
+	public default IConsumerProcedure<T, V> toConsumerWithFirstParam(U param1) {
+		return (target, param) -> run(target, param1, param);
 	}
 	
 	@Override
-	public default IConsumerProcedure<O, U> toConsumerWithSecondParam(V param2) {
-		return (owner, param) -> run(owner, param, param2);
+	public default IConsumerProcedure<T, U> toConsumerWithSecondParam(V param2) {
+		return (target, param) -> run(target, param, param2);
 	}
 	
 
-	public default IBiFunctionProcedure<O, R, U, V> compose(IActionProcedure<? super O> before) {
-		return (owner, param1, param2) -> {
-			before.run(owner);
-			return run(owner, param1, param2);
+	public default IBiFunctionProcedure<T, R, U, V> compose(IActionProcedure<? super T> before) {
+		return (target, param1, param2) -> {
+			before.run(target);
+			return run(target, param1, param2);
 		};
 	}
 	
 
-	public default <K> IBiFunctionProcedure<O, K, U, V> andThen(IFunctionProcedure<? super O, ? extends K, ? super R> after) {
-		return (owner, param1, param2) -> after.run(owner, run(owner, param1, param2));
+	public default <K> IBiFunctionProcedure<T, K, U, V> andThen(IFunctionProcedure<? super T, ? extends K, ? super R> after) {
+		return (target, param1, param2) -> after.run(target, run(target, param1, param2));
 	}
 	
-	public default IBiFunctionProcedure<O, R, U, V> andThen(IActionProcedure<? super O> after) {
-		return (owner, param1, param2) -> {
-			R result = run(owner, param1, param2);
-			after.run(owner);
+	public default IBiFunctionProcedure<T, R, U, V> andThen(IActionProcedure<? super T> after) {
+		return (target, param1, param2) -> {
+			R result = run(target, param1, param2);
+			after.run(target);
 			return result;
 		};
 	}
 	
 	
-	public interface IBiFunctionProcedureFactory<O, R, U, V> extends IOwnedProcedureFactory<O>, IBiFunctionCheckedProcedureFactory<O, R, U, V> {
+	public interface IBiFunctionProcedureFactory<T, R, U, V> extends ITargetedProcedureFactory<T>, IBiFunctionCheckedProcedureFactory<T, R, U, V> {
 		
 		@Override
-		public IBiFunctionProcedure<O, R, U, V> create();
+		public IBiFunctionProcedure<T, R, U, V> create();
 	}
 	
 }

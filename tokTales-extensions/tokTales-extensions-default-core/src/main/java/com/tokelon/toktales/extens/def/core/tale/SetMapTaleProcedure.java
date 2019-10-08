@@ -30,7 +30,7 @@ public class SetMapTaleProcedure implements IFunctionCheckedProcedure<IExtendedG
 	
 
 	@Override
-	public IMapController run(IExtendedGameScene owner, IBlockMap map) throws MapException {
+	public IMapController run(IExtendedGameScene target, IBlockMap map) throws MapException {
 		IBlockMapConfig config = map.getConfig();
 		if(config.getConfigMapSpawnX() >= map.getHorizontalSize() || config.getConfigMapSpawnY() >= map.getVerticalSize()) {
 			throw new MapException("Loading map failed: Map config defines invalid spawn point");
@@ -57,8 +57,8 @@ public class SetMapTaleProcedure implements IFunctionCheckedProcedure<IExtendedG
 		//cworldy = IWorld.WORLD_GRID.gridIndexToWorld(4);
 
 		
-		owner.getPlayerController().getPlayer().getActor().setWorldCoordinates(pworldx, pworldy);
-		owner.getCameraController().getCamera().setWorldCoordinates(pworldx, pworldy);
+		target.getPlayerController().getPlayer().getActor().setWorldCoordinates(pworldx, pworldy);
+		target.getCameraController().getCamera().setWorldCoordinates(pworldx, pworldy);
 		
 		
 		return mapContr;

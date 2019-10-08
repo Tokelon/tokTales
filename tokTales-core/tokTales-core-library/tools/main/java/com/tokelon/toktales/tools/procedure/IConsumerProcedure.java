@@ -2,63 +2,63 @@ package com.tokelon.toktales.tools.procedure;
 
 import com.tokelon.toktales.tools.procedure.checked.IConsumerCheckedProcedure;
 
-public interface IConsumerProcedure<O, P> extends IOwnedProcedure<O>, IConsumerCheckedProcedure<O, P> {
+public interface IConsumerProcedure<T, P> extends ITargetedProcedure<T>, IConsumerCheckedProcedure<T, P> {
 
 
 	@Override
-	public void run(O owner, P parameter);
+	public void run(T target, P parameter);
 	
 	
 	@Override
-	public default IActionProcedure<O> toAction(P parameter) {
-		return (owner) -> run(owner, parameter);
+	public default IActionProcedure<T> toAction(P parameter) {
+		return (target) -> run(target, parameter);
 	}
 	
 	
-	public default IConsumerProcedure<O, P> compose(IConsumerProcedure<? super O, ? super P> before) {
-		return (owner, parameter) -> {
-			before.run(owner, parameter);
-			run(owner, parameter);
+	public default IConsumerProcedure<T, P> compose(IConsumerProcedure<? super T, ? super P> before) {
+		return (target, parameter) -> {
+			before.run(target, parameter);
+			run(target, parameter);
 		};
 	}
 	
-	public default IActionProcedure<O> compose(ISupplierProcedure<? super O, ? extends P> before) {
-		return (owner) -> {
-			run(owner, before.run(owner));
+	public default IActionProcedure<T> compose(ISupplierProcedure<? super T, ? extends P> before) {
+		return (target) -> {
+			run(target, before.run(target));
 		};
 	}
 	
-	public default IConsumerProcedure<O, P> compose(IActionProcedure<? super O> before) {
-		return (owner, parameter) -> {
-			before.run(owner);
-			run(owner, parameter);
+	public default IConsumerProcedure<T, P> compose(IActionProcedure<? super T> before) {
+		return (target, parameter) -> {
+			before.run(target);
+			run(target, parameter);
 		};
 	}
 	
-	public default <V> IConsumerProcedure<O, V> compose(IFunctionProcedure<? super O, ? extends P, ? super V> before) {
-		return (owner, parameter) -> run(owner, before.run(owner, parameter));
+	public default <V> IConsumerProcedure<T, V> compose(IFunctionProcedure<? super T, ? extends P, ? super V> before) {
+		return (target, parameter) -> run(target, before.run(target, parameter));
 	}
 	
 	
-	public default IConsumerProcedure<O, P> andThen(IConsumerProcedure<? super O, ? super P> after) {
-		return (owner, parameter) -> {
-			run(owner, parameter);
-			after.run(owner, parameter);
+	public default IConsumerProcedure<T, P> andThen(IConsumerProcedure<? super T, ? super P> after) {
+		return (target, parameter) -> {
+			run(target, parameter);
+			after.run(target, parameter);
 		};
 	}
 	
-	public default IConsumerProcedure<O, P> andThen(IActionProcedure<? super O> after) {
-		return (owner, parameter) -> {
-			run(owner, parameter);
-			after.run(owner);
+	public default IConsumerProcedure<T, P> andThen(IActionProcedure<? super T> after) {
+		return (target, parameter) -> {
+			run(target, parameter);
+			after.run(target);
 		};
 	}
     
 	
-	public interface IConsumerProcedureFactory<O, P> extends IOwnedProcedureFactory<O>, IConsumerCheckedProcedureFactory<O, P> {
+	public interface IConsumerProcedureFactory<T, P> extends ITargetedProcedureFactory<T>, IConsumerCheckedProcedureFactory<T, P> {
 		
 		@Override
-		public IConsumerProcedure<O, P> create();
+		public IConsumerProcedure<T, P> create();
 	}
 	
 }
