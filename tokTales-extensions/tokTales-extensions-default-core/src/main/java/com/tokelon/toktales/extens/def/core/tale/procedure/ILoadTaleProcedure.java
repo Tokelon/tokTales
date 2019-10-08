@@ -9,6 +9,6 @@ public interface ILoadTaleProcedure extends IFunctionCheckedProcedure<IGame, ITa
 
 
 	@Override
-	public ITaleGamescene run(IGame target, String parameter) throws TaleException;
+	public ITaleGamescene run(IGame game, String taleAppPath) throws TaleException;
 	
 }

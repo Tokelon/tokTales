@@ -78,10 +78,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 
 	
 	@Override
-	public ITaleGamescene run(IGame target, String parameter) throws TaleException {
-		IGame game = target;
-		String taleAppPath = parameter;
-		
+	public ITaleGamescene run(IGame game, String taleAppPath) throws TaleException {
 		// Root directory of the Tale
 		LocationImpl taleLocation = new LocationImpl(taleAppPath);
 
