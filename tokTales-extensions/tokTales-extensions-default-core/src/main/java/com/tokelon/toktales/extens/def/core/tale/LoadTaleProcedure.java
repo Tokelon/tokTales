@@ -20,7 +20,6 @@ import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.graphic.SpriteGraphicImpl;
 import com.tokelon.toktales.core.game.graphic.animation.GameAnimation;
 import com.tokelon.toktales.core.game.graphic.animation.IGameAnimation;
-import com.tokelon.toktales.core.game.logic.map.MapException;
 import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.IPlayer;
@@ -48,6 +47,7 @@ import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
 public class LoadTaleProcedure implements ILoadTaleProcedure {
 	// TODO: Refactor internal structure and error handling
+	// TODO: Divide further into procedures
 
 
 	private static final String TALE_MAIN_FILE_ENDING = ".tok";
@@ -63,13 +63,15 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	private final ILogging logging;
 	private final IStorageService storageService;
 	private final Injector injector;
+	private final ISetMapTaleProcedure setMapProcedure;
 	
 	@Inject
-	public LoadTaleProcedure(ILogging logging, IStorageService storageService, Injector injector) {
+	public LoadTaleProcedure(ILogging logging, IStorageService storageService, Injector injector, ISetMapTaleProcedure setMapProcedure) {
 		this.logger = logging.getLogger(getClass());
 		this.logging = logging;
 		this.storageService = storageService;
 		this.injector = injector;
+		this.setMapProcedure = setMapProcedure;
 	}
 
 	
@@ -508,12 +510,10 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	
 
 	private boolean loadMapIntoGame(IGame game, IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
-		SetMapTaleProcedure receiver = new SetMapTaleProcedure(logging, game);
-		
 		try {
-			taleScene.runSetMap((target) -> receiver.run(target, map));
-		} catch (MapException me) {
-			logger.error("Invalid map configuration while loading into tale:", me);
+			taleScene.runSetMap(setMapProcedure.toSupplier(game, map));
+		} catch (TaleException te) {
+			logger.error("Invalid map configuration while loading into tale:", te);
 			return false;
 		} catch (Exception re) {
 			// pass exception?
