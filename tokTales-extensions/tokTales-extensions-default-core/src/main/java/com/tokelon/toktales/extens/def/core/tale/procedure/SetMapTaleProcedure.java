@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.core.tale;
+package com.tokelon.toktales.extens.def.core.tale.procedure;
 
 import javax.inject.Inject;
 
@@ -12,6 +12,7 @@ import com.tokelon.toktales.core.game.model.map.MapPositionImpl;
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementImpl;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
+import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 
 public class SetMapTaleProcedure implements ISetMapTaleProcedure {

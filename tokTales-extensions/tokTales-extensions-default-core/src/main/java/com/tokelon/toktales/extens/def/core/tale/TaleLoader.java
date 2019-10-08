@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.extens.def.core.tale.procedure.ILoadTaleProcedure;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
 

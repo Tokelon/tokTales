@@ -1,4 +1,4 @@
-package com.tokelon.toktales.extens.def.core.tale;
+package com.tokelon.toktales.extens.def.core.tale.procedure;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +32,8 @@ import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
+import com.tokelon.toktales.extens.def.core.tale.ITaleScriptModule;
+import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.tale.config.CiniAnimConfig;
 import com.tokelon.toktales.extens.def.core.tale.config.CiniTaleConfig;
 import com.tokelon.toktales.extens.def.core.tale.config.ITaleConfig;
