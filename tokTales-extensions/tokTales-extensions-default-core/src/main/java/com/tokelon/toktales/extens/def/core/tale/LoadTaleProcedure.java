@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import com.google.inject.Injector;
 import com.tokelon.toktales.core.config.CiniMainConfig;
 import com.tokelon.toktales.core.config.IConfigManager;
 import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.content.sprite.SpriteImpl;
-import com.tokelon.toktales.core.engine.IEngine;
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.game.IGame;
@@ -24,6 +26,7 @@ import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
+import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.resources.IResourceType;
 import com.tokelon.toktales.core.resources.Resource;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
@@ -43,9 +46,8 @@ import com.tokelon.toktales.tools.script.ScriptErrorException;
 import com.tokelon.toktales.tools.tiledmap.MapFormatException;
 import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
-class TaleProcess {
+public class LoadTaleProcedure implements ILoadTaleProcedure {
 	// TODO: Refactor internal structure and error handling
-	// Implement as a procedure?
 
 
 	private static final String TALE_MAIN_FILE_ENDING = ".tok";
@@ -57,34 +59,25 @@ class TaleProcess {
 	
 	
 	
-	private ITaleGamescene gamesceneResult;
-	
-	private final IEngineContext engineContext;
 	private final ILogger logger;
-	private final IEngine engine;
-	private final IGame game;
-
-	private String taleAppPath;
+	private final ILogging logging;
+	private final IStorageService storageService;
+	private final Injector injector;
 	
-	public TaleProcess(IEngineContext engineContext, String taleApplicationPath) {
-		this.engineContext = engineContext;
-		this.logger = engineContext.getLogging().getLogger(getClass());
-		this.engine = engineContext.getEngine();
-		this.game = engineContext.getGame();
-		
-		this.taleAppPath = taleApplicationPath;
+	@Inject
+	public LoadTaleProcedure(ILogging logging, IStorageService storageService, Injector injector) {
+		this.logger = logging.getLogger(getClass());
+		this.logging = logging;
+		this.storageService = storageService;
+		this.injector = injector;
 	}
 
 	
-	public ITaleGamescene getResult() {
-		return gamesceneResult;
-	}
-	
-	
-	public void run() {
+	@Override
+	public ITaleGamescene run(IGame owner, String parameter) throws TaleException {
+		IGame game = owner;
+		String taleAppPath = parameter;
 		
-		IStorageService storageService = engine.getStorageService();
-
 		// Root directory of the Tale
 		LocationImpl taleLocation = new LocationImpl(taleAppPath);
 
@@ -94,17 +87,15 @@ class TaleProcess {
 		String[] fileNames;
 		try {
 			fileNames = storageService.listAppDirOnExternal(taleLocation);
-			
 		} catch (StorageException e) {
 			logger.error("List Tale directory failed:", e);
-			return;
+			throw new TaleException(e);
 		}
 		
 		
 		// Search for main Tale file (ends with .tok)
 		String mainFileName = null;
 		for(String fName: fileNames) {
-			
 			if(fName.endsWith(TALE_MAIN_FILE_ENDING)) {
 				mainFileName = fName;
 			}
@@ -112,8 +103,8 @@ class TaleProcess {
 		
 		
 		if(mainFileName == null) {
-			logger.error("No main Tale file found");
-			return;
+			logger.error("No main Tale file found with ending: {}", TALE_MAIN_FILE_ENDING);
+			throw new TaleException("No main Tale file found with ending: " + TALE_MAIN_FILE_ENDING);
 		}
 		
 
@@ -158,7 +149,7 @@ class TaleProcess {
 			else {
 				// TODO: 096 Load a tale specific config and not the main config
 				
-				game.getConfigManager().loadConfig(IConfigManager.MAIN_CONFIG, mainConfig);		// We have to load the main config first so it is available TODO: Fix (If tale loading fails, main config will be wrong)
+				game.getConfigManager().loadConfig(IConfigManager.MAIN_CONFIG, mainConfig); // We have to load the main config first so it is available TODO: Fix (If tale loading fails, main config will be wrong)
 			}
 		}
 		
@@ -167,8 +158,7 @@ class TaleProcess {
 		// Load tale
 		ITaleGamescene taleScene = null; // TODO: If taleScene is null, the rest should probably not execute
 		try {
-			taleScene = loadTale(storageService, taleLocation, mainFileName);
-			gamesceneResult = taleScene;
+			taleScene = loadTale(game, taleLocation, mainFileName);
 		} catch (TaleException te) {
 			logger.error("Loading Tale failed. Tale error:", te);
 		} catch (StorageException se) {
@@ -200,53 +190,20 @@ class TaleProcess {
 				taleModule = game.getScriptManager().loadModule(scriptFileIn, scriptFileName);
 				taleModule.callFunction(ITaleScriptModule.FUNCTION_onTaleCreate, taleScene);
 				
-				
-				/*
-				Object result = taleModule.callFunction("createActor", "Actor_Jack");
-				if(!(result instanceof IActor)) {
-					log.w(TAG, "Return type for module function createActor does not match the expected type (IActor)");
-				}
-				else {
-
-					IActor jack = (IActor) result;
-					game.getGamestate().getWorldspace().putEntity("actor_jack", jack);
-					game.getGamestate().getControllerManager().setPlayerController(new PlayerController(jack));
-					game.getGamestate().getControllerManager().getCameraController().enableCameraFollow(jack);
-					
-					
-					String gravityFileName = "Gravity.lua";
-					InputStream gravityFileIn = storageFramework.tryReadAppFileOnExternal(taleLocation, gravityFileName);
-					if(gravityFileIn != null) {
-						log.i(TAG, "Gravity module file found");
-						IScriptModule gravityModule = game.getScriptManager().loadModule(gravityFileIn, gravityFileName);
-						
-						Object participantResult = gravityModule.callFunction("createGravityParticipant", null);
-						if(participantResult instanceof IGameEntityParticipant) {
-							IGameEntityParticipant participant = (IGameEntityParticipant) participantResult;
-							jack.getParticipation().addParticipant(participant);
-						}
-						else {
-							log.w(TAG, "Return type for module function createGravityParticipant does not match the expected type (IGameEntityParticipant)");
-						}
-					}
-					
-				}
-				*/
-				
+				//createScriptActor(); //testing
 			} catch (ScriptErrorException e) {
 				logger.warn("Script failed to load:", e);
 			}
-			
-			
 		}
 		
 		
 		logger.debug("Reading Tale finished");
+		return taleScene;
 	}
 
 	
 	
-	private ITaleGamescene loadTale(IStorageService storageService, LocationImpl taleLocation, String mainFileName) throws TaleException, StorageException, ConfigFormatException, ConfigDataException {
+	private ITaleGamescene loadTale(IGame game, LocationImpl taleLocation, String mainFileName) throws TaleException, StorageException, ConfigFormatException, ConfigDataException {
 		logger.debug("Reading Tale: Started");
 		
 		
@@ -264,7 +221,7 @@ class TaleProcess {
 		ITaleGamescene sceneResult = null;
 		String initialSceneCodename = taleConfig.getConfigTaleInitialSceneCodename().trim();
 		if(initialSceneCodename.isEmpty()) {
-			sceneResult = engineContext.getInjector().getInstance(ITaleGamescene.class);
+			sceneResult = injector.getInstance(ITaleGamescene.class);
 			logger.info("Loaded default scene implementation");
 		}
 		else {
@@ -276,7 +233,7 @@ class TaleProcess {
 		        
 		        if(ITaleGamescene.class.isAssignableFrom(sceneClass)) {
 		        	try {
-		        		sceneResult = (ITaleGamescene) engineContext.getInjector().getInstance(sceneClass);
+		        		sceneResult = (ITaleGamescene) injector.getInstance(sceneClass);
 		        		logger.info("Loaded scene with implementation: {}", sceneResult.getClass().getName());
 		        	}
 		        	catch (Exception e) {
@@ -305,7 +262,7 @@ class TaleProcess {
 
 		logger.debug("Loading initial map...");
 		// Read the initial map
-		IBlockMap initialMap = readTiledMap(mapsLocation, initialMapfileName);
+		IBlockMap initialMap = readTiledMap(game.getWorld(), mapsLocation, initialMapfileName);
 		
 		if(initialMap == null) {
 			logger.error("Loading Tale failed: Could not read initial map");
@@ -315,7 +272,7 @@ class TaleProcess {
 			// Map was read fine
 			
 			// Load the map into our map manager
-			boolean res = loadMapIntoGame(initialMap, taleConfig, taleLocation, sceneResult);
+			boolean res = loadMapIntoGame(game, initialMap, taleConfig, taleLocation, sceneResult);
 			if(!res) {
 				logger.error("Loading Tale failed: Could not load map into game");
 				return null;
@@ -324,14 +281,13 @@ class TaleProcess {
 
 		
 		// Load player sprites and animations
-		setupPlayerEntity(storageService, taleLocation, taleConfig, sceneResult);
+		setupPlayerEntity(game.getWorld(), taleLocation, taleConfig, sceneResult);
 
 		return sceneResult;
 	}
 	
 	
-	private void setupPlayerEntity(IStorageService storageService, LocationImpl taleLocation, ITaleConfig taleConfig, ITaleGamescene taleScene) {
-		
+	private void setupPlayerEntity(IWorld world, LocationImpl taleLocation, ITaleConfig taleConfig, ITaleGamescene taleScene) {
 		IPlayerController playerController = taleScene.getPlayerController();
 		IPlayer player = playerController.getPlayer();
 		IActor playerActor = player.getActor();
@@ -361,19 +317,19 @@ class TaleProcess {
 	
 		// Walk left
 		animFilename = taleConfig.getConfigPlayerAnimationWalkLeft();
-		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_LEFT, playerActor);
+		loadAnimationIntoActor(world, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_LEFT, playerActor);
 		
 		// Walk Up
 		animFilename = taleConfig.getConfigPlayerAnimationWalkUp();
-		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_UP, playerActor);
+		loadAnimationIntoActor(world, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_UP, playerActor);
 
 		// Walk right
 		animFilename = taleConfig.getConfigPlayerAnimationWalkRight();
-		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_RIGHT, playerActor);
+		loadAnimationIntoActor(world, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_RIGHT, playerActor);
 
 		// Walk down
 		animFilename = taleConfig.getConfigPlayerAnimationWalkDown();
-		loadAnimationIntoActor(storageService, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_DOWN, playerActor);
+		loadAnimationIntoActor(world, animationsLocation, animFilename, ciniReader, IPlayer.ANIMATION_WALK_DOWN, playerActor);
 
 		
 
@@ -403,9 +359,7 @@ class TaleProcess {
 		playerController.playerLook(ICrossDirection.DOWN);
 	}
 	
-	private void loadAnimationIntoActor(IStorageService storageService, LocationImpl animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IActor actor) {
-		
-		
+	private void loadAnimationIntoActor(IWorld world, LocationImpl animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IActor actor) {
 		/* Default for if walk animations do not define their time
 		 * Do either this or set default animation time to 1
 		 */
@@ -413,7 +367,7 @@ class TaleProcess {
 		//int aniTime = taleConfig.getConfigPlayerMoveOneBlockDuration();
 		// TODO: What to do here?
 		//int aniTime = 1;
-		float tileSize = game.getWorld().getGridTileSize();
+		float tileSize = world.getGridTileSize();
 		int aniTime = (int) (1000.0f * tileSize / actor.getSpeedX());
 
 		
@@ -517,10 +471,9 @@ class TaleProcess {
 	}
 	
 	
-	private IBlockMap readTiledMap(LocationImpl location, String fileName) {
-		
+	private IBlockMap readTiledMap(IWorld world, LocationImpl location, String fileName) {
 		// Tiled Map loader
-		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(engineContext.getLogging(), engine.getStorageService(), game.getWorld());
+		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(logging, storageService, world);
 		
 		
 		try {
@@ -554,8 +507,8 @@ class TaleProcess {
 	
 	
 
-	private boolean loadMapIntoGame(IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
-		SetMapTaleProcedure receiver = new SetMapTaleProcedure(engineContext.getLogging(), game);
+	private boolean loadMapIntoGame(IGame game, IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
+		SetMapTaleProcedure receiver = new SetMapTaleProcedure(logging, game);
 		
 		try {
 			taleScene.runSetMap((owner) -> receiver.run(owner, map));
@@ -602,5 +555,38 @@ class TaleProcess {
 		
 		return true;
 	}
+	
+	
+	/*
+	private void createScriptActor(ITaleGamescene taleScene, IScriptModule taleModule, IApplicationLocation taleLocation) {
+		Object result = taleModule.callFunction("createActor", "Actor_Jack");
+		if(!(result instanceof IActor)) {
+			logger.warn("Return type for module function createActor does not match the expected type (IActor)");
+		}
+		else {
+			IActor jack = (IActor) result;
+			taleScene.getWorldspace().putEntity("actor_jack", jack);
+			taleScene.setPlayerController(new PlayerController(jack));
+			taleScene.getCameraController().enableCameraFollow(jack);
+			
+			
+			String gravityFileName = "Gravity.lua";
+			InputStream gravityFileIn = engine.getStorageService().tryReadAppFileOnExternal(taleLocation, gravityFileName);
+			if(gravityFileIn != null) {
+				logger.info("Gravity module file found");
+				IScriptModule gravityModule = game.getScriptManager().loadModule(gravityFileIn, gravityFileName);
+				
+				Object participantResult = gravityModule.callFunction("createGravityParticipant", null);
+				if(participantResult instanceof IGameEntityParticipant) {
+					IGameEntityParticipant participant = (IGameEntityParticipant) participantResult;
+					jack.getParticipation().addParticipant(participant);
+				}
+				else {
+					logger.warn("Return type for module function createGravityParticipant does not match the expected type (IGameEntityParticipant)");
+				}
+			}
+		}
+	}
+	*/
 	
 }

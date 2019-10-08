@@ -3,8 +3,9 @@ package com.tokelon.toktales.extens.def.core.tale;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
@@ -12,25 +13,23 @@ import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
 public class TaleLoader implements ITaleLoader {
 
 
-	private final IEngineContext engineContext;
-	private final Provider<ITaleGamestate> taleGamestateProvider;
 	private final ILogger logger;
+	private final IGame game;
+	private final ILoadTaleProcedure loadTaleProcedure;
+	private final Provider<ITaleGamestate> taleGamestateProvider;
 	
 	@Inject
-	public TaleLoader(IEngineContext engineContext, Provider<ITaleGamestate> taleGamestateProvider) {
-		this.engineContext = engineContext;
+	public TaleLoader(ILogging logging, IGame game, ILoadTaleProcedure loadTaleProcedure, Provider<ITaleGamestate> taleGamestateProvider) {
+		this.logger = logging.getLogger(getClass());
+		this.game = game;
+		this.loadTaleProcedure = loadTaleProcedure;
 		this.taleGamestateProvider = taleGamestateProvider;
-		this.logger = engineContext.getLogging().getLogger(getClass());
 	}
 	
 	
 	@Override
 	public ITaleGamescene loadTale(String taleAppPath) throws TaleException {
-		TaleProcess taleProcess = new TaleProcess(engineContext, taleAppPath);
-		taleProcess.run();
-		ITaleGamescene result = taleProcess.getResult();
-		
-		return result;
+		return loadTaleProcedure.run(game, taleAppPath);
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class TaleLoader implements ITaleLoader {
 		if(gamestate.assignScene(gamesceneName, taleScene)) {
 			gamestate.changeScene(gamesceneName);
 			
-			engineContext.getGame().getStateControl().addState(gamestateName, gamestate);
+			game.getStateControl().addState(gamestateName, gamestate);
 		}
 		else {
 			throw new TaleException("Loading tale failed | Scene and state are incompatible");

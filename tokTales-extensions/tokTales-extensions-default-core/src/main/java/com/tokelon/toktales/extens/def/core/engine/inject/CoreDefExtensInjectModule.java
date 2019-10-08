@@ -39,7 +39,9 @@ import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapConsole
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamestate;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapStateRenderer;
+import com.tokelon.toktales.extens.def.core.tale.ILoadTaleProcedure;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
+import com.tokelon.toktales.extens.def.core.tale.LoadTaleProcedure;
 import com.tokelon.toktales.extens.def.core.tale.TaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
@@ -85,6 +87,7 @@ public class CoreDefExtensInjectModule extends AbstractInjectModule {
 	    
 	    
 	    bind(ITaleLoader.class).to(TaleLoader.class);
+	    bind(ILoadTaleProcedure.class).to(LoadTaleProcedure.class);
     }
     
     

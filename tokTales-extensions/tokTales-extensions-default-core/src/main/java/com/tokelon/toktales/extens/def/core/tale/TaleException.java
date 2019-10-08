@@ -1,9 +1,10 @@
 package com.tokelon.toktales.extens.def.core.tale;
 
 public class TaleException extends Exception {
-	
-	private static final long serialVersionUID = 2861121411771441388L;
 
+
+	private static final long serialVersionUID = 2861121411771441388L;
+	
 	
 	public TaleException() {
 		super();
