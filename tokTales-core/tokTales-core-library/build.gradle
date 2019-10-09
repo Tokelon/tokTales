@@ -58,12 +58,6 @@ dependencies {
 	api project(':tokTales-tools-core')
 	
 	
-	// LuaJ
-	implementation 'org.luaj:luaj-jse:3.0.1'
-	
-	// XStream
-	implementation 'com.thoughtworks.xstream:xstream:1.4.8'
-	
 	// Guice
 	api 'com.google.inject:guice:4.2.1'
 	api 'com.google.inject.extensions:guice-assistedinject:4.2.1'
