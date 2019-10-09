@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.tiledmap;
+package com.tokelon.toktales.core.tiled;
 
 public final class MetaValuesTiledMap {
 

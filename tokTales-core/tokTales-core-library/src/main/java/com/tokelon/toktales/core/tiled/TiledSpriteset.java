@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.tiledmap;
+package com.tokelon.toktales.core.tiled;
 
 import com.tokelon.toktales.core.content.manage.resources.ResourceScannerKey;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;

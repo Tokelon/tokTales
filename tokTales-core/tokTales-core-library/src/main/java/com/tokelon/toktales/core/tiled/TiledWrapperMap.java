@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.tiledmap;
+package com.tokelon.toktales.core.tiled;
 
 import java.util.HashMap;
 import java.util.Map;

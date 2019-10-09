@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.tiledmap;
+package com.tokelon.toktales.core.tiled;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.tokelon.toktales.core.config.StorageConfigLoader;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -21,7 +22,10 @@ import com.tokelon.toktales.core.storage.utils.IMutablePath;
 import com.tokelon.toktales.tools.config.ConfigDataException;
 import com.tokelon.toktales.tools.config.ConfigFormatException;
 import com.tokelon.toktales.tools.config.ICiniConfig;
-import com.tokelon.toktales.tools.config.StorageConfigLoader;
+import com.tokelon.toktales.tools.tiledmap.MapFormatException;
+import com.tokelon.toktales.tools.tiledmap.TiledMapFormatException;
+import com.tokelon.toktales.tools.tiledmap.TiledMapReader;
+import com.tokelon.toktales.tools.tiledmap.TiledMapTilesetReader;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMap;
 import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
 import com.tokelon.toktales.tools.tiledmap.model.TiledMapTilesetImpl;

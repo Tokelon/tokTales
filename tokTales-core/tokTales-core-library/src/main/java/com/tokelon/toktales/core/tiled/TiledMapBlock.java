@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.tiledmap;
+package com.tokelon.toktales.core.tiled;
 
 import com.tokelon.toktales.core.game.model.map.IBlock;
 import com.tokelon.toktales.core.game.model.map.elements.IMapElement;

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.tiledmap;
+package com.tokelon.toktales.core.tiled;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,7 @@ import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.prog.annotation.Unfinished;
 import com.tokelon.toktales.tools.config.ICiniConfig;
+import com.tokelon.toktales.tools.tiledmap.MapFormatException;
 
 @Unfinished
 public class StorageTiledMapLoaderManual implements IMapLoader {

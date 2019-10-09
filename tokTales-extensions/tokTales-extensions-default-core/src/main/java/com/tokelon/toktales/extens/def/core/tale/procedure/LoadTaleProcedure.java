@@ -32,6 +32,7 @@ import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
+import com.tokelon.toktales.core.tiled.StorageTiledMapLoaderAuto;
 import com.tokelon.toktales.extens.def.core.tale.ITaleScriptModule;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.tale.config.CiniAnimConfig;
@@ -45,7 +46,6 @@ import com.tokelon.toktales.tools.config.MutableCiniConfig;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
 import com.tokelon.toktales.tools.tiledmap.MapFormatException;
-import com.tokelon.toktales.tools.tiledmap.StorageTiledMapLoaderAuto;
 
 public class LoadTaleProcedure implements ILoadTaleProcedure {
 	// TODO: Refactor internal structure and error handling

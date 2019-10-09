@@ -27,7 +27,6 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
-			srcDir 'tools/main/java'
 			
 			srcDir 'exp/main/java'
 		}
@@ -38,7 +37,6 @@ sourceSets {
 	test {
 		java {
 			srcDir 'src/test/java'
-			srcDir 'tools/test/java'
 		}
 	}
 }
