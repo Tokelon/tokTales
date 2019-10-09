@@ -56,6 +56,9 @@ dependencies {
 	 */
 	testImplementation project(':tokTales-core-test')
 	
+	// Tools
+	api project(':tokTales-tools-core')
+	
 	
 	// LuaJ
 	implementation 'org.luaj:luaj-jse:3.0.1'

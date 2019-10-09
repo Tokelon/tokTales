@@ -54,6 +54,8 @@ dependencies {
 	
 	
 	/* Project dependencies */
+	api project(':tokTales-tools-desktop')
+	
 	api (project(':tokTales-core-library')) {
 		// This is necessary because otherwise projects depending on this, might get the android version (if the version is newer)
 		exclude group: 'com.google.guava', module: 'guava'

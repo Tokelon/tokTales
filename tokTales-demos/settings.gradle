@@ -8,8 +8,21 @@ include ':tokTales-demos-app'
 
 // if project dir contains other projects, include those
 
+def tokTalesTools = new File(rootProject.projectDir, '../tokTales-tools')
+if (tokTalesTools.exists()) {
+    include ':tokTales-tools'
+    project(':tokTales-tools').projectDir = tokTalesTools
+
+    include ':tokTales-tools-core'
+    project(':tokTales-tools-core').projectDir = new File(tokTalesTools, 'tokTales-tools-core')
+    include ':tokTales-tools-desktop'
+    project(':tokTales-tools-desktop').projectDir = new File(tokTalesTools, 'tokTales-tools-desktop')
+    include ':tokTales-tools-android'
+    project(':tokTales-tools-android').projectDir = new File(tokTalesTools, 'tokTales-tools-android')
+}
+
 def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
-if (tokTalesCore.exists()) {
+if (tokTalesTools.exists() && tokTalesCore.exists()) {
     include ':tokTales-core'
     project(':tokTales-core').projectDir = tokTalesCore
     
@@ -21,7 +34,7 @@ if (tokTalesCore.exists()) {
 
 
 def tokTalesAndroid = new File(rootProject.projectDir, '../tokTales-android')
-if (tokTalesCore.exists() && tokTalesAndroid.exists()) {
+if (tokTalesTools.exists() && tokTalesCore.exists() && tokTalesAndroid.exists()) {
     include ':tokTales-android'
     project(':tokTales-android').projectDir = tokTalesAndroid
 
@@ -35,7 +48,7 @@ if (tokTalesCore.exists() && tokTalesAndroid.exists()) {
 
 
 def tokTalesDesktop = new File(rootProject.projectDir, '../tokTales-desktop')
-if (tokTalesCore.exists() && tokTalesDesktop.exists()) {
+if (tokTalesTools.exists() && tokTalesCore.exists() && tokTalesDesktop.exists()) {
     include ':tokTales-desktop'
     project(':tokTales-desktop').projectDir = tokTalesDesktop
     
@@ -47,7 +60,7 @@ if (tokTalesCore.exists() && tokTalesDesktop.exists()) {
 
 
 def tokTalesExtensions = new File(rootProject.projectDir, '../tokTales-extensions')
-if (tokTalesCore.exists() && tokTalesAndroid.exists() && tokTalesDesktop.exists() && tokTalesExtensions.exists()) {
+if (tokTalesTools.exists() && tokTalesCore.exists() && tokTalesAndroid.exists() && tokTalesDesktop.exists() && tokTalesExtensions.exists()) {
     include ':tokTales-extensions'
     project(':tokTales-extensions').projectDir = tokTalesExtensions
 

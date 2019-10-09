@@ -3,3 +3,9 @@
 rootProject.name = 'tokTales-core'
 
 include ':tokTales-core-library', ':tokTales-core-test'
+
+
+includeFlat 'tokTales-tools'
+
+include ':tokTales-tools-core'
+project(':tokTales-tools-core').projectDir = new File('../tokTales-tools/tokTales-tools-core')

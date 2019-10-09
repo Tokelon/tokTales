@@ -1,0 +1,32 @@
+// tokTales-tools build.gradle
+// settings in this file will only apply to subprojects if this is the root project
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    apply plugin: 'eclipse'
+}
+
+
+task wrapperCustom(type: Wrapper) {
+    group 'build setup'
+    gradleVersion = '5.1.1'
+    distributionType = Wrapper.DistributionType.ALL
+}

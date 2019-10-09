@@ -6,6 +6,18 @@
 rootProject.name = 'tokTales-master'
 
 
+def tokTalesTools = new File(rootProject.projectDir, '../tokTales-tools')
+include ':tokTales-tools'
+project(':tokTales-tools').projectDir = tokTalesTools
+
+include ':tokTales-tools-android'
+project(':tokTales-tools-android').projectDir = new File(tokTalesTools, 'tokTales-tools-android')
+include ':tokTales-tools-core'
+project(':tokTales-tools-core').projectDir = new File(tokTalesTools, 'tokTales-tools-core')
+include ':tokTales-tools-desktop'
+project(':tokTales-tools-desktop').projectDir = new File(tokTalesTools, 'tokTales-tools-desktop')
+
+
 def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
 include ':tokTales-core'
 project(':tokTales-core').projectDir = tokTalesCore

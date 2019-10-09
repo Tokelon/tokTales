@@ -5,11 +5,19 @@ rootProject.name = 'tokTales-test'
 include ':tokTales-test-android', ':tokTales-test-core', ':tokTales-test-desktop'
 
 
+includeFlat 'tokTales-tools'
 includeFlat 'tokTales-core'
 includeFlat 'tokTales-desktop'
 includeFlat 'tokTales-android'
 includeFlat 'tokTales-extensions'
 
+
+include ':tokTales-tools-core'
+project(':tokTales-tools-core').projectDir = new File('../tokTales-tools/tokTales-tools-core')
+include ':tokTales-tools-desktop'
+project(':tokTales-tools-desktop').projectDir = new File('../tokTales-tools/tokTales-tools-desktop')
+include ':tokTales-tools-android'
+project(':tokTales-tools-android').projectDir = new File('../tokTales-tools/tokTales-tools-android')
 
 include ':tokTales-core-library'
 project(':tokTales-core-library').projectDir = new File('../tokTales-core/tokTales-core-library')

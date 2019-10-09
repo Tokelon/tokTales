@@ -1,0 +1,30 @@
+// tokTales-tools-desktop build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+			
+			srcDir 'exp/main/java'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+			
+			srcDir 'exp/test/java'
+		}
+	}
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

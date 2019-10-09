@@ -5,6 +5,14 @@ rootProject.name = 'tokTales-desktop'
 include ':tokTales-desktop-library', ':tokTales-desktop-test'
 
 
+includeFlat 'tokTales-tools'
+
+include ':tokTales-tools-core'
+project(':tokTales-tools-core').projectDir = new File('../tokTales-tools/tokTales-tools-core')
+include ':tokTales-tools-desktop'
+project(':tokTales-tools-desktop').projectDir = new File('../tokTales-tools/tokTales-tools-desktop')
+
+
 includeFlat 'tokTales-core'
 
 include ':tokTales-core-library'
