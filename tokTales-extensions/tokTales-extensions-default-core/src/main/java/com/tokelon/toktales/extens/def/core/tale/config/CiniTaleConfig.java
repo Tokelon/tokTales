@@ -1,8 +1,8 @@
 package com.tokelon.toktales.extens.def.core.tale.config;
 
 import com.tokelon.toktales.core.config.CiniFileConfig;
-import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.ICiniConfig.IMutableCiniConfig;
+import com.tokelon.toktales.tools.core.config.ConfigDataException;
+import com.tokelon.toktales.tools.core.config.ICiniConfig.IMutableCiniConfig;
 
 public class CiniTaleConfig extends CiniFileConfig implements ITaleConfig {
 	

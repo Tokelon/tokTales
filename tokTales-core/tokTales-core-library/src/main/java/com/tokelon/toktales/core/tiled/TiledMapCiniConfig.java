@@ -1,9 +1,9 @@
 package com.tokelon.toktales.core.tiled;
 
-import com.tokelon.toktales.tools.config.AbstractConfig;
-import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.ICiniConfig;
-import com.tokelon.toktales.tools.config.MutableCiniConfig;
+import com.tokelon.toktales.tools.core.config.AbstractConfig;
+import com.tokelon.toktales.tools.core.config.ConfigDataException;
+import com.tokelon.toktales.tools.core.config.ICiniConfig;
+import com.tokelon.toktales.tools.core.config.MutableCiniConfig;
 
 public class TiledMapCiniConfig extends AbstractConfig implements ITiledMapConfig {
 	

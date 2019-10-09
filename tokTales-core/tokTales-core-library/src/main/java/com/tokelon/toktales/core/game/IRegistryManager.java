@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game;
 
-import com.tokelon.toktales.tools.registry.IBasicRegistry;
+import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public interface IRegistryManager {
 

@@ -11,11 +11,11 @@ import com.tokelon.toktales.core.game.world.IWorldGeometry;
 import com.tokelon.toktales.core.game.world.PolygonGeometry;
 import com.tokelon.toktales.core.game.world.PolylineGeometry;
 import com.tokelon.toktales.core.game.world.RectangleGeometry;
-import com.tokelon.toktales.tools.tiledmap.model.ITMXEllipse;
-import com.tokelon.toktales.tools.tiledmap.model.ITMXObject;
-import com.tokelon.toktales.tools.tiledmap.model.ITMXPolygon;
-import com.tokelon.toktales.tools.tiledmap.model.ITMXPolyline;
-import com.tokelon.toktales.tools.tiledmap.model.ITiledMapProperties;
+import com.tokelon.toktales.tools.core.tiled.model.ITMXEllipse;
+import com.tokelon.toktales.tools.core.tiled.model.ITMXObject;
+import com.tokelon.toktales.tools.core.tiled.model.ITMXPolygon;
+import com.tokelon.toktales.tools.core.tiled.model.ITMXPolyline;
+import com.tokelon.toktales.tools.core.tiled.model.ITiledMapProperties;
 
 public class TiledMapObject implements IMapObject {
 

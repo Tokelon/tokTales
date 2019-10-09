@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetKey;
 import com.tokelon.toktales.core.content.manage.sprite.ReadDelegateSpriteAssetKey;
 import com.tokelon.toktales.core.content.sprite.ISpriteset;
 import com.tokelon.toktales.core.resources.IResource;
-import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
+import com.tokelon.toktales.tools.core.tiled.model.ITiledMapTileset;
 
 public class TiledSpriteset implements ISpriteset {
 	

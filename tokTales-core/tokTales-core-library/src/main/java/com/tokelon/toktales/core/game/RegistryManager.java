@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyRegistry;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalRegistry;
-import com.tokelon.toktales.tools.registry.IBasicRegistry;
+import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class RegistryManager implements IRegistryManager {
 

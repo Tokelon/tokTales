@@ -2,8 +2,8 @@ package com.tokelon.toktales.core.game.controller;
 
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.script.ScriptInstanceBase;
-import com.tokelon.toktales.tools.script.IScriptInstance;
-import com.tokelon.toktales.tools.script.ScriptErrorException;
+import com.tokelon.toktales.tools.core.script.IScriptInstance;
+import com.tokelon.toktales.tools.core.script.ScriptErrorException;
 
 public class ScriptInstancePlayerController extends ScriptInstanceBase implements IPlayerController {
 

@@ -8,7 +8,7 @@ import javax.inject.Provider;
 import com.tokelon.toktales.core.engine.inject.RegistryProvider;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyAliases;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyEntries;
-import com.tokelon.toktales.tools.registry.IBasicRegistry;
+import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class GlobalAssetKeyRegistryProvider extends RegistryProvider implements Provider<IBasicRegistry> {
 

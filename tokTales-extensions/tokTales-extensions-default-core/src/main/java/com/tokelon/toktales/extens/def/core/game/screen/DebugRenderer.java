@@ -39,7 +39,7 @@ import com.tokelon.toktales.core.render.shapes.LineShape;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
-import com.tokelon.toktales.tools.registry.IBasicRegistry;
+import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 

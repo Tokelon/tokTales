@@ -3,8 +3,8 @@ package com.tokelon.toktales.core.script;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.logic.observers.IObserver;
-import com.tokelon.toktales.tools.script.IScriptModule;
-import com.tokelon.toktales.tools.script.ScriptErrorException;
+import com.tokelon.toktales.tools.core.script.IScriptModule;
+import com.tokelon.toktales.tools.core.script.ScriptErrorException;
 
 /**
  * Note that {@link IObserver#getObservationInterest(Object, String)} will not call the module but simply return 'this'.

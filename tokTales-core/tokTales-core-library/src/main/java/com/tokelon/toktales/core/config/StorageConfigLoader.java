@@ -6,10 +6,10 @@ import java.io.InputStream;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.tools.config.CiniConfigStreamReader;
-import com.tokelon.toktales.tools.config.ConfigFormatException;
-import com.tokelon.toktales.tools.config.ICiniConfig;
-import com.tokelon.toktales.tools.config.IConfigLoader;
+import com.tokelon.toktales.tools.core.config.CiniConfigStreamReader;
+import com.tokelon.toktales.tools.core.config.ConfigFormatException;
+import com.tokelon.toktales.tools.core.config.ICiniConfig;
+import com.tokelon.toktales.tools.core.config.IConfigLoader;
 
 public class StorageConfigLoader implements IConfigLoader {
 

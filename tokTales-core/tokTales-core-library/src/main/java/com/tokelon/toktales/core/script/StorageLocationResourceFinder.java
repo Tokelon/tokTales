@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.tools.script.IResourceFinder;
+import com.tokelon.toktales.tools.core.script.IResourceFinder;
 
 public class StorageLocationResourceFinder implements IResourceFinder {
 	

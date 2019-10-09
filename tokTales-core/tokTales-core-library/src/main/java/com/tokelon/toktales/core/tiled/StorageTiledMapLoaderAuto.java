@@ -19,16 +19,16 @@ import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.DynamicApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.IMutablePath;
-import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.ConfigFormatException;
-import com.tokelon.toktales.tools.config.ICiniConfig;
-import com.tokelon.toktales.tools.tiledmap.MapFormatException;
-import com.tokelon.toktales.tools.tiledmap.TiledMapFormatException;
-import com.tokelon.toktales.tools.tiledmap.TiledMapReader;
-import com.tokelon.toktales.tools.tiledmap.TiledMapTilesetReader;
-import com.tokelon.toktales.tools.tiledmap.model.ITiledMap;
-import com.tokelon.toktales.tools.tiledmap.model.ITiledMapTileset;
-import com.tokelon.toktales.tools.tiledmap.model.TiledMapTilesetImpl;
+import com.tokelon.toktales.tools.core.config.ConfigDataException;
+import com.tokelon.toktales.tools.core.config.ConfigFormatException;
+import com.tokelon.toktales.tools.core.config.ICiniConfig;
+import com.tokelon.toktales.tools.core.tiled.MapFormatException;
+import com.tokelon.toktales.tools.core.tiled.TiledMapFormatException;
+import com.tokelon.toktales.tools.core.tiled.TiledMapReader;
+import com.tokelon.toktales.tools.core.tiled.TiledMapTilesetReader;
+import com.tokelon.toktales.tools.core.tiled.model.ITiledMap;
+import com.tokelon.toktales.tools.core.tiled.model.ITiledMapTileset;
+import com.tokelon.toktales.tools.core.tiled.model.TiledMapTilesetImpl;
 
 public class StorageTiledMapLoaderAuto implements IMapLoader {
 

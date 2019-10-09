@@ -1,8 +1,8 @@
 package com.tokelon.toktales.core.config;
 
-import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.ICiniConfig.IMutableCiniConfig;
-import com.tokelon.toktales.tools.config.MutableCiniConfig;
+import com.tokelon.toktales.tools.core.config.ConfigDataException;
+import com.tokelon.toktales.tools.core.config.MutableCiniConfig;
+import com.tokelon.toktales.tools.core.config.ICiniConfig.IMutableCiniConfig;
 
 public class CiniMainConfig extends CiniFileConfig implements IMainConfig {
 

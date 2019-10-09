@@ -8,7 +8,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.tokelon.toktales.tools.inject.InjectParameters;
+import com.tokelon.toktales.tools.core.inject.InjectParameters;
 
 /** When applied to methods, indicates that the method should be invoked and an {@link IGameState} should be injected.
  * <p>

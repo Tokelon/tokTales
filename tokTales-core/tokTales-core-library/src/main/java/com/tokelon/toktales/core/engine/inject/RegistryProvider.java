@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Provider;
 
-import com.tokelon.toktales.tools.registry.BasicRegistry;
-import com.tokelon.toktales.tools.registry.IBasicRegistry;
+import com.tokelon.toktales.tools.core.registry.BasicRegistry;
+import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class RegistryProvider implements Provider<IBasicRegistry> {
 

@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.tokelon.toktales.core.config.CiniFileConfig;
 import com.tokelon.toktales.core.config.CiniFileConfig.IValueFactory;
-import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.ICiniConfig.IMutableCiniConfig;
+import com.tokelon.toktales.tools.core.config.ConfigDataException;
+import com.tokelon.toktales.tools.core.config.ICiniConfig.IMutableCiniConfig;
 
 public class CiniAnimConfig extends CiniFileConfig implements IAnimConfig {
 

@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.engine.inject.RegistryChildProvider;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyAliases;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyEntries;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalRegistry;
-import com.tokelon.toktales.tools.registry.IBasicRegistry;
+import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class GlobalAssetKeyChildRegistryProvider extends RegistryChildProvider implements Provider<IBasicRegistry> {
 

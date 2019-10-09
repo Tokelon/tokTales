@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.game;
 
-import com.tokelon.toktales.tools.script.IScriptEnvironment;
-import com.tokelon.toktales.tools.script.lua.ILuaClass;
+import com.tokelon.toktales.tools.core.script.IScriptEnvironment;
+import com.tokelon.toktales.tools.core.script.lua.ILuaClass;
 
 public interface IGameScriptManager extends IScriptEnvironment {
 

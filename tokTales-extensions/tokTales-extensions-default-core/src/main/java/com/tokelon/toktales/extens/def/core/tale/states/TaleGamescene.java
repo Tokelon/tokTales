@@ -10,7 +10,7 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.LocalMapGamescene;
-import com.tokelon.toktales.tools.procedure.checked.ISupplierCheckedProcedure;
+import com.tokelon.toktales.tools.core.procedure.checked.ISupplierCheckedProcedure;
 
 public class TaleGamescene extends LocalMapGamescene implements ITaleGamescene {
 

@@ -98,8 +98,8 @@ import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorF
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.util.DefaultObjectPool;
 import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
-import com.tokelon.toktales.tools.inject.IParameterInjector.IParameterInjectorFactory;
-import com.tokelon.toktales.tools.inject.ParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.ParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.IParameterInjector.IParameterInjectorFactory;
 
 public class CoreInjectModule extends AbstractInjectModule {
 

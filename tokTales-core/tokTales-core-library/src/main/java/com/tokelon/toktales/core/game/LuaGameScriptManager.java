@@ -11,9 +11,9 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
 import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
-import com.tokelon.toktales.tools.script.lua.ILuaClass;
-import com.tokelon.toktales.tools.script.lua.ILuaObject;
-import com.tokelon.toktales.tools.script.lua.LuaScriptEnvironment;
+import com.tokelon.toktales.tools.core.script.lua.ILuaClass;
+import com.tokelon.toktales.tools.core.script.lua.ILuaObject;
+import com.tokelon.toktales.tools.core.script.lua.LuaScriptEnvironment;
 
 @ThreadSafe
 public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameScriptManager {

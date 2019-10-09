@@ -39,13 +39,13 @@ import com.tokelon.toktales.extens.def.core.tale.config.CiniAnimConfig;
 import com.tokelon.toktales.extens.def.core.tale.config.CiniTaleConfig;
 import com.tokelon.toktales.extens.def.core.tale.config.ITaleConfig;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
-import com.tokelon.toktales.tools.config.CiniConfigStreamReader;
-import com.tokelon.toktales.tools.config.ConfigDataException;
-import com.tokelon.toktales.tools.config.ConfigFormatException;
-import com.tokelon.toktales.tools.config.MutableCiniConfig;
-import com.tokelon.toktales.tools.script.IScriptModule;
-import com.tokelon.toktales.tools.script.ScriptErrorException;
-import com.tokelon.toktales.tools.tiledmap.MapFormatException;
+import com.tokelon.toktales.tools.core.config.CiniConfigStreamReader;
+import com.tokelon.toktales.tools.core.config.ConfigDataException;
+import com.tokelon.toktales.tools.core.config.ConfigFormatException;
+import com.tokelon.toktales.tools.core.config.MutableCiniConfig;
+import com.tokelon.toktales.tools.core.script.IScriptModule;
+import com.tokelon.toktales.tools.core.script.ScriptErrorException;
+import com.tokelon.toktales.tools.core.tiled.MapFormatException;
 
 public class LoadTaleProcedure implements ILoadTaleProcedure {
 	// TODO: Refactor internal structure and error handling
