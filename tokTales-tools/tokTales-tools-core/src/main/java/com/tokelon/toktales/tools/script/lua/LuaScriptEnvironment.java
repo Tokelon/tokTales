@@ -4,8 +4,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaThread;
@@ -13,17 +11,15 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
 
-import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
 import com.tokelon.toktales.tools.script.IExtendableResourceFinder;
 import com.tokelon.toktales.tools.script.IScript;
 import com.tokelon.toktales.tools.script.IScriptEnvironment;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
 
-@ThreadSafe
 public class LuaScriptEnvironment implements IScriptEnvironment {
 	// TODO: Expose debug functionality to outside or disable it
 
@@ -31,11 +27,10 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 	private final LuaScriptState mScriptState;
 
 
-	private ILogger logger;
+	private Logger logger;
 	
-	@Inject
-	public LuaScriptEnvironment(ILogging logging) {
-		this.logger = logging.getLogger(getClass());
+	public LuaScriptEnvironment(ILoggerFactory loggerFactory) {
+		this.logger = loggerFactory.getLogger(getClass().getName());
 		
 		mScriptState = new LuaScriptState();
 		

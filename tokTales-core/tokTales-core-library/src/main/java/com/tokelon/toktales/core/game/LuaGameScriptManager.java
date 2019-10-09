@@ -7,9 +7,9 @@ import javax.inject.Inject;
 
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
 
-import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
 import com.tokelon.toktales.tools.script.lua.ILuaClass;
 import com.tokelon.toktales.tools.script.lua.ILuaObject;
@@ -31,13 +31,13 @@ public class LuaGameScriptManager extends LuaScriptEnvironment implements IGameS
 	private final Map<ILuaClass<?>, ILuaObject> luaMappings;
 	private final LuaValue loadModuleFunction;
 	
-	private final ILogger logger;
+	private final Logger logger;
 	
 	@Inject
-	public LuaGameScriptManager(ILogging logging) {
-		super(logging);
+	public LuaGameScriptManager(ILoggerFactory loggerFactory) {
+		super(loggerFactory);
 		
-		this.logger = logging.getLogger(getClass());
+		this.logger = loggerFactory.getLogger(getClass().getName());
 		
 		luaMappings = new HashMap<ILuaClass<?>, ILuaObject>();
 		loadModuleFunction = initLoadModuleFunction();

@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tokelon.toktales.core.prog.annotation.NotThreadSafe;
 import com.tokelon.toktales.tools.config.ICiniConfig.IMutableCiniConfig;
 
-@NotThreadSafe
 public class MutableCiniConfig implements IMutableCiniConfig {
 	
 	
