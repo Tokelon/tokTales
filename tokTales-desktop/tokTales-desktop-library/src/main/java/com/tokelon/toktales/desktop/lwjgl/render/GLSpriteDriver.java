@@ -31,11 +31,11 @@ import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.TextureRegion;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
-import com.tokelon.toktales.core.util.IParams;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.desktop.lwjgl.ShaderProgram;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.params.IParams;
 
 public class GLSpriteDriver implements IRenderDriver {
 

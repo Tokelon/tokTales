@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.IRenderDriverFactory;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
-import com.tokelon.toktales.core.util.IParams;
+import com.tokelon.toktales.tools.core.objects.params.IParams;
 
 public interface IRenderAccess {
 

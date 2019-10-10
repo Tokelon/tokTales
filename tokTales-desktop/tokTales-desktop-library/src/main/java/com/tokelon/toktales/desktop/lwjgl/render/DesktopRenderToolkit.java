@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.render.IRenderToolkit;
-import com.tokelon.toktales.core.util.IParams;
+import com.tokelon.toktales.tools.core.objects.params.IParams;
 
 public class DesktopRenderToolkit implements IRenderToolkit {
 

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.util;
+package com.tokelon.toktales.tools.core.objects.params;
 
 import java.util.HashMap;
 import java.util.Map;

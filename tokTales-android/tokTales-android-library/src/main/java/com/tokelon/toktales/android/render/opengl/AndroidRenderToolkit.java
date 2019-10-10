@@ -2,7 +2,7 @@ package com.tokelon.toktales.android.render.opengl;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.render.IRenderToolkit;
-import com.tokelon.toktales.core.util.IParams;
+import com.tokelon.toktales.tools.core.objects.params.IParams;
 
 import android.opengl.GLES20;
 
