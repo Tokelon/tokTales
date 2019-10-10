@@ -11,6 +11,10 @@ include ':tokTales-tools-core'
 project(':tokTales-tools-core').projectDir = new File('../tokTales-tools/tokTales-tools-core')
 include ':tokTales-tools-desktop'
 project(':tokTales-tools-desktop').projectDir = new File('../tokTales-tools/tokTales-tools-desktop')
+include ':tokTales-tools-script'
+project(':tokTales-tools-script').projectDir = new File('../tokTales-tools/tokTales-tools-script')
+include ':tokTales-tools-tiled'
+project(':tokTales-tools-tiled').projectDir = new File('../tokTales-tools/tokTales-tools-tiled')
 
 
 includeFlat 'tokTales-core'

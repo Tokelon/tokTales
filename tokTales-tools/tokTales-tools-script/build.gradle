@@ -1,0 +1,42 @@
+// tokTales-tools-script build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+	// SLF4J
+	implementation 'org.slf4j:slf4j-api:1.7.28'
+	
+	// LuaJ
+	implementation 'org.luaj:luaj-jse:3.0.1' // change to api?
+}
+
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+		}
+	}
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+// Export project and dependencies for Android
+eclipse.classpath.file.withXml { xml ->
+    def node = xml.asNode()
+
+    def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+    if(con) {
+        con.@exported = 'true'
+    }
+}

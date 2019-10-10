@@ -18,6 +18,10 @@ include ':tokTales-tools-desktop'
 project(':tokTales-tools-desktop').projectDir = new File('../tokTales-tools/tokTales-tools-desktop')
 include ':tokTales-tools-android'
 project(':tokTales-tools-android').projectDir = new File('../tokTales-tools/tokTales-tools-android')
+include ':tokTales-tools-script'
+project(':tokTales-tools-script').projectDir = new File('../tokTales-tools/tokTales-tools-script')
+include ':tokTales-tools-tiled'
+project(':tokTales-tools-tiled').projectDir = new File('../tokTales-tools/tokTales-tools-tiled')
 
 include ':tokTales-core-library'
 project(':tokTales-core-library').projectDir = new File('../tokTales-core/tokTales-core-library')

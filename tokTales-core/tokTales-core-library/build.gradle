@@ -56,6 +56,8 @@ dependencies {
 	
 	// Tools
 	api project(':tokTales-tools-core')
+	api project(':tokTales-tools-script')
+	api project(':tokTales-tools-tiled')
 	
 	
 	// Guice

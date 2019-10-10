@@ -2,4 +2,4 @@
 
 rootProject.name = 'tokTales-tools'
 
-include ':tokTales-tools-android', ':tokTales-tools-core', ':tokTales-tools-desktop'
+include ':tokTales-tools-android', ':tokTales-tools-core', ':tokTales-tools-desktop', ':tokTales-tools-script', ':tokTales-tools-tiled'

@@ -9,3 +9,7 @@ includeFlat 'tokTales-tools'
 
 include ':tokTales-tools-core'
 project(':tokTales-tools-core').projectDir = new File('../tokTales-tools/tokTales-tools-core')
+include ':tokTales-tools-script'
+project(':tokTales-tools-script').projectDir = new File('../tokTales-tools/tokTales-tools-script')
+include ':tokTales-tools-tiled'
+project(':tokTales-tools-tiled').projectDir = new File('../tokTales-tools/tokTales-tools-tiled')

@@ -19,6 +19,10 @@ if (tokTalesTools.exists()) {
     project(':tokTales-tools-desktop').projectDir = new File(tokTalesTools, 'tokTales-tools-desktop')
     include ':tokTales-tools-android'
     project(':tokTales-tools-android').projectDir = new File(tokTalesTools, 'tokTales-tools-android')
+    include ':tokTales-tools-script'
+    project(':tokTales-tools-script').projectDir = new File(tokTalesTools, 'tokTales-tools-script')
+    include ':tokTales-tools-tiled'
+    project(':tokTales-tools-tiled').projectDir = new File(tokTalesTools, 'tokTales-tools-tiled')
 }
 
 def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
