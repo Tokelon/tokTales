@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content.manage;
 
 import java.lang.reflect.Type;
 
-import com.tokelon.toktales.core.util.manage.ISealedObjectOrganizer.IObjectOrganizer;
+import com.tokelon.toktales.tools.core.objects.managers.ISealedObjectOrganizer.IObjectOrganizer;
 
 public interface IAssetReaderManager extends IObjectOrganizer<Type, IManagedAssetReader> {
 	// TODO: Maybe use String instead of Type as it might convey that a reader only supports one single type

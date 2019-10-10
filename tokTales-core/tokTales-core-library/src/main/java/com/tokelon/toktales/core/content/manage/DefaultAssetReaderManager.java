@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
-import com.tokelon.toktales.core.util.manage.ObjectOrganizer;
+import com.tokelon.toktales.tools.core.objects.managers.ObjectOrganizer;
 
 public class DefaultAssetReaderManager extends ObjectOrganizer<Type, IManagedAssetReader> implements IAssetReaderManager {
 

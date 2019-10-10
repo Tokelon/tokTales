@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.util.manage;
+package com.tokelon.toktales.tools.core.objects.managers;
 
 /** Holds a number of objects without enabling modification.
  *

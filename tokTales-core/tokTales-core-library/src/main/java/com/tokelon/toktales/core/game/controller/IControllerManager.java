@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.controller;
 
-import com.tokelon.toktales.core.util.manage.IListenerHolder;
+import com.tokelon.toktales.tools.core.objects.managers.IListenerHolder;
 
 public interface IControllerManager extends IListenerHolder<IControllerChangeListener> {
 	// Add modifiable controller manager?
