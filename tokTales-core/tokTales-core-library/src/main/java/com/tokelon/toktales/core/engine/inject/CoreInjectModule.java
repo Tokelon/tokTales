@@ -96,10 +96,10 @@ import com.tokelon.toktales.core.render.DefaultTextureManager;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureManager;
-import com.tokelon.toktales.core.util.DefaultObjectPool;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.tools.core.inject.ParameterInjectorFactory;
 import com.tokelon.toktales.tools.core.inject.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.objects.pools.DefaultObjectPool;
+import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
 public class CoreInjectModule extends AbstractInjectModule {
 

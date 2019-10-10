@@ -2,7 +2,7 @@ package com.tokelon.toktales.android.input.events;
 
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent.ScreenButtonInputEvent;
-import com.tokelon.toktales.core.util.IObjectPool;
+import com.tokelon.toktales.tools.core.objects.pools.IObjectPool;
 
 public class AndroidScreenButtonInputProducer {
 

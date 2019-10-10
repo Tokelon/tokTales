@@ -1,9 +1,9 @@
-package com.tokelon.toktales.core.util;
+package com.tokelon.toktales.tools.core.objects.pools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java9.util.function.Supplier;
+import com.tokelon.toktales.tools.core.function.Supplier;
 
 public class DefaultObjectPool<T> implements IObjectPool<T> {
 

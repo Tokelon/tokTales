@@ -2,8 +2,8 @@ package com.tokelon.toktales.core.storage.utils;
 
 import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.IStructuredLocation;
-import com.tokelon.toktales.core.util.SynchronizedPool;
-import com.tokelon.toktales.core.util.SynchronizedPool.PoolObjectFactory;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool.PoolObjectFactory;
 
 public class ApplicationLocationWrapper implements IApplicationLocation {
 

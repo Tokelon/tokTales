@@ -8,13 +8,13 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
+import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
 public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	// TODO: Additional window properties, like visible resisable etc.

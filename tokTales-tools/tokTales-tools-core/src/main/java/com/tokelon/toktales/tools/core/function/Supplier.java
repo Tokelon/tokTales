@@ -1,15 +1,11 @@
-package com.tokelon.toktales.core.util.function;
+package com.tokelon.toktales.tools.core.function;
 
-import com.tokelon.toktales.core.prog.annotation.CustomFunctionalInterface;
-
-/**
- * Represents a supplier of results.
+/** Represents a supplier of results.
  * <p>
  * There is no requirement that a new or distinct result be returned each time the supplier is invoked. 
  *
  * @param <T> The type of results.
  */
-@CustomFunctionalInterface
 public interface Supplier<T> {
 
 	

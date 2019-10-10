@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.game.logic.motion.StraightAnimatedMotion;
 import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.world.ICompassDirection;
-import com.tokelon.toktales.core.util.SynchronizedPool;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
 
 public class EntityController {
 

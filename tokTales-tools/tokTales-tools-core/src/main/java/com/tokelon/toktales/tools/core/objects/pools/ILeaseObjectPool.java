@@ -1,6 +1,6 @@
-package com.tokelon.toktales.core.util;
+package com.tokelon.toktales.tools.core.objects.pools;
 
-import java9.util.function.Supplier;
+import com.tokelon.toktales.tools.core.function.Supplier;
 
 public interface ILeaseObjectPool<T> extends IObjectPool<IObjectLease<T>> {
 	

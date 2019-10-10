@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.resources;
 
-import com.tokelon.toktales.core.util.SynchronizedPool;
-import com.tokelon.toktales.core.util.SynchronizedPool.PoolObjectFactory;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool.PoolObjectFactory;
 
 public class ResourceLookup implements IResourceLookup {
 	

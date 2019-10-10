@@ -9,8 +9,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.util.SynchronizedPool;
-import com.tokelon.toktales.core.util.SynchronizedPool.PoolObjectFactory;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool.PoolObjectFactory;
 
 public class ActionScheduler implements IActionScheduler {
 	// TODO: Important - Make a method for increasing (and resetting) the action counter

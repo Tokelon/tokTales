@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import com.tokelon.toktales.core.prog.annotation.NotThreadSafe;
-import com.tokelon.toktales.core.util.SynchronizedPool;
-import com.tokelon.toktales.core.util.SynchronizedPool.PoolObjectFactory;
 import com.tokelon.toktales.tools.core.config.AbstractConfig;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ICiniConfig;
 import com.tokelon.toktales.tools.core.config.ICiniConfig.IMutableCiniConfig;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
+import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool.PoolObjectFactory;
 
 
 @NotThreadSafe

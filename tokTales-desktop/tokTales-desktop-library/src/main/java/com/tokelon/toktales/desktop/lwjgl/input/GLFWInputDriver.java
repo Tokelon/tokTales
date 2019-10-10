@@ -2,7 +2,6 @@ package com.tokelon.toktales.desktop.lwjgl.input;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.tokelon.toktales.core.util.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
@@ -12,6 +11,7 @@ import com.tokelon.toktales.desktop.input.events.ICursorPosInputEvent.CursorPosI
 import com.tokelon.toktales.desktop.input.events.IKeyInputEvent.KeyInputEvent;
 import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent.MouseButtonInputEvent;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow;
+import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
 public class GLFWInputDriver implements IDesktopInputDriver {
 	

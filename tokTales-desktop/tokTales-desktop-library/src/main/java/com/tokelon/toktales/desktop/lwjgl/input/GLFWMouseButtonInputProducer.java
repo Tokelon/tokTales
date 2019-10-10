@@ -2,9 +2,9 @@ package com.tokelon.toktales.desktop.lwjgl.input;
 
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-import com.tokelon.toktales.core.util.IObjectPool;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent.MouseButtonInputEvent;
+import com.tokelon.toktales.tools.core.objects.pools.IObjectPool;
 
 /**
  * Note: Keep a reference to instances of this class.
