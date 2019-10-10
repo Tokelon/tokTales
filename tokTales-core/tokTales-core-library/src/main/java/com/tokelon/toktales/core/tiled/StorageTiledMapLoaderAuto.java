@@ -22,13 +22,13 @@ import com.tokelon.toktales.core.storage.utils.IMutablePath;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ConfigFormatException;
 import com.tokelon.toktales.tools.core.config.ICiniConfig;
-import com.tokelon.toktales.tools.core.tiled.MapFormatException;
-import com.tokelon.toktales.tools.core.tiled.TiledMapFormatException;
-import com.tokelon.toktales.tools.core.tiled.TiledMapReader;
-import com.tokelon.toktales.tools.core.tiled.TiledMapTilesetReader;
-import com.tokelon.toktales.tools.core.tiled.model.ITiledMap;
-import com.tokelon.toktales.tools.core.tiled.model.ITiledMapTileset;
-import com.tokelon.toktales.tools.core.tiled.model.TiledMapTilesetImpl;
+import com.tokelon.toktales.tools.tiled.MapFormatException;
+import com.tokelon.toktales.tools.tiled.TiledMapFormatException;
+import com.tokelon.toktales.tools.tiled.TiledMapReader;
+import com.tokelon.toktales.tools.tiled.TiledMapTilesetReader;
+import com.tokelon.toktales.tools.tiled.model.ITiledMap;
+import com.tokelon.toktales.tools.tiled.model.ITiledMapTileset;
+import com.tokelon.toktales.tools.tiled.model.TiledMapTilesetImpl;
 
 public class StorageTiledMapLoaderAuto implements IMapLoader {
 

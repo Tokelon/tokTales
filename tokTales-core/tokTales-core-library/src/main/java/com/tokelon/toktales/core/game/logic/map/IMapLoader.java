@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.game.logic.map;
 import java.io.IOException;
 
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.tools.core.tiled.MapFormatException;
+import com.tokelon.toktales.tools.tiled.MapFormatException;
 
 /** Note that for validation it is required to provide a separate InputStream / map file along with the InputStream / map file that will be read.  
  * 

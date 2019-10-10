@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.prog.annotation.Unfinished;
 import com.tokelon.toktales.tools.core.config.ICiniConfig;
-import com.tokelon.toktales.tools.core.tiled.MapFormatException;
+import com.tokelon.toktales.tools.tiled.MapFormatException;
 
 @Unfinished
 public class StorageTiledMapLoaderManual implements IMapLoader {

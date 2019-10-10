@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteset;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
-import com.tokelon.toktales.tools.core.tiled.model.ITMXImage;
-import com.tokelon.toktales.tools.core.tiled.model.ITMXTile;
-import com.tokelon.toktales.tools.core.tiled.model.ITiledMapTileset;
+import com.tokelon.toktales.tools.tiled.model.ITMXImage;
+import com.tokelon.toktales.tools.tiled.model.ITMXTile;
+import com.tokelon.toktales.tools.tiled.model.ITiledMapTileset;
 
 public class TiledTileElementFactory {
 	
