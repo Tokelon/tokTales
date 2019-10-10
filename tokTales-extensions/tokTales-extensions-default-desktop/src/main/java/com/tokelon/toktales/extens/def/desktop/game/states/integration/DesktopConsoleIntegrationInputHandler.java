@@ -1,8 +1,8 @@
 package com.tokelon.toktales.extens.def.desktop.game.states.integration;
 
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.desktop.input.TInput;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.ICharInputCallback;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputRegistration.IKeyInputCallback;
@@ -14,9 +14,9 @@ import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleInte
 public class DesktopConsoleIntegrationInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
 
 	
-	private final Supplier<IConsoleIntegration> consoleIntegrationSupplier;
+	private final ISupplier<IConsoleIntegration> consoleIntegrationSupplier;
 
-	public DesktopConsoleIntegrationInputHandler(Supplier<IConsoleIntegration> consoleIntegrationSupplier) {
+	public DesktopConsoleIntegrationInputHandler(ISupplier<IConsoleIntegration> consoleIntegrationSupplier) {
 		this.consoleIntegrationSupplier = consoleIntegrationSupplier;
 	}
 

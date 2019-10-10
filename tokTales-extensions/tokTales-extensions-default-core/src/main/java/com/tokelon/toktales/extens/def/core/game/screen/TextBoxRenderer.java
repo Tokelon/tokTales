@@ -5,6 +5,7 @@ import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -13,7 +14,6 @@ import com.tokelon.toktales.core.game.states.GameStateSuppliers;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.extens.def.core.game.controller.ITextBoxController;
 import com.tokelon.toktales.extens.def.core.game.model.ITextBox;
@@ -31,15 +31,15 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 	private final ILogger logger;
 	private final IRenderService renderService;
 	private final ICodepointAssetManager codepointAssetManager;
-	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
-	private final Supplier<ITextBoxController> textBoxControllerSupplier;
+	private final ISupplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final ISupplier<ITextBoxController> textBoxControllerSupplier;
 	
 	public TextBoxRenderer(
 			ILogging logging,
 			IEngine engine,
 			ICodepointAssetManager codepointAssetManager,
-			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-			Supplier<ITextBoxController> textBoxControllerSupplier
+			ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+			ISupplier<ITextBoxController> textBoxControllerSupplier
 	) {
 		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
@@ -104,8 +104,8 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 		
 		public TextBoxRenderer create(
 				IEngineContext engineContext,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<ITextBoxController> textBoxControllerSupplier
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<ITextBoxController> textBoxControllerSupplier
 		) {
 			return new TextBoxRenderer(
 					engineContext.getLogging(),
@@ -126,7 +126,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 			);
 		}
 		
-		public TextBoxRenderer createForGamestate(IGameState gamestate, Supplier<ITextBoxController> textBoxControllerSupplier) {
+		public TextBoxRenderer createForGamestate(IGameState gamestate, ISupplier<ITextBoxController> textBoxControllerSupplier) {
 			return new TextBoxRenderer(
 					gamestate.getLogging(),
 					gamestate.getEngine(),

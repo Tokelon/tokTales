@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -43,7 +44,6 @@ import com.tokelon.toktales.core.render.model.LineModel;
 import com.tokelon.toktales.core.render.model.RectangleModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.render.model.TriangleModel;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
@@ -91,15 +91,15 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	private final ILogger logger;
 	private final IRenderService renderService;
 	private final ISpriteAssetManager spriteAssetManager;
-	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
-	private final Supplier<IMapController> mapControllerSupplier;
+	private final ISupplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final ISupplier<IMapController> mapControllerSupplier;
 	
 	public ObjectRenderer(
 			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
-			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-			Supplier<IMapController> mapControllerSupplier
+			ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+			ISupplier<IMapController> mapControllerSupplier
 	) {
 		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
@@ -404,8 +404,8 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		@Override
 		public ObjectRenderer create(
 				IEngineContext engineContext,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IMapController> mapControllerSupplier		
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IMapController> mapControllerSupplier		
 		) {
 			return new ObjectRenderer(
 					engineContext.getLogging(),

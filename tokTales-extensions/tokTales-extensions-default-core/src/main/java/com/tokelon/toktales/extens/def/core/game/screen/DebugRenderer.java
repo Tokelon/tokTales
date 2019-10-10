@@ -12,6 +12,7 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyRegistry;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
@@ -37,7 +38,6 @@ import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.LineShape;
 import com.tokelon.toktales.core.util.FrameTool;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
@@ -96,17 +96,17 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private final IGame game;
 	private final IContentManager contentManager;
 	private final IBasicRegistry assetKeyRegistry;
-	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
-	private final Supplier<IPlayerController> playerControllerSupplier;
-	private final Supplier<IWorldspace> worlspaceSupplier;
+	private final ISupplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final ISupplier<IPlayerController> playerControllerSupplier;
+	private final ISupplier<IWorldspace> worlspaceSupplier;
 	
 	public DebugRenderer(
 			IEngineContext engineContext,
 			IContentManager contentManager,
 			IBasicRegistry assetKeyRegistry,
-			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-			Supplier<IPlayerController> playerControllerSupplier,
-			Supplier<IWorldspace> worlspaceSupplier
+			ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+			ISupplier<IPlayerController> playerControllerSupplier,
+			ISupplier<IWorldspace> worlspaceSupplier
 	) {
 		
 		this.logging = engineContext.getLogging();
@@ -424,16 +424,16 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 				IEngineContext engineContext,
 				IContentManager contentManager,
 				IBasicRegistry assetKeyRegistry,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IPlayerController> playerControllerSupplier,
-				Supplier<IWorldspace> worlspaceSupplier
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IPlayerController> playerControllerSupplier,
+				ISupplier<IWorldspace> worlspaceSupplier
 		) {
 			return new DebugRenderer(engineContext, contentManager, assetKeyRegistry, textureCoordinatorSupplier, playerControllerSupplier, worlspaceSupplier);
 		}
 
 
 		@Override
-		public DebugRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worlspaceSupplier) {
+		public DebugRenderer createForGamestate(IGameState gamestate, ISupplier<IWorldspace> worlspaceSupplier) {
 			return new DebugRenderer(
 					gamestate.getEngineContext(),
 					gamestate.getGame().getContentManager(),
@@ -481,9 +481,9 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		
 		@Override
 		public IDebugRenderer build(
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IPlayerController> playerControllerSupplier,
-				Supplier<IWorldspace> worlspaceSupplier
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IPlayerController> playerControllerSupplier,
+				ISupplier<IWorldspace> worlspaceSupplier
 		) {
 			return new DebugRenderer(
 					engineContext == null ? engineContextProvider.get() : engineContext,
@@ -496,7 +496,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		}
 
 		@Override
-		public IDebugRenderer build(IGameState gamestate, Supplier<IWorldspace> worlspaceSupplier) {
+		public IDebugRenderer build(IGameState gamestate, ISupplier<IWorldspace> worlspaceSupplier) {
 			return new DebugRenderer(
 					engineContext == null ? engineContextProvider.get() : engineContext,
 					contentManager == null ? contentManagerProvider.get() : contentManager,

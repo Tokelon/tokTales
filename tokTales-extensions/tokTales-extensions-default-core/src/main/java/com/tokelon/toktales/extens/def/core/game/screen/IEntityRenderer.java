@@ -1,13 +1,13 @@
 package com.tokelon.toktales.extens.def.core.game.screen;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.states.IExtendedGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
-import com.tokelon.toktales.core.util.function.Supplier;
 
 public interface IEntityRenderer extends ISegmentRenderer {
 
@@ -20,11 +20,11 @@ public interface IEntityRenderer extends ISegmentRenderer {
 
 		public IEntityRenderer create(
 				IEngineContext engineContext,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IWorldspace> worldspaceSupplier
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IWorldspace> worldspaceSupplier
 		);
 
-		public IEntityRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worldspaceSupplier);
+		public IEntityRenderer createForGamestate(IGameState gamestate, ISupplier<IWorldspace> worldspaceSupplier);
 
 		public IEntityRenderer createForTypedGamestate(ITypedGameState<? extends IExtendedGameScene> typedGamestate);
 	}

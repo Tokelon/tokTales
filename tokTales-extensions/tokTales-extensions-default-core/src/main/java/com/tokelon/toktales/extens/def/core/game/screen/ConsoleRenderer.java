@@ -9,6 +9,7 @@ import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -31,7 +32,6 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
@@ -66,16 +66,16 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	private final IRenderService renderService;
 	private final IWorld world;
 	private final ICodepointAssetManager codepointAssetManager;
-	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
-	private final Supplier<IConsoleController> consoleControllerSupplier;
+	private final ISupplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final ISupplier<IConsoleController> consoleControllerSupplier;
 	
 	public ConsoleRenderer(
 			ILogging logging,
 			IEngine engine,
 			IWorld world,
 			ICodepointAssetManager codepointAssetManager,
-			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-			Supplier<IConsoleController> consoleControllerSupplier
+			ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+			ISupplier<IConsoleController> consoleControllerSupplier
 	) {
 		this.logger = logging.getLogger(getClass());
 		this.codepointAssetManager = codepointAssetManager;
@@ -373,8 +373,8 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		
 		public ConsoleRenderer create(
 				IEngineContext engineContext,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IConsoleController> consoleControllerSupplier
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IConsoleController> consoleControllerSupplier
 		) {
 			return new ConsoleRenderer(
 					engineContext.getLogging(),
@@ -397,7 +397,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 			);
 		}
 		
-		public ConsoleRenderer createForGamestate(IGameState gamestate, Supplier<IConsoleController> consoleControllerSupplier) {
+		public ConsoleRenderer createForGamestate(IGameState gamestate, ISupplier<IConsoleController> consoleControllerSupplier) {
 			return new ConsoleRenderer(
 					gamestate.getLogging(),
 					gamestate.getEngine(),

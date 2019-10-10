@@ -10,6 +10,7 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -32,7 +33,6 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
@@ -70,15 +70,15 @@ public class EntityRenderer implements IEntityRenderer {
 	private final ILogger logger;
 	private final IRenderService renderService;
 	private final ISpriteAssetManager spriteAssetManager;
-	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
-	private final Supplier<IWorldspace> worldspaceSupplier;
+	private final ISupplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final ISupplier<IWorldspace> worldspaceSupplier;
 
 	public EntityRenderer(
 			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
-			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-			Supplier<IWorldspace> worldspaceSupplier
+			ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+			ISupplier<IWorldspace> worldspaceSupplier
 	) {
 		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
@@ -293,8 +293,8 @@ public class EntityRenderer implements IEntityRenderer {
 		@Override
 		public EntityRenderer create(
 				IEngineContext engineContext,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IWorldspace> worldspaceSupplier		
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IWorldspace> worldspaceSupplier		
 		) {
 			return new EntityRenderer(
 					engineContext.getLogging(),
@@ -307,7 +307,7 @@ public class EntityRenderer implements IEntityRenderer {
 		
 		
 		@Override
-		public EntityRenderer createForGamestate(IGameState gamestate, Supplier<IWorldspace> worldspaceSupplier) {
+		public EntityRenderer createForGamestate(IGameState gamestate, ISupplier<IWorldspace> worldspaceSupplier) {
 			return new EntityRenderer(
 					gamestate.getLogging(),
 					gamestate.getEngine(),

@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -29,7 +30,6 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
-import com.tokelon.toktales.core.util.function.Supplier;
 import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
@@ -67,15 +67,15 @@ public class PlayerRenderer implements IPlayerRenderer {
 	private final ILogger logger;
 	private final IRenderService renderService;
 	private final ISpriteAssetManager spriteAssetManager;
-	private final Supplier<ITextureCoordinator> textureCoordinatorSupplier;
-	private final Supplier<IPlayerController> playerControllerSupplier;
+	private final ISupplier<ITextureCoordinator> textureCoordinatorSupplier;
+	private final ISupplier<IPlayerController> playerControllerSupplier;
 	
 	public PlayerRenderer(
 			ILogging logging,
 			IEngine engine,
 			ISpriteAssetManager spriteAssetManager,
-			Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-			Supplier<IPlayerController> playerControllerSupplier
+			ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+			ISupplier<IPlayerController> playerControllerSupplier
 	) {
 		this.logger = logging.getLogger(getClass());
 		this.renderService = engine.getRenderService();
@@ -276,8 +276,8 @@ public class PlayerRenderer implements IPlayerRenderer {
 		@Override
 		public PlayerRenderer create(
 				IEngineContext engineContext,
-				Supplier<ITextureCoordinator> textureCoordinatorSupplier,
-				Supplier<IPlayerController> playerControllerSupplier		
+				ISupplier<ITextureCoordinator> textureCoordinatorSupplier,
+				ISupplier<IPlayerController> playerControllerSupplier		
 		) {
 			return new PlayerRenderer(
 					engineContext.getLogging(),
