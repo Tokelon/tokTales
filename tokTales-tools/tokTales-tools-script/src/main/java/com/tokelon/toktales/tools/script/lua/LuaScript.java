@@ -1,10 +1,10 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 
-import com.tokelon.toktales.tools.core.script.IScript;
-import com.tokelon.toktales.tools.core.script.ScriptErrorException;
+import com.tokelon.toktales.tools.script.IScript;
+import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class LuaScript implements IScript {
 

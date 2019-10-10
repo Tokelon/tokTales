@@ -15,8 +15,6 @@ dependencies {
 	// SLF4J
 	implementation 'org.slf4j:slf4j-api:1.7.28'
 	
-	// LuaJ
-	implementation 'org.luaj:luaj-jse:3.0.1'
 	
 	// XStream
 	implementation 'com.thoughtworks.xstream:xstream:1.4.8'

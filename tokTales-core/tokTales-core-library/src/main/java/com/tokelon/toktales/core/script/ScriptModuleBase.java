@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.script;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
-import com.tokelon.toktales.tools.core.script.IScriptModule;
+import com.tokelon.toktales.tools.script.IScriptModule;
 
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;

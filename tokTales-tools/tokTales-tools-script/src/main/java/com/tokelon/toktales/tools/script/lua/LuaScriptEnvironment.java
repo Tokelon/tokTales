@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -15,11 +15,11 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tokelon.toktales.tools.core.script.IExtendableResourceFinder;
-import com.tokelon.toktales.tools.core.script.IScript;
-import com.tokelon.toktales.tools.core.script.IScriptEnvironment;
-import com.tokelon.toktales.tools.core.script.IScriptModule;
-import com.tokelon.toktales.tools.core.script.ScriptErrorException;
+import com.tokelon.toktales.tools.script.IExtendableResourceFinder;
+import com.tokelon.toktales.tools.script.IScript;
+import com.tokelon.toktales.tools.script.IScriptEnvironment;
+import com.tokelon.toktales.tools.script.IScriptModule;
+import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class LuaScriptEnvironment implements IScriptEnvironment {
 	// TODO: Expose debug functionality to outside or disable it

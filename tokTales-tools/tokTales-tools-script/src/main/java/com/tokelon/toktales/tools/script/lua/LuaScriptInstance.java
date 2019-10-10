@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
@@ -6,9 +6,9 @@ import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.CoerceLuaToJava;
 
-import com.tokelon.toktales.tools.core.script.IScriptEnvironment;
-import com.tokelon.toktales.tools.core.script.IScriptInstance;
-import com.tokelon.toktales.tools.core.script.ScriptErrorException;
+import com.tokelon.toktales.tools.script.IScriptEnvironment;
+import com.tokelon.toktales.tools.script.IScriptInstance;
+import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class LuaScriptInstance implements IScriptInstance {
 

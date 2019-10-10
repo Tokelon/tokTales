@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.script;
+package com.tokelon.toktales.tools.script;
 
 public interface IScriptManager extends IScriptEnvironment {
 	// TODO: Rework this interface

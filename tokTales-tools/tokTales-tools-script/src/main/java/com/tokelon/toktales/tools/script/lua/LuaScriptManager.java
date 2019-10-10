@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
 import java.util.HashMap;
 import java.util.Map;

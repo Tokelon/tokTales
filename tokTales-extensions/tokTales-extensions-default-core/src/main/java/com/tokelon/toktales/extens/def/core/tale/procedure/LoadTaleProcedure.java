@@ -43,9 +43,9 @@ import com.tokelon.toktales.tools.core.config.CiniConfigStreamReader;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ConfigFormatException;
 import com.tokelon.toktales.tools.core.config.MutableCiniConfig;
-import com.tokelon.toktales.tools.core.script.IScriptModule;
-import com.tokelon.toktales.tools.core.script.ScriptErrorException;
 import com.tokelon.toktales.tools.core.tiled.MapFormatException;
+import com.tokelon.toktales.tools.script.IScriptModule;
+import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class LoadTaleProcedure implements ILoadTaleProcedure {
 	// TODO: Refactor internal structure and error handling

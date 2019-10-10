@@ -5,8 +5,8 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
-import com.tokelon.toktales.tools.core.script.IScriptModule;
-import com.tokelon.toktales.tools.core.script.ScriptErrorException;
+import com.tokelon.toktales.tools.script.IScriptModule;
+import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 public class InitScriptingSetupScript implements ISetupScript {
 

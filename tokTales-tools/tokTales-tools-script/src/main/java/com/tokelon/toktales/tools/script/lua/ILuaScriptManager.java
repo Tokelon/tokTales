@@ -1,6 +1,6 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
-import com.tokelon.toktales.tools.core.script.IScriptManager;
+import com.tokelon.toktales.tools.script.IScriptManager;
 
 public interface ILuaScriptManager extends IScriptManager {
 	// TODO: What is all this needed for?

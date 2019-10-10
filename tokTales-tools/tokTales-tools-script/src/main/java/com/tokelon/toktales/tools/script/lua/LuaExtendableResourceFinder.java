@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.luaj.vm2.lib.ResourceFinder;
 
-import com.tokelon.toktales.tools.core.script.IExtendableResourceFinder;
-import com.tokelon.toktales.tools.core.script.IResourceFinder;
+import com.tokelon.toktales.tools.script.IExtendableResourceFinder;
+import com.tokelon.toktales.tools.script.IResourceFinder;
 
 public class LuaExtendableResourceFinder implements IExtendableResourceFinder, ResourceFinder {
 

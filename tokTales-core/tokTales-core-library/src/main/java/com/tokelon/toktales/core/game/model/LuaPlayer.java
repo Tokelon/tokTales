@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.model;
 
-import com.tokelon.toktales.tools.core.script.lua.ILuaObject;
+import com.tokelon.toktales.tools.script.lua.ILuaObject;
 
 class LuaPlayer implements ILuaObject {
 

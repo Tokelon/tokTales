@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.script.lua;
+package com.tokelon.toktales.tools.script.lua;
 
 public interface ILuaClass<T extends ILuaObject> {
 

@@ -1,8 +1,8 @@
 package com.tokelon.toktales.core.script;
 
 import com.tokelon.toktales.core.game.logic.observers.IObserver;
-import com.tokelon.toktales.tools.core.script.IScriptInstance;
-import com.tokelon.toktales.tools.core.script.ScriptErrorException;
+import com.tokelon.toktales.tools.script.IScriptInstance;
+import com.tokelon.toktales.tools.script.ScriptErrorException;
 
 /**
  * Note that {@link IObserver#getObservationInterest(Object, String)} will not call the instance but simply return 'this'.
