@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 public interface IScriptEnvironment {
 
-	
+
 	public IExtendableResourceFinder getResourceFinder();
 	
 	
@@ -24,6 +24,5 @@ public interface IScriptEnvironment {
 	
 	
 	public IScriptModule moduleFromScript(IScript script) throws ScriptErrorException;	// ScriptModuleException
-	
 	
 }

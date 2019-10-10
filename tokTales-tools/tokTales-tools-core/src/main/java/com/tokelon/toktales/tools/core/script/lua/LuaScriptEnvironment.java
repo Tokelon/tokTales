@@ -13,6 +13,7 @@ import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tokelon.toktales.tools.core.script.IExtendableResourceFinder;
 import com.tokelon.toktales.tools.core.script.IScript;
@@ -23,16 +24,19 @@ import com.tokelon.toktales.tools.core.script.ScriptErrorException;
 public class LuaScriptEnvironment implements IScriptEnvironment {
 	// TODO: Expose debug functionality to outside or disable it
 
+
+	private final LuaScriptState scriptState;
+
+	private final Logger logger;
 	
-	private final LuaScriptState mScriptState;
-
-
-	private Logger logger;
+	public LuaScriptEnvironment() {
+		this(LoggerFactory.getILoggerFactory());
+	}
 	
 	public LuaScriptEnvironment(ILoggerFactory loggerFactory) {
 		this.logger = loggerFactory.getLogger(getClass().getName());
 		
-		mScriptState = new LuaScriptState();
+		scriptState = new LuaScriptState();
 		
 		
 		/* Debug stuff */
@@ -40,26 +44,26 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 		//mScriptState.getGlobals().get("debug").get("getlocal").call(LuaValue.valueOf(1), LuaValue.valueOf(1));
 		
 		//mScriptState.getGlobals().get("debug").set("debug", new DebugDebug());
-		mScriptState.getGlobals().get("debug").set("debugEnable", new DebugDebugEnable());
-		mScriptState.getGlobals().get("debug").set("debugDisable", new DebugDebugDisable());
+		scriptState.getGlobals().get("debug").set("debugEnable", new DebugDebugEnable());
+		scriptState.getGlobals().get("debug").set("debugDisable", new DebugDebugDisable());
 	}
 
 	
 	protected synchronized LuaScriptState getScriptState() {
-		return mScriptState;
+		return scriptState;
 	}
 	
 	
 	@Override
 	public IExtendableResourceFinder getResourceFinder() {
-		return mScriptState.getResourceFinder();
+		return scriptState.getResourceFinder();
 	}
 	
 	
 	@Override
 	public synchronized LuaScript loadScript(InputStream source, String sourcename) throws ScriptErrorException {
 		try {
-			LuaValue luaValue = mScriptState.load(source, sourcename);
+			LuaValue luaValue = scriptState.load(source, sourcename);
 
 			LuaScript luaScript = new LuaScript(luaValue);
 
@@ -75,7 +79,7 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 	@Override
 	public synchronized LuaScript loadScript(String scriptCode) throws ScriptErrorException {
 		try {
-			LuaValue luaValue = mScriptState.load(scriptCode);
+			LuaValue luaValue = scriptState.load(scriptCode);
 			
 			LuaScript luaScript = new LuaScript(luaValue);
 			
@@ -174,14 +178,14 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 
 		@Override public LuaValue call() {
 			if(hookSet) {
-				mScriptState.getGlobals().get("debug").get("sethook").call();	
+				scriptState.getGlobals().get("debug").get("sethook").call();	
 			}
 			else {
-				mScriptState.getGlobals().get("debug").get("sethook").call(hookFunc, LuaValue.valueOf("l"));
+				scriptState.getGlobals().get("debug").get("sethook").call(hookFunc, LuaValue.valueOf("l"));
 			}
 			hookSet = !hookSet;
 			
-			LuaThread runningThread = mScriptState.getGlobals().running;
+			LuaThread runningThread = scriptState.getGlobals().running;
 			Object callstack = runningThread.callstack;
 			return NONE;
 		}
@@ -194,7 +198,7 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 
 		@Override
 		public LuaValue call() {
-			mScriptState.getGlobals().get("debug").get("sethook").call(hookFunc, LuaValue.valueOf("l"));
+			scriptState.getGlobals().get("debug").get("sethook").call(hookFunc, LuaValue.valueOf("l"));
 			return null;
 		}
 	}
@@ -202,7 +206,7 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 	private final class DebugDebugDisable extends ZeroArgFunction {
 		@Override
 		public LuaValue call() {
-			mScriptState.getGlobals().get("debug").get("sethook").call();
+			scriptState.getGlobals().get("debug").get("sethook").call();
 			return null;
 		}
 	}
@@ -220,7 +224,7 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 				String lineNum = arg2.tojstring();
 				logger.debug("Line: {}", lineNum);
 				
-				LuaThread runningThread = mScriptState.getGlobals().running;
+				LuaThread runningThread = scriptState.getGlobals().running;
 				Object callstack = runningThread.callstack;
 				
 				
@@ -228,7 +232,7 @@ public class LuaScriptEnvironment implements IScriptEnvironment {
 				Varargs returnValues;
 				int stackCounter = 1;
 				do {
-					returnValues = mScriptState.getGlobals().get("debug").get("getlocal").invoke(LuaValue.valueOf(1), LuaValue.valueOf(stackCounter));
+					returnValues = scriptState.getGlobals().get("debug").get("getlocal").invoke(LuaValue.valueOf(1), LuaValue.valueOf(stackCounter));
 					
 					if(!returnValues.isnil(1)) {
 						if(returnValues.arg1().isfunction()) {
