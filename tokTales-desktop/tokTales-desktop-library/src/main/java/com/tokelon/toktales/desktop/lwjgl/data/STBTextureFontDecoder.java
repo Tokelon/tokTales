@@ -17,8 +17,8 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.util.options.IOptions;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 

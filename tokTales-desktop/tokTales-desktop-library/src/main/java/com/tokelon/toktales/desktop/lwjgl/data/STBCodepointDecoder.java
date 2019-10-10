@@ -19,7 +19,7 @@ import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
-import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class STBCodepointDecoder implements ICodepointAssetDecoder {
 

@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class BitmapAssetManager extends DefaultAssetManager<IBitmapAsset, IBitmapAssetKey, IOptions> implements IBitmapAssetManager {
 

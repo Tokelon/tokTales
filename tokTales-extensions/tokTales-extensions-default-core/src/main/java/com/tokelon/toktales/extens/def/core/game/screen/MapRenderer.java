@@ -42,9 +42,9 @@ import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.tiled.ITiledTileElement;
 import com.tokelon.toktales.core.tiled.TiledMapElementTypes;
-import com.tokelon.toktales.core.util.options.INamedOptions;
-import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class MapRenderer implements IMapRenderer {
 

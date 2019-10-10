@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.util.options;
+package com.tokelon.toktales.tools.core.objects.options;
 
 public interface INamedOptions extends IKeyedOptions<String> {
 	

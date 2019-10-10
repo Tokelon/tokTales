@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.render.shapes.ILineShape;
 import com.tokelon.toktales.core.render.shapes.IPointShape;
 import com.tokelon.toktales.core.render.shapes.IRectangleShape;
 import com.tokelon.toktales.core.render.shapes.ITriangleShape;
-import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
+import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class ShapeRenderer extends AbstractRenderer implements IShapeRenderer {
 

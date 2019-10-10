@@ -5,7 +5,7 @@ import java.nio.file.Path;
 
 import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public interface IRelativePathAssetReader extends IManagedAssetReader {
 

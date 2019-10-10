@@ -10,7 +10,7 @@ import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.render.Texture;
-import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class SpriteAssetDecoder implements ISpriteAssetDecoder {
 

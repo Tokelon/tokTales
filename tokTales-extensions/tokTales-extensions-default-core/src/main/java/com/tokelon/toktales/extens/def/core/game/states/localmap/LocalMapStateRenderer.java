@@ -23,7 +23,6 @@ import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IDebugRenderer.IDebugRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IEntityRenderer;
@@ -34,6 +33,7 @@ import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IObjectRenderer.IObjectRendererFactory;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.IPlayerRenderer.IPlayerRendererFactory;
+import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 import com.tokelon.toktales.extens.def.core.game.screen.PlayerRenderer;
 
 public class LocalMapStateRenderer implements ILocalMapStateRenderer {

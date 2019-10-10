@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class SpriteAssetLoader extends DefaultAssetLoader<ISpriteAsset, ISpriteAssetKey, IOptions> implements ISpriteAssetLoader {
 

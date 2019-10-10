@@ -41,8 +41,8 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.GameScoped;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalExecutorServiceImplementation;
-import com.tokelon.toktales.core.util.options.INamedOptions;
-import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class AssetManagersInjectModule extends AbstractInjectModule {
 	// Rename to AssetManagementInjectModule ?

@@ -15,11 +15,11 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ShapeRenderer;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.RectangleShape;
-import com.tokelon.toktales.core.util.options.INamedOptions;
 import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
 import com.tokelon.toktales.extens.def.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class DialogRenderer extends AbstractRenderer implements IDialogRenderer {
 

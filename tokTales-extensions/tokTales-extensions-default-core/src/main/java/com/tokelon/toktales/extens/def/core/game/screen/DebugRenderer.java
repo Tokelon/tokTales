@@ -38,7 +38,7 @@ import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
 import com.tokelon.toktales.core.render.shapes.LineShape;
 import com.tokelon.toktales.core.util.FrameTool;
-import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {

@@ -9,10 +9,10 @@ import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
 import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 import com.tokelon.toktales.core.resources.IResourceLookup;
 import com.tokelon.toktales.core.resources.ResourceLookup;
 import com.tokelon.toktales.core.resources.ResourceTypeFilter;
-import com.tokelon.toktales.core.util.options.IOptions;
 
 public class ResourceScannerAssetReader implements IResourceScannerAssetReader {
 	

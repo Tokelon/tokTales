@@ -29,7 +29,7 @@ import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.ISpriteFontModel;
 import com.tokelon.toktales.core.util.IParams;
-import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 import android.opengl.GLES20;
 

@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.util.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
 
 public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions> implements ICodepointAssetManager {

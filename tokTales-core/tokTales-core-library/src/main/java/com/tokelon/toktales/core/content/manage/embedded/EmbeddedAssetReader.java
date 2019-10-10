@@ -11,7 +11,7 @@ import com.google.common.io.BaseEncoding.DecodingException;
 import com.google.common.io.ByteStreams;
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.util.options.IOptions;
+import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class EmbeddedAssetReader implements IEmbeddedAssetReader {
 	// Use IOptions to pass sanitize flag and/or separator parameters?

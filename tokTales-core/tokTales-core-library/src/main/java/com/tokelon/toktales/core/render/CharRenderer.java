@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.ITextureFontModel;
 import com.tokelon.toktales.core.render.model.TextureFontModel;
-import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
+import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 

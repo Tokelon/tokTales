@@ -23,7 +23,7 @@ import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
-import com.tokelon.toktales.core.util.options.NamedOptionsImpl;
+import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 import android.graphics.Color;
 import android.opengl.GLES20;
