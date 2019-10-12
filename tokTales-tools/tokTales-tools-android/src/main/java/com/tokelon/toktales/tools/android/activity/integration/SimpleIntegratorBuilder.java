@@ -1,11 +1,11 @@
-package com.tokelon.toktales.android.activity.integration;
+package com.tokelon.toktales.tools.android.activity.integration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration.IActivityIntegrationFactory;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration.IActivityIntegrationFactory;
 
 public class SimpleIntegratorBuilder implements IActivityIntegratorBuilder {
 

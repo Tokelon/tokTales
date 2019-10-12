@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

@@ -1,6 +1,7 @@
 package com.tokelon.toktales.android.activity.integration;
 
 import com.tokelon.toktales.android.render.opengl.IGLRenderView;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration;
 
 /** An activity integration that will create the main renderer for the engine,
  * by using a given surface view.

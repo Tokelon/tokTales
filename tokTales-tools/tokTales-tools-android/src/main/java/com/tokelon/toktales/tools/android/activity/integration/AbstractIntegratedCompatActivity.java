@@ -1,29 +1,25 @@
-package com.tokelon.toktales.android.activity;
-
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
-import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
-import com.tokelon.toktales.android.activity.integration.SimpleIntegratorBuilder;
+package com.tokelon.toktales.tools.android.activity.integration;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public abstract class AbstractIntegratedActivity extends Activity implements IIntegratedActivity {
+public abstract class AbstractIntegratedCompatActivity extends AppCompatActivity implements IIntegratedActivity {
 
 
 	private IActivityIntegrator integrator;
 	
 	private final IActivityIntegratorBuilder initialIntegratorBuilder;
 
-	public AbstractIntegratedActivity() {
+	public AbstractIntegratedCompatActivity() {
 		this.initialIntegratorBuilder = null;
 	}
 	
-	public AbstractIntegratedActivity(IActivityIntegratorBuilder integratorBuilder) {
+	public AbstractIntegratedCompatActivity(IActivityIntegratorBuilder integratorBuilder) {
 		this.initialIntegratorBuilder = integratorBuilder;
 	}
-	
-	
+
+
 	protected IActivityIntegratorBuilder createIntegrationBuilder() {
 		return initialIntegratorBuilder == null ? new SimpleIntegratorBuilder() : initialIntegratorBuilder;
 	}
@@ -46,7 +42,7 @@ public abstract class AbstractIntegratedActivity extends Activity implements IIn
 	public IActivityIntegrator getIntegrator() {
 		return integrator;
 	}
-	
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

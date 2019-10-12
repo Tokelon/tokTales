@@ -1,5 +1,7 @@
 package com.tokelon.toktales.android.activity.integration;
 
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
+
 public interface IDefaultActivityIntegratorBuilder extends IActivityIntegratorBuilder {
 
 

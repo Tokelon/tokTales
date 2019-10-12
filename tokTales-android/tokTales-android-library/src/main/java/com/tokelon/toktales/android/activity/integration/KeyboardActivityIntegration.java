@@ -2,6 +2,9 @@ package com.tokelon.toktales.android.activity.integration;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;

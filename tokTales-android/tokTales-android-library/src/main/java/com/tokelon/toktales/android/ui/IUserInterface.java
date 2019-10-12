@@ -1,6 +1,6 @@
 package com.tokelon.toktales.android.ui;
 
-import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 public interface IUserInterface {
 

@@ -2,7 +2,6 @@ package com.tokelon.toktales.extens.def.android.activity;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.ActivityHelper;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
@@ -10,6 +9,7 @@ import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.values.LocationsAndPlaces;
 import com.tokelon.toktales.extens.def.android.R;
+import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

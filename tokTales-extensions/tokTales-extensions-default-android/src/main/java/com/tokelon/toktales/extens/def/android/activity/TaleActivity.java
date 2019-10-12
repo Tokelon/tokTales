@@ -2,14 +2,11 @@ package com.tokelon.toktales.extens.def.android.activity;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.ActivityHelper;
 import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
 import com.tokelon.toktales.android.activity.SettingsActivity;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration;
@@ -23,6 +20,9 @@ import com.tokelon.toktales.extens.def.android.R;
 import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
+import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

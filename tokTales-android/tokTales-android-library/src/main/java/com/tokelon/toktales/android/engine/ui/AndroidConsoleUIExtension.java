@@ -3,7 +3,6 @@ package com.tokelon.toktales.android.engine.ui;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.activity.IConsoleActivity;
-import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineService;
@@ -12,6 +11,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.ui.IConsoleUIExtension;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;

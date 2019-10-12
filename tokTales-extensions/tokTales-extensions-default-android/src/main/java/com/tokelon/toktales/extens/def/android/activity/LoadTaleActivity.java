@@ -2,10 +2,7 @@ package com.tokelon.toktales.extens.def.android.activity;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.android.activity.AbstractIntegratedActivity;
 import com.tokelon.toktales.android.activity.ActivityHelper;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -16,6 +13,9 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.android.R;
+import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.Manifest;
 import android.content.Intent;

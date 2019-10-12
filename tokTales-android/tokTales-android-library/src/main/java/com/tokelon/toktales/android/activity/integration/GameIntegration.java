@@ -3,6 +3,7 @@ package com.tokelon.toktales.android.activity.integration;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.IGame;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 public class GameIntegration implements IGameIntegration {
 

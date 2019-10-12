@@ -1,30 +1,23 @@
-package com.tokelon.toktales.android.activity.integration;
+package com.tokelon.toktales.tools.android.activity.integration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import com.google.inject.Injector;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
-import com.tokelon.toktales.tools.android.activity.integration.IInjectActivityIntegratorBuilder;
-import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration.IActivityIntegrationFactory;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.tools.core.inject.IInjector;
+import com.tokelon.toktales.tools.core.inject.IProvider;
 
 public class InjectorIntegratorBuilder implements IInjectActivityIntegratorBuilder {
 
 
-	private final Map<String, Provider<? extends IActivityIntegration>> integrationProviders = new HashMap<>();
+	private final Map<String, IProvider<? extends IActivityIntegration>> integrationProviders = new HashMap<>();
 	
-	private final Injector injector;
+	private final IInjector injector;
 	
-	@Inject
-	public InjectorIntegratorBuilder(Injector injector) {
+	public InjectorIntegratorBuilder(IInjector injector) {
 		this.injector = injector;
 	}
 	
@@ -61,7 +54,7 @@ public class InjectorIntegratorBuilder implements IInjectActivityIntegratorBuild
 	public IActivityIntegrator build(IIntegratedActivity activity) {
 		List<IActivityIntegration> integrations = new ArrayList<>();
 		
-		for (Provider<? extends IActivityIntegration> integrationSupplier: integrationProviders.values()) {
+		for (IProvider<? extends IActivityIntegration> integrationSupplier: integrationProviders.values()) {
 			integrations.add(integrationSupplier.get());
 		}
 		

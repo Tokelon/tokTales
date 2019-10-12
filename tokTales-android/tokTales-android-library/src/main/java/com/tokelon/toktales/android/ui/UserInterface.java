@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 public class UserInterface implements IUserInterface {
 

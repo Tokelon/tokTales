@@ -1,12 +1,12 @@
 package com.tokelon.toktales.android.engine.ui;
 
 import com.tokelon.toktales.android.activity.IDebugActivity;
-import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineService;
 import com.tokelon.toktales.core.engine.ServiceException;
 import com.tokelon.toktales.core.engine.ui.IDebugUIExtension;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 public class AndroidDebugUIExtension implements IDebugUIExtension {
 

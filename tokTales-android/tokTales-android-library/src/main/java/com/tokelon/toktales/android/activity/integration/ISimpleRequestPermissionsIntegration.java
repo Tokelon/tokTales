@@ -1,5 +1,8 @@
 package com.tokelon.toktales.android.activity.integration;
 
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
+
 public interface ISimpleRequestPermissionsIntegration extends IActivityIntegration {
 
 

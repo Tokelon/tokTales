@@ -1,6 +1,6 @@
-package com.tokelon.toktales.android.activity.integration;
+package com.tokelon.toktales.tools.android.activity.integration;
 
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration.IActivityIntegrationFactory;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration.IActivityIntegrationFactory;
 
 public interface IActivityIntegratorBuilder {
 

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.activity.integration;
+package com.tokelon.toktales.tools.android.activity.integration;
 
 public interface IActivityIntegrator {
 	// Implement add, remove, to use after creation? - Maybe like IGameStateIntegrator

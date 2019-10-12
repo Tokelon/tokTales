@@ -3,14 +3,15 @@ package com.tokelon.toktales.android.activity;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

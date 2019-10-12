@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.google.inject.Injector;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegration;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
 import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
-import com.tokelon.toktales.android.activity.integration.IInjectActivityIntegratorBuilder;
-import com.tokelon.toktales.android.activity.integration.IIntegratedActivity;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.tools.android.activity.integration.IInjectActivityIntegratorBuilder;
+import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
 import android.app.Activity;
 

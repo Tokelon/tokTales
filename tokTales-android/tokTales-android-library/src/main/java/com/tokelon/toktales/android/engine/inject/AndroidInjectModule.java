@@ -1,13 +1,9 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.tokelon.toktales.android.activity.integration.ActivityIntegrator.ActivityIntegratorFactory;
 import com.tokelon.toktales.android.activity.integration.DefaultIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
-import com.tokelon.toktales.android.activity.integration.IInjectActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration.IKeyboardActivityIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
@@ -54,6 +50,10 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.tools.android.activity.integration.ActivityIntegrator.ActivityIntegratorFactory;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
+import com.tokelon.toktales.tools.android.activity.integration.IInjectActivityIntegratorBuilder;
 
 public class AndroidInjectModule extends AbstractInjectModule {
 	
