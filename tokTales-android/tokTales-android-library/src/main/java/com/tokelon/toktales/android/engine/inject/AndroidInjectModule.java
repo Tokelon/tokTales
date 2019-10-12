@@ -1,10 +1,8 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.tokelon.toktales.android.activity.integration.ActivityIntegrator;
+import com.tokelon.toktales.android.activity.integration.ActivityIntegrator.ActivityIntegratorFactory;
 import com.tokelon.toktales.android.activity.integration.DefaultIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
 import com.tokelon.toktales.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
@@ -90,10 +88,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		/* Other bindings */
 		
-		install(new FactoryModuleBuilder()
-				.implement(IActivityIntegrator.class, ActivityIntegrator.class)
-				.build(IActivityIntegratorFactory.class));
-		
+		bind(IActivityIntegratorFactory.class).to(ActivityIntegratorFactory.class);
 		bind(IActivityIntegratorBuilder.class).to(IInjectActivityIntegratorBuilder.class);
 		bind(IInjectActivityIntegratorBuilder.class).to(InjectorIntegratorBuilder.class);
 		bind(IDefaultActivityIntegratorBuilder.class).to(DefaultIntegratorBuilder.class);

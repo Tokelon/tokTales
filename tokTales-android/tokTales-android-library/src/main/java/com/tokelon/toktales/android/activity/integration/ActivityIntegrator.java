@@ -2,19 +2,14 @@ package com.tokelon.toktales.android.activity.integration;
 
 import java.util.ArrayList;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.tokelon.toktales.core.prog.annotation.CustomFunctionalInterface;
-
 public class ActivityIntegrator implements IActivityIntegrator {
 
-	
+
 	private final ArrayList<IActivityIntegration> integrationList = new ArrayList<>();
 	
 	private final IIntegratedActivity activity;
 	
-	@Inject
-	public ActivityIntegrator(@Assisted IIntegratedActivity activity, @Assisted Iterable<IActivityIntegration> integrations) {
+	public ActivityIntegrator(IIntegratedActivity activity, Iterable<IActivityIntegration> integrations) {
 		this.activity = activity;
 		
 		for(IActivityIntegration integration: integrations) {
@@ -84,10 +79,18 @@ public class ActivityIntegrator implements IActivityIntegrator {
 
 	
 	
-	@CustomFunctionalInterface
 	private interface IntegrationMethodRunner {
+		
 		public void run(IActivityIntegration integration);
 	}
+	
+	
+	public static class ActivityIntegratorFactory implements IActivityIntegratorFactory {
 
+		@Override
+		public IActivityIntegrator create(IIntegratedActivity activity, Iterable<IActivityIntegration> integrations) {
+			return new ActivityIntegrator(activity, integrations);
+		}
+	}
 	
 }
