@@ -46,6 +46,9 @@ dependencies {
 // Only for eclipse
 eclipse.classpath.file.withXml { xml ->
     def node = xml.asNode()
+    
+    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-tools-core' ])
+
 
 	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-tools-android/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
 
