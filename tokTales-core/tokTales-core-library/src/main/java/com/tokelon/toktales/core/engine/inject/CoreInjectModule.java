@@ -97,8 +97,8 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.tools.core.inject.IInjector;
-import com.tokelon.toktales.tools.core.inject.IParameterInjector.IParameterInjectorFactory;
-import com.tokelon.toktales.tools.core.inject.ParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.parameter.ParameterInjectorFactory;
 import com.tokelon.toktales.tools.core.objects.pools.DefaultObjectPool;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 

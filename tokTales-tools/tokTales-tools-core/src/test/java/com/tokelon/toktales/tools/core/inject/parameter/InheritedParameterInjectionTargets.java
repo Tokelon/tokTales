@@ -1,8 +1,9 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import java.util.List;
 
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObject;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectParameters;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObject;
 
 public class InheritedParameterInjectionTargets {
 

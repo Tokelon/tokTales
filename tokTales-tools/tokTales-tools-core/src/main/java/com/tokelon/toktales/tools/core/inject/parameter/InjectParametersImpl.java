@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;

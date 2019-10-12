@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
@@ -14,6 +14,8 @@ import java.util.Set;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tokelon.toktales.tools.core.annotations.CompatRepeatable;
 
 public class ParameterInjector implements IParameterInjector {
 

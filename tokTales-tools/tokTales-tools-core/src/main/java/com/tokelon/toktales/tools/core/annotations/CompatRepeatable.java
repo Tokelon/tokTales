@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.annotations;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

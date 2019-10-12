@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 /** Helper class for creating {@link InjectParameters} instances.
  * 

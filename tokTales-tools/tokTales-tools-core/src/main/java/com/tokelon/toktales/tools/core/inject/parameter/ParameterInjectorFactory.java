@@ -1,8 +1,8 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import java.lang.annotation.Annotation;
 
-import com.tokelon.toktales.tools.core.inject.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
 
 public class ParameterInjectorFactory implements IParameterInjectorFactory {
 

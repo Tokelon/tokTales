@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -9,14 +9,14 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObject;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectA;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectB;
-import com.tokelon.toktales.tools.core.inject.SingleParameterInjectionTarget.KeyCaseA;
-import com.tokelon.toktales.tools.core.inject.SingleParameterInjectionTarget.KeyCaseB;
-import com.tokelon.toktales.tools.core.inject.SingleParameterInjectionTarget.KeyException;
-import com.tokelon.toktales.tools.core.inject.SingleParameterInjectionTarget.KeyMethodOverload;
-import com.tokelon.toktales.tools.core.inject.SingleParameterInjectionTarget.KeyNoParameters;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObject;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectA;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectB;
+import com.tokelon.toktales.tools.core.inject.parameter.SingleParameterInjectionTarget.KeyCaseA;
+import com.tokelon.toktales.tools.core.inject.parameter.SingleParameterInjectionTarget.KeyCaseB;
+import com.tokelon.toktales.tools.core.inject.parameter.SingleParameterInjectionTarget.KeyException;
+import com.tokelon.toktales.tools.core.inject.parameter.SingleParameterInjectionTarget.KeyMethodOverload;
+import com.tokelon.toktales.tools.core.inject.parameter.SingleParameterInjectionTarget.KeyNoParameters;
 
 public class ParameterInjectorSingleParameterTest {
 	

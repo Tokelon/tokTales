@@ -1,8 +1,8 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObject;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectA;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectB;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObject;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectA;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectB;
 
 class SingleParameterInjectionTarget {
 

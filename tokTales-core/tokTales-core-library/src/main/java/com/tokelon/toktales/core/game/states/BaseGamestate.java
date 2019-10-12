@@ -22,8 +22,8 @@ import com.tokelon.toktales.core.game.states.IGameSceneControl.IGameSceneControl
 import com.tokelon.toktales.core.game.states.IGameSceneControl.IModifiableGameSceneControl;
 import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator;
 import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
-import com.tokelon.toktales.tools.core.inject.IParameterInjector;
-import com.tokelon.toktales.tools.core.inject.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector;
+import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
 
 /** Use as the base for game states.
  * <p>

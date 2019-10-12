@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -10,11 +10,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tokelon.toktales.tools.core.inject.InheritedParameterInjectionTargets.InjectBaseTarget.KeyEqualMethodsPrivate;
-import com.tokelon.toktales.tools.core.inject.InheritedParameterInjectionTargets.InjectBaseTarget.KeyWithAnnotationGeneric;
-import com.tokelon.toktales.tools.core.inject.InheritedParameterInjectionTargets.InjectBaseTarget.KeyWithoutAnnotationGeneric;
-import com.tokelon.toktales.tools.core.inject.InheritedParameterInjectionTargets.InjectInheritTarget;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObject;
+import com.tokelon.toktales.tools.core.inject.parameter.InheritedParameterInjectionTargets.InjectBaseTarget.KeyEqualMethodsPrivate;
+import com.tokelon.toktales.tools.core.inject.parameter.InheritedParameterInjectionTargets.InjectBaseTarget.KeyWithAnnotationGeneric;
+import com.tokelon.toktales.tools.core.inject.parameter.InheritedParameterInjectionTargets.InjectBaseTarget.KeyWithoutAnnotationGeneric;
+import com.tokelon.toktales.tools.core.inject.parameter.InheritedParameterInjectionTargets.InjectInheritTarget;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObject;
 
 public class ParameterInjectorInheritedInjectionTest {
 

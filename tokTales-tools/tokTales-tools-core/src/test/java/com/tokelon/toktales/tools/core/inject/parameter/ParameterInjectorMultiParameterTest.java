@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import static org.junit.Assert.assertSame;
 
@@ -10,13 +10,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectA;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectB;
-import com.tokelon.toktales.tools.core.inject.InjectedObjects.InjectedObjectC;
-import com.tokelon.toktales.tools.core.inject.MultiParameterInjectionTarget.KeyAdditionalParameters;
-import com.tokelon.toktales.tools.core.inject.MultiParameterInjectionTarget.KeyDuplicateParameters;
-import com.tokelon.toktales.tools.core.inject.MultiParameterInjectionTarget.KeyIndexedParameters;
-import com.tokelon.toktales.tools.core.inject.MultiParameterInjectionTarget.KeyIndexedUnorderedParameters;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectA;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectB;
+import com.tokelon.toktales.tools.core.inject.parameter.InjectedObjects.InjectedObjectC;
+import com.tokelon.toktales.tools.core.inject.parameter.MultiParameterInjectionTarget.KeyAdditionalParameters;
+import com.tokelon.toktales.tools.core.inject.parameter.MultiParameterInjectionTarget.KeyDuplicateParameters;
+import com.tokelon.toktales.tools.core.inject.parameter.MultiParameterInjectionTarget.KeyIndexedParameters;
+import com.tokelon.toktales.tools.core.inject.parameter.MultiParameterInjectionTarget.KeyIndexedUnorderedParameters;
 
 public class ParameterInjectorMultiParameterTest {
 

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.inject;
+package com.tokelon.toktales.tools.core.inject.parameter;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -8,6 +8,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import com.tokelon.toktales.tools.core.annotations.CompatRepeatable;
 
 /** Can be used to annotated methods that should be invoked by an {@link IParameterInjector}.
  * <p>
