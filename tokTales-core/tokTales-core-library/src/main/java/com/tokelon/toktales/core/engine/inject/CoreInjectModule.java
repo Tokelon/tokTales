@@ -96,8 +96,9 @@ import com.tokelon.toktales.core.render.DefaultTextureManager;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureManager;
-import com.tokelon.toktales.tools.core.inject.ParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.IInjector;
 import com.tokelon.toktales.tools.core.inject.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.inject.ParameterInjectorFactory;
 import com.tokelon.toktales.tools.core.objects.pools.DefaultObjectPool;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
@@ -120,6 +121,10 @@ public class CoreInjectModule extends AbstractInjectModule {
 		// you can make 'inexact' annotated bindings - fallback for missing annotated bindings with parameter
 		// e.g. bind(IControlScheme.class).annotatedWith(ForClass.class).to(IControlScheme.EmptyControlScheme.class);
 		// -> This causes a dependency to (@ForClass(Example.class) IControlScheme controScheme) to succeed even if no For.forClass(Example.class) bound
+		
+		
+		// Tools injector
+		bind(IInjector.class).to(GuiceInjector.class);
 		
 		
 		// Engine Scope
