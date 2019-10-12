@@ -1,9 +1,9 @@
 package com.tokelon.toktales.core.content.manage;
 
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.prog.annotation.CustomFunctionalInterface;
+import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
-@CustomFunctionalInterface
+@CompatFunctionalInterface
 public interface ILoaderTask<T> {
 	
 	

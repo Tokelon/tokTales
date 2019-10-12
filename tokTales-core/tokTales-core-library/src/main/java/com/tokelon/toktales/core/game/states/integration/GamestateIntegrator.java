@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.core.prog.annotation.CustomFunctionalInterface;
+import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
 public class GamestateIntegrator implements IGameStateIntegrator {
 	// TODO: Implement automatic gamestate injection for integrations via parameter injector?
@@ -170,7 +170,7 @@ public class GamestateIntegrator implements IGameStateIntegrator {
 	}
 	
 	
-	@CustomFunctionalInterface
+	@CompatFunctionalInterface
 	private interface IntegrationMethodRunner {
 		public void run(IGameStateIntegration integration);
 	}

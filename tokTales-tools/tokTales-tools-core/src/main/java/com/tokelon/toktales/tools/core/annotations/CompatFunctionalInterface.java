@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.prog.annotation;
+package com.tokelon.toktales.tools.core.annotations;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -11,12 +11,11 @@ import java.lang.annotation.Target;
  * <br><br>
  * Note that compilers will not generate any errors if requirements for an annotated type are not met.
  * This annotation is intended to be used alongside FuntionalInterface, or as a replacement when backwards compatibility is needed.
- * 
  *
  */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface CustomFunctionalInterface {
+public @interface CompatFunctionalInterface {
     
 }

@@ -6,9 +6,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
-import com.tokelon.toktales.core.prog.annotation.CustomFunctionalInterface;
+import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
-@CustomFunctionalInterface
+@CompatFunctionalInterface
 public interface IInjectConfig {
     
     public Collection<Module> getModules();
