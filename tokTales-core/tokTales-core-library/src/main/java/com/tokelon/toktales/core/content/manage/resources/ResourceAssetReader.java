@@ -5,8 +5,9 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
+import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.core.engine.content.AssetLoadException;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.content.ContentLoadException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
@@ -34,11 +35,11 @@ public class ResourceAssetReader implements IResourceAssetReader {
 	}
 	
 	@Override
-	public InputStream read(Object key, Object options) throws ContentException {
+	public InputStream read(Object key, Object options) throws AssetException {
 		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
 
 		if(!(readableKey instanceof IResourceKey)) {
-			throw new ContentException("Unsupported key: must be instance of " + IResourceKey.class.getName());
+			throw new AssetException("Unsupported key: must be instance of " + IResourceKey.class.getName());
 		}
 		IResourceKey resourceKey = (IResourceKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
@@ -48,12 +49,12 @@ public class ResourceAssetReader implements IResourceAssetReader {
 	
 	
 	@Override
-	public InputStream readAsset(IResource resource, IOptions options) throws ContentException {
+	public InputStream readAsset(IResource resource, IOptions options) throws AssetException {
 		return readAsset(resource.getLocation(), resource.getName(), options);
 	}
 	
 	@Override
-	public InputStream readAsset(IStructuredLocation location, String fileName, IOptions options) throws ContentException {
+	public InputStream readAsset(IStructuredLocation location, String fileName, IOptions options) throws AssetException {
 		ApplicationLocationWrapper locationWrapper = ApplicationLocationWrapper.getObjectPool().newObject();
 		locationWrapper.objectReset();
 		try {
@@ -66,10 +67,12 @@ public class ResourceAssetReader implements IResourceAssetReader {
 			case EXTERNAL:
 				return storageService.readAppFileOnExternal(locationWrapper, fileName);
 			default:
-				throw new ContentLoadException(String.format("Unable to load file \"%s\" from location \"%s\" (Unsupported location)", fileName, location.getOriginalValue()));
+				throw new AssetLoadException(String.format("Unable to load file \"%s\" from location \"%s\" (Unsupported location)", fileName, location.getOriginalValue()));
 			}
 		} catch (StorageException e) {
-			throw new ContentLoadException(e);
+			throw new AssetLoadException(e);
+		} catch (ContentException e) {
+			throw new AssetLoadException(e);
 		} finally {
 			ApplicationLocationWrapper.getObjectPool().free(locationWrapper);
 		}

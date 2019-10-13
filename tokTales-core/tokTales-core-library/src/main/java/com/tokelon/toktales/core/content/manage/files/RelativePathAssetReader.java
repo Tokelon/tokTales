@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -32,11 +32,11 @@ public class RelativePathAssetReader implements IRelativePathAssetReader {
 	}
 	
 	@Override
-	public InputStream read(Object key, Object options) throws ContentException {
+	public InputStream read(Object key, Object options) throws AssetException {
 		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
 		
 		if(!(readableKey instanceof IRelativePathKey)) {
-			throw new ContentException("Unsupported key: must be instance of " + IRelativePathKey.class.getName());
+			throw new AssetException("Unsupported key: must be instance of " + IRelativePathKey.class.getName());
 		}
 		IRelativePathKey pathKey = (IRelativePathKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
@@ -46,7 +46,7 @@ public class RelativePathAssetReader implements IRelativePathAssetReader {
 	
 	
 	@Override
-	public InputStream readAsset(Path path, Object parentIdentifier, IOptions options) throws ContentException {
+	public InputStream readAsset(Path path, Object parentIdentifier, IOptions options) throws AssetException {
 		if(parentIdentifier == null) {
 			// TODO: Use path as absolut?
 		}
@@ -60,22 +60,22 @@ public class RelativePathAssetReader implements IRelativePathAssetReader {
 		}
 		
 		if(readablePath == null) {
-			throw new ContentException(String.format("Unsupported parent [%s] for path [%s]", parentIdentifier, path));
+			throw new AssetException(String.format("Unsupported parent [%s] for path [%s]", parentIdentifier, path));
 		}
 		
 		try {
 			return openStream(path);
 		} catch (IOException e) {
-			throw new ContentException(e);
+			throw new AssetException(e);
 		}
 	}
 	
-	protected InputStream openStream(Path path) throws IOException, ContentException {
+	protected InputStream openStream(Path path) throws IOException, AssetException {
 		if(Files.isReadable(path)) { // TODO: File.isDirectory?
 			return Files.newInputStream(path, StandardOpenOption.READ);
 		}
 		else {
-			throw new ContentException("File is not readable: " + path);
+			throw new AssetException("File is not readable: " + path);
 		}
 	}
 

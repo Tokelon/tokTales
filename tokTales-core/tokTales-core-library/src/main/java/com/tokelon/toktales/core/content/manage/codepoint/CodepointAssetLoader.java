@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.content.manage.AbstractExecutorServiceAssetLoad
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetReader;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
@@ -46,7 +46,7 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 	}
 	
 	@Override
-	public ICodepointAsset load(ICodepointAssetKey key, INamedOptions options, IAssetReader reader, IAssetDecoder<? extends ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) throws ContentException {
+	public ICodepointAsset load(ICodepointAssetKey key, INamedOptions options, IAssetReader reader, IAssetDecoder<? extends ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) throws AssetException {
 		return decoder.decode(null, key, options);
 	}
 	

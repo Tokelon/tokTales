@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.render.Texture;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -24,7 +24,7 @@ public class SpriteAssetDecoder implements ISpriteAssetDecoder {
 	
 	
 	@Override
-	public ISpriteAsset decode(InputStream inputstream, ISpriteAssetKey key, IOptions options) throws ContentException {
+	public ISpriteAsset decode(InputStream inputstream, ISpriteAssetKey key, IOptions options) throws AssetException {
 		IBitmapAsset bitmapAsset = bitmapAssetDecoder.decode(inputstream, null, options); // TODO: Wrap key instead of passing null, if needed
 		return new SpriteAsset(new Texture(bitmapAsset.getBitmap()));
 	}

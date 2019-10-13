@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.SoundAsset;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
@@ -24,7 +24,7 @@ public class STBVorbisSoundDecoder implements ISoundAssetDecoder {
 
 
 	@Override
-	public ISoundAsset decode(InputStream inputstream, ISoundAssetKey key, INamedOptions options) throws ContentException {
+	public ISoundAsset decode(InputStream inputstream, ISoundAssetKey key, INamedOptions options) throws AssetException {
 		try {
 			byte[] bytes = ByteStreams.toByteArray(inputstream);
 			
@@ -40,9 +40,9 @@ public class STBVorbisSoundDecoder implements ISoundAssetDecoder {
 				MemoryUtil.memFree(buffer);
 			}
 		} catch (IOException e) {
-			throw new ContentException(e);
+			throw new AssetException(e);
 		} catch (LWJGLException lwe) {
-			throw new ContentException(lwe);
+			throw new AssetException(lwe);
 		}
 	}
 	

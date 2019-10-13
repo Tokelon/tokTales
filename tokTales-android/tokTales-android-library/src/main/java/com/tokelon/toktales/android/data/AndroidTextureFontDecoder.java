@@ -13,7 +13,7 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
@@ -35,7 +35,7 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 	
 	
 	@Override
-	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws ContentException {
+	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws AssetException {
 		int textSize = options == null ? DEFAULT_FONT_PIXEL_HEIGHT : options.getAsOrDefault(OPTION_FONT_PIXEL_HEIGHT, DEFAULT_FONT_PIXEL_HEIGHT, Integer.class);
 		
 		if(key instanceof IFileKey) {
@@ -51,14 +51,14 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 			try {
 				tmpFile = storageService.createTempFile("font", ".ttf");
 			} catch (StorageException se) {
-				throw new ContentException(se);
+				throw new AssetException(se);
 			}
 			
 			try {
 				try(FileOutputStream outputstream = new FileOutputStream(tmpFile)) {
 					ByteStreams.copy(inputstream, outputstream);
 				} catch (IOException e) {
-					throw new ContentException(e);
+					throw new AssetException(e);
 				}
 				
 				Typeface typeface = Typeface.createFromFile(tmpFile); // Does this throw any exceptions?

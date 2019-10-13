@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -31,11 +31,11 @@ public class RelativeFileAssetReader implements IRelativeFileAssetReader {
 	}
 	
 	@Override
-	public InputStream read(Object key, Object options) throws ContentException {
+	public InputStream read(Object key, Object options) throws AssetException {
 		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
 		
 		if(!(readableKey instanceof IRelativeFileKey)) {
-			throw new ContentException("Unsupported key: must be instance of " + IRelativeFileKey.class.getName());
+			throw new AssetException("Unsupported key: must be instance of " + IRelativeFileKey.class.getName());
 		}
 		IRelativeFileKey fileKey = (IRelativeFileKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
@@ -45,7 +45,7 @@ public class RelativeFileAssetReader implements IRelativeFileAssetReader {
 	
 	
 	@Override
-	public InputStream readAsset(File file, Object parentIdentifier, IOptions options) throws ContentException {
+	public InputStream readAsset(File file, Object parentIdentifier, IOptions options) throws AssetException {
 		if(parentIdentifier == null) {
 			// TODO: Use file as absolut?
 		}
@@ -59,23 +59,23 @@ public class RelativeFileAssetReader implements IRelativeFileAssetReader {
 		}
 		
 		if(readableFile == null) {
-			throw new ContentException(String.format("Unsupported parent [%s] for file [%s]", parentIdentifier, file));
+			throw new AssetException(String.format("Unsupported parent [%s] for file [%s]", parentIdentifier, file));
 		}
 		
 		try {
 			return openStream(readableFile);
 		} catch (IOException e) {
-			throw new ContentException(e);
+			throw new AssetException(e);
 		}
 	}
 	
-	protected InputStream openStream(File file) throws IOException, ContentException {
+	protected InputStream openStream(File file) throws IOException, AssetException {
 		if(file.canRead()) { // TODO: File.isDirectory?
 			return new FileInputStream(file);
 			//return Files.asByteSource(file).openStream(); // Guava way
 		}
 		else {
-			throw new ContentException("File is not readable: " + file);
+			throw new AssetException("File is not readable: " + file);
 		}
 	}
 

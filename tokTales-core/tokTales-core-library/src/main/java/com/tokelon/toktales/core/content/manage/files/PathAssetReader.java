@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class PathAssetReader implements IPathAssetReader {
@@ -19,11 +19,11 @@ public class PathAssetReader implements IPathAssetReader {
 	}
 	
 	@Override
-	public InputStream read(Object key, Object options) throws ContentException {
+	public InputStream read(Object key, Object options) throws AssetException {
 		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
 		
 		if(!(readableKey instanceof IPathKey)) {
-			throw new ContentException("Unsupported key: must be instance of " + IPathKey.class.getName());
+			throw new AssetException("Unsupported key: must be instance of " + IPathKey.class.getName());
 		}
 		IPathKey pathKey = (IPathKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
@@ -33,20 +33,20 @@ public class PathAssetReader implements IPathAssetReader {
 	
 	
 	@Override
-	public InputStream readAsset(Path path, IOptions options) throws ContentException {
+	public InputStream readAsset(Path path, IOptions options) throws AssetException {
 		try {
 			return openStream(path);
 		} catch (IOException e) {
-			throw new ContentException(e);
+			throw new AssetException(e);
 		}
 	}
 	
-	protected InputStream openStream(Path path) throws IOException, ContentException {
+	protected InputStream openStream(Path path) throws IOException, AssetException {
 		if(Files.isReadable(path)) { // TODO: File.isDirectory?
 			return Files.newInputStream(path, StandardOpenOption.READ);
 		}
 		else {
-			throw new ContentException("File is not readable: " + path);
+			throw new AssetException("File is not readable: " + path);
 		}
 	}
 

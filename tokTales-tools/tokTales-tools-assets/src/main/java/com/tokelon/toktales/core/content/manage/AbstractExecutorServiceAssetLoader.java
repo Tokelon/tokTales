@@ -14,7 +14,7 @@ import javax.inject.Provider;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 
 import java9.util.concurrent.CompletableFuture;
 
@@ -158,7 +158,7 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 			try {
 				T result = loaderTask.load();
 				wrapperFuture.complete(result);
-			} catch (ContentException ce) {
+			} catch (AssetException ce) {
 				wrapperFuture.completeExceptionally(ce);
 			} catch (RuntimeException re) { 
 				getLogger().error("Loader task threw RuntimeException:", re);
@@ -257,32 +257,32 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 
 
 	@Override
-	public T load(K key) throws ContentException {
+	public T load(K key) throws AssetException {
 		return load(key, getDefaultOptions(), findReader(key, getDefaultOptions()), getDefaultDecoder());
 	}
 
 	@Override
-	public T load(K key, O options) throws ContentException {
+	public T load(K key, O options) throws AssetException {
 		return load(key, options, findReader(key, options), getDefaultDecoder());
 	}
 	
 	@Override
-	public T load(K key, IAssetReader reader) throws ContentException {
+	public T load(K key, IAssetReader reader) throws AssetException {
 		return load(key, getDefaultOptions(), reader, getDefaultDecoder());
 	}
 	
 	@Override
-	public T load(K key, O options, IAssetReader reader) throws ContentException {
+	public T load(K key, O options, IAssetReader reader) throws AssetException {
 		return load(key, options, reader, getDefaultDecoder());
 	}
 	
 	@Override
-	public T load(K key, O options, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+	public T load(K key, O options, IAssetDecoder<? extends T, K, O> decoder) throws AssetException {
 		return load(key, options, findReader(key, options), decoder);
 	}
 	
 	@Override
-	public T load(K key, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+	public T load(K key, IAssetDecoder<? extends T, K, O> decoder) throws AssetException {
 		return load(key, getDefaultOptions(), findReader(key, getDefaultOptions()), decoder);
 	}
 

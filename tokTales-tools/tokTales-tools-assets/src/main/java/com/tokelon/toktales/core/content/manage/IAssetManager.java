@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content.manage;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
+import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.core.engine.content.AssetNotFoundException;
 
 import java9.util.concurrent.CompletableFuture;
 
@@ -31,7 +31,7 @@ public interface IAssetManager<T, K, O> {
 	public T getAssetIfKeyValid(K key, O options, String tag);
 	
 	// The exception used here is more of a ContentNotLoadedException - Make it custom?
-	public T getAssetOrError(K key) throws ContentNotFoundException;
+	public T getAssetOrError(K key) throws AssetNotFoundException;
 	
 
 	public T getAssetLoadIfNeeded(K key);
@@ -40,8 +40,8 @@ public interface IAssetManager<T, K, O> {
 	public T getAssetLoadIfNeededIfKeyValid(K key, String tag);
 	public T getAssetLoadIfNeededIfKeyValid(K key, O options, String tag);
 	
-	public T getAssetLoadIfNeededOrError(K key) throws ContentException;
-	public T getAssetLoadIfNeededOrError(K key, O options) throws ContentException;
+	public T getAssetLoadIfNeededOrError(K key) throws AssetException;
+	public T getAssetLoadIfNeededOrError(K key, O options) throws AssetException;
 	
 	
 	// add, store, insert?

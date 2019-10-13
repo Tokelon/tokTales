@@ -10,7 +10,7 @@ import com.google.common.io.BaseEncoding;
 import com.google.common.io.BaseEncoding.DecodingException;
 import com.google.common.io.ByteStreams;
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class EmbeddedAssetReader implements IEmbeddedAssetReader {
@@ -25,11 +25,11 @@ public class EmbeddedAssetReader implements IEmbeddedAssetReader {
 	}
 
 	@Override
-	public InputStream read(Object key, Object options) throws ContentException {
+	public InputStream read(Object key, Object options) throws AssetException {
 		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
 		
 		if(!(readableKey instanceof IEmbeddedAssetKey)) {
-			throw new ContentException("Unsupported key: must be instance of " + IEmbeddedAssetKey.class.getName());
+			throw new AssetException("Unsupported key: must be instance of " + IEmbeddedAssetKey.class.getName());
 		}
 		IEmbeddedAssetKey embeddedKey = (IEmbeddedAssetKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
@@ -45,16 +45,16 @@ public class EmbeddedAssetReader implements IEmbeddedAssetReader {
 	
 	
 	@Override
-	public InputStream readAsset(byte[] content, IOptions options) throws ContentException {
+	public InputStream readAsset(byte[] content, IOptions options) throws AssetException {
 		byte[] decodedContent = null;
 		try(InputStream decodingStream = BaseEncoding.base64().decodingStream(new InputStreamReader(new ByteArrayInputStream(content), StandardCharsets.US_ASCII))) {
 			try {
 				decodedContent = ByteStreams.toByteArray(decodingStream);
 			} catch (IOException e) {
-				throw new ContentException(e);
+				throw new AssetException(e);
 			}
 		} catch(DecodingException decodingException) {
-			throw new ContentException(decodingException);
+			throw new AssetException(decodingException);
 		} catch (IOException closeException) {
 			// Ignore
 		}
@@ -63,12 +63,12 @@ public class EmbeddedAssetReader implements IEmbeddedAssetReader {
 	}
 	
 	@Override
-	public InputStream readAsset(String content, IOptions options) throws ContentException {
+	public InputStream readAsset(String content, IOptions options) throws AssetException {
 		byte[] decodedContent;
 		try {
 			decodedContent = BaseEncoding.base64().decode(content);
 		} catch(IllegalArgumentException decodingException) {
-			throw new ContentException(decodingException);
+			throw new AssetException(decodingException);
 		}
 		
 		return new ByteArrayInputStream(decodedContent);

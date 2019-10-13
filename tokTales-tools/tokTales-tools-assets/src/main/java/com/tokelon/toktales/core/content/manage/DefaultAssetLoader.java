@@ -10,7 +10,7 @@ import javax.inject.Provider;
 import org.slf4j.ILoggerFactory;
 
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 
 /** Default asset loader, using an executor service.
  * 
@@ -32,14 +32,14 @@ public class DefaultAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoa
 
 	
 	@Override
-	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws AssetException {
 		getLogger().debug("Starting loading for asset key=[{}], options=[{}], reader=[{}], decoder=[{}]", key, options, reader, decoder);
 		
 		if(reader == null) {
-			throw new ContentException(String.format("No reader for key=[%s]", key));
+			throw new AssetException(String.format("No reader for key=[%s]", key));
 		}
 		if(decoder == null) {
-			throw new ContentException(String.format("No decoder for key=[%s]", decoder));
+			throw new AssetException(String.format("No decoder for key=[%s]", decoder));
 		}
 		
 		Object readableKey;

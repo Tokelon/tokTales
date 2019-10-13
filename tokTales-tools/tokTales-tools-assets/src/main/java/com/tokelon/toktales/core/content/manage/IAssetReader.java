@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content.manage;
 
 import java.io.InputStream;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
 @CompatFunctionalInterface
@@ -15,9 +15,9 @@ public interface IAssetReader {
 	 * 
 	 * @param key
 	 * @return An input stream of the asset for the given key.
-	 * @throws ContentException If an error opening the stream occurs.
+	 * @throws AssetException If an error opening the stream occurs.
 	 */
-	public default InputStream read(Object key) throws ContentException {
+	public default InputStream read(Object key) throws AssetException {
 		return read(key, null);
 	}
 	
@@ -26,8 +26,8 @@ public interface IAssetReader {
 	 * @param key
 	 * @param options
 	 * @return An input stream of the asset for the given key.
-	 * @throws ContentException If an error opening the stream occurs.
+	 * @throws AssetException If an error opening the stream occurs.
 	 */
-	public InputStream read(Object key, Object options) throws ContentException;
+	public InputStream read(Object key, Object options) throws AssetException;
 	
 }

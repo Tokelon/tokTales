@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -18,10 +18,10 @@ public class AndroidBitmapDecoder implements IBitmapAssetDecoder {
 
 	
 	@Override
-	public IBitmapAsset decode(InputStream inputstream, IBitmapAssetKey key, IOptions options) throws ContentException {
+	public IBitmapAsset decode(InputStream inputstream, IBitmapAssetKey key, IOptions options) throws AssetException {
 		Bitmap bitmap = BitmapFactory.decodeStream(inputstream);
 		if(bitmap == null) {
-			throw new ContentException("Bitmap could not be created for key: " + key);
+			throw new AssetException("Bitmap could not be created for key: " + key);
 		}
 		
 		if(options != null) {
@@ -33,7 +33,7 @@ public class AndroidBitmapDecoder implements IBitmapAssetDecoder {
 	
 	
 	// Maybe convert to BitmapPostEditor and pass in options
-	protected Bitmap postEditBitmap(Bitmap original, IOptions options) throws ContentException {
+	protected Bitmap postEditBitmap(Bitmap original, IOptions options) throws AssetException {
 		IGraphicLoadingOptions graphicLoadingOptions = options.getAs(OPTION_GRAPHIC_LOADING, IGraphicLoadingOptions.class);
 		if(graphicLoadingOptions == null) {
 			return original;
@@ -60,7 +60,7 @@ public class AndroidBitmapDecoder implements IBitmapAssetDecoder {
 				editedBitmap = getResizedBitmap(editedBitmap, newWidth, newHeight);
 			}
 			catch(OutOfMemoryError error) {
-				throw new ContentException("Out of memory. Failed to resize bitmap to " + newWidth + "x" + newHeight);
+				throw new AssetException("Out of memory. Failed to resize bitmap to " + newWidth + "x" + newHeight);
 			}	
 		}
 		

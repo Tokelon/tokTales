@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -22,7 +22,7 @@ public class STBBitmapDecoder implements IBitmapAssetDecoder {
 	// TODO: Implement options?
 
 	@Override
-	public IBitmapAsset decode(InputStream inputstream, IBitmapAssetKey key, IOptions options) throws ContentException {
+	public IBitmapAsset decode(InputStream inputstream, IBitmapAssetKey key, IOptions options) throws AssetException {
 		try {
 			// Read input stream into byte array
 			byte[] byteArray = ByteStreams.toByteArray(inputstream);
@@ -41,9 +41,9 @@ public class STBBitmapDecoder implements IBitmapAssetDecoder {
 				MemoryUtil.memFree(buffer);
 			}
 		} catch (LWJGLException e) {
-			throw new ContentException(e);
+			throw new AssetException(e);
 		} catch (IOException ioe) {
-			throw new ContentException(ioe);
+			throw new AssetException(ioe);
 		}
 	}
 

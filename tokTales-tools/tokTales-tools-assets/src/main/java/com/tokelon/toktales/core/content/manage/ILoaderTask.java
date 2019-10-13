@@ -1,13 +1,13 @@
 package com.tokelon.toktales.core.content.manage;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
 @CompatFunctionalInterface
 public interface ILoaderTask<T> {
 	
 	
-	public T load() throws ContentException;
+	public T load() throws AssetException;
 	
 	
 	public interface ILoaderTaskFactory<T, K, O> {

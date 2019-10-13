@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.content.manage;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 
 import java9.util.concurrent.CompletableFuture;
 
@@ -28,13 +28,13 @@ public interface IAssetLoader<T, K, O> {
 	
 	
 	// Document that these throw ContentNotFoundException, ContentLoadException ?
-	public T load(K key) throws ContentException;
-	public T load(K key, O options) throws ContentException;
-	public T load(K key, IAssetReader reader) throws ContentException;
-	public T load(K key, IAssetDecoder<? extends T, K, O> decoder) throws ContentException;
-	public T load(K key, O options, IAssetReader reader) throws ContentException;
-	public T load(K key, O options, IAssetDecoder<? extends T, K, O> decoder) throws ContentException;
-	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws ContentException;
+	public T load(K key) throws AssetException;
+	public T load(K key, O options) throws AssetException;
+	public T load(K key, IAssetReader reader) throws AssetException;
+	public T load(K key, IAssetDecoder<? extends T, K, O> decoder) throws AssetException;
+	public T load(K key, O options, IAssetReader reader) throws AssetException;
+	public T load(K key, O options, IAssetDecoder<? extends T, K, O> decoder) throws AssetException;
+	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws AssetException;
 	
 	
 	

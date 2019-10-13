@@ -16,7 +16,7 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -26,7 +26,7 @@ public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 	
 
 	@Override
-	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws ContentException {
+	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws AssetException {
 		int fontPixelHeight = options == null ? DEFAULT_FONT_PIXEL_HEIGHT : options.getAsOrDefault(OPTION_FONT_PIXEL_HEIGHT, DEFAULT_FONT_PIXEL_HEIGHT, Integer.class);
 		
 		try {
@@ -35,9 +35,9 @@ public class STBTextureFontDecoder implements ITextureFontAssetDecoder {
 			ITextureFont font = createFont(bytes, fontPixelHeight);
 			return new TextureFontAssetImpl(font);
 		} catch (LWJGLException e) {
-			throw new ContentException(e);
+			throw new AssetException(e);
 		} catch (IOException ioe) {
-			throw new ContentException(ioe);
+			throw new AssetException(ioe);
 		}
 	}
 	

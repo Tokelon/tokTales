@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
+import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.core.engine.content.AssetNotFoundException;
 
 import java9.util.concurrent.CompletableFuture;
 
@@ -115,14 +115,14 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	}
 	
 	@Override
-	public T getAssetOrError(K key) throws ContentNotFoundException {
+	public T getAssetOrError(K key) throws AssetNotFoundException {
 		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
 		}
 		
 		// TODO: Really use ContentNotFoundException for this?
-		throw new ContentNotFoundException("Asset for key {%s} was not loaded");
+		throw new AssetNotFoundException("Asset for key {%s} was not loaded");
 	}
 
 
@@ -136,7 +136,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		T result = null;
 		try {
 			result = handleAssetResult(key, getLoader().load(key));
-		} catch (ContentException e) {
+		} catch (AssetException e) {
 			getLogger().error("Asset loading failed for [key={}]:", key, e);
 		}
 		
@@ -153,7 +153,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 		T result = null;
 		try {
 			result = handleAssetResult(key, getLoader().load(key, options));
-		} catch (ContentException e) {
+		} catch (AssetException e) {
 			getLogger().error("Asset loading failed for [key={}, options={}]:", key, options, e);
 		}
 		
@@ -181,7 +181,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	}
 
 	@Override
-	public T getAssetLoadIfNeededOrError(K key) throws ContentException {
+	public T getAssetLoadIfNeededOrError(K key) throws AssetException {
 		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;
@@ -191,7 +191,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	}
 
 	@Override
-	public T getAssetLoadIfNeededOrError(K key, O options) throws ContentException {
+	public T getAssetLoadIfNeededOrError(K key, O options) throws AssetException {
 		T asset = getStore().retrieve(key);
 		if(asset != null) {
 			return asset;

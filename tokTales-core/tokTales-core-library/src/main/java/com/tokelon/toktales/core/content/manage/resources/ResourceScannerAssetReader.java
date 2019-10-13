@@ -6,8 +6,8 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
+import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.core.engine.content.AssetNotFoundException;
 import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 import com.tokelon.toktales.core.resources.IResourceLookup;
@@ -33,11 +33,11 @@ public class ResourceScannerAssetReader implements IResourceScannerAssetReader {
 	}
 
 	@Override
-	public InputStream read(Object key, Object options) throws ContentException {
+	public InputStream read(Object key, Object options) throws AssetException {
 		Object readableKey = IReadDelegateAssetKey.getReadableKey(key);
 
 		if(!(readableKey instanceof IResourceScannerKey)) {
-			throw new ContentException("Unsupported key: must be instance of " + IResourceScannerKey.class.getName());
+			throw new AssetException("Unsupported key: must be instance of " + IResourceScannerKey.class.getName());
 		}
 		IResourceScannerKey resourceScannerKey = (IResourceScannerKey) readableKey;
 		IOptions iOptions = options instanceof IOptions ? (IOptions) options : null;
@@ -47,7 +47,7 @@ public class ResourceScannerAssetReader implements IResourceScannerAssetReader {
 	
 	
 	@Override
-	public InputStream readAsset(String resourceName, IOptions options) throws ContentException {
+	public InputStream readAsset(String resourceName, IOptions options) throws AssetException {
 		ResourceTypeFilter filterType = options == null ? null : options.getAsOrDefault(OPTION_RESOURCE_LOOKUP_FILTER_TYPE, null, ResourceTypeFilter.class);
 		int matchingType = options == null ? IResourceLookup.STRING_FILTER_TYPE_EQUALS : options.getAsOrDefault(OPTION_RESOURCE_LOOKUP_NAME_MATCHING_TYPE, IResourceLookup.STRING_FILTER_TYPE_EQUALS, Integer.class);
 		
@@ -66,7 +66,7 @@ public class ResourceScannerAssetReader implements IResourceScannerAssetReader {
 		}
 		
 		if(resourceFileDescriptor == null) {
-			throw new ContentNotFoundException("No resource found in listings for name: " + resourceName);
+			throw new AssetNotFoundException("No resource found in listings for name: " + resourceName);
 		}
 		
 		return resourceAssetReader.readAsset(resourceFileDescriptor.getLocation(), resourceFileDescriptor.getName(), options);

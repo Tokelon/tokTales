@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content.manage;
 
 import java.io.InputStream;
 
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
 @CompatFunctionalInterface
@@ -16,9 +16,9 @@ public interface IAssetDecoder<T, K, O> {
 	 * @param inputstream
 	 * @param key
 	 * @return The decoded asset, or null.
-	 * @throws ContentException If an error occurs while decoding.
+	 * @throws AssetException If an error occurs while decoding.
 	 */
-	public default T decode(InputStream inputstream, K key) throws ContentException {
+	public default T decode(InputStream inputstream, K key) throws AssetException {
 		return decode(inputstream, key, null);
 	}
 	
@@ -28,8 +28,8 @@ public interface IAssetDecoder<T, K, O> {
 	 * @param key
 	 * @param options
 	 * @return The decoded asset, or null.
-	 * @throws ContentException If an error occurs while decoding.
+	 * @throws AssetException If an error occurs while decoding.
 	 */
-	public T decode(InputStream inputstream, K key, O options) throws ContentException;
+	public T decode(InputStream inputstream, K key, O options) throws AssetException;
 	
 }

@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
@@ -28,7 +28,7 @@ public class AndroidCodepointDecoder implements ICodepointAssetDecoder {
 	
 
 	@Override
-	public ICodepointAsset decode(InputStream inputstream, ICodepointAssetKey key, INamedOptions options) throws ContentException {
+	public ICodepointAsset decode(InputStream inputstream, ICodepointAssetKey key, INamedOptions options) throws AssetException {
 		if(!(key.getFont() instanceof AndroidTextureFont)) {
 			throw new IllegalArgumentException("font must be of type: " + AndroidTextureFont.class.getSimpleName());
 		}

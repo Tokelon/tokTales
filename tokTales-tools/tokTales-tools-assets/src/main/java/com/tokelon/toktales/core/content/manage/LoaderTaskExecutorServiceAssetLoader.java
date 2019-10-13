@@ -8,7 +8,7 @@ import javax.inject.Provider;
 import org.slf4j.ILoggerFactory;
 
 import com.tokelon.toktales.core.content.manage.ILoaderTask.ILoaderTaskFactory;
-import com.tokelon.toktales.core.engine.content.ContentException;
+import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
 
 public class LoaderTaskExecutorServiceAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoader<T, K, O> {
@@ -43,7 +43,7 @@ public class LoaderTaskExecutorServiceAssetLoader<T, K, O> extends AbstractExecu
 	
 	
 	@Override
-	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws ContentException {
+	public T load(K key, O options, IAssetReader reader, IAssetDecoder<? extends T, K, O> decoder) throws AssetException {
 		ILoaderTask<T> loaderTask = createLoaderTask(key, options, reader, decoder);
 		return loaderTask.load();
 	}
