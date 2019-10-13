@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.manage;
+package com.tokelon.toktales.tools.assets.loader;
 
 import java.io.InputStream;
 import java.util.HashMap;
