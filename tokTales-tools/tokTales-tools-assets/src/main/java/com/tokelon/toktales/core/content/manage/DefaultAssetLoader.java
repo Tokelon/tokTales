@@ -7,9 +7,10 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.slf4j.ILoggerFactory;
+
 import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.log.ILogging;
 
 /** Default asset loader, using an executor service.
  * 
@@ -20,13 +21,13 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 public class DefaultAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoader<T, K, O> {
 
 
-	public DefaultAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
-		super(logging, readerManager, decoder);
+	public DefaultAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
+		super(loggerFactory, readerManager, decoder);
 	}
 	
 	//@Inject - Avoid injection because of bound generic type in decoder
-	public DefaultAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
-		super(logging, readerManager, decoder, executorServiceProvider);
+	public DefaultAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
+		super(loggerFactory, readerManager, decoder, executorServiceProvider);
 	}
 
 	
@@ -71,32 +72,32 @@ public class DefaultAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoa
 	
 	public static class DefaultAssetLoaderFactory implements IAssetLoaderFactory {
 		
-		private final Provider<ILogging> loggingProvider;
+		private final Provider<ILoggerFactory> loggerFactoryProvider;
 		private final Provider<IAssetReaderManager> readerManagerProvider;
 
 		@Inject
-		public DefaultAssetLoaderFactory(Provider<ILogging> loggingProvider, Provider<IAssetReaderManager> readerManagerProvider) {
-			this.loggingProvider = loggingProvider;
+		public DefaultAssetLoaderFactory(Provider<ILoggerFactory> loggerFactoryProvider, Provider<IAssetReaderManager> readerManagerProvider) {
+			this.loggerFactoryProvider = loggerFactoryProvider;
 			this.readerManagerProvider = readerManagerProvider;
 		}
 		
 		
 		@Override
 		public <T, K, O> DefaultAssetLoader<T, K, O> create(IAssetDecoder<? extends T, K, O> decoder) {
-			return new DefaultAssetLoader<>(loggingProvider.get(), readerManagerProvider.get(), decoder);
+			return new DefaultAssetLoader<>(loggerFactoryProvider.get(), readerManagerProvider.get(), decoder);
 		}
 		
 		@Override
 		public <T, K, O> DefaultAssetLoader<T, K, O> create(IAssetDecoder<? extends T, K, O> decoder, IAssetReaderManager readerManager) {
-			return new DefaultAssetLoader<>(loggingProvider.get(), readerManager, decoder);
+			return new DefaultAssetLoader<>(loggerFactoryProvider.get(), readerManager, decoder);
 		}
 		
 		public <T, K, O> DefaultAssetLoader<T, K, O> create(IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
-			return new DefaultAssetLoader<>(loggingProvider.get(), readerManagerProvider.get(), decoder, executorServiceProvider);
+			return new DefaultAssetLoader<>(loggerFactoryProvider.get(), readerManagerProvider.get(), decoder, executorServiceProvider);
 		}
 		
 		public <T, K, O> DefaultAssetLoader<T, K, O> create(IAssetDecoder<? extends T, K, O> decoder, IAssetReaderManager readerManager, Provider<ExecutorService> executorServiceProvider) {
-			return new DefaultAssetLoader<>(loggingProvider.get(), readerManager, decoder, executorServiceProvider);
+			return new DefaultAssetLoader<>(loggerFactoryProvider.get(), readerManager, decoder, executorServiceProvider);
 		}
 	}
 

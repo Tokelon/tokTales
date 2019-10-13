@@ -6,11 +6,18 @@ version "0.0.1"
 apply plugin: 'java-library'
 
 dependencies {
+	implementation project(':tokTales-tools-core')
+
+
 	// SLF4J
 	implementation 'org.slf4j:slf4j-api:1.7.28'
 	
 	// Javax Inject
 	implementation 'javax.inject:javax.inject:1'
+	
+	// Streamsupport
+	//api 'net.sourceforge.streamsupport:android-retrostreams:1.6.3'
+	api 'net.sourceforge.streamsupport:android-retrofuture:1.6.3'
 }
 
 

@@ -2,12 +2,13 @@ package com.tokelon.toktales.core.content.manage.codepoint;
 
 import javax.inject.Inject;
 
+import org.slf4j.ILoggerFactory;
+
 import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
 import com.tokelon.toktales.core.content.manage.IAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetStore;
 import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
 
@@ -21,8 +22,8 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 	
 	@Inject
-	public CodepointAssetManager(ILogging logging, ISpecialAssetManager<ICodepointAsset> specialAssetManager, IAssetStore<ICodepointAsset, ICodepointAssetKey> assetStore, IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> assetLoader) {
-		super(logging, specialAssetManager, assetStore, assetLoader);
+	public CodepointAssetManager(ILoggerFactory loggerFactory, ISpecialAssetManager<ICodepointAsset> specialAssetManager, IAssetStore<ICodepointAsset, ICodepointAssetKey> assetStore, IAssetLoader<ICodepointAsset, ICodepointAssetKey, INamedOptions> assetLoader) {
+		super(loggerFactory, specialAssetManager, assetStore, assetLoader);
 	}
 
 

@@ -5,24 +5,25 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.slf4j.ILoggerFactory;
+
 import com.tokelon.toktales.core.content.manage.DefaultAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
-import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class SpriteAssetLoader extends DefaultAssetLoader<ISpriteAsset, ISpriteAssetKey, IOptions> implements ISpriteAssetLoader {
 
 
-	public SpriteAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions> decoder) {
-		super(logging, readerManager, decoder);
+	public SpriteAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions> decoder) {
+		super(loggerFactory, readerManager, decoder);
 	}
 
 	@Inject
-	public SpriteAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
-		super(logging, readerManager, decoder, executorServiceProvider);
+	public SpriteAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<ISpriteAsset, ISpriteAssetKey, IOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
+		super(loggerFactory, readerManager, decoder, executorServiceProvider);
 	}
 	
 	

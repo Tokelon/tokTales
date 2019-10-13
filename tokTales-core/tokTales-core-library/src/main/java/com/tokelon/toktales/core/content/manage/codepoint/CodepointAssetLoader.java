@@ -5,13 +5,14 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.slf4j.ILoggerFactory;
+
 import com.tokelon.toktales.core.content.manage.AbstractExecutorServiceAssetLoader;
 import com.tokelon.toktales.core.content.manage.IAssetDecoder;
 import com.tokelon.toktales.core.content.manage.IAssetReader;
 import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
-import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
@@ -21,13 +22,13 @@ public class CodepointAssetLoader extends AbstractExecutorServiceAssetLoader<ICo
 	public static final INamedOptions EMPTY_OPTIONS = new NamedOptionsImpl();
 	
 	
-	public CodepointAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
-		super(logging, readerManager, decoder);
+	public CodepointAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder) {
+		super(loggerFactory, readerManager, decoder);
 	}
 	
 	@Inject
-	public CodepointAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
-		super(logging, readerManager, decoder, executorServiceProvider);
+	public CodepointAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<ICodepointAsset, ICodepointAssetKey, INamedOptions> decoder, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
+		super(loggerFactory, readerManager, decoder, executorServiceProvider);
 	}
 
 	

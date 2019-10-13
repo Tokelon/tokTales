@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Provider;
 
-import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.engine.log.LoggingManager;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
 
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.IntFunction;
@@ -23,7 +23,7 @@ class TestExecutorServiceAssetLoader {
 		System.out.println("TestExecutorServiceAssetLoader started");
 		
 		TestDecoder testDecoder = new TestDecoder();
-		TestLoader testLoader = new TestLoader(LoggingManager.getLogging(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
+		TestLoader testLoader = new TestLoader(LoggerFactory.getILoggerFactory(), new DefaultAssetReaderManager(new HashMap<>()), testDecoder);
 		
 		
 		int tasks = 10;
@@ -111,14 +111,14 @@ class TestExecutorServiceAssetLoader {
 		
 		private int counter = 0;
 		
-		public TestLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder) {
-			super(logging, readerManager, decoder);
+		public TestLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder) {
+			super(loggerFactory, readerManager, decoder);
 			
 			setLogDebugEnabled(ENABLE_LOG_DEBUG);
 		}
 		
-		public TestLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
-			super(logging, readerManager, decoder, executorServiceProvider);
+		public TestLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<AssetObject, AssetKey, AssetOptions> decoder, Provider<ExecutorService> executorServiceProvider) {
+			super(loggerFactory, readerManager, decoder, executorServiceProvider);
 			
 			setLogDebugEnabled(ENABLE_LOG_DEBUG);
 		}

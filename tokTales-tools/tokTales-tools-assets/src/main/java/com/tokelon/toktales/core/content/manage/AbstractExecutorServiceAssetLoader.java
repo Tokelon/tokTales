@@ -11,9 +11,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.inject.Provider;
 
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+
 import com.tokelon.toktales.core.engine.content.ContentException;
-import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.ILogging;
 
 import java9.util.concurrent.CompletableFuture;
 
@@ -31,22 +32,22 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 	private final Map<K, CompletableFuture<T>> loaderPendingFutures;
 	private final List<Runnable> loaderWaitingTasks;
 
-	private final ILogger loaderLogger;
+	private final Logger loaderLogger;
 	private final IAssetReaderManager loaderReaderManager;
 	private final IAssetDecoder<? extends T, K, O> loaderDecoder;
 	private final Provider<ExecutorService> loaderExecutorServiceProvider;
 
-	protected AbstractExecutorServiceAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
+	protected AbstractExecutorServiceAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder) {
 		// Remove this constructor and force executor service injection?
-		this(logging, readerManager, decoder, new DefaultExecutorServiceProvider());
+		this(loggerFactory, readerManager, decoder, new DefaultExecutorServiceProvider());
 	}
 
-	protected AbstractExecutorServiceAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
+	protected AbstractExecutorServiceAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<? extends T, K, O> decoder, Provider<ExecutorService> executorServiceProvider) {
 		if(decoder == null || executorServiceProvider == null) {
 			throw new NullPointerException();
 		}
 
-		this.loaderLogger = logging.getLogger(getClass());
+		this.loaderLogger = loggerFactory.getLogger(getClass().getName());
 		this.loaderReaderManager = readerManager;
 		this.loaderDecoder = decoder;
 		this.loaderExecutorServiceProvider = executorServiceProvider;
@@ -68,7 +69,7 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 		return loaderPendingFutures;
 	}
 	
-	protected ILogger getLogger() {
+	protected Logger getLogger() {
 		return loaderLogger;
 	}
 	

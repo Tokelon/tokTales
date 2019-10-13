@@ -5,25 +5,26 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.slf4j.ILoggerFactory;
+
 import com.tokelon.toktales.core.content.manage.ILoaderTask.ILoaderTaskFactory;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
-import com.tokelon.toktales.core.engine.log.ILogging;
 
 public class LoaderTaskExecutorServiceAssetLoader<T, K, O> extends AbstractExecutorServiceAssetLoader<T, K, O> {
 
 
 	private final ILoaderTaskFactory<T, K, O> loaderTaskFactory;
 
-	public LoaderTaskExecutorServiceAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory) {
-		super(logging, readerManager, decoder);
+	public LoaderTaskExecutorServiceAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory) {
+		super(loggerFactory, readerManager, decoder);
 		
 		this.loaderTaskFactory = loaderTaskFactory;
 	}
 
 	@Inject
-	public LoaderTaskExecutorServiceAssetLoader(ILogging logging, IAssetReaderManager readerManager, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
-		super(logging, readerManager, decoder, executorServiceProvider);
+	public LoaderTaskExecutorServiceAssetLoader(ILoggerFactory loggerFactory, IAssetReaderManager readerManager, IAssetDecoder<T, K, O> decoder, ILoaderTaskFactory<T, K, O> loaderTaskFactory, @AssetLoader Provider<ExecutorService> executorServiceProvider) {
+		super(loggerFactory, readerManager, decoder, executorServiceProvider);
 		
 		this.loaderTaskFactory = loaderTaskFactory;
 	}

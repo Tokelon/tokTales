@@ -2,31 +2,32 @@ package com.tokelon.toktales.core.content.manage;
 
 import javax.inject.Inject;
 
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.ContentNotFoundException;
-import com.tokelon.toktales.core.engine.log.ILogger;
-import com.tokelon.toktales.core.engine.log.ILogging;
 
 import java9.util.concurrent.CompletableFuture;
 
 public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 
 
-	private final ILogger logger;
+	private final Logger logger;
 	private final ISpecialAssetManager<T> specialAssetManager;
 	private final IAssetStore<T, K> assetStore;
 	private final IAssetLoader<T, K, O> assetLoader;
 
 	@Inject
-	public DefaultAssetManager(ILogging logging, ISpecialAssetManager<T> specialAssetManager, IAssetStore<T, K> assetStore, IAssetLoader<T, K, O> assetLoader) {
-		this.logger = logging.getLogger(getClass());
+	public DefaultAssetManager(ILoggerFactory loggerFactory, ISpecialAssetManager<T> specialAssetManager, IAssetStore<T, K> assetStore, IAssetLoader<T, K, O> assetLoader) {
+		this.logger = loggerFactory.getLogger(getClass().getName());
 		this.specialAssetManager = specialAssetManager;
 		this.assetStore = assetStore;
 		this.assetLoader = assetLoader;
 	}
 	
 	
-	protected ILogger getLogger() {
+	protected Logger getLogger() {
 		return logger;
 	}
 	
@@ -96,7 +97,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetIfKeyValid(K key, String tag) {
 		if(key == null) {
-			getLogger().warnOnceForId(tag, "Asset key was null for tag: {}", tag);
+			//getLogger().warnOnceForId(tag, "Asset key was null for tag: {}", tag); // TODO: Implement and enable?
 			return null;
 		}
 		
@@ -106,7 +107,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetIfKeyValid(K key, O options, String tag) {
 		if(key == null) {
-			getLogger().warnOnceForId(tag, "(With Options) Asset key was null for tag: {}", tag);
+			//getLogger().warnOnceForId(tag, "(With Options) Asset key was null for tag: {}", tag); // TODO: Implement and enable?
 			return null;
 		}
 		
@@ -162,7 +163,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetLoadIfNeededIfKeyValid(K key, String tag) {
 		if(key == null) {
-			getLogger().warnOnceForId(tag, "(Load if Needed) Asset key was null for tag: {}", tag);
+			//getLogger().warnOnceForId(tag, "(Load if Needed) Asset key was null for tag: {}", tag); // TODO: Implement and enable?
 			return null;
 		}
 		
@@ -172,7 +173,7 @@ public class DefaultAssetManager<T, K, O> implements IAssetManager<T, K, O> {
 	@Override
 	public T getAssetLoadIfNeededIfKeyValid(K key, O options, String tag) {
 		if(key == null) {
-			getLogger().warnOnceForId(tag, "(Load if Needed) (With Options) Asset key was null for tag: {}", tag);
+			//getLogger().warnOnceForId(tag, "(Load if Needed) (With Options) Asset key was null for tag: {}", tag); // TODO: Implement and enable?
 			return null;
 		}
 		
