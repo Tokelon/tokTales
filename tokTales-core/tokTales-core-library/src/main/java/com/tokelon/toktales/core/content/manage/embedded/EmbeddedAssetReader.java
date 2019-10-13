@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.BaseEncoding.DecodingException;
 import com.google.common.io.ByteStreams;
-import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class EmbeddedAssetReader implements IEmbeddedAssetReader {

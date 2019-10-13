@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.content.manage.embedded;
 
-import com.tokelon.toktales.core.content.manage.keys.IReadableAssetKey;
+import com.tokelon.toktales.tools.assets.key.IReadableAssetKey;
 
 public interface IEmbeddedAssetKey extends IReadableAssetKey {
 	/* Use instead of IStringEmbeddedAssetKey?

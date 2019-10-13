@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
-import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.content.manage.embedded.EmbeddedAssetReader;
 import com.tokelon.toktales.core.content.manage.embedded.IEmbeddedAssetKey;
 import com.tokelon.toktales.core.content.manage.embedded.IEmbeddedAssetReader;
@@ -17,10 +16,11 @@ import com.tokelon.toktales.core.content.manage.resources.IResourceScannerKey;
 import com.tokelon.toktales.core.content.manage.resources.ResourceAssetReader;
 import com.tokelon.toktales.core.content.manage.resources.ResourceScannerAssetReader;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
+import com.tokelon.toktales.tools.assets.annotation.AssetReaders;
+import com.tokelon.toktales.tools.assets.reader.IManagedAssetReader;
 
 public class AssetReadersInjectModule extends AbstractInjectModule {
 

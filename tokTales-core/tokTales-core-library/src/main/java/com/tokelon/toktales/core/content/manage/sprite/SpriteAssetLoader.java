@@ -7,11 +7,11 @@ import javax.inject.Provider;
 
 import org.slf4j.ILoggerFactory;
 
-import com.tokelon.toktales.core.content.manage.DefaultAssetLoader;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
-import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
-import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
+import com.tokelon.toktales.tools.assets.annotation.AssetLoader;
+import com.tokelon.toktales.tools.assets.loader.DefaultAssetLoader;
+import com.tokelon.toktales.tools.assets.loader.IAssetDecoder;
+import com.tokelon.toktales.tools.assets.reader.IAssetReaderManager;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class SpriteAssetLoader extends DefaultAssetLoader<ISpriteAsset, ISpriteAssetKey, IOptions> implements ISpriteAssetLoader {

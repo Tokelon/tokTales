@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content.manage.bitmap;
 
-import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.content.manage.keys.IReadableAssetKey;
+import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
+import com.tokelon.toktales.tools.assets.key.IReadableAssetKey;
 
 public class ReadDelegateBitmapAssetKey implements IBitmapAssetKey, IReadDelegateAssetKey {
 

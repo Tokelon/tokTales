@@ -4,9 +4,6 @@ import java.io.InputStream;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.AssetException;
-import com.tokelon.toktales.core.engine.content.AssetLoadException;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
@@ -14,6 +11,9 @@ import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.core.storage.IStructuredLocation;
 import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.exception.AssetLoadException;
+import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class ResourceAssetReader implements IResourceAssetReader {

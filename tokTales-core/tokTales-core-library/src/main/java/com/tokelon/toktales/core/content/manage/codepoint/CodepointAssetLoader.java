@@ -7,12 +7,12 @@ import javax.inject.Provider;
 
 import org.slf4j.ILoggerFactory;
 
-import com.tokelon.toktales.core.content.manage.AbstractExecutorServiceAssetLoader;
-import com.tokelon.toktales.core.content.manage.IAssetDecoder;
-import com.tokelon.toktales.core.content.manage.IAssetReader;
-import com.tokelon.toktales.core.content.manage.IAssetReaderManager;
-import com.tokelon.toktales.core.engine.content.AssetException;
-import com.tokelon.toktales.core.engine.inject.annotation.AssetLoader;
+import com.tokelon.toktales.tools.assets.annotation.AssetLoader;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.loader.AbstractExecutorServiceAssetLoader;
+import com.tokelon.toktales.tools.assets.loader.IAssetDecoder;
+import com.tokelon.toktales.tools.assets.reader.IAssetReader;
+import com.tokelon.toktales.tools.assets.reader.IAssetReaderManager;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 

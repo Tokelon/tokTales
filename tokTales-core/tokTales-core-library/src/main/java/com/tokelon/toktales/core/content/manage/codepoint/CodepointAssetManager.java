@@ -4,11 +4,11 @@ import javax.inject.Inject;
 
 import org.slf4j.ILoggerFactory;
 
-import com.tokelon.toktales.core.content.manage.DefaultAssetManager;
-import com.tokelon.toktales.core.content.manage.IAssetLoader;
-import com.tokelon.toktales.core.content.manage.IAssetStore;
-import com.tokelon.toktales.core.content.manage.ISpecialAssetManager;
 import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.tools.assets.loader.IAssetLoader;
+import com.tokelon.toktales.tools.assets.manager.DefaultAssetManager;
+import com.tokelon.toktales.tools.assets.manager.IAssetStore;
+import com.tokelon.toktales.tools.assets.manager.ISpecialAssetManager;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
 

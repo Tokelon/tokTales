@@ -5,10 +5,10 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.IResourceManager;
-import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.AssetException;
-import com.tokelon.toktales.core.engine.content.AssetNotFoundException;
 import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.exception.AssetNotFoundException;
+import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 import com.tokelon.toktales.core.resources.IResourceLookup;
 import com.tokelon.toktales.core.resources.ResourceLookup;

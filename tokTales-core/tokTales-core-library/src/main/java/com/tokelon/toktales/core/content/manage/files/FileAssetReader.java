@@ -5,8 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class FileAssetReader implements IFileAssetReader {

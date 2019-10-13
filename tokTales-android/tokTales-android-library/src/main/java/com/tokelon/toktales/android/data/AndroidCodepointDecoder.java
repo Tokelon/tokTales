@@ -8,9 +8,9 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetKey;
 import com.tokelon.toktales.core.content.text.CodepointTexture;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 import android.graphics.Bitmap;

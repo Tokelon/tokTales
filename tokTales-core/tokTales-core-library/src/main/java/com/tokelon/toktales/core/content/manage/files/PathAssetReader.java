@@ -6,8 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import com.tokelon.toktales.core.content.manage.keys.IReadDelegateAssetKey;
-import com.tokelon.toktales.core.engine.content.AssetException;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class PathAssetReader implements IPathAssetReader {

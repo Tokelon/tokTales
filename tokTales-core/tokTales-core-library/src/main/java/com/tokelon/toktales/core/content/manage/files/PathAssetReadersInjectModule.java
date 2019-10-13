@@ -7,12 +7,12 @@ import java.nio.file.Paths;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
-import com.tokelon.toktales.core.content.manage.IManagedAssetReader;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.AssetReaders;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
+import com.tokelon.toktales.tools.assets.annotation.AssetReaders;
+import com.tokelon.toktales.tools.assets.reader.IManagedAssetReader;
 
 public class PathAssetReadersInjectModule extends AbstractInjectModule {
 

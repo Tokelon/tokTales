@@ -6,8 +6,8 @@ import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAsset;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetKey;
-import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.core.engine.content.IGraphicLoadingOptions;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 import android.graphics.Bitmap;

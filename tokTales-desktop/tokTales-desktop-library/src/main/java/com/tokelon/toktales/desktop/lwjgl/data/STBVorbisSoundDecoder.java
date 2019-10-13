@@ -16,8 +16,8 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAsset;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetKey;
 import com.tokelon.toktales.core.content.manage.sound.SoundAsset;
-import com.tokelon.toktales.core.engine.content.AssetException;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
+import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class STBVorbisSoundDecoder implements ISoundAssetDecoder {
