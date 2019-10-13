@@ -1,0 +1,46 @@
+// tokTales-tools-core-inject build.gradle
+group "com.tokelon.toktales"
+version "0.0.1"
+
+
+apply plugin: 'java-library'
+
+dependencies {
+	implementation project(':tokTales-tools-core')
+
+	
+	// SLF4J
+	implementation 'org.slf4j:slf4j-api:1.7.28'
+	
+	// Guice
+	implementation 'com.google.inject:guice:4.2.1'
+	//implementation 'com.google.inject.extensions:guice-assistedinject:4.2.1'
+}
+
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+		}
+	}
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+// Export project and dependencies for Android
+eclipse.classpath.file.withXml { xml ->
+    def node = xml.asNode()
+
+    def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+    if(con) {
+        con.@exported = 'true'
+    }
+}

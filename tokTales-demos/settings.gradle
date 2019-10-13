@@ -23,6 +23,10 @@ if (tokTalesTools.exists()) {
     project(':tokTales-tools-script').projectDir = new File(tokTalesTools, 'tokTales-tools-script')
     include ':tokTales-tools-tiled'
     project(':tokTales-tools-tiled').projectDir = new File(tokTalesTools, 'tokTales-tools-tiled')
+    include ':tokTales-tools-assets'
+    project(':tokTales-tools-assets').projectDir = new File(tokTalesTools, 'tokTales-tools-assets')
+    include ':tokTales-tools-core-inject'
+    project(':tokTales-tools-core-inject').projectDir = new File(tokTalesTools, 'tokTales-tools-core-inject')
 }
 
 def tokTalesCore = new File(rootProject.projectDir, '../tokTales-core')
