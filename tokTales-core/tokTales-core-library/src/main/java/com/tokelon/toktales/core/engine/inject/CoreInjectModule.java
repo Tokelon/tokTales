@@ -101,6 +101,7 @@ import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IPara
 import com.tokelon.toktales.tools.core.inject.parameter.ParameterInjectorFactory;
 import com.tokelon.toktales.tools.core.objects.pools.DefaultObjectPool;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
+import com.tokelon.toktales.tools.core.sub.inject.GuiceInjector;
 
 public class CoreInjectModule extends AbstractInjectModule {
 
