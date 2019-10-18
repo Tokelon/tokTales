@@ -4,10 +4,9 @@ import java.util.Collection;
 
 import com.google.inject.Module;
 
-public class MasterInjectConfig extends HierarchicalInjectConfig {
-	// TODO: Add interface?
-	
-	
+public class MasterInjectConfig extends HierarchicalInjectConfig implements IMasterInjectConfig {
+
+
 	public MasterInjectConfig() {
 		super();
 	}
@@ -22,31 +21,35 @@ public class MasterInjectConfig extends HierarchicalInjectConfig {
 	}
 
 	
-	// Maybe name these differently to avoid passing the wrong type
-	public MasterInjectConfig extend(HierarchicalInjectConfig config) {
+	@Override
+	public IMasterInjectConfig extend(IHierarchicalInjectConfig config) {
 		extend(config.getModules());
 		return this;
 	}
 	
-	public MasterInjectConfig override(HierarchicalInjectConfig config) {
+	@Override
+	public IMasterInjectConfig override(IHierarchicalInjectConfig config) {
 		override(config.getModules());
 		return this;
 	}
 	
-	public MasterInjectConfig filter(HierarchicalInjectConfig config) {
+	@Override
+	public IMasterInjectConfig filter(IHierarchicalInjectConfig config) {
 		filter(config.getFilterModules());
 		return this;
 	}
 	
 
 	// TODO: What's the order here: filter after?
-	public MasterInjectConfig extendWithFilters(HierarchicalInjectConfig config) {
+	@Override
+	public IMasterInjectConfig extendWithFilters(IHierarchicalInjectConfig config) {
 		extend(config.getModules());
 		filter(config.getFilterModules());
 		return this;
 	}
 	
-	public MasterInjectConfig overrideWithFilters(HierarchicalInjectConfig config) {
+	@Override
+	public IMasterInjectConfig overrideWithFilters(IHierarchicalInjectConfig config) {
 		override(config.getModules());
 		filter(config.getFilterModules());
 		return this;

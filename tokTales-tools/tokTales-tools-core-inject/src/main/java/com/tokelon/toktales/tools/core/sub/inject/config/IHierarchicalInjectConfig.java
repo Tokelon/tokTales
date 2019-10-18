@@ -7,7 +7,7 @@ import com.google.inject.Stage;
 
 public interface IHierarchicalInjectConfig extends IInjectConfig {
 
-	
+
 	/** Combines all current modules with the given ones.
 	 * 
 	 * @param modules

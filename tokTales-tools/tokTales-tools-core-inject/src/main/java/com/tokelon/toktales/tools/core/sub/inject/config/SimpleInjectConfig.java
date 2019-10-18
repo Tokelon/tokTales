@@ -9,6 +9,7 @@ import com.google.inject.Stage;
 
 public class SimpleInjectConfig implements IInjectConfig {
 
+
 	private final Collection<Module> moduleCollection;
 
 	private Stage defaultStage = Stage.PRODUCTION;
