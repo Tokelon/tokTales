@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject;
+package com.tokelon.toktales.tools.core.sub.inject.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,9 +8,6 @@ import java.util.List;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
-
-import java9.util.stream.Collectors;
-import java9.util.stream.StreamSupport;
 
 public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
 	// TODO: Test configure and constructor parameter filters
@@ -107,10 +104,22 @@ public class HierarchicalInjectConfig implements IHierarchicalInjectConfig {
 		if(modules.isEmpty()) {
 			return modules;
 		}
-
-		List<Module> result = StreamSupport.stream(modules)
-				.filter(m -> StreamSupport.stream(configFilterModules).noneMatch(c -> c.isInstance(m)))
-				.collect(Collectors.toList());
+		
+		List<Module> result = new ArrayList<>();
+		for(Module module: modules) {
+			boolean isFilterModule = false;
+			
+			for(Class<? extends Module> configFilterModule: configFilterModules) {
+				if(configFilterModule.isInstance(module)) {
+					isFilterModule = true;
+					break;
+				}
+			}
+			
+			if(!isFilterModule) {
+				result.add(module);
+			}
+		}
 
 		return result;
 	}

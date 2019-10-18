@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
 import com.tokelon.toktales.extens.def.core.game.logic.DefaultConsoleInterpreterManager;
 import com.tokelon.toktales.extens.def.core.game.logic.IConsoleInterpreterManager;
@@ -49,6 +48,7 @@ import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamescene;
 import com.tokelon.toktales.extens.def.core.tale.states.ITaleGamestate;
 import com.tokelon.toktales.extens.def.core.tale.states.TaleGamescene;
 import com.tokelon.toktales.extens.def.core.tale.states.TaleGamestate;
+import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
 public class CoreDefExtensInjectModule extends AbstractInjectModule {
 

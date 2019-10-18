@@ -6,7 +6,6 @@ import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
 import com.tokelon.toktales.core.content.text.ITextureFont;
-import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
@@ -30,6 +29,7 @@ import com.tokelon.toktales.extens.def.core.game.screen.IDialogRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer;
 import com.tokelon.toktales.extens.def.core.game.screen.TextBoxRenderer.TextBoxRendererFactory;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
+import com.tokelon.toktales.tools.core.sub.inject.scope.ForClass;
 
 public class ConsoleGamestate extends BaseGamestate<IGameScene> implements IConsoleGamestate {
 

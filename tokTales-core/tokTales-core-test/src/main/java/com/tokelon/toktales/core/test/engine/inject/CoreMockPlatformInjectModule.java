@@ -14,7 +14,6 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -32,6 +31,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
+import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
 /** Core inject module used for testing.
  * <p>

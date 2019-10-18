@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject;
+package com.tokelon.toktales.tools.core.sub.inject.scope;
 
 import java.util.HashMap;
 import java.util.Map;

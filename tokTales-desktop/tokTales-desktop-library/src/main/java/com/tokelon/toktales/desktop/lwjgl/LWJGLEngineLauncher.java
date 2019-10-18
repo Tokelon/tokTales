@@ -5,7 +5,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
@@ -15,6 +14,7 @@ import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
+import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
 public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	// TODO: Additional window properties, like visible resisable etc.

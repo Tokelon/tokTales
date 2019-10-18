@@ -4,9 +4,9 @@ import com.tokelon.toktales.android.engine.inject.AndroidInjectConfig;
 import com.tokelon.toktales.android.engine.inject.AndroidOverrideInjectConfig;
 import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.engine.inject.CoreOverrideInjectConfig;
-import com.tokelon.toktales.core.engine.inject.MasterInjectConfig;
 import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectConfig;
 import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensOverrideInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.MasterInjectConfig;
 
 public class MasterAndroidDefExtensInjectConfig extends MasterInjectConfig {
 

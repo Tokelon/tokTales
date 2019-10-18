@@ -2,11 +2,11 @@ package com.tokelon.toktales.extens.def.desktop.engine.inject;
 
 import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.engine.inject.CoreOverrideInjectConfig;
-import com.tokelon.toktales.core.engine.inject.MasterInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopOverrideInjectConfig;
 import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensInjectConfig;
 import com.tokelon.toktales.extens.def.core.engine.inject.CoreDefExtensOverrideInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.MasterInjectConfig;
 
 public class MasterDesktopDefExtensInjectConfig extends MasterInjectConfig {
 

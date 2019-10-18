@@ -2,7 +2,6 @@ package com.tokelon.toktales.core.game.states;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.ICameraController.ICameraControllerFactory;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
@@ -17,6 +16,7 @@ import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.prog.annotation.ScriptingAccess;
 import com.tokelon.toktales.core.values.ControllerValues;
+import com.tokelon.toktales.tools.core.sub.inject.annotations.RequiresInjection;
 
 /** Use as an extended base for game scenes.
  */

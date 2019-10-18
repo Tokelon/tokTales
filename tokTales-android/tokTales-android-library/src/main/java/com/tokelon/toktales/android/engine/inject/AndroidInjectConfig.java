@@ -4,7 +4,7 @@ import com.tokelon.toktales.android.data.AndroidParentIdentifiersInjectModule;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderDriversInjectModule;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGLInjectModule;
 import com.tokelon.toktales.android.ui.AndroidUIServiceExtensionsInjectModule;
-import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfig;
 
 public class AndroidInjectConfig extends HierarchicalInjectConfig {
 

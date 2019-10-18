@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject;
+package com.tokelon.toktales.tools.core.sub.inject.config;
 
 import java.util.Collection;
 

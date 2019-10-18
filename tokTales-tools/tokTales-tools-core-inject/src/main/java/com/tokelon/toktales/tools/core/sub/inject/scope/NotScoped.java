@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject;
+package com.tokelon.toktales.tools.core.sub.inject.scope;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -10,10 +10,9 @@ import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
 
-@Retention(RUNTIME)
-@Target({ FIELD, PARAMETER, METHOD })
 @Qualifier // @BindingAnnotation
-public @interface ForClass {
-	
-	Class<?> value();
+@Target({FIELD, PARAMETER, METHOD})
+@Retention(RUNTIME)
+public @interface NotScoped {
+
 }

@@ -2,7 +2,7 @@ package com.tokelon.toktales.desktop.engine.inject;
 
 import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.engine.inject.CoreOverrideInjectConfig;
-import com.tokelon.toktales.core.engine.inject.MasterInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.MasterInjectConfig;
 
 public class MasterDesktopInjectConfig extends MasterInjectConfig {
 

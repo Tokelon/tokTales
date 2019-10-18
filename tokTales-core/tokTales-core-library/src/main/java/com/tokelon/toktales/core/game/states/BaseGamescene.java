@@ -7,7 +7,6 @@ import com.tokelon.toktales.core.config.IFileConfig;
 import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
@@ -15,6 +14,7 @@ import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.sub.inject.annotations.RequiresInjection;
 
 /** Use as a base for game scenes.
  */

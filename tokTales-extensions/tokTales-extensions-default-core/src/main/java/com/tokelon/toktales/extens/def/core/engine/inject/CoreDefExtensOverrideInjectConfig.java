@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extens.def.core.engine.inject;
 
-import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfig;
 
 public class CoreDefExtensOverrideInjectConfig extends HierarchicalInjectConfig {
 

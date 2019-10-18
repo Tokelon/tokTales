@@ -9,7 +9,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Key;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.RequiresInjection;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.ISurface;
@@ -24,6 +23,7 @@ import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator;
 import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
+import com.tokelon.toktales.tools.core.sub.inject.annotations.RequiresInjection;
 
 /** Use as the base for game states.
  * <p>

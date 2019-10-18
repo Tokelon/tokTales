@@ -4,12 +4,12 @@ import com.google.inject.Injector;
 import com.google.inject.Stage;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
-import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.IInjectConfig;
 
 public abstract class AbstractInjectSetup implements IEngineSetup {
 

@@ -5,10 +5,10 @@ import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.BaseEngineLauncher;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
+import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
 import android.content.Context;
 

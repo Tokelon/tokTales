@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 import javax.inject.Provider;
 
 import com.google.inject.AbstractModule;
+import com.tokelon.toktales.tools.core.sub.inject.scope.NotScoped;
 
 public abstract class AbstractInjectModule extends AbstractModule {
 

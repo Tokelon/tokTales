@@ -6,7 +6,6 @@ import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.ForClass;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
@@ -17,6 +16,7 @@ import com.tokelon.toktales.extens.def.core.game.states.console.ConsoleGamestate
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapControlScheme;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
 import com.tokelon.toktales.extens.def.core.test.engine.inject.CoreDefExtensMockPlatformInjectModule;
+import com.tokelon.toktales.tools.core.sub.inject.scope.ForClass;
 
 public class TestCoreDefExtensInjection {
 	

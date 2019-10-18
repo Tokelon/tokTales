@@ -41,7 +41,6 @@ import com.tokelon.toktales.android.ui.UserInterface;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -52,6 +51,7 @@ import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.tools.android.activity.integration.ActivityIntegrator.ActivityIntegratorFactory;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
+import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 import com.tokelon.toktales.tools.android.activity.integration.IInjectActivityIntegratorBuilder;
 

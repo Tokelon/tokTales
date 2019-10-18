@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.sub.inject;
+package com.tokelon.toktales.tools.core.sub.inject.guice;
 
 import java.lang.reflect.Type;
 

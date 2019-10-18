@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.game.states;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.inject.ForClass;
+import com.tokelon.toktales.tools.core.sub.inject.scope.ForClass;
 
 public class InitialGamestate extends BaseGamestate<IGameScene> {
 

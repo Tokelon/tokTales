@@ -1,4 +1,4 @@
-package com.tokelon.toktales.tools.core.sub.inject;
+package com.tokelon.toktales.tools.core.sub.inject.guice;
 
 import com.google.inject.Key;
 import com.tokelon.toktales.tools.core.inject.IKey;

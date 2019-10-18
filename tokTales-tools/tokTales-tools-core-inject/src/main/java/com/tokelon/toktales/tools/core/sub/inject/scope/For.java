@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject;
+package com.tokelon.toktales.tools.core.sub.inject.scope;
 
 /** Helper class for creating For* (ex. {@link ForClass}) instances of various keys.
  * 

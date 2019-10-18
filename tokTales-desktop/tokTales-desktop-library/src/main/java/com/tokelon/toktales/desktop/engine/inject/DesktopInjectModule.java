@@ -3,7 +3,6 @@ package com.tokelon.toktales.desktop.engine.inject;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.For;
 import com.tokelon.toktales.core.engine.input.IInputDispatch;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -27,6 +26,7 @@ import com.tokelon.toktales.desktop.main.DesktopEnvironment;
 import com.tokelon.toktales.desktop.render.DesktopRenderService;
 import com.tokelon.toktales.desktop.storage.DesktopStorageService;
 import com.tokelon.toktales.desktop.ui.DesktopUIService;
+import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
 public class DesktopInjectModule extends AbstractInjectModule {
 	

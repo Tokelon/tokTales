@@ -16,8 +16,6 @@ import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
-import com.tokelon.toktales.core.engine.inject.ForClass;
-import com.tokelon.toktales.core.engine.inject.IInjectConfig;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -34,6 +32,8 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL13;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL14;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
+import com.tokelon.toktales.tools.core.sub.inject.config.IInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.scope.ForClass;
 
 public final class InjectionTestHelper {
 	

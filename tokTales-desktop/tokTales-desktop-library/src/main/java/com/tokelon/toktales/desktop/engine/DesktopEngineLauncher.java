@@ -2,9 +2,9 @@ package com.tokelon.toktales.desktop.engine;
 
 import com.tokelon.toktales.core.engine.BaseEngineLauncher;
 import com.tokelon.toktales.core.engine.IEngineLooper;
-import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.desktop.engine.inject.MasterDesktopInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
 public class DesktopEngineLauncher extends BaseEngineLauncher {
 

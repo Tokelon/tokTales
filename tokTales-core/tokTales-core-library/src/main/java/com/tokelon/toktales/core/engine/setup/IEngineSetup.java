@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.engine.setup;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.IHierarchicalInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
 public interface IEngineSetup {
 	
