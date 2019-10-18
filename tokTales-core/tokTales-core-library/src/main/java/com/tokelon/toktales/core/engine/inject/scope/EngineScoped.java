@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject;
+package com.tokelon.toktales.core.engine.inject.scope;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -12,6 +12,6 @@ import javax.inject.Scope;
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
 @Scope // @ScopeAnnotation
-public @interface GameScoped {
+public @interface EngineScoped {
 	
 }

@@ -5,6 +5,10 @@ import java.lang.annotation.Annotation;
 import javax.inject.Provider;
 
 import com.google.inject.AbstractModule;
+import com.tokelon.toktales.core.engine.inject.scope.EngineInstance;
+import com.tokelon.toktales.core.engine.inject.scope.EngineScoped;
+import com.tokelon.toktales.core.engine.inject.scope.GameInstance;
+import com.tokelon.toktales.core.engine.inject.scope.GameScoped;
 import com.tokelon.toktales.tools.core.sub.inject.scope.NotScoped;
 
 public abstract class AbstractInjectModule extends AbstractModule {

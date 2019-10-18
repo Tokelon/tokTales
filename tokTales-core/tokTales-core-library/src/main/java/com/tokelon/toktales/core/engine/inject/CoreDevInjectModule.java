@@ -6,6 +6,7 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import com.tokelon.toktales.core.engine.inject.annotation.DebugInjectModuleIsDev;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 

@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.engine.inject;
 
+import com.tokelon.toktales.core.engine.inject.annotation.DebugInjectModuleIsDev;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.opengl.GLErrorCheckingEnabled;
 
