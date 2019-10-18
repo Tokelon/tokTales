@@ -3,11 +3,11 @@ package com.tokelon.toktales.extens.def.android.states.integration;
 import com.tokelon.toktales.android.input.TokelonTypeAInputs;
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenButtonCallback;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
 import com.tokelon.toktales.extens.def.core.game.states.localmap.ILocalMapInputHandler;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 
 public class AndroidConsoleIntegrationInputHandler implements ILocalMapInputHandler, IScreenButtonCallback {
 

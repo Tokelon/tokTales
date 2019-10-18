@@ -10,7 +10,6 @@ import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -34,6 +33,7 @@ import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ISpriteModel;
 import com.tokelon.toktales.core.render.model.SpriteModel;
 import com.tokelon.toktales.core.values.RenderDriverOptions;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 

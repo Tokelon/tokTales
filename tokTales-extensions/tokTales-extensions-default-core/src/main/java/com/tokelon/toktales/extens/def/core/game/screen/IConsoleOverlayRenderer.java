@@ -2,11 +2,11 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 
 public interface IConsoleOverlayRenderer extends ISegmentRenderer {
 

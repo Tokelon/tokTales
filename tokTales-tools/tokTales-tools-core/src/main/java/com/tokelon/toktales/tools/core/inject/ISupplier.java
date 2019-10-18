@@ -1,9 +1,7 @@
-package com.tokelon.toktales.core.engine.inject;
-
-import javax.inject.Provider;
+package com.tokelon.toktales.tools.core.inject;
 
 /** Supplies an instance of {@code T}.<br>
- * Similar to {@link Provider}, however indicates that the returned object will be a specific instance.
+ * Similar to {@link IProvider}, however indicates that the returned object will be a specific instance.
  * <p>
  * There is no requirement that a new or distinct result be returned each time the supplier is invoked. 
  *

@@ -1,6 +1,5 @@
 package com.tokelon.toktales.extens.def.desktop.game.states.integration;
 
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.desktop.input.TInput;
@@ -10,6 +9,7 @@ import com.tokelon.toktales.desktop.input.events.ICharInputEvent;
 import com.tokelon.toktales.desktop.input.events.IKeyInputEvent;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegration;
 import com.tokelon.toktales.extens.def.core.game.states.integration.IConsoleIntegrationControlHandler;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 
 public class DesktopConsoleIntegrationInputHandler implements IGameStateInputHandler, ICharInputCallback, IKeyInputCallback {
 

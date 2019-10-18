@@ -3,7 +3,6 @@ package com.tokelon.toktales.extens.def.core.game.screen;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -19,6 +18,7 @@ import com.tokelon.toktales.extens.def.core.game.controller.IDialogController;
 import com.tokelon.toktales.extens.def.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class DialogRenderer extends AbstractRenderer implements IDialogRenderer {

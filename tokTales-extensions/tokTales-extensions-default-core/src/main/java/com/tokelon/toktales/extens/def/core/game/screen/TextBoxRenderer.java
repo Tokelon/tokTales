@@ -5,7 +5,6 @@ import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -18,6 +17,7 @@ import com.tokelon.toktales.extens.def.core.game.controller.ITextBoxController;
 import com.tokelon.toktales.extens.def.core.game.model.ITextBox;
 import com.tokelon.toktales.extens.def.core.render.TextRenderer;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class TextBoxRenderer extends AbstractRenderer implements ISegmentRenderer {

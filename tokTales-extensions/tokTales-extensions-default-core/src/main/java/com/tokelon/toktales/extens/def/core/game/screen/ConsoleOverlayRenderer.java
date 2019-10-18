@@ -6,7 +6,6 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager
 import com.tokelon.toktales.core.content.text.ITextureFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.inject.ISupplier;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
@@ -23,6 +22,7 @@ import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.CharRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.extens.def.core.values.ControllerExtensionsValues;
+import com.tokelon.toktales.tools.core.inject.ISupplier;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {
