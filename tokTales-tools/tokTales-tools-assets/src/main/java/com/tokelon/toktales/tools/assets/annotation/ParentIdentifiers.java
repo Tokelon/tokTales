@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.inject.annotation;
+package com.tokelon.toktales.tools.assets.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

@@ -1,26 +1,26 @@
-package com.tokelon.toktales.core.content.manage.files;
+package com.tokelon.toktales.tools.assets.files;
 
-import java.io.File;
+import java.nio.file.Path;
 
-public class RelativeFileKey implements IRelativeFileKey {
+public class RelativePathKey implements IRelativePathKey {
 
 	
-	private final File file;
+	private final Path path;
 	private final Object parent;
 
-	public RelativeFileKey(File file) {
+	public RelativePathKey(Path file) {
 		this(file, null);
 	}
 	
-	public RelativeFileKey(File file, Object parentIdentifier) {
-		this.file = file;
+	public RelativePathKey(Path file, Object parentIdentifier) {
+		this.path = file;
 		this.parent = parentIdentifier;
 	}
 	
 	
 	@Override
-	public File getFile() {
-		return file;
+	public Path getPath() {
+		return path;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class RelativeFileKey implements IRelativeFileKey {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((file == null) ? 0 : file.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		return result;
 	}
@@ -46,16 +46,16 @@ public class RelativeFileKey implements IRelativeFileKey {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof IRelativeFileKey)) {
+		if (!(obj instanceof IRelativePathKey)) {
 			return false;
 		}
-		IRelativeFileKey other = (IRelativeFileKey) obj;
+		IRelativePathKey other = (IRelativePathKey) obj;
 		
-		if (file == null) {
-			if (other.getFile() != null) {
+		if (path == null) {
+			if (other.getPath() != null) {
 				return false;
 			}
-		} else if (!file.equals(other.getFile())) {
+		} else if (!path.equals(other.getPath())) {
 			return false;
 		}
 		

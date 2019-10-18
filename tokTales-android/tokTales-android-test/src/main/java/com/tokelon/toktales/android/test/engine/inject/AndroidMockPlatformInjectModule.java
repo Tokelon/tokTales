@@ -8,10 +8,10 @@ import java.util.Map;
 
 import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
+import com.tokelon.toktales.tools.assets.annotation.ParentIdentifiers;
 
 import android.content.Context;
 

@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.engine.inject;
 
 import com.tokelon.toktales.core.content.manage.AssetManagersInjectModule;
-import com.tokelon.toktales.core.content.manage.files.AssetReadersInjectModule;
+import com.tokelon.toktales.core.content.manage.AssetReadersInjectModule;
 import com.tokelon.toktales.core.engine.ServiceExtensionsInjectModule;
 import com.tokelon.toktales.core.engine.log.LoggingInjectModule;
 import com.tokelon.toktales.core.render.opengl.CoreGLInjectModule;

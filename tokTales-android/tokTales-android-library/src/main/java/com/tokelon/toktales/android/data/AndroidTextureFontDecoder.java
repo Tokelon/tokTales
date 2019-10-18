@@ -8,7 +8,6 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import com.google.common.io.ByteStreams;
-import com.tokelon.toktales.core.content.manage.files.IFileKey;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
@@ -16,6 +15,7 @@ import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.assets.files.IFileKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 import android.graphics.Typeface;

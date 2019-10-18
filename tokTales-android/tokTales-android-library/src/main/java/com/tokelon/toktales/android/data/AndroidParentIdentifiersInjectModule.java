@@ -6,8 +6,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.MapBinder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
+import com.tokelon.toktales.tools.assets.annotation.ParentIdentifiers;
 
 public class AndroidParentIdentifiersInjectModule extends AbstractInjectModule {
 

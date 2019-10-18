@@ -1,6 +1,6 @@
 package com.tokelon.toktales.desktop.engine.inject;
 
-import com.tokelon.toktales.core.content.manage.files.PathAssetReadersInjectModule;
+import com.tokelon.toktales.core.content.manage.PathAssetReadersInjectModule;
 import com.tokelon.toktales.core.engine.inject.HierarchicalInjectConfig;
 import com.tokelon.toktales.desktop.content.DesktopParentIdentifiersInjectModule;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLInjectModule;

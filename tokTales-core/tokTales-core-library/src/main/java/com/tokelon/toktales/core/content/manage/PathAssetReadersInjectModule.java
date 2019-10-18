@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.manage.files;
+package com.tokelon.toktales.core.content.manage;
 
 import java.lang.reflect.Type;
 import java.nio.file.Path;
@@ -8,10 +8,18 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
 import com.tokelon.toktales.tools.assets.annotation.AssetReaders;
+import com.tokelon.toktales.tools.assets.annotation.ParentIdentifiers;
+import com.tokelon.toktales.tools.assets.annotation.ParentResolvers;
+import com.tokelon.toktales.tools.assets.files.IParentResolver;
+import com.tokelon.toktales.tools.assets.files.IPathAssetReader;
+import com.tokelon.toktales.tools.assets.files.IPathKey;
+import com.tokelon.toktales.tools.assets.files.IRelativePathAssetReader;
+import com.tokelon.toktales.tools.assets.files.IRelativePathKey;
+import com.tokelon.toktales.tools.assets.files.PathAssetReader;
+import com.tokelon.toktales.tools.assets.files.PathParentResolver;
+import com.tokelon.toktales.tools.assets.files.RelativePathAssetReader;
 import com.tokelon.toktales.tools.assets.reader.IManagedAssetReader;
 
 public class PathAssetReadersInjectModule extends AbstractInjectModule {

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.manage.files;
+package com.tokelon.toktales.tools.assets.files;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
+import com.tokelon.toktales.tools.assets.annotation.ParentIdentifiers;
 
 public class PathParentResolver implements IParentResolver<Path> {
 

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.manage.files;
+package com.tokelon.toktales.core.content.manage;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -16,10 +16,18 @@ import com.tokelon.toktales.core.content.manage.resources.IResourceScannerKey;
 import com.tokelon.toktales.core.content.manage.resources.ResourceAssetReader;
 import com.tokelon.toktales.core.content.manage.resources.ResourceScannerAssetReader;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentIdentifiers;
-import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
 import com.tokelon.toktales.tools.assets.annotation.AssetReaders;
+import com.tokelon.toktales.tools.assets.annotation.ParentIdentifiers;
+import com.tokelon.toktales.tools.assets.annotation.ParentResolvers;
+import com.tokelon.toktales.tools.assets.files.FileAssetReader;
+import com.tokelon.toktales.tools.assets.files.FileParentResolver;
+import com.tokelon.toktales.tools.assets.files.IFileAssetReader;
+import com.tokelon.toktales.tools.assets.files.IFileKey;
+import com.tokelon.toktales.tools.assets.files.IParentResolver;
+import com.tokelon.toktales.tools.assets.files.IRelativeFileAssetReader;
+import com.tokelon.toktales.tools.assets.files.IRelativeFileKey;
+import com.tokelon.toktales.tools.assets.files.RelativeFileAssetReader;
 import com.tokelon.toktales.tools.assets.reader.IManagedAssetReader;
 
 public class AssetReadersInjectModule extends AbstractInjectModule {

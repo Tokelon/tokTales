@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.manage.files;
+package com.tokelon.toktales.tools.assets.files;
 
 public interface IParentResolver<T> {
 	// IParentTranslator, IKeyParentResolver

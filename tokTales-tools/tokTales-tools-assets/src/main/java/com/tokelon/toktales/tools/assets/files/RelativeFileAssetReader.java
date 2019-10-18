@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content.manage.files;
+package com.tokelon.toktales.tools.assets.files;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.engine.inject.annotation.ParentResolvers;
+import com.tokelon.toktales.tools.assets.annotation.ParentResolvers;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
