@@ -1,7 +1,5 @@
 package com.tokelon.toktales.core.content.manage;
 
-import java.util.concurrent.ExecutorService;
-
 import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetImpl;
 import com.tokelon.toktales.core.content.manage.bitmap.BitmapAssetManager;
@@ -38,11 +36,7 @@ import com.tokelon.toktales.core.content.manage.sprite.SpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
 import com.tokelon.toktales.core.content.sprite.SpriteAsset;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.engine.inject.annotation.GlobalExecutorServiceImplementation;
 import com.tokelon.toktales.core.engine.inject.scope.GameScoped;
-import com.tokelon.toktales.tools.assets.annotation.AssetLoader;
-import com.tokelon.toktales.tools.assets.loader.DefaultAssetLoader;
-import com.tokelon.toktales.tools.assets.loader.DefaultExecutorServiceProvider;
 import com.tokelon.toktales.tools.assets.loader.DefaultInjectableAssetLoader;
 import com.tokelon.toktales.tools.assets.loader.IAssetDecoder;
 import com.tokelon.toktales.tools.assets.loader.IAssetLoader;
@@ -52,8 +46,6 @@ import com.tokelon.toktales.tools.assets.manager.IAssetManager;
 import com.tokelon.toktales.tools.assets.manager.IAssetStore;
 import com.tokelon.toktales.tools.assets.manager.ISpecialAssetFactory;
 import com.tokelon.toktales.tools.assets.manager.ISpecialAssetManager;
-import com.tokelon.toktales.tools.assets.reader.DefaultAssetReaderManager;
-import com.tokelon.toktales.tools.assets.reader.IAssetReaderManager;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
@@ -65,23 +57,6 @@ public class AssetManagersInjectModule extends AbstractInjectModule {
 
 	@Override
 	protected void configure() {
-		/*
-		//bind(IAssetManager.class) // Cannot bind this in a generic way
-		install(new FactoryModuleBuilder() // If we do this we have to bind store, loader etc.
-				.implement(IAssetManager.class, DefaultAssetManager.class)
-				.build(IAssetManagerFactory.class));
-		*/
-		
-		
-		bind(ExecutorService.class).toProvider(DefaultExecutorServiceProvider.class);
-		bind(ExecutorService.class).annotatedWith(GlobalExecutorServiceImplementation.class).toProvider(DefaultExecutorServiceProvider.class);
-		bind(ExecutorService.class).annotatedWith(AssetLoader.class).to(RecyclableExecutorService.class).in(GameScoped.class);
-		
-		
-		bind(IAssetLoader.IAssetLoaderFactory.class).to(DefaultAssetLoader.DefaultAssetLoaderFactory.class);
-		bind(IAssetReaderManager.class).to(DefaultAssetReaderManager.class);
-		
-		
 		bindInGameScopeAndForNotScoped(ICodepointAssetManager.class, CodepointAssetManager.class);
 		bind(new TypeLiteral<IAssetManager<ICodepointAsset, ICodepointAssetKey, INamedOptions>>() {}).to(ICodepointAssetManager.class);
 		bind(new TypeLiteral<IAssetStore<ICodepointAsset, ICodepointAssetKey>>() {}).to(new TypeLiteral<DefaultAssetStore<ICodepointAsset, ICodepointAssetKey>>() {});

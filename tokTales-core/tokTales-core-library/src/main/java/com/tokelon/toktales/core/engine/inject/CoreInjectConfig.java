@@ -6,6 +6,8 @@ import com.tokelon.toktales.core.engine.ServiceExtensionsInjectModule;
 import com.tokelon.toktales.core.engine.log.LoggingInjectModule;
 import com.tokelon.toktales.core.render.opengl.CoreGLInjectModule;
 import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfig;
+import com.tokelon.toktales.tools.core.sub.inject.modules.CoreInjectToolsModule;
+import com.tokelon.toktales.tools.core.sub.inject.modules.CoreToolsModule;
 
 public class CoreInjectConfig extends HierarchicalInjectConfig {
 
@@ -31,6 +33,13 @@ public class CoreInjectConfig extends HierarchicalInjectConfig {
 		extend(new CoreGLInjectModule());
 		
 		extend(new LoggingInjectModule());
+		
+		
+		extend(new CoreToolsInjectModule());
+		extend(new AssetToolsInjectModule());
+		
+		extend(new CoreToolsModule());
+		extend(new CoreInjectToolsModule());
 	}
     
 }

@@ -100,12 +100,6 @@ import com.tokelon.toktales.core.render.DefaultTextureManager;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureCoordinator.ITextureCoordinatorFactory;
 import com.tokelon.toktales.core.render.ITextureManager;
-import com.tokelon.toktales.tools.core.inject.IInjector;
-import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
-import com.tokelon.toktales.tools.core.inject.parameter.ParameterInjectorFactory;
-import com.tokelon.toktales.tools.core.objects.pools.DefaultObjectPool;
-import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
-import com.tokelon.toktales.tools.core.sub.inject.guice.GuiceInjector;
 
 public class CoreInjectModule extends AbstractInjectModule {
 
@@ -127,9 +121,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		// e.g. bind(IControlScheme.class).annotatedWith(ForClass.class).to(IControlScheme.EmptyControlScheme.class);
 		// -> This causes a dependency to (@ForClass(Example.class) IControlScheme controScheme) to succeed even if no For.forClass(Example.class) bound
 		
-		
-		// Tools injector
-		bind(IInjector.class).to(GuiceInjector.class);
 		
 		
 		// Engine Scope
@@ -211,10 +202,6 @@ public class CoreInjectModule extends AbstractInjectModule {
 		bind(ICamera.class).to(Camera.class);
 		 bind(ICameraModel.class).to(CameraModel.class);
 		
-		
-		// Tools
-		bind(IParameterInjectorFactory.class).to(ParameterInjectorFactory.class);
-		bind(IObjectPoolFactory.class).to(DefaultObjectPool.DefaultObjectPoolFactory.class);
 	}
 	
 	

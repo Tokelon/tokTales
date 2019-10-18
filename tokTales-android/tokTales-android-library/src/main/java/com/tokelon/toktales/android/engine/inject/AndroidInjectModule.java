@@ -1,15 +1,12 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.tokelon.toktales.android.activity.integration.DefaultIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration.IKeyboardActivityIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.activity.integration.IUIServiceIntegration;
-import com.tokelon.toktales.android.activity.integration.InjectorIntegratorBuilder;
 import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegration.KeyboardActivityIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration.SimpleRequestPermissionsIntegrationFactory;
@@ -49,11 +46,7 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.states.IGameStateInput;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
-import com.tokelon.toktales.tools.android.activity.integration.ActivityIntegrator.ActivityIntegratorFactory;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
 import com.tokelon.toktales.tools.core.sub.inject.scope.For;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
-import com.tokelon.toktales.tools.android.activity.integration.IInjectActivityIntegratorBuilder;
 
 public class AndroidInjectModule extends AbstractInjectModule {
 	
@@ -87,11 +80,6 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		
 		
 		/* Other bindings */
-		
-		bind(IActivityIntegratorFactory.class).to(ActivityIntegratorFactory.class);
-		bind(IActivityIntegratorBuilder.class).to(IInjectActivityIntegratorBuilder.class);
-		bind(IInjectActivityIntegratorBuilder.class).to(InjectorIntegratorBuilder.class);
-		bind(IDefaultActivityIntegratorBuilder.class).to(DefaultIntegratorBuilder.class);
 		
 		bind(IUIServiceIntegration.class).to(UIServiceIntegration.class);
 		bind(IKeyboardActivityIntegration.class).to(KeyboardActivityIntegration.class);

@@ -9,22 +9,25 @@ import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfi
 public class AndroidInjectConfig extends HierarchicalInjectConfig {
 
 
-    @Override
-    protected void configure() {
-    	super.configure();
-    	
-        extend(new AndroidInjectModule());
-        
-        extend(new AndroidValuesInjectModule());
-        
-        extend(new AndroidParentIdentifiersInjectModule());
-        
-        extend(new AndroidGLInjectModule());
-        
-        extend(new AndroidPlatformInjectModule());
-        extend(new AndroidRenderDriversInjectModule());
-        
-        extend(new AndroidUIServiceExtensionsInjectModule());
-    }
-    
+	@Override
+	protected void configure() {
+		super.configure();
+
+		extend(new AndroidInjectModule());
+
+		extend(new AndroidValuesInjectModule());
+
+		extend(new AndroidParentIdentifiersInjectModule());
+
+		extend(new AndroidGLInjectModule());
+
+		extend(new AndroidPlatformInjectModule());
+		extend(new AndroidRenderDriversInjectModule());
+
+		extend(new AndroidUIServiceExtensionsInjectModule());
+
+
+		extend(new AndroidToolsInjectModule());
+	}
+
 }

@@ -10,21 +10,24 @@ import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfi
 public class DesktopInjectConfig extends HierarchicalInjectConfig {
 
 
-    @Override
-    public void configure() {
-    	super.configure();
-    	
-    	extend(new DesktopInjectModule());
-    	
-    	extend(new DesktopValuesInjectModule());
-    	
-    	extend(new DesktopParentIdentifiersInjectModule());
-    	extend(new PathAssetReadersInjectModule());
-    	
-    	extend(new DesktopGLInjectModule());
-    	
-    	extend(new LWJGLInjectModule());
-    	extend(new LWJGLRenderDriversInjectModule());
-    }
-    
+	@Override
+	public void configure() {
+		super.configure();
+
+		extend(new DesktopInjectModule());
+
+		extend(new DesktopValuesInjectModule());
+
+		extend(new DesktopParentIdentifiersInjectModule());
+		extend(new PathAssetReadersInjectModule());
+
+		extend(new DesktopGLInjectModule());
+
+		extend(new LWJGLInjectModule());
+		extend(new LWJGLRenderDriversInjectModule());
+
+
+		extend(new DesktopToolsInjectModule());
+	}
+
 }
