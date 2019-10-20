@@ -2,8 +2,8 @@ package com.tokelon.toktales.desktop.lwjgl.data;
 
 import java.nio.ShortBuffer;
 
-import com.tokelon.toktales.core.content.IDisposer;
 import com.tokelon.toktales.core.content.audio.ISound;
+import com.tokelon.toktales.tools.core.dispose.IDisposer;
 
 public class STBSound implements ISound {
 	

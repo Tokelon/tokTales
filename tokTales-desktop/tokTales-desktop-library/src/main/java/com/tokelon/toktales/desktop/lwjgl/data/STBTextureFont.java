@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
-import com.tokelon.toktales.core.content.IDisposer;
 import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.tools.core.dispose.IDisposer;
 
 public class STBTextureFont implements ITextureFont {
 	/* Possible optimizations, improvements

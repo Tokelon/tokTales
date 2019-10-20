@@ -2,7 +2,7 @@ package com.tokelon.toktales.desktop.lwjgl.data;
 
 import java.nio.ByteBuffer;
 
-import com.tokelon.toktales.core.content.IDisposer;
+import com.tokelon.toktales.tools.core.dispose.IDisposer;
 
 public class STBBitmap implements ISTBBitmap {
 

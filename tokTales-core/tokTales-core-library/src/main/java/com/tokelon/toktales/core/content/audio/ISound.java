@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content.audio;
 
 import java.nio.ShortBuffer;
 
-import com.tokelon.toktales.core.content.IDisposable;
+import com.tokelon.toktales.tools.core.dispose.IDisposable;
 
 public interface ISound extends IDisposable {
 

@@ -8,7 +8,6 @@ import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
 
-import com.tokelon.toktales.core.content.IDisposer;
 import com.tokelon.toktales.core.content.manage.codepoint.CodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
@@ -19,6 +18,7 @@ import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
+import com.tokelon.toktales.tools.core.dispose.IDisposer;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class STBCodepointDecoder implements ICodepointAssetDecoder {

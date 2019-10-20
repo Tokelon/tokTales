@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.content.graphics;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 
-import com.tokelon.toktales.core.content.IDisposable;
+import com.tokelon.toktales.tools.core.dispose.IDisposable;
 
 /** Contains pixel data and meta information of an image.
  *

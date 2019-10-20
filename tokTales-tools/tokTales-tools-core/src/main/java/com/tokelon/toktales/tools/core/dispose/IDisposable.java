@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.content;
+package com.tokelon.toktales.tools.core.dispose;
 
 /** Specifies that an object should be disposed to free up resources.
  */

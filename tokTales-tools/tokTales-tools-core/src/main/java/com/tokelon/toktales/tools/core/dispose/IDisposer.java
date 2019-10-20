@@ -1,8 +1,8 @@
-package com.tokelon.toktales.core.content;
+package com.tokelon.toktales.tools.core.dispose;
 
-import java9.lang.FunctionalInterface;
+import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
 
-@FunctionalInterface
+@CompatFunctionalInterface
 public interface IDisposer<T> {
 
 	
