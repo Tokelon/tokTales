@@ -4,15 +4,16 @@ import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 
 public interface IEngineLauncher {
-	
+	// TODO: Return IEngineContext from launch methods?
+
 	/* IGameAdapter binding:
 	 * External binding of game adapter is discouraged,
 	 * to avoid problematic bindings (no scope, to instance) and further confusion.
 	 * 
 	 * If truly necessary, the binding can be overridden in custom IEngineSetup.
 	 */
-	
-	
+
+
 	/** Launches with the given game adapter and the default setup.
 	 * 
 	 * @param adapter
@@ -27,6 +28,5 @@ public interface IEngineLauncher {
 	 * @throws EngineException
 	 */
 	public void launchWithSetup(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException;
-	
 
 }

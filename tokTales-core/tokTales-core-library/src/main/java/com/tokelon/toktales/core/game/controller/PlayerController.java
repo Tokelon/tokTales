@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.game.controller;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.sprite.SpriteImpl;
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.graphic.IBaseGraphic;
 import com.tokelon.toktales.core.game.graphic.SpriteGraphicImpl;
 import com.tokelon.toktales.core.game.graphic.animation.GameAnimation;
@@ -12,9 +12,9 @@ import com.tokelon.toktales.core.game.graphic.animation.IGameAnimation;
 import com.tokelon.toktales.core.game.logic.motion.IGameMotion;
 import com.tokelon.toktales.core.game.logic.motion.IMotionCallback;
 import com.tokelon.toktales.core.game.logic.motion.StraightAnimatedMotion;
-import com.tokelon.toktales.core.game.model.Player;
 import com.tokelon.toktales.core.game.model.IActor;
 import com.tokelon.toktales.core.game.model.IPlayer;
+import com.tokelon.toktales.core.game.model.Player;
 import com.tokelon.toktales.core.game.model.Point2fImpl;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity.IGameEntityParticipant;
@@ -27,28 +27,41 @@ import com.tokelon.toktales.core.values.PlayerValues;
 
 public class PlayerController extends AbstractController implements IPlayerController {
 
-	
-	private boolean mPlayerResponsive = true;
+
+	private boolean playerResponsive = true;
 	
 	private final AnimationCallback playerAnimationCallback = new AnimationCallback();
 
-	private final PlayerParticipant mPlayerParticipant;
+	private final PlayerParticipant playerParticipant;
 	
+	
+	private IGame game;
 	
 	private final IPlayer player;
 	
-	@Inject
 	public PlayerController(IPlayer player) {
+		this(player, null);
+	}
+	
+	@Inject
+	public PlayerController(IPlayer player, IGame game) {
 		this.player = player;
+		this.game = game;
 		
-		mPlayerParticipant = new PlayerParticipant();
+		this.playerParticipant = new PlayerParticipant();
 		//mPlayer.getParticipation().addParticipant(mPlayerParticipant);
 		
 		setupPlayer();
 	}
 	
 	public PlayerController(IActor playerActor) {
-		mPlayerParticipant = new PlayerParticipant();
+		this(playerActor, null);
+	}
+	
+	public PlayerController(IActor playerActor, IGame game) {
+		this.game = game;
+		
+		this.playerParticipant = new PlayerParticipant();
 		
 		this.player = new Player(playerActor);
 		//mPlayer.getParticipation().addParticipant(mPlayerParticipant);
@@ -125,6 +138,10 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	
 	@InjectGameScene
 	public void injectGamescene(IGameScene gamescene) {
+		if(game == null) {
+			this.game = gamescene.getGamestate().getGame();
+		}
+		
 		// Since the script manager comes from the game, this would be done on injection
 		
 		//gamescene.getGamestate().getGame().getScriptManager();
@@ -153,7 +170,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	@Override
 	public boolean playerLook(int direction) {
 		
-		if(mPlayerResponsive) {
+		if(playerResponsive) {
 
 			IBaseGraphic staticGraphic = player.getActor().getGraphicsImage().getAssignedGraphic(selectGraphicIDForDirection(direction));
 
@@ -172,7 +189,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	@Override
 	public boolean playerStartMoving(int direction) {
 
-		if(mPlayerResponsive) {
+		if(playerResponsive) {
 
 			player.getActor().setVelocity(
 					player.getActor().getSpeedX() * ICrossDirection.Tools.horizontalVelocitySignFromDirection(direction),
@@ -191,7 +208,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 				selAnimation.enableLoop(true);
 
 				//mPlayer.setAnimation(selAnimation, playerAnimationCallback);
-				player.getActor().getGraphicsImage().startAnimation(selAnimation, TokTales.getGame().getTimeManager().getGameTimeMillis());
+				player.getActor().getGraphicsImage().startAnimation(selAnimation, game.getTimeManager().getGameTimeMillis());
 			}
 
 			return true;
@@ -204,7 +221,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	@Override
 	public boolean playerStopMoving() {
 		
-		if(mPlayerResponsive) {
+		if(playerResponsive) {
 
 			player.getActor().setVelocity(0f, 0f);
 			
@@ -230,7 +247,7 @@ public class PlayerController extends AbstractController implements IPlayerContr
 	
 	@Override
 	public boolean playerJump() {
-		mPlayerParticipant.doJump(); // Does not actually do anything?
+		playerParticipant.doJump(); // Does not actually do anything?
 		
 		player.getActor().getParticipation().notifyOfChange("gravity_DoJump");
 		

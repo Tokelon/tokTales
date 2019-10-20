@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
+import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
@@ -17,6 +18,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 
 public class TokTalesApp extends Application {
+	// TODO: Add callback onEngineLaunch(IEngineContext context) ?
 
 
 	private static final ILogger logger = LoggingManager.getLogger(TokTalesApp.class);
@@ -148,9 +150,12 @@ public class TokTalesApp extends Application {
 		 * TODO: Implement termination inside an activity (the main activity)
 		 */
 		
-		TokTales.getGame().getGameControl().pauseGame();
-		TokTales.getGame().getGameControl().stopGame();
-		TokTales.getGame().getGameControl().destroyGame();
+		IGame game = TokTales.getGame(); // TODO: Replace with callback onEngineLaunch() ?
+		if(game != null) {
+			game.getGameControl().pauseGame();
+			game.getGameControl().stopGame();
+			game.getGameControl().destroyGame();	
+		}
 	}
 
 	

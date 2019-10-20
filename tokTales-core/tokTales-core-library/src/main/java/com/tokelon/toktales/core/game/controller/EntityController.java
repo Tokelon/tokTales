@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.controller;
 
-import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.graphic.animation.IGameAnimation;
 import com.tokelon.toktales.core.game.logic.motion.IGameMotion;
 import com.tokelon.toktales.core.game.logic.motion.IMotionCallback;
@@ -11,24 +11,24 @@ import com.tokelon.toktales.core.game.world.ICompassDirection;
 import com.tokelon.toktales.tools.core.objects.pools.SynchronizedPool;
 
 public class EntityController {
-
-	
 	// TODO: Refactor, remove motion stuff
-	
+
+
 	private static final int STRAIGHT_DIRECTION_POOL_MAX_SIZE = 50;
 	private final SynchronizedPool<StraightAnimatedMotion> straightDirectionPool;
 	
 	private final IMotionCallback<IGameMotion> motionCallback;
 	
 	
-	public EntityController() {
+	private final IGame game;
+	
+	public EntityController(IGame game) {
+		this.game = game;
 		StraightDirectionFactory sdfactory = new StraightDirectionFactory();
 		
 		motionCallback = sdfactory;
 		straightDirectionPool = new SynchronizedPool<StraightAnimatedMotion>(sdfactory, STRAIGHT_DIRECTION_POOL_MAX_SIZE);
 	}
-	
-	
 	
 	
 	
@@ -48,7 +48,7 @@ public class EntityController {
 		entity.setVelocity(
 				entity.getSpeedX() * ICompassDirection.Tools.horizontalVelocitySignFromDirection(direction),
 				entity.getSpeedY() * ICompassDirection.Tools.verticalVelocitySignFromDirection(direction)
-				);
+		);
 		
 		
 		// Animation
@@ -66,7 +66,7 @@ public class EntityController {
 			
 			animation.resetAnimation();
 			animation.enableLoop(true);
-			entity.getGraphicsImage().startAnimation(animation, TokTales.getGame().getTimeManager().getGameTimeMillis());
+			entity.getGraphicsImage().startAnimation(animation, game.getTimeManager().getGameTimeMillis());
 			
 			//motion.setAnimation(animation);
 		}
@@ -156,5 +156,5 @@ public class EntityController {
 		
 		return res;
 	}
-		
+	
 }

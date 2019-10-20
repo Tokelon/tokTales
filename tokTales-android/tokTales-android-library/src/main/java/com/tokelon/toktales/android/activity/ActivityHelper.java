@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.google.inject.Injector;
 import com.tokelon.toktales.android.activity.integration.IDefaultActivityIntegratorBuilder;
 import com.tokelon.toktales.core.engine.TokTales;
+import com.tokelon.toktales.core.engine.annotation.TokTalesRequired;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegration;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator.IActivityIntegratorFactory;
@@ -24,6 +25,7 @@ public final class ActivityHelper {
 	 * 
 	 * @param activity
 	 */
+	@TokTalesRequired
 	public static void injectActivityDependencies(Activity activity) {
 		Injector injector = TokTales.getInjector();
 		injector.injectMembers(activity);
@@ -36,6 +38,7 @@ public final class ActivityHelper {
 	 * 
 	 * @return A new integrator builder.
 	 */
+	@TokTalesRequired
 	public static IInjectActivityIntegratorBuilder createActivityIntegratorBuilder() {
 		return TokTales.getInjector().getInstance(IInjectActivityIntegratorBuilder.class);
 	}
@@ -46,6 +49,7 @@ public final class ActivityHelper {
 	 * 
 	 * @return A new default integrator builder.
 	 */
+	@TokTalesRequired
 	public static IDefaultActivityIntegratorBuilder createDefaultActivityIntegratorBuilder() {
 		return TokTales.getInjector().getInstance(IDefaultActivityIntegratorBuilder.class);
 	}
@@ -59,6 +63,7 @@ public final class ActivityHelper {
 	 * @param integrations
 	 * @return A new integrator with the given configuration.
 	 */
+	@TokTalesRequired
 	public static IActivityIntegrator createActivityIntegrator(IIntegratedActivity activity, IActivityIntegration... integrations) {
 		return createActivityIntegrator(activity, Arrays.asList(integrations));
 	}
@@ -71,6 +76,7 @@ public final class ActivityHelper {
 	 * @param integrations
 	 * @return A new integrator with the given configuration.
 	 */
+	@TokTalesRequired
 	public static IActivityIntegrator createActivityIntegrator(IIntegratedActivity activity, Iterable<IActivityIntegration> integrations) {
 		Injector injector = TokTales.getInjector();
 		
@@ -92,6 +98,7 @@ public final class ActivityHelper {
 	 * @return A new integrator with the given configuration.
 	 */
 	@SafeVarargs
+	@TokTalesRequired
 	public static IActivityIntegrator createActivityIntegratorWithTypes(IIntegratedActivity activity, Class<? extends IActivityIntegration>... integrationTypes) {
 		return createActivityIntegratorWithTypes(activity, Arrays.asList(integrationTypes));
 	}
@@ -104,6 +111,7 @@ public final class ActivityHelper {
 	 * @param integrationTypes
 	 * @return A new integrator with the given configuration.
 	 */
+	@TokTalesRequired
 	public static IActivityIntegrator createActivityIntegratorWithTypes(IIntegratedActivity activity, Iterable<Class<? extends IActivityIntegration>> integrationTypes) {
 		Injector injector = TokTales.getInjector();
 		
