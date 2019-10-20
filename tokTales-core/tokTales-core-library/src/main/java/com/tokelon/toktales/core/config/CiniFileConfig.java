@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import com.tokelon.toktales.core.prog.annotation.NotThreadSafe;
+import com.tokelon.toktales.tools.core.annotations.safety.NotThreadSafe;
 import com.tokelon.toktales.tools.core.config.AbstractConfig;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ICiniConfig;

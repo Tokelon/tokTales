@@ -9,7 +9,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.tokelon.toktales.tools.core.annotations.CompatRepeatable;
+import com.tokelon.toktales.tools.core.annotations.compatibility.CompatRepeatable;
 
 /** Can be used to annotated methods that should be invoked by an {@link IParameterInjector}.
  * <p>

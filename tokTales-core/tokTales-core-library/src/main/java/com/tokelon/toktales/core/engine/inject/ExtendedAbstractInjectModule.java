@@ -11,7 +11,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
-import com.tokelon.toktales.core.prog.annotation.Experimental;
+import com.tokelon.toktales.tools.core.annotations.condition.Experimental;
 
 /** Alternative to {@link AbstractInjectModule} with builder syntax.
  * 

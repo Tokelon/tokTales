@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.prog.annotation;
+package com.tokelon.toktales.tools.core.annotations.condition;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

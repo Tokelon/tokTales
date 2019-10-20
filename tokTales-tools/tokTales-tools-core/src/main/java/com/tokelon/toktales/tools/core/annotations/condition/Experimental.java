@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.prog.annotation;
+package com.tokelon.toktales.tools.core.annotations.condition;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
@@ -12,15 +12,15 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/** Indicates that the target is not finished or polished.<br>
- * Targets with this indicator may not work as intended or cause bugs.
+/** Indicates that the target is not part of the stable API.<br>
+ * Targets with this indicator may be removed in the short term.
  * <p>
  * The value field can be used for comments.
  */
 @Documented
 @Retention(SOURCE)
 @Target({ TYPE, FIELD, METHOD, CONSTRUCTOR, LOCAL_VARIABLE, PACKAGE })
-public @interface WorkInProgress {
+public @interface Experimental {
 
 	String value() default "";
 }

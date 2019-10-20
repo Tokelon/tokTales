@@ -3,7 +3,7 @@ package com.tokelon.toktales.tools.assets.loader;
 import java.io.InputStream;
 
 import com.tokelon.toktales.tools.assets.exception.AssetException;
-import com.tokelon.toktales.tools.core.annotations.CompatFunctionalInterface;
+import com.tokelon.toktales.tools.core.annotations.compatibility.CompatFunctionalInterface;
 
 @CompatFunctionalInterface
 public interface IAssetDecoder<T, K, O> {

@@ -6,7 +6,7 @@ import java.io.InputStream;
 import com.tokelon.toktales.core.game.logic.map.IMapLoader;
 import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.core.prog.annotation.Unfinished;
+import com.tokelon.toktales.tools.core.annotations.condition.Unfinished;
 import com.tokelon.toktales.tools.core.config.ICiniConfig;
 import com.tokelon.toktales.tools.tiled.MapFormatException;
 

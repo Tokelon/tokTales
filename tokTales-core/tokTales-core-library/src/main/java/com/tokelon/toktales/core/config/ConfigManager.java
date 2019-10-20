@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tokelon.toktales.core.prog.annotation.ThreadSafe;
+import com.tokelon.toktales.tools.core.annotations.safety.ThreadSafe;
 
 @ThreadSafe
 public class ConfigManager implements IConfigManager {

@@ -15,7 +15,7 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tokelon.toktales.tools.core.annotations.CompatRepeatable;
+import com.tokelon.toktales.tools.core.annotations.compatibility.CompatRepeatable;
 
 public class ParameterInjector implements IParameterInjector {
 
