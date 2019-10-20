@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.game.logic.observers.Participation;
 import com.tokelon.toktales.core.game.model.entity.GameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
-import com.tokelon.toktales.core.prog.annotation.Scripting;
+import com.tokelon.toktales.tools.script.annotation.ScriptRelevant;
 
 /** See {@link GameEntity} for subclassing this class.
  *
@@ -24,7 +24,7 @@ public class Actor extends GameEntity implements IActor {
 	private IParticipation<IGameEntity, IObserver<IGameEntity>, IParticipant<IGameEntity>> mParticipation;
 
 	
-	@Scripting("uses default ctor")
+	@ScriptRelevant("uses default ctor")
 	public Actor() {
 		super();
 		initParticipation();

@@ -14,9 +14,9 @@ import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderLayerStack;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.world.IWorldspace;
-import com.tokelon.toktales.core.prog.annotation.ScriptingAccess;
 import com.tokelon.toktales.core.values.ControllerValues;
 import com.tokelon.toktales.tools.core.sub.inject.annotations.RequiresInjection;
+import com.tokelon.toktales.tools.script.annotation.ScriptAccess;
 
 /** Use as an extended base for game scenes.
  */
@@ -277,7 +277,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	 * @param worldspace
 	 * @throws NullPointerException If worldspace is null.
 	 */
-	@ScriptingAccess
+	@ScriptAccess
 	public void setSceneWorldspace(IWorldspace worldspace) {
 		if(worldspace == null) {
 			throw new NullPointerException();
@@ -293,7 +293,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	 * @param playerController
 	 * @throws NullPointerException If playerController is null.
 	 */
-	@ScriptingAccess
+	@ScriptAccess
 	public void setScenePlayerController(IPlayerController playerController) {
 		if(playerController == null) {
 			throw new NullPointerException();
@@ -311,7 +311,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	 * @param cameraController
 	 * @throws NullPointerException If cameraController is null.
 	 */
-	@ScriptingAccess
+	@ScriptAccess
 	public void setSceneCameraController(ICameraController cameraController) {
 		if(cameraController == null) {
 			throw new NullPointerException();
@@ -329,7 +329,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	 * @param mapController
 	 * @throws NullPointerException If mapController is null.
 	 */
-	@ScriptingAccess
+	@ScriptAccess
 	public void setSceneMapController(IMapController mapController) {
 		if(mapController == null) {
 			throw new NullPointerException();

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.prog.annotation;
+package com.tokelon.toktales.tools.script.annotation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  */
 @Retention(SOURCE)
 @Target({ TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER, TYPE_USE })
-public @interface Scripting {
+public @interface ScriptRelevant {
 	
 	String value() default "";
 }
