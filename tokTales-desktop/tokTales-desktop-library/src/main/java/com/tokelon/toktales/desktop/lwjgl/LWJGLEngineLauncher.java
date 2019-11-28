@@ -3,9 +3,11 @@ package com.tokelon.toktales.desktop.lwjgl;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
 
+import com.google.inject.ConfigurationException;
+import com.google.inject.ProvisionException;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.input.IInputService;
+import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
@@ -33,6 +35,11 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		super(injectConfig);
 	}
 	
+	public LWJGLEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig) {
+		super(loggerFactory, injectConfig);
+	}
+
+
 	@Override
 	protected void startEngine(IEngineContext engineContext) throws EngineException {
 
@@ -50,23 +57,9 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 					lwMainWindow.show();
 
 					
-					IInputService inputService = engineContext.getEngine().getInputService();
-					if(inputService instanceof IDesktopInputService) {
-						IDesktopInputService desktopInputService = (IDesktopInputService) inputService;
-						IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
-						inputDriver = new GLFWInputDriver(lwMainWindow, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
-					}
-					else {
-						getLogger().error("Input driver could not be created: Input service is not compatible with input driver. Input service must be of type {}", IDesktopInputService.class);
-						//throw new EngineException("Input service must be of type " + IDesktopInputService.class);
-					}
+					initInputDriver(engineContext, lwMainWindow);
+					initRenderer(engineContext, lwMainWindow);
 					
-					renderer = new LWJGLRenderer(engineContext.getGame());
-					ISurface surface = renderer.onWindowCreated(lwMainWindow);
-
-					engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
-					engineContext.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
-
 					
 					super.startEngine(engineContext);
 				}
@@ -92,6 +85,27 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	}
 	
 	
+	private void initInputDriver(IEngineContext engineContext, LWJGLWindow window) throws EngineException {
+		IDesktopInputService desktopInputService;
+		try {
+			desktopInputService = engineContext.getInjector().getInstance(IDesktopInputService.class);
+		}
+		catch (ConfigurationException | ProvisionException e) {
+			throw new EngineException(e);
+		}
+
+		IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
+		inputDriver = new GLFWInputDriver(window, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+	}
+	
+	private void initRenderer(IEngineContext engineContext, LWJGLWindow lwMainWindow) {
+		renderer = new LWJGLRenderer(engineContext.getGame());
+		ISurface surface = renderer.onWindowCreated(lwMainWindow);
+		
+		engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
+		engineContext.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
+	}
+
 	
 	public void setWindowSize(int width, int height) {
 		this.windowWidth = width;
