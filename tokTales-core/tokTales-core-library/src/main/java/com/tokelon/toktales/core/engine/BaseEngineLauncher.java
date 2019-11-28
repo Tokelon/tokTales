@@ -12,9 +12,9 @@ import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConf
 public class BaseEngineLauncher implements IEngineLauncher {
 
 
-	private final ILogger logger;
 	private final IHierarchicalInjectConfig injectConfig;
 	private final IEngineLooper looper;
+	private final ILogger logger;
 
 	/** Constructor with an inject config.
 	 * <p>
@@ -23,18 +23,18 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param injectConfig
 	 */
 	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig) {
-		this(LoggingManager.getLoggerFactory(), injectConfig, () -> {});
+		this(injectConfig, () -> {}, LoggingManager.getLoggerFactory());
 	}
 	
-	/** Constructor with a logger factory and and inject config.
+	/** Constructor with an inject config and a logger factory.
 	 * <p>
 	 * A no-op looper will be used.
 	 * 
-	 * @param loggerFactory
 	 * @param injectConfig
+	 * @param loggerFactory
 	 */
-	protected BaseEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig) {
-		this(loggerFactory, injectConfig, () -> {});
+	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, ILoggerFactory loggerFactory) {
+		this(injectConfig, () -> {}, loggerFactory);
 	}
 	
 	/** Constructor with an inject config and a looper.
@@ -43,25 +43,21 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param looper
 	 */
 	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
-		this(LoggingManager.getLoggerFactory(), injectConfig, looper);
+		this(injectConfig, looper, LoggingManager.getLoggerFactory());
 	}
 	
-	/** Constructor with a logger factory, an inject config and a looper.
+	/** Constructor with an inject config, a logger factory and a looper.
 	 * 
-	 * @param loggerFactory
 	 * @param injectConfig
 	 * @param looper
+	 * @param loggerFactory
 	 */
-	public BaseEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
-		this.logger = loggerFactory.getLogger(getClass());
+	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper, ILoggerFactory loggerFactory) {
 		this.injectConfig = injectConfig;
 		this.looper = looper;
+		this.logger = loggerFactory.getLogger(getClass());
 	}
 	
-	
-	public ILogger getLogger() {
-		return logger;
-	}
 	
 	public IHierarchicalInjectConfig getInjectConfig() {
 		return injectConfig;
@@ -69,6 +65,10 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	
 	public IEngineLooper getEngineLooper() {
 		return looper;
+	}
+	
+	public ILogger getLogger() {
+		return logger;
 	}
 	
 

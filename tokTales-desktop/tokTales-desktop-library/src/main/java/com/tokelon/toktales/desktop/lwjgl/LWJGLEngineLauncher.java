@@ -35,8 +35,8 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		super(injectConfig);
 	}
 	
-	public LWJGLEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig) {
-		super(loggerFactory, injectConfig);
+	public LWJGLEngineLauncher(IHierarchicalInjectConfig injectConfig, ILoggerFactory loggerFactory) {
+		super(injectConfig, loggerFactory);
 	}
 
 

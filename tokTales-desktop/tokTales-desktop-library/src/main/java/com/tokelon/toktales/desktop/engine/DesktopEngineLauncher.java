@@ -21,19 +21,6 @@ public class DesktopEngineLauncher extends BaseEngineLauncher {
 		super(injectConfig);
 	}
 
-	/** Constructor with a logger factory and and inject config.
-	 * <p>
-	 * A no-op looper will be used.
-	 * 
-	 * @param loggerFactory
-	 * @param injectConfig
-	 * 
-	 * @see MasterDesktopInjectConfig
-	 */
-	public DesktopEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig) {
-		super(loggerFactory, injectConfig);
-	}
-	
 	/** Constructor with an inject config and a looper.
 	 * 
 	 * @param injectConfig
@@ -44,17 +31,30 @@ public class DesktopEngineLauncher extends BaseEngineLauncher {
 	public DesktopEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
 		super(injectConfig, looper);
 	}
-
-	/** Constructor with a logger factory, an inject config and a looper.
+	
+	/** Constructor with an inject config and a logger factory.
+	 * <p>
+	 * A no-op looper will be used.
 	 * 
-	 * @param loggerFactory
 	 * @param injectConfig
-	 * @param looper
+	 * @param loggerFactory
 	 * 
 	 * @see MasterDesktopInjectConfig
 	 */
-	public DesktopEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
-		super(loggerFactory, injectConfig, looper);
+	public DesktopEngineLauncher(IHierarchicalInjectConfig injectConfig, ILoggerFactory loggerFactory) {
+		super(injectConfig, loggerFactory);
+	}
+
+	/** Constructor with an inject config, a logger factory, and a looper.
+	 * 
+	 * @param injectConfig
+	 * @param looper
+	 * @param loggerFactory
+	 * 
+	 * @see MasterDesktopInjectConfig
+	 */
+	public DesktopEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper, ILoggerFactory loggerFactory) {
+		super(injectConfig, looper, loggerFactory);
 	}
 	
 }

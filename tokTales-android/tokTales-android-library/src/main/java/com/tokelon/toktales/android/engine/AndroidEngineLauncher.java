@@ -30,16 +30,16 @@ public class AndroidEngineLauncher extends BaseEngineLauncher {
 		this.appContext = applicationContext;
 	}
 
-	/** Constructor with a logger factory, an inject config and an application context.
+	/** Constructor with an inject config, an application context and a logger factory.
 	 * 
-	 * @param loggerFactory
 	 * @param injectConfig
 	 * @param applicationContext
+	 * @param loggerFactory
 	 * 
 	 * @see MasterAndroidInjectConfig
 	 */
-	public AndroidEngineLauncher(ILoggerFactory loggerFactory, IHierarchicalInjectConfig injectConfig, Context applicationContext) {
-		super(loggerFactory, injectConfig);
+	public AndroidEngineLauncher(IHierarchicalInjectConfig injectConfig, Context applicationContext, ILoggerFactory loggerFactory) {
+		super(injectConfig, loggerFactory);
 
 		this.appContext = applicationContext;
 	}
