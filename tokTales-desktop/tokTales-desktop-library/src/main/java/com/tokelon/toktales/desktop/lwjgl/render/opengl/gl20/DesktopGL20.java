@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.render.opengl.gl20;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl.gl20;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;

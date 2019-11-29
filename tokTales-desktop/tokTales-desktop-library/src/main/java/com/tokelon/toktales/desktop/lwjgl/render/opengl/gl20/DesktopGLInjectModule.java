@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.render.opengl.gl20;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl.gl20;
 
 import com.google.inject.Scopes;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
@@ -9,9 +9,8 @@ import com.tokelon.toktales.core.render.opengl.gl20.IGL15;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL20;
 
 public class DesktopGLInjectModule extends AbstractInjectModule {
-	// TODO: Move all these types into LWJGL package
-	
-	
+
+
 	@Override
 	protected void configure() {
 		bind(IGL11.class).to(DesktopGL11.class).in(Scopes.SINGLETON);

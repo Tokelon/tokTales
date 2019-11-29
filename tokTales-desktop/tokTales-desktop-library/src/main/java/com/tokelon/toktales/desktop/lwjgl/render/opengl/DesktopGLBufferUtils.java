@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.render.opengl;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

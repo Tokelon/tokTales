@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.content.manage.PathAssetReadersInjectModule;
 import com.tokelon.toktales.desktop.content.DesktopParentIdentifiersInjectModule;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLInjectModule;
 import com.tokelon.toktales.desktop.lwjgl.render.LWJGLRenderDriversInjectModule;
-import com.tokelon.toktales.desktop.render.opengl.gl20.DesktopGLInjectModule;
+import com.tokelon.toktales.desktop.lwjgl.render.opengl.gl20.DesktopGLInjectModule;
 import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfig;
 
 public class DesktopInjectConfig extends HierarchicalInjectConfig {
