@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl;
+package com.tokelon.toktales.desktop.lwjgl.render;
 
 import java.nio.FloatBuffer;
 
@@ -11,6 +11,7 @@ import org.lwjgl.system.MemoryUtil;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 import com.tokelon.toktales.tools.core.dispose.IDisposable;
 
 import gnu.trove.map.TObjectIntMap;

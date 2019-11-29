@@ -4,14 +4,14 @@ import org.lwjgl.glfw.GLFW;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLooper;
-import com.tokelon.toktales.desktop.render.IDesktopOpenGLRenderer;
+import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
 public class DefaultLWJGLLooper implements IEngineLooper {
 
 
-	private final IDesktopOpenGLRenderer renderer;
+	private final IWindowRenderer renderer;
 
-	public DefaultLWJGLLooper(IDesktopOpenGLRenderer renderer) {
+	public DefaultLWJGLLooper(IWindowRenderer renderer) {
 		this.renderer = renderer;
 	}
 	

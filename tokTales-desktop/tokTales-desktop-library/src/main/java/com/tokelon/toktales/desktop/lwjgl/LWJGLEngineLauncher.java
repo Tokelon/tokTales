@@ -15,7 +15,9 @@ import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
-import com.tokelon.toktales.desktop.render.IDesktopOpenGLRenderer;
+import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowFactory;
+import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowRenderer;
+import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
@@ -31,7 +33,7 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	private String windowTitle = "";
 
 	private IDesktopInputDriver mainWindowInputDriver;
-	private IDesktopOpenGLRenderer mainWindowRenderer;
+	private IWindowRenderer mainWindowRenderer;
 	private IEngineLooper mainWindowLooper;
 	
 	
@@ -99,8 +101,8 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		return inputDriver;
 	}
 	
-	protected IDesktopOpenGLRenderer setupRenderer(IEngineContext engineContext, IWindow window) {
-		IDesktopOpenGLRenderer renderer = new LWJGLRenderer(engineContext.getGame());
+	protected IWindowRenderer setupRenderer(IEngineContext engineContext, IWindow window) {
+		IWindowRenderer renderer = new LWJGLWindowRenderer(engineContext.getGame());
 		ISurface surface = renderer.create(window);
 		
 		engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
@@ -109,7 +111,7 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		return renderer;
 	}
 
-	protected IEngineLooper setupLooper(IDesktopOpenGLRenderer renderer) {
+	protected IEngineLooper setupLooper(IWindowRenderer renderer) {
 		return new DefaultLWJGLLooper(renderer);
 	}
 	

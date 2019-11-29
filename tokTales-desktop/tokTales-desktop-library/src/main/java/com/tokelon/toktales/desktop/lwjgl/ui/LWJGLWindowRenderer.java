@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl;
+package com.tokelon.toktales.desktop.lwjgl.ui;
 
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
@@ -8,10 +8,10 @@ import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
-import com.tokelon.toktales.desktop.render.IDesktopOpenGLRenderer;
+import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 
-public class LWJGLRenderer implements IDesktopOpenGLRenderer { // TODO: Rename to LWJGLGameWindowRenderer
+public class LWJGLWindowRenderer implements IWindowRenderer {
 
 
 	private final IGame game;
@@ -19,7 +19,7 @@ public class LWJGLRenderer implements IDesktopOpenGLRenderer { // TODO: Rename t
 	private IWindow window;
 	private ISurface surface;
 	
-	public LWJGLRenderer(IGame game) {
+	public LWJGLWindowRenderer(IGame game) {
 		if(game == null) {
 			throw new NullPointerException();
 		}

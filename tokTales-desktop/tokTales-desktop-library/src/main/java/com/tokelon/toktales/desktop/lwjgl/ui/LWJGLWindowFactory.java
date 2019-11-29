@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl;
+package com.tokelon.toktales.desktop.lwjgl.ui;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
