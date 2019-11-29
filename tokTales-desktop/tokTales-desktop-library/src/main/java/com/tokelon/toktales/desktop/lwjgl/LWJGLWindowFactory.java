@@ -38,17 +38,17 @@ public class LWJGLWindowFactory implements IWindowFactory {
 
 	@Override
 	public IWindow create(int width, int height, String title) {
-		return new LWJGLWindowImpl(width, height, title);
+		return new LWJGLWindow(width, height, title);
 	}
 	
 	@Override
 	public IWindow create(int width, int height, String title, long monitor) {
-		return new LWJGLWindowImpl(width, height, title, monitor);
+		return new LWJGLWindow(width, height, title, monitor);
 	}
 	
 	@Override
 	public IWindow create(int width, int height, String title, long monitor, long share) {
-		return new LWJGLWindowImpl(width, height, title, monitor, share);
+		return new LWJGLWindow(width, height, title, monitor, share);
 	}
 	
 	
@@ -67,7 +67,7 @@ public class LWJGLWindowFactory implements IWindowFactory {
 				throw new RuntimeException("Failed to create window");
 			}
 			
-			IWindow window = new LWJGLWindowImpl(id, title);
+			IWindow window = new LWJGLWindow(id, title);
 			return window;
 		}
 

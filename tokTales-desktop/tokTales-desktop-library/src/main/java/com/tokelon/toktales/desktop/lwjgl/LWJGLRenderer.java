@@ -1,7 +1,7 @@
 package com.tokelon.toktales.desktop.lwjgl;
 
 import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
@@ -9,29 +9,72 @@ import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.desktop.render.IDesktopOpenGLRenderer;
+import com.tokelon.toktales.desktop.ui.window.IWindow;
 
-public class LWJGLRenderer implements IDesktopOpenGLRenderer {
-	
-	
-	// TODO: Use window name for surface and make settable
-	public static final String DEFAULT_SURFACE_NAME = "LWJGLRenderer_Surface";
-	
-	private final IGame mGame;
-	
-	private LWJGLWindow mWindow;
+public class LWJGLRenderer implements IDesktopOpenGLRenderer { // TODO: Rename to LWJGLGameWindowRenderer
 
+
+	private final IGame game;
+	
+	private IWindow window;
+	private ISurface surface;
 	
 	public LWJGLRenderer(IGame game) {
 		if(game == null) {
 			throw new NullPointerException();
 		}
 		
-		this.mGame = game;
+		this.game = game;
 	}
 	
 	
-	public ISurface onWindowCreated(LWJGLWindow window) {
-		mWindow = window;
+	@Override
+	public ISurface create(IWindow window) {
+		this.window = window;
+		
+		window.makeContextCurrent();
+		
+		GL.createCapabilities();
+		
+		
+		this.surface = createSurface(window.getTitle(), window.getWidth(), window.getHeight());
+		return surface;
+	}
+
+	protected ISurface createSurface(String name, int windowWidth, int windowHeight) {
+		AccurateViewport newMasterViewport = new AccurateViewport();
+		newMasterViewport.setSize(windowWidth, windowHeight);
+		
+		
+		float glViewportWidth = windowWidth;
+		float glViewportHeight = windowHeight;
+		
+		Matrix4f projMatrix = new Matrix4f().ortho(
+				0.0f, (float)glViewportWidth,
+				//0.0f - 1.0f, (float)glViewportWidth - 1.0f,
+				
+				//0.0f - 1.0f, (float)glViewportHeight - 1.0f,	// Normal y axis (up)
+				//(float)glViewportHeight - 1.0f, 0.0f - 1.0f,	// Flip y axis
+				(float)glViewportHeight, 0.0f,	// Flip y axis
+				
+				0.0f, 50.0f
+				);
+		
+		ISurface surface = new Surface(name, newMasterViewport, projMatrix);
+		
+		return surface;
+	}
+	
+	
+	@Override
+	public void destroy() {
+		// TODO: Something?
+	}
+	
+	
+	public void prepareFrame() {
+		window.makeContextCurrent();
+
 		
 		// TODO: Set clear color
 		GL11.glClearColor(0.33f, 0.59f, 0.729f, 0.0f);
@@ -49,58 +92,24 @@ public class LWJGLRenderer implements IDesktopOpenGLRenderer {
 		
 		
 		GL11.glViewport(0, 0, window.getWidth(), window.getHeight());
-		
-
-		
-		AccurateViewport newMasterViewport = new AccurateViewport();
-		newMasterViewport.setSize(window.getWidth(), window.getHeight());
-		
-		
-		float glViewportWidth = window.getWidth();
-		float glViewportHeight = window.getHeight();
-		
-		Matrix4f projMatrix = new Matrix4f().ortho(
-				0.0f, (float)glViewportWidth,
-				//0.0f - 1.0f, (float)glViewportWidth - 1.0f,
-				
-				//0.0f - 1.0f, (float)glViewportHeight - 1.0f,	// Normal y axis (up)
-				//(float)glViewportHeight - 1.0f, 0.0f - 1.0f,	// Flip y axis
-				(float)glViewportHeight, 0.0f,	// Flip y axis
-				
-				0.0f, 50.0f
-				);
-		
-		ISurface surface = new Surface(DEFAULT_SURFACE_NAME, newMasterViewport, projMatrix);
-		
-		return surface;
 	}
-
 	
-	public void runLoop() {
+	@Override
+	public void drawFrame() {
+		game.getGameControl().updateGame();
 		
-		// Maybe do the loop outside of here
-		
-		// Run the rendering loop until the user has attempted to close
-		// the window or has pressed the ESCAPE key.
-		while (!mWindow.shouldClose()) {
-			
-			// Draw the actual stuff
-			onDrawFrame();
-			
-			mWindow.swapBuffers();
-
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			GLFW.glfwPollEvents();
-		}
+		game.getGameControl().renderGame();
+	}
+	
+	@Override
+	public void commitFrame() {
+		window.swapBuffers();		
 	}
 	
 	
 	@Override
-	public void onDrawFrame() {
-		mGame.getGameControl().updateGame();
-		
-		mGame.getGameControl().renderGame();
+	public IWindow getWindow() {
+		return window;
 	}
 	
 }

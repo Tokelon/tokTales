@@ -1,34 +1,38 @@
 package com.tokelon.toktales.desktop.lwjgl;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.system.MemoryUtil;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.ProvisionException;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.desktop.engine.DesktopEngineLauncher;
+import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLWindow.WindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
+import com.tokelon.toktales.desktop.render.IDesktopOpenGLRenderer;
+import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
 public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	// TODO: Additional window properties, like visible resisable etc.
 	// Better: Make window object available through a solid interface
+	// TODO: Pass window in ctor!
 
-	
+
 	private int windowWidth = 1280;
 	private int windowHeight = 720;
 	private String windowTitle = "";
 
-	private LWJGLRenderer renderer;
-	private GLFWInputDriver inputDriver;
+	private IDesktopInputDriver mainWindowInputDriver;
+	private IDesktopOpenGLRenderer mainWindowRenderer;
+	private IEngineLooper mainWindowLooper;
 	
 	
 	public LWJGLEngineLauncher(IHierarchicalInjectConfig injectConfig) {
@@ -42,31 +46,27 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 
 	@Override
 	protected void startEngine(IEngineContext engineContext) throws EngineException {
-
 		LWJGLProgram lwProgram = new LWJGLProgram();
 		try {
 			
 			lwProgram.setup();
 			try {
-				LWJGLWindow lwMainWindow = createWindow();
+				IWindow mainWindow = createWindow();
 
-
-				lwMainWindow.create();
+				mainWindow.create();
 				try {
-					lwMainWindow.setSwapInterval(1);	// Enable Vsync
-					lwMainWindow.show();
+					mainWindow.show();
+					
+					mainWindowInputDriver = setupInputDriver(engineContext, mainWindow);
+					mainWindowRenderer = setupRenderer(engineContext, mainWindow);
+					mainWindowLooper = setupLooper(mainWindowRenderer);
 
-					
-					initInputDriver(engineContext, lwMainWindow);
-					initRenderer(engineContext, lwMainWindow);
-					
 					
 					super.startEngine(engineContext);
 				}
 				finally {
-					lwMainWindow.destroy();
+					mainWindow.destroy();
 				}
-
 			}
 			finally {
 				lwProgram.tearDown();
@@ -79,13 +79,13 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	
 	@Override
 	protected void loop() throws EngineException {
-		// Do not invoke super, as it would call the looper
+		// Do not invoke super, for it would call the looper
 		
-		renderer.runLoop();
+		mainWindowLooper.loop();
 	}
 	
 	
-	private void initInputDriver(IEngineContext engineContext, LWJGLWindow window) throws EngineException {
+	protected IDesktopInputDriver setupInputDriver(IEngineContext engineContext, IWindow window) throws EngineException {
 		IDesktopInputService desktopInputService;
 		try {
 			desktopInputService = engineContext.getInjector().getInstance(IDesktopInputService.class);
@@ -95,17 +95,24 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		}
 
 		IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
-		inputDriver = new GLFWInputDriver(window, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+		IDesktopInputDriver inputDriver = new GLFWInputDriver(window, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+		return inputDriver;
 	}
 	
-	private void initRenderer(IEngineContext engineContext, LWJGLWindow lwMainWindow) {
-		renderer = new LWJGLRenderer(engineContext.getGame());
-		ISurface surface = renderer.onWindowCreated(lwMainWindow);
+	protected IDesktopOpenGLRenderer setupRenderer(IEngineContext engineContext, IWindow window) {
+		IDesktopOpenGLRenderer renderer = new LWJGLRenderer(engineContext.getGame());
+		ISurface surface = renderer.create(window);
 		
 		engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
 		engineContext.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
+		
+		return renderer;
 	}
 
+	protected IEngineLooper setupLooper(IDesktopOpenGLRenderer renderer) {
+		return new DefaultLWJGLLooper(renderer);
+	}
+	
 	
 	public void setWindowSize(int width, int height) {
 		this.windowWidth = width;
@@ -117,19 +124,16 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	}
 	
 
-	private LWJGLWindow createWindow() throws LWJGLException {
+	private IWindow createWindow() throws LWJGLException {
+		LWJGLWindowFactory windowFactory = new LWJGLWindowFactory();
+		windowFactory.setWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_TRUE);
+		windowFactory.setWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 		
-		LWJGLWindow.WindowFactory mainWindowFactory = new WindowFactory();
+		//IWindow window = windowFactory.create(windowWidth, windowHeight, windowTitle, windowFactory.getPrimaryMonitor());
+		IWindow window = windowFactory.create(windowWidth, windowHeight, windowTitle);
+		window.create();
 		
-		mainWindowFactory.setWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_TRUE);
-		mainWindowFactory.setWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
-		
-		//GLFW.glfwGetPrimaryMonitor()
-		LWJGLWindow mainWindow = mainWindowFactory.create(windowWidth, windowHeight, windowTitle, MemoryUtil.NULL, MemoryUtil.NULL);
-		//LWJGLWindow mainWindow = mainWindowFactory.create(windowWidth, windowHeight, windowTitle, GLFW.glfwGetPrimaryMonitor(), MemoryUtil.NULL);
-
-		
-		return mainWindow;
+		return window;
 	}
 	
 }
