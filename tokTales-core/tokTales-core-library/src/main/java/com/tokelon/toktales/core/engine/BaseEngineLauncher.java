@@ -93,7 +93,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		
 		
 		// Start the engine
-		startEngine(engineContext);
+		runEngine(engineContext);
 	}
 
 
@@ -139,7 +139,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * 
 	 * @see #loop()
 	 */
-	protected void startEngine(IEngineContext engineContext) throws EngineException {
+	protected void runEngine(IEngineContext engineContext) throws EngineException {
 		startupEngine(engineContext);
 
 		try {

@@ -67,7 +67,7 @@ public class AndroidEngineLauncher extends BaseEngineLauncher {
 	 * @throws EngineException
 	 */
 	@Override
-	protected void startEngine(IEngineContext engineContext) throws EngineException {
+	protected void runEngine(IEngineContext engineContext) throws EngineException {
 		// Do NOT call super here
 		
 		// calls onCreate on adapter
