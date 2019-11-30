@@ -80,10 +80,10 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	}
 	
 	@Override
-	protected void loop() throws EngineException {
+	protected void loop(IEngineContext engineContext, IEngineLooper defaultLooper) throws EngineException {
 		// Do not invoke super, for it would call the looper
 		
-		mainWindowLooper.loop();
+		mainWindowLooper.loop(engineContext);
 	}
 	
 	

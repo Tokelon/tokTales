@@ -3,6 +3,7 @@ package com.tokelon.toktales.desktop.lwjgl;
 import org.lwjgl.glfw.GLFW;
 
 import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
@@ -17,7 +18,7 @@ public class DefaultLWJGLLooper implements IEngineLooper {
 	
 	
 	@Override
-	public void loop() throws EngineException {
+	public void loop(IEngineContext engineContext) throws EngineException {
 		/* Run the rendering loop until the user has attempted to close the window,
 		 * or has pressed the ESCAPE key.
 		 */

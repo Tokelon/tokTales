@@ -13,7 +13,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 
 
 	private final IHierarchicalInjectConfig injectConfig;
-	private final IEngineLooper looper;
+	private final IEngineLooper defaultLooper;
 	private final ILogger logger;
 
 	/** Constructor with an inject config.
@@ -23,7 +23,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param injectConfig
 	 */
 	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig) {
-		this(injectConfig, () -> {}, LoggingManager.getLoggerFactory());
+		this(injectConfig, (ctx) -> {}, LoggingManager.getLoggerFactory());
 	}
 	
 	/** Constructor with an inject config and a logger factory.
@@ -34,27 +34,27 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param loggerFactory
 	 */
 	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, ILoggerFactory loggerFactory) {
-		this(injectConfig, () -> {}, loggerFactory);
+		this(injectConfig, (ctx) -> {}, loggerFactory);
 	}
 	
 	/** Constructor with an inject config and a looper.
 	 * 
 	 * @param injectConfig
-	 * @param looper
+	 * @param defaultLooper
 	 */
-	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper) {
-		this(injectConfig, looper, LoggingManager.getLoggerFactory());
+	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper defaultLooper) {
+		this(injectConfig, defaultLooper, LoggingManager.getLoggerFactory());
 	}
 	
 	/** Constructor with an inject config, a logger factory and a looper.
 	 * 
 	 * @param injectConfig
-	 * @param looper
+	 * @param defaultLooper
 	 * @param loggerFactory
 	 */
-	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper looper, ILoggerFactory loggerFactory) {
+	public BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, IEngineLooper defaultLooper, ILoggerFactory loggerFactory) {
 		this.injectConfig = injectConfig;
-		this.looper = looper;
+		this.defaultLooper = defaultLooper;
 		this.logger = loggerFactory.getLogger(getClass());
 	}
 	
@@ -63,8 +63,8 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		return injectConfig;
 	}
 	
-	public IEngineLooper getEngineLooper() {
-		return looper;
+	public IEngineLooper getDefaultLooper() {
+		return defaultLooper;
 	}
 	
 	public ILogger getLogger() {
@@ -106,10 +106,10 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 */
 	protected IEngineContext createEngine(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
 		// Inject game adapter
-		injectConfig.extend(new BaseSetupInjectModule(adapter));
+		getInjectConfig().extend(new BaseSetupInjectModule(adapter));
 
 		// Create engine context
-		IEngineContext engineContext = setup.create(injectConfig);
+		IEngineContext engineContext = setup.create(getInjectConfig());
 
 		// Return the result
 		return engineContext;
@@ -140,28 +140,39 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @see #loop()
 	 */
 	protected void startEngine(IEngineContext engineContext) throws EngineException {
+		startupEngine(engineContext);
+
+		try {
+			loop(engineContext, getDefaultLooper());
+		}
+		finally {
+			shutdownEngine(engineContext);
+		}
+	}
+	
+	protected void startupEngine(IEngineContext engineContext) throws EngineException {
 		engineContext.getGame().getGameControl().createGame(); // calls onCreate on adapter
 
 		engineContext.getGame().getGameControl().startGame();
 		engineContext.getGame().getGameControl().resumeGame();
-		try {
-			loop();
-		}
-		finally {
-			engineContext.getGame().getGameControl().pauseGame();
-			engineContext.getGame().getGameControl().stopGame();
-			
-			engineContext.getGame().getGameControl().destroyGame();
-		}
 	}
+	
+	protected void shutdownEngine(IEngineContext engineContext) throws EngineException {
+		engineContext.getGame().getGameControl().pauseGame();
+		engineContext.getGame().getGameControl().stopGame();
+		
+		engineContext.getGame().getGameControl().destroyGame();
+	}
+	
 	
 	/** The actual loop.
 	 * The default implementation calls the looper.
 	 * 
+	 * @param defaultLooper
 	 * @throws EngineException If an error occurs while looping.
 	 */
-	protected void loop() throws EngineException {
-		looper.loop();
+	protected void loop(IEngineContext engineContext, IEngineLooper defaultLooper) throws EngineException {
+		defaultLooper.loop(engineContext);
 	}
 	
 }
