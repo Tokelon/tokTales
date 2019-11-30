@@ -14,7 +14,6 @@ import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
 public class GLFWInputDriver implements IDesktopInputDriver {
-	//public IInputDispatch getInputDispatch(); // TODO: Add to window or input driver?
 
 
 	private static final int EVENT_POOL_CAPACITY_MOUSE_BUTTON_INPUT = 20;
@@ -29,17 +28,31 @@ public class GLFWInputDriver implements IDesktopInputDriver {
 	private static final int EVENT_POOL_INITIAL_SIZE_CHAR_INPUT = 20;
 	
 	
-	private final GLFWMouseButtonInputProducer glfwButtonCallback;
-	private final GLFWCursorEnterInputProducer glfwCursorEnterCallback;
-	private final GLFWCursorPosInputProducer glfwCursorPosCallback;
-	private final GLFWKeyInputProducer glfwKeyCallback;
-	private final GLFWCharInputProducer glfwCharCallback;
+	private GLFWMouseButtonInputProducer glfwButtonCallback;
+	private GLFWCursorEnterInputProducer glfwCursorEnterCallback;
+	private GLFWCursorPosInputProducer glfwCursorPosCallback;
+	private GLFWKeyInputProducer glfwKeyCallback;
+	private GLFWCharInputProducer glfwCharCallback;
 	
 	
-	private final IWindow window;
-	private final long windowHandle;
+	private IWindow window;
+	private long windowHandle;
 
-	public GLFWInputDriver(IWindow window, IDesktopInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
+	private final IDesktopInputProducer inputProducer;
+	private final IObjectPoolFactory eventPoolFactory;
+
+	public GLFWInputDriver(IDesktopInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
+		this.inputProducer = inputProducer;
+		this.eventPoolFactory = eventPoolFactory;
+	}
+	
+	
+	@Override
+	public void register(IWindow window) {
+		if(this.window != null) {
+			throw new IllegalStateException("Input driver has already been registered");
+		}
+		
 		this.window = window;
 		this.windowHandle = window.getId();
 		
@@ -47,11 +60,33 @@ public class GLFWInputDriver implements IDesktopInputDriver {
 		GLFW.glfwSetMouseButtonCallback(windowHandle, glfwButtonCallback = new GLFWMouseButtonInputProducer(inputProducer, eventPoolFactory.create(() -> new MouseButtonInputEvent(), EVENT_POOL_CAPACITY_MOUSE_BUTTON_INPUT, EVENT_POOL_INITIAL_SIZE_MOUSE_BUTTON_INPUT)));
 		GLFW.glfwSetCursorEnterCallback(windowHandle, glfwCursorEnterCallback = new GLFWCursorEnterInputProducer(inputProducer, eventPoolFactory.create(() -> new CursorEnterInputEvent(), EVENT_POOL_CAPACITY_CURSOR_ENTER_INPUT, EVENT_POOL_INITIAL_SIZE_CURSOR_ENTER_INPUT)));
 		GLFW.glfwSetCursorPosCallback(windowHandle, glfwCursorPosCallback = new GLFWCursorPosInputProducer(inputProducer, eventPoolFactory.create(() -> new CursorPosInputEvent(), EVENT_POOL_CAPACITY_CURSOR_POS_INPUT, EVENT_POOL_INITIAL_SIZE_CURSOR_POS_INPUT)));
-		
 		GLFW.glfwSetKeyCallback(windowHandle, glfwKeyCallback = new GLFWKeyInputProducer(inputProducer, eventPoolFactory.create(() -> new KeyInputEvent(), EVENT_POOL_CAPACITY_KEY_INPUT, EVENT_POOL_INITIAL_SIZE_KEY_INPUT)));
-		GLFW.glfwSetCharCallback(windowHandle, glfwCharCallback = new GLFWCharInputProducer(inputProducer, eventPoolFactory.create(() -> new CharInputEvent(), EVENT_POOL_CAPACITY_CHAR_INPUT, EVENT_POOL_INITIAL_SIZE_CHAR_INPUT)));
+		GLFW.glfwSetCharCallback(windowHandle, glfwCharCallback = new GLFWCharInputProducer(inputProducer, eventPoolFactory.create(() -> new CharInputEvent(), EVENT_POOL_CAPACITY_CHAR_INPUT, EVENT_POOL_INITIAL_SIZE_CHAR_INPUT)));		
 	}
+	
+	@Override
+	public void unregister() {
+		if(this.window == null) {
+			throw new IllegalStateException("Input driver has not been registered");
+		}
+		
 
+		GLFW.glfwSetMouseButtonCallback(windowHandle, null);
+		GLFW.glfwSetCursorEnterCallback(windowHandle, null);
+		GLFW.glfwSetCursorPosCallback(windowHandle, null);
+		GLFW.glfwSetKeyCallback(windowHandle, null);
+		GLFW.glfwSetCharCallback(windowHandle, null);
+		
+		glfwButtonCallback = null;
+		glfwCursorEnterCallback = null;
+		glfwCursorPosCallback = null;
+		glfwKeyCallback = null;
+		glfwCharCallback = null;
+		
+		window = null;
+		windowHandle = 0L;
+	}
+	
 	
 	@Override
 	public int getKeyState(int vk) {

@@ -1,9 +1,15 @@
 package com.tokelon.toktales.desktop.input;
 
 import com.tokelon.toktales.core.engine.input.IInputDriver;
+import com.tokelon.toktales.desktop.ui.window.IWindow;
 
 public interface IDesktopInputDriver extends IInputDriver {
-	// TODO: Make this window dependent
+
+
+	public void register(IWindow window);
+	
+	public void unregister();
+
 	
 	public int getKeyState(int vk);
 

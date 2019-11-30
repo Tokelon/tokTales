@@ -97,7 +97,8 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 		}
 
 		IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
-		IDesktopInputDriver inputDriver = new GLFWInputDriver(window, mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+		IDesktopInputDriver inputDriver = new GLFWInputDriver(mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+		inputDriver.register(window);
 		return inputDriver;
 	}
 	
