@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
+import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.IGame;
@@ -14,17 +15,14 @@ import com.tokelon.toktales.desktop.ui.window.IWindow;
 public class LWJGLWindowRenderer implements IWindowRenderer {
 
 
-	private final IGame game;
-	
-	private IWindow window;
 	private ISurface surface;
+
+	private IWindow window;
 	
-	public LWJGLWindowRenderer(IGame game) {
-		if(game == null) {
-			throw new NullPointerException();
-		}
-		
-		this.game = game;
+	private IGame game;
+	
+	public LWJGLWindowRenderer(IEngineContext engineContext) {
+		this.game = engineContext.getGame();
 	}
 	
 	

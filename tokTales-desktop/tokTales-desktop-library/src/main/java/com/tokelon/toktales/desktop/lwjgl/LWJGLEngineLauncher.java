@@ -103,7 +103,7 @@ public class LWJGLEngineLauncher extends DesktopEngineLauncher {
 	}
 	
 	protected IWindowRenderer setupRenderer(IEngineContext engineContext, IWindow window) {
-		IWindowRenderer renderer = new LWJGLWindowRenderer(engineContext.getGame());
+		IWindowRenderer renderer = new LWJGLWindowRenderer(engineContext);
 		ISurface surface = renderer.create(window);
 		
 		engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
