@@ -1,6 +1,7 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.desktop.ui.window.WindowException;
@@ -30,11 +31,11 @@ public class LWJGLWindow implements IWindow {
 	}
 
 	public LWJGLWindow(int width, int height, String title) {
-		this(width, height, title, 0L, 0L);
+		this(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
 	}
 	
 	public LWJGLWindow(int width, int height, String title, long monitor) {
-		this(width, height, title, monitor, 0L);
+		this(width, height, title, monitor, MemoryUtil.NULL);
 	}
 	
 	public LWJGLWindow(int width, int height, String title, long monitor, long share) {
