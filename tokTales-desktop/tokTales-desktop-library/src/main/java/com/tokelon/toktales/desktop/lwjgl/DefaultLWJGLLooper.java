@@ -2,42 +2,22 @@ package com.tokelon.toktales.desktop.lwjgl;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.IEngineLooper;
+import com.tokelon.toktales.desktop.engine.DefaultEngineLooper;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
-public class DefaultLWJGLLooper implements IEngineLooper {
+public class DefaultLWJGLLooper extends DefaultEngineLooper {
 
-
-	private final IWindowRenderer renderer;
 
 	public DefaultLWJGLLooper(IWindowRenderer renderer) {
-		this.renderer = renderer;
+		super(renderer);
 	}
 	
-	
+
 	@Override
-	public void loop(IEngineContext engineContext) throws EngineException {
-		/* Run the rendering loop until the user has attempted to close the window,
-		 * or has pressed the ESCAPE key.
-		 */
-		while (!renderer.getWindow().shouldClose()) {
-			// Update
-			engineContext.getGame().getGameControl().updateGame();
-
-			
-			// Render
-			renderer.prepareFrame();
-			
-			renderer.drawFrame();
-			
-			renderer.commitFrame();
-
-			
-			// Input - poll for window events
-			GLFW.glfwPollEvents();
-		}
+	protected void processInput(IEngineContext engineContext) {
+		// Poll for window events
+		GLFW.glfwPollEvents();
 	}
 
 }
