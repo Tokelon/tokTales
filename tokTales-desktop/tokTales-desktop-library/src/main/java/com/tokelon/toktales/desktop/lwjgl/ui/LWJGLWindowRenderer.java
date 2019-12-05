@@ -94,8 +94,6 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	
 	@Override
 	public void drawFrame() {
-		game.getGameControl().updateGame();
-		
 		game.getGameControl().renderGame();
 	}
 	

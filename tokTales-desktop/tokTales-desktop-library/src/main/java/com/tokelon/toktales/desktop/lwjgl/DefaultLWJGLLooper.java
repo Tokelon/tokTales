@@ -23,6 +23,11 @@ public class DefaultLWJGLLooper implements IEngineLooper {
 		 * or has pressed the ESCAPE key.
 		 */
 		while (!renderer.getWindow().shouldClose()) {
+			// Update
+			engineContext.getGame().getGameControl().updateGame();
+
+			
+			// Render
 			renderer.prepareFrame();
 			
 			renderer.drawFrame();
@@ -30,7 +35,7 @@ public class DefaultLWJGLLooper implements IEngineLooper {
 			renderer.commitFrame();
 
 			
-			// Poll for window events
+			// Input - poll for window events
 			GLFW.glfwPollEvents();
 		}
 	}
