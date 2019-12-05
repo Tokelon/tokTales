@@ -11,9 +11,15 @@ public class DefaultEngineLooper implements IEngineLooper {
 	private boolean running;
 	
 	private final IWindowRenderer renderer;
+	private final IEngineInputProcessor inputProcessor;
 
 	public DefaultEngineLooper(IWindowRenderer renderer) {
+		this(renderer, () -> {});
+	}
+	
+	public DefaultEngineLooper(IWindowRenderer renderer, IEngineInputProcessor inputProcessor) {
 		this.renderer = renderer;
+		this.inputProcessor = inputProcessor;
 	}
 	
 	
@@ -51,7 +57,7 @@ public class DefaultEngineLooper implements IEngineLooper {
 	}
 	
 	protected void processInput(IEngineContext engineContext) {
-		// Nothing
+		getInputProcessor().process();
 	}
 	
 	
@@ -61,6 +67,10 @@ public class DefaultEngineLooper implements IEngineLooper {
 	
 	protected IWindowRenderer getRenderer() {
 		return renderer;
+	}
+	
+	protected IEngineInputProcessor getInputProcessor() {
+		return inputProcessor;
 	}
 	
 }

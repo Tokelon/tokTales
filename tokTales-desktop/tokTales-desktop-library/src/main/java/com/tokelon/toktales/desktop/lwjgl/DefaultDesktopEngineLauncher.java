@@ -9,6 +9,7 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
+import com.tokelon.toktales.desktop.engine.DefaultEngineLooper;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
@@ -197,7 +198,7 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 	}
 
 	public IEngineLooper createDefaultLooper(IWindowRenderer renderer) {
-		return new DefaultLWJGLLooper(renderer);
+		return new DefaultEngineLooper(renderer, new LWJGLInputProcessor());
 	}
 	
 	
