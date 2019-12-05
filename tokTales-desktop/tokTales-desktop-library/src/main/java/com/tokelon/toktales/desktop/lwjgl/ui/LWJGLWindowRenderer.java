@@ -1,111 +1,97 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
-import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
 
-import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.engine.render.Surface;
-import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
+import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
+import com.tokelon.toktales.desktop.render.SurfaceManager;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 
 public class LWJGLWindowRenderer implements IWindowRenderer {
+	// Make abstract including drawFrame and prepareFrame ?
 
 
-	private ISurface surface;
-
+	private boolean hasContext = false;
+	private WindowSizeCallback windowSizeCallback;
 	private IWindow window;
 	
-	private IGame game;
+	private SurfaceManager surfaceManager;
 	
-	public LWJGLWindowRenderer(IEngineContext engineContext) {
-		this.game = engineContext.getGame();
+	public LWJGLWindowRenderer(ISurfaceHandler surfaceHandler) {
+		this.surfaceManager = new SurfaceManager(surfaceHandler);
 	}
 	
 	
 	@Override
-	public ISurface create(IWindow window) {
+	public void create(IWindow window) {
 		this.window = window;
 		
-		window.makeContextCurrent();
+		windowSizeCallback = new WindowSizeCallback();
+		GLFW.glfwSetWindowSizeCallback(window.getId(), windowSizeCallback);
+	}
+	
+	@Override
+	public void createContext() {
+		getWindow().makeContextCurrent();
 		
 		GL.createCapabilities();
 		
 		
-		this.surface = createSurface(window.getTitle(), window.getWidth(), window.getHeight());
-		return surface;
-	}
-
-	protected ISurface createSurface(String name, int windowWidth, int windowHeight) {
-		AccurateViewport newMasterViewport = new AccurateViewport();
-		newMasterViewport.setSize(windowWidth, windowHeight);
+		surfaceManager.createSurface(window.getTitle(), window.getWidth(), window.getHeight());
+		surfaceManager.publishSurface();
 		
-		
-		float glViewportWidth = windowWidth;
-		float glViewportHeight = windowHeight;
-		
-		Matrix4f projMatrix = new Matrix4f().ortho(
-				0.0f, (float)glViewportWidth,
-				//0.0f - 1.0f, (float)glViewportWidth - 1.0f,
-				
-				//0.0f - 1.0f, (float)glViewportHeight - 1.0f,	// Normal y axis (up)
-				//(float)glViewportHeight - 1.0f, 0.0f - 1.0f,	// Flip y axis
-				(float)glViewportHeight, 0.0f,	// Flip y axis
-				
-				0.0f, 50.0f
-				);
-		
-		ISurface surface = new Surface(name, newMasterViewport, projMatrix);
-		
-		return surface;
+		hasContext = true;
 	}
 	
+	@Override
+	public void destroyContext() {
+		hasContext = false;
+
+		surfaceManager.recallSurface();
+		
+		// Replace with window.detachContext() ?
+		GLFW.glfwMakeContextCurrent(MemoryUtil.NULL);
+	}
 	
 	@Override
 	public void destroy() {
-		// TODO: Something?
+		GLFW.glfwSetWindowSizeCallback(getWindow().getId(), null);
 	}
 	
 	
 	public void prepareFrame() {
-		window.makeContextCurrent();
-
-		
-		// TODO: Set clear color
-		GL11.glClearColor(0.33f, 0.59f, 0.729f, 0.0f);
-		
-		//GL11.glEnable(GL11.GL_DEPTH_TEST);
-		//GL11.glDepthFunc(GL11.GL_LEQUAL);
-		//GL11.glDepthMask(true);
-		
-		//GL11.glEnable(GL11.GL_ALPHA_TEST);
-		//GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);	// DEPRECATED
-		
-		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		
-		GL11.glViewport(0, 0, window.getWidth(), window.getHeight());
+		// Nothing yet
 	}
 	
 	@Override
 	public void drawFrame() {
-		game.getGameControl().renderGame();
+		// Nothing yet
 	}
 	
 	@Override
 	public void commitFrame() {
-		window.swapBuffers();		
+		getWindow().swapBuffers();
 	}
 	
 	
 	@Override
 	public IWindow getWindow() {
 		return window;
+	}
+	
+	
+
+	protected class WindowSizeCallback implements GLFWWindowSizeCallbackI {
+
+		@Override
+		public void invoke(long window, int width, int height) {
+			if(hasContext) {
+				surfaceManager.updateSurface(width, height);
+			}
+		}
 	}
 	
 }

@@ -1,13 +1,21 @@
 package com.tokelon.toktales.desktop.render;
 
-import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 
 public interface IWindowRenderer {
-	// TODO: Handle surface changes
 
 
-	public ISurface create(IWindow window);
+	/*
+	 * Must be called from the main thread.
+	 */
+	public void create(IWindow window);
+	
+	/*
+	 * Must be called from the thread that the renderer will be associated to.
+	 */
+	public void createContext();
+	
+	public void destroyContext();
 	
 	public void destroy();
 	
@@ -20,8 +28,5 @@ public interface IWindowRenderer {
 	
 	
 	public IWindow getWindow();
-	
-	
-	//public void onSurfaceChanged();
 	
 }

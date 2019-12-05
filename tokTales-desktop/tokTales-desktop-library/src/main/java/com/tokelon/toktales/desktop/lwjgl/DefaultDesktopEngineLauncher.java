@@ -9,14 +9,12 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
-import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
-import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
+import com.tokelon.toktales.desktop.lwjgl.ui.DefaultGameWindowRenderer;
 import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowFactory;
-import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowRenderer;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
@@ -80,11 +78,9 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 		// Register input driver
 		getEffectiveInputDriver().register(getEffectiveWindow());
 
-		// Create renderer and surface
-		// Right now surface creation is before window configuration - need to implement surface changes for window configuration to make sense
-		ISurface surface = getEffectiveRenderer().create(getEffectiveWindow());
-		engineContext.getEngine().getRenderService().getSurfaceHandler().publishSurface(surface, new GLSurfaceController());
-		engineContext.getEngine().getRenderService().getSurfaceHandler().updateSurface(surface);
+		// Create renderer and context
+		getEffectiveRenderer().create(getEffectiveWindow());
+		getEffectiveRenderer().createContext();
 
 		// Configure window
 		getEffectiveWindowConfigurator().configure(getEffectiveWindow());
@@ -98,6 +94,8 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 				getEffectiveInputDriver().unregister();
 			}
 
+			getEffectiveRenderer().destroyContext();
+			getEffectiveRenderer().destroy();
 			getEffectiveWindow().destroy();
 		}
 		finally {
@@ -195,7 +193,7 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 	}
 	
 	public IWindowRenderer createDefaultRenderer(IEngineContext engineContext) {
-		return new LWJGLWindowRenderer(engineContext);
+		return new DefaultGameWindowRenderer(engineContext);
 	}
 
 	public IEngineLooper createDefaultLooper(IWindowRenderer renderer) {
