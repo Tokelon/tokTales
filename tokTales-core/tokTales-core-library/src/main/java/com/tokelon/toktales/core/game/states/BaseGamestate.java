@@ -530,16 +530,10 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	}
 	
 	
-	// Add these to IGameState? Where would they be called from?
-	
 	/** Called when a surface is created.
 	 * <p>
-	 * The default implementation will save the first surface that is created and set it as current.
+	 * The default implementation saves the first surface that is created and sets it as current.
 	 * The surface will remain the current as long as it is not destroyed.
-	 * <br>
-	 * It will also pass the event to the state render using {@link IStateRender#surfaceCreated(ISurface)}. 
-	 * <p>
-	 * You can override this method to choose the surface you want to use.
 	 * 
 	 * @param surface
 	 * @see {@link ISurfaceCallback#surfaceCreated(ISurface)}
@@ -547,35 +541,32 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	protected void onSurfaceCreated(ISurface surface) {
 		if(currentSurface == null) {
 			currentSurface = surface;
-			getStateRender().surfaceCreated(currentSurface);
 		}
 	}
 	
 	/** Called when a surface is changed.
 	 * <p>
-	 * The default implementation will only consider the surface if it is current.<br>
-	 * If the surface is the current surface it will pass the event to the state render using {@link IStateRender#surfaceChanged(ISurface)}.
+	 * The implementation should test whether the given surface is the current one with {@link #getCurrentSurface()}.
+	 * <p>
+	 * The default implementation does nothing.
 	 * 
 	 * @param surface
 	 * @see {@link ISurfaceCallback#surfaceChanged(ISurface)}
 	 */
 	protected void onSurfaceChanged(ISurface surface) {
-		if(surface.equals(currentSurface)) {
-			getStateRender().surfaceChanged(currentSurface);
-		}
 	}
 	
 	/** Called when a surface is destroyed.
 	 * <p>
-	 * The default implementation will only consider the surface if it is current.<br>
-	 * If the surface is the current surface, it will pass the event to the state render using {@link IStateRender#surfaceDestroyed(ISurface)}.
+	 * The implementation should test whether the given surface is the current one with {@link #getCurrentSurface()}.
+	 * <p>
+	 * The default implementation sets the surface returned by {@link #getCurrentSurface()} to null if it's equal the given one. 
 	 * 
 	 * @param surface
 	 * @see {@link ISurfaceCallback#surfaceDestroyed(ISurface)}
 	 */
 	protected void onSurfaceDestroyed(ISurface surface) {
 		if(surface.equals(currentSurface)) {
-			getStateRender().surfaceDestroyed(currentSurface);
 			currentSurface = null;
 		}
 	}
@@ -825,7 +816,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	/**
 	 * @return The current surface, or null if there is none.
 	 */
-	protected ISurface getCurrentSurface() {
+	protected ISurface getCurrentSurface() { // TODO: Keep this?
 		return currentSurface;
 	}
 
