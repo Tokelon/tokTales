@@ -100,18 +100,22 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 			getEffectiveWindow().destroy();
 		}
 		finally {
-			super.shutdownProgram(engineContext);			
+			super.shutdownProgram(engineContext);
 		}
 	}
 	
 	
 	@Override
 	protected void loop(IEngineContext engineContext, IEngineLooper defaultLooper) throws EngineException {
-		// The default looper is no-op here
+		// The default looper is a no-op here
 		
 		getEffectiveLooper().loop(engineContext);
 	}
-
+	
+	@Override
+	public void terminate() {
+		getEffectiveLooper().stop();
+	}
 	
 	
 	public void useDefaultWindowBuilder() {

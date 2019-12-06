@@ -60,14 +60,23 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 	
 	
+	/**
+	 * @return The inject config for this launcher.
+	 */
 	public IHierarchicalInjectConfig getInjectConfig() {
 		return injectConfig;
 	}
-	
+
+	/**
+	 * @return The default looper for this launcher.
+	 */
 	public IEngineLooper getDefaultLooper() {
 		return defaultLooper;
 	}
 	
+	/**
+	 * @return The logger for this launcher.
+	 */
 	public ILogger getLogger() {
 		return logger;
 	}
@@ -99,8 +108,14 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		// Start the engine
 		runEngine(engineContext);
 	}
-
-
+	
+	
+	@Override
+	public void terminate() {
+		getDefaultLooper().stop();
+	}
+	
+	
 	/** Extends the inject config with launching modules.
 	 * <p>
 	 * The default implementation registers this launcher and the given game adapter.
@@ -129,7 +144,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 	
 	
-	/** Set's up the engine.
+	/** Runs the engine setup with the given context.
 	 * 
 	 * @param setup
 	 * @param engineContext
@@ -141,16 +156,16 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 	
 	
-	/** Starts the game and runs the main loop after the engine has been setup.
+	/** Runs the engine.<br>
+	 * The default implementation steps are as follows:<br>
+	 * 1. Start up the engine by calling {@link #startupEngine(IEngineContext)}.<br>
+	 * 2. Run the main loop by calling {@link #loop(IEngineContext, IEngineLooper)}.<br>
+	 * 3. Shut down the engine by calling {@link #shutdownEngine(IEngineContext)}, after {@link #terminate()} has been called or the looper has stopped. 
 	 * <p>
-	 * You can override this method but you should call super to include game life-cycle handling.
-	 * <p>
-	 * Note: This method will only return when the game has ended.
+	 * Generally this method will not return until the engine should exit.
 	 * 
 	 * @param engineContext
 	 * @throws EngineException If an error occurs during execution.
-	 * 
-	 * @see #loop()
 	 */
 	protected void runEngine(IEngineContext engineContext) throws EngineException {
 		startupEngine(engineContext);
@@ -163,6 +178,13 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		}
 	}
 	
+	/** Runs the startup logic for the engine.
+	 * <p>
+	 * The default implementation calls the methods responsible for starting the game lifecycle.
+	 * 
+	 * @param engineContext
+	 * @throws EngineException If an error occurs during startup.
+	 */
 	protected void startupEngine(IEngineContext engineContext) throws EngineException {
 		engineContext.getGame().getGameControl().createGame(); // calls onCreate on adapter
 
@@ -170,6 +192,13 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		engineContext.getGame().getGameControl().resumeGame();
 	}
 	
+	/** Runs the shutdown logic for the engine.
+	 * <p>
+	 * The default implementation calls the methods responsible for ending the game lifecycle.
+	 * 
+	 * @param engineContext
+	 * @throws EngineException If an error occurs during shutdown.
+	 */
 	protected void shutdownEngine(IEngineContext engineContext) throws EngineException {
 		engineContext.getGame().getGameControl().pauseGame();
 		engineContext.getGame().getGameControl().stopGame();
@@ -178,9 +207,11 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 	
 	
-	/** The actual loop.
-	 * The default implementation calls the looper.
+	/** Runs the main loop.
+	 * <p>
+	 * The default implementation simply calls the default looper.
 	 * 
+	 * @param engineContext
 	 * @param defaultLooper
 	 * @throws EngineException If an error occurs while looping.
 	 */
