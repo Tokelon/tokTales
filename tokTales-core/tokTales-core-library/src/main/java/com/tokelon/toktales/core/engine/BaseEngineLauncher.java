@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.engine;
 
+import com.tokelon.toktales.core.engine.inject.BaseLauncherInjectModule;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
@@ -81,6 +82,9 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	
 	@Override
 	public void launchWithSetup(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
+		// Extend inject config
+		extendInjectConfig(adapter, setup);
+		
 		// Create the engine
 		IEngineContext engineContext = createEngine(adapter, setup);
 
@@ -97,22 +101,31 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 
 
+	/** Extends the inject config with launching modules.
+	 * <p>
+	 * The default implementation registers this launcher and the given game adapter.
+	 * 
+	 * @param adapter
+	 * @param setup
+	 */
+	protected void extendInjectConfig(Class<? extends IGameAdapter> adapter, IEngineSetup setup) {
+		// Inject this launcher
+		getInjectConfig().extend(new BaseLauncherInjectModule(this));
+		
+		// Inject game adapter
+		getInjectConfig().extend(new BaseSetupInjectModule(adapter));
+	}
+
+
 	/** Creates the engine context.
 	 * 
 	 * @param adapter
 	 * @param setup
-	 * @return
+	 * @return The engine context.
 	 * @throws EngineException If an error occurs during creation.
 	 */
 	protected IEngineContext createEngine(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
-		// Inject game adapter
-		getInjectConfig().extend(new BaseSetupInjectModule(adapter));
-
-		// Create engine context
-		IEngineContext engineContext = setup.create(getInjectConfig());
-
-		// Return the result
-		return engineContext;
+		return setup.create(getInjectConfig());
 	}
 	
 	
