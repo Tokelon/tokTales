@@ -23,7 +23,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param injectConfig
 	 */
 	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig) {
-		this(injectConfig, (ctx) -> {}, LoggingManager.getLoggerFactory());
+		this(injectConfig, new NoopEngineLooper(), LoggingManager.getLoggerFactory());
 	}
 	
 	/** Constructor with an inject config and a logger factory.
@@ -34,7 +34,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @param loggerFactory
 	 */
 	protected BaseEngineLauncher(IHierarchicalInjectConfig injectConfig, ILoggerFactory loggerFactory) {
-		this(injectConfig, (ctx) -> {}, loggerFactory);
+		this(injectConfig, new NoopEngineLooper(), loggerFactory);
 	}
 	
 	/** Constructor with an inject config and a looper.
