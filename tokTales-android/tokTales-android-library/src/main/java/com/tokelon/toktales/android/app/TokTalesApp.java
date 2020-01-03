@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
+import com.tokelon.toktales.core.game.EmptyGameAdapter;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
@@ -165,9 +166,5 @@ public class TokTalesApp extends Application {
 		
 		logger.debug("App configuration has changed");
 	}
-	
-	
-	// Default
-	private static class EmptyGameAdapter implements IGameAdapter { }
 	
 }
