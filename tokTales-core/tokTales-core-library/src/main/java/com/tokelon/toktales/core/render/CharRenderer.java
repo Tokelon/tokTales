@@ -58,7 +58,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	protected void onContextCreated() {
 		fontDriver = renderAccess.requestDriver(ITextureFontModel.class.getName());
 		if(fontDriver == null) {
-			throw new RenderException("No render driver found for: " +ITextureFontModel.class.getName());
+			throw new RenderException("No render driver found for: " + ITextureFontModel.class.getName());
 		}
 		
 		fontDriver.create();

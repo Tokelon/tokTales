@@ -7,8 +7,9 @@ import com.tokelon.toktales.core.render.shapes.IRectangleShape;
 import com.tokelon.toktales.core.render.shapes.ITriangleShape;
 
 public interface IShapeRenderer extends IChunkRenderer {
+	// TODO: Use IShapePaint object for properties below
 
-	
+
 	public void setColor(IRGBAColor color);
 	
 	public void setFill(boolean fill);
@@ -18,13 +19,13 @@ public interface IShapeRenderer extends IChunkRenderer {
 	public void setOutlineType(int type);
 	
 	
+	
 	//public void drawShape(IRenderShape shape);
 	
 	
 	public void drawPointShape(IPointShape pointShape);
 	
 	public void drawPoint(float x, float y, float pointSize);
-	
 	
 
 	public void setLineAlignment(int type);
@@ -38,7 +39,6 @@ public interface IShapeRenderer extends IChunkRenderer {
 	public void drawLine(float x1, float y1, float x2, float y2, float lineWidth);	// drawLineShape()
 	//public void drawLine(float x1, float y1, float x2, float y2, IShapePaint paint);
 
-	
 
 	//public void setTriangleOutlineWidth(float width);
 	//public void setTriangleFill(boolean fill);
@@ -50,21 +50,10 @@ public interface IShapeRenderer extends IChunkRenderer {
 	//public void drawTriangle(IPoint2f p0, IPoint2f p1, IPoint2f p2);
 	
 	
-	
 	public void drawRectangleShape(IRectangleShape rectangleShape);
 	
 	public void drawRectangle(float x, float y, float hLength, float vLength);
 	
 	public void drawRectangle(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
-	
-
-	// Not used yet
-	public interface IShapePaint {
-		
-		public void setColor(IRGBAColor color);
-		public IRGBAColor getColor();
-		
-	}
-
 	
 }

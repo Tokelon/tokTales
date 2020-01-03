@@ -4,6 +4,7 @@ import com.tokelon.toktales.core.content.manage.AssetManagersInjectModule;
 import com.tokelon.toktales.core.content.manage.AssetReadersInjectModule;
 import com.tokelon.toktales.core.engine.ServiceExtensionsInjectModule;
 import com.tokelon.toktales.core.engine.log.LoggingInjectModule;
+import com.tokelon.toktales.core.render.RenderInjectModule;
 import com.tokelon.toktales.core.render.opengl.CoreGLInjectModule;
 import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfig;
 import com.tokelon.toktales.tools.core.sub.inject.modules.CoreInjectToolsModule;
@@ -31,6 +32,7 @@ public class CoreInjectConfig extends HierarchicalInjectConfig {
 		extend(new AssetManagersInjectModule());
 
 		extend(new CoreGLInjectModule());
+		extend(new RenderInjectModule());
 		
 		extend(new LoggingInjectModule());
 		

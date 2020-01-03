@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.render;
 
+import javax.inject.Inject;
+
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
@@ -40,6 +42,7 @@ public class ShapeRenderer extends AbstractRenderer implements IShapeRenderer {
 	
 	private final IRenderAccess renderAccess;
 	
+	@Inject
 	public ShapeRenderer(IRenderAccess renderAccess) {
 		this.renderAccess = renderAccess;
 	}

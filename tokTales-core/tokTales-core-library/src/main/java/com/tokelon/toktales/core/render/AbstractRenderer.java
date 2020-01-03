@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 
 public abstract class AbstractRenderer implements IRenderer {
 
-	
+
 	private boolean hasView = false;
 	
 	private IViewTransformer viewTransformer;
@@ -17,10 +17,13 @@ public abstract class AbstractRenderer implements IRenderer {
 	
 	
 	
+	protected abstract void onContextCreated();
+	protected abstract void onContextChanged();
+	protected abstract void onContextDestroyed();
+
 	
 	@Override
 	public void contextCreated() {
-		
 		onContextCreated();
 	}
 	
@@ -47,11 +50,6 @@ public abstract class AbstractRenderer implements IRenderer {
 		hasView = false;
 	}
 	
-	protected abstract void onContextCreated();
-	protected abstract void onContextChanged();
-	protected abstract void onContextDestroyed();
-	
-	
 	
 	protected boolean hasView() {
 		return hasView;
@@ -72,7 +70,5 @@ public abstract class AbstractRenderer implements IRenderer {
 	protected Matrix4f getMatrixProjectionAndView() {
 		return hasView() ? matrixProjectionAndView : null;
 	}
-	
-	
 	
 }

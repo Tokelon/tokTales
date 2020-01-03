@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.render;
 
+import javax.inject.Inject;
+
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 import com.tokelon.toktales.core.render.model.ManagedTextureModel;
@@ -19,6 +21,7 @@ public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 	
 	private final IRenderAccess renderAccess;
 	
+	@Inject
 	public ImageRenderer(IRenderAccess renderAccess, ITextureCoordinator textureCoordinator) {
 		this.renderAccess = renderAccess;
 		

@@ -6,29 +6,28 @@ import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 
 public interface IRenderer {
 
-	
+
 	/** Called when the render context has been created.
-	 * 
-	 * Here you should initialize all your low level dependencies.
+	 * <p>
+	 * Low level dependencies should be initialized here.
 	 * 
 	 */
 	public void contextCreated();
 	
 	
 	/** Called when the render context has been changed.
+	 * <p>
+	 * THe given view properties can be used for rendering later. 
 	 * 
-	 * Here you get the parameters you should work with.
-	 * 
-	 * @param viewport The viewport you use for rendering.
-	 * @param projectionMatrix The projection matrix you use for rendering.
+	 * @param viewTransformer The view transformer used for rendering.
+	 * @param projectionMatrix The projection matrix used for rendering.
 	 */
-	public void contextChanged(IViewTransformer viewTransformer, Matrix4f projectionMatrix);
-	// TODO: What to do with the projection matrix? include in transformer?
+	public void contextChanged(IViewTransformer viewTransformer, Matrix4f projectionMatrix); // TODO: What to do with the projection matrix? Include in transformer?
 	
 	
 	/** Called when the render context has been destroyed.
-	 * 
-	 * Here you should clear all your low level dependencies.
+	 * <p>
+	 * Low level dependencies should be disposed here.
 	 * 
 	 */
 	public void contextDestroyed();
