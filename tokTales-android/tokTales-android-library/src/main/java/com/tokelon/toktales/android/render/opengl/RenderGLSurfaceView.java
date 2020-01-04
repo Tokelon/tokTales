@@ -4,6 +4,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.tokelon.toktales.android.render.DelegateRenderViewAdapter;
+import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
 
 import android.content.Context;
@@ -15,7 +16,7 @@ import android.view.SurfaceHolder;
 /** Note: You have to call {@link #onPause()} and {@link #onResume()} in the enclosing activity.
  * 
  */
-public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView {
+public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 
 
 	private final DelegateRenderViewAdapter delegateAdapter = new DelegateRenderViewAdapter();
@@ -85,7 +86,7 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		super.surfaceDestroyed(holder);
 		
-		// TODO: Call here like this?
+		// TODO: Does this complement the renderer lifecycle correctly?
 		delegateAdapter.onSurfaceDestroyed();
 	}
 	

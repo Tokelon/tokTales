@@ -11,8 +11,6 @@ import javax.inject.Provider;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
-import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.content.IContentUtils;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.log.ILogger;

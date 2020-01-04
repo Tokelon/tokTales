@@ -6,8 +6,8 @@ import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
 
-import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
-import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
+import com.tokelon.toktales.android.render.opengl.OpenGLException;
+import com.tokelon.toktales.android.render.opengl.ShaderProgram;
 import com.tokelon.toktales.android.render.tools.IButtonOverlayView;
 import com.tokelon.toktales.android.render.tools.ICrossControlOverlayView;
 import com.tokelon.toktales.android.render.tools.IUIOverlay;

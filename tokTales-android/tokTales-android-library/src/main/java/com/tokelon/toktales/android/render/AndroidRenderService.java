@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.render.opengl;
+package com.tokelon.toktales.android.render;
 
 import java.util.Map;
 

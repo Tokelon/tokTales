@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.render.opengl.program;
+package com.tokelon.toktales.android.render.opengl;
 
 public class OpenGLException extends Exception {
 

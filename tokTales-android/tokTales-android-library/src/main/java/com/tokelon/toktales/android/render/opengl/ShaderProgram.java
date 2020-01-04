@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.render.opengl.program;
+package com.tokelon.toktales.android.render.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

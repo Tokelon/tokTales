@@ -8,8 +8,6 @@ import javax.inject.Provider;
 
 import org.joml.Matrix4f;
 
-import com.tokelon.toktales.android.render.opengl.program.OpenGLException;
-import com.tokelon.toktales.android.render.opengl.program.ShaderProgram;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.IRenderDriver;

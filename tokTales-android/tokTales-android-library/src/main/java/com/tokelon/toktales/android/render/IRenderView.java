@@ -1,8 +1,6 @@
-package com.tokelon.toktales.android.render.opengl;
+package com.tokelon.toktales.android.render;
 
-import com.tokelon.toktales.android.render.IRenderViewAdapter;
-
-public interface IGLRenderView { // TODO: Rename to IRenderView
+public interface IRenderView {
 
 
 	public void onResume();

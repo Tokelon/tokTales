@@ -2,10 +2,10 @@ package com.tokelon.toktales.android.activity.integration;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
 import com.tokelon.toktales.android.render.IRenderViewAdapter.IRenderViewAdapterFactory;
-import com.tokelon.toktales.android.render.opengl.GLSurfaceController;
-import com.tokelon.toktales.android.render.opengl.IGLRenderView;
+import com.tokelon.toktales.android.render.RenderViewSurfaceController;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
@@ -13,7 +13,7 @@ import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivi
 public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 
 
-	private IGLRenderView renderView;
+	private IRenderView renderView;
 	
 	private IRenderViewAdapter adapter;
 	
@@ -33,9 +33,9 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 	}
 	
 	@Override
-	public void integrateRenderView(IGLRenderView renderView) {
+	public void integrateRenderView(IRenderView renderView) {
 		this.renderView = renderView;
-		this.adapter = adapterFactory.create(new GLSurfaceController(renderView));
+		this.adapter = adapterFactory.create(new RenderViewSurfaceController(renderView));
 		
 		renderView.setRenderViewAdapter(adapter);
 	}
