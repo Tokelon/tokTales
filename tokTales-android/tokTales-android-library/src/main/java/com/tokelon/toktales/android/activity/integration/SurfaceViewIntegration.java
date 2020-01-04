@@ -2,10 +2,10 @@ package com.tokelon.toktales.android.activity.integration;
 
 import javax.inject.Inject;
 
+import com.tokelon.toktales.android.render.IRenderViewAdapter;
+import com.tokelon.toktales.android.render.IRenderViewAdapter.IRenderViewAdapterFactory;
 import com.tokelon.toktales.android.render.opengl.GLSurfaceController;
 import com.tokelon.toktales.android.render.opengl.IGLRenderView;
-import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer;
-import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer.IOpenGLRendererFactory;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
@@ -15,32 +15,29 @@ public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 
 	private IGLRenderView renderView;
 	
-	private IOpenGLRenderer renderer;
-	
+	private IRenderViewAdapter adapter;
 	
 	private final ILogger logger;
-	private final ILogging logging;
-	private final IOpenGLRendererFactory rendererFactory;
+	private final IRenderViewAdapterFactory adapterFactory;
 	
 	@Inject
-	public SurfaceViewIntegration(ILogging logging, IOpenGLRendererFactory rendererFactory) {
+	public SurfaceViewIntegration(ILogging logging, IRenderViewAdapterFactory adapterFactory) {
 		this.logger = logging.getLogger(getClass());
-		this.logging = logging;
-		this.rendererFactory = rendererFactory;
+		this.adapterFactory = adapterFactory;
 	}
 	
 	
 	@Override
 	public void setRenderSurfaceName(String surfaceName) {
-		renderer.setSurfaceName(surfaceName); // TODO: Catch renderer null
+		adapter.setSurfaceName(surfaceName); // TODO: Catch adapter null
 	}
 	
 	@Override
 	public void integrateRenderView(IGLRenderView renderView) {
 		this.renderView = renderView;
-		this.renderer = rendererFactory.create(new GLSurfaceController(renderView));
+		this.adapter = adapterFactory.create(new GLSurfaceController(renderView));
 		
-		renderView.setMainRenderer(renderer);
+		renderView.setRenderViewAdapter(adapter);
 	}
 	
 	

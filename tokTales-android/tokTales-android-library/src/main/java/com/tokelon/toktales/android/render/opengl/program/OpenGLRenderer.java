@@ -7,6 +7,7 @@ import org.joml.Matrix4f;
 import com.tokelon.toktales.android.game.screen.UIRenderer;
 import com.tokelon.toktales.android.input.AndroidInputDriver;
 import com.tokelon.toktales.android.input.IAndroidInputDriver;
+import com.tokelon.toktales.android.render.IRenderViewAdapter;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.android.render.tools.IUIControl;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
@@ -29,7 +30,7 @@ import android.graphics.Color;
 import android.opengl.GLES20;
 import android.view.MotionEvent;
 
-public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
+public class OpenGLRenderer implements IRenderViewAdapter, IUIOverlayProvider {
 	// TODO: Refactor all this!
 	// TODO: Maybe pack all the GL viewport functionality into a separate class like GLViewport or MasterViewport
 
@@ -269,6 +270,12 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 		}
 		
 	}
+	
+	@Override
+	public void onSurfaceDestroyed() {
+		// TODO: Null fields?
+		renderService.getSurfaceHandler().recallSurface(currentSurface);
+	}
 
 	
 	@Override
@@ -324,7 +331,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 	}
 	
 	
-	public static class OpenGLRendererFactory implements IOpenGLRendererFactory {
+	public static class OpenGLRendererFactory implements IRenderViewAdapterFactory {
 		private final ILogging logging;
 		private final IGame game;
 		private final IRenderService renderService;
@@ -339,7 +346,7 @@ public class OpenGLRenderer implements IOpenGLRenderer, IUIOverlayProvider {
 		}
 		
 		@Override
-		public IOpenGLRenderer create(ISurfaceController surfaceController) {
+		public IRenderViewAdapter create(ISurfaceController surfaceController) {
 			return new OpenGLRenderer(logging, game, renderService, uiControlFactory, surfaceController);
 		}
 	}

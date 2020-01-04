@@ -1,27 +1,21 @@
 package com.tokelon.toktales.android.render.opengl;
 
-import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer;
+import com.tokelon.toktales.android.render.IRenderViewAdapter;
 
-import android.view.MotionEvent;
-
-public interface IGLRenderView {
+public interface IGLRenderView { // TODO: Rename to IRenderView
 
 
-	public void setMainRenderer(IOpenGLRenderer mainRenderer);
-
-	/** Call before renderer is set for immediate effect.
-	 * 
-	 * @param debugFlags
-	 */
-	public void setDebugFlags(int debugFlags);
-
-	
 	public void onResume();
 	public void onPause();
+	
 
-	public boolean onTouchEvent(MotionEvent event);
-
+	public void setRenderViewAdapter(IRenderViewAdapter adapter);
+	
 	
 	public void queueEvent(Runnable event);
+	
+	//public boolean fireTouchEvent(MotionEvent event); // Add this?
+
+	//public void setViewName(String name);
 	
 }

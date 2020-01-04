@@ -1,11 +1,16 @@
 package com.tokelon.toktales.android.render.opengl;
 
-import com.tokelon.toktales.android.render.opengl.program.IOpenGLRenderer;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+import com.tokelon.toktales.android.render.DelegateRenderViewAdapter;
+import com.tokelon.toktales.android.render.IRenderViewAdapter;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 
 /** Note: You have to call {@link #onPause()} and {@link #onResume()} in the enclosing activity.
  * 
@@ -13,7 +18,8 @@ import android.view.MotionEvent;
 public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView {
 
 
-	private DelegateGLRenderer delegateRenderer;
+	private final DelegateRenderViewAdapter delegateAdapter = new DelegateRenderViewAdapter();
+	private final DelegateRenderer delegateRenderer = new DelegateRenderer();
 	
 	
 	public RenderGLSurfaceView(Context context) {
@@ -28,12 +34,12 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 		init(context);
 	}
 
-	private void init(Context context) {
+	protected void init(Context context) {
 		// Create an OpenGL ES 2.0 context
 		setEGLContextClientVersion(2);
 
 		
-		delegateRenderer = new DelegateGLRenderer();
+		// Set the renderer
 		setRenderer(delegateRenderer);
 		
 		
@@ -41,39 +47,66 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IGLRenderView 
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	}
 	
-
+	
 	@Override
-	public void setMainRenderer(IOpenGLRenderer mainRenderer) {
+	public void setRenderViewAdapter(IRenderViewAdapter adapter) {
 		// To guarantee thread safety this method must be called inside the renderer thread.
-		queueEvent(() -> delegateRenderer.setMainRenderer(mainRenderer));
+		queueEvent(() -> delegateAdapter.setAdapter(adapter));
 	}
 
 
 	@Override
 	public void onResume() {
-		// If main renderer not set -> throw exception?
-		
 		super.onResume();
 		
-		delegateRenderer.onResume();
+		delegateAdapter.onResume();
 	}
 	
 	@Override
 	public void onPause() {
-		// Pause delegate renderer first?
+		// TODO: Pause delegate adapter first?
 		
 		super.onPause();
 		
-		delegateRenderer.onPause();
+		delegateAdapter.onPause();
 	}
 	
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// If main renderer not set ?
+		// If delegate adapter not set ?
 		// return super.onTouchEvent(event);
 		
-		return delegateRenderer.onTouch(event);
+		return delegateAdapter.onTouch(event);
+	}
+	
+	
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		super.surfaceDestroyed(holder);
+		
+		// TODO: Call here like this?
+		delegateAdapter.onSurfaceDestroyed();
+	}
+	
+	
+	
+	protected class DelegateRenderer implements Renderer {
+		
+		@Override
+		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+			delegateAdapter.onSurfaceCreated();
+		}
+
+		@Override
+		public void onSurfaceChanged(GL10 gl, int width, int height) {
+			delegateAdapter.onSurfaceChanged(width, height);
+		}
+		
+		@Override
+		public void onDrawFrame(GL10 gl) {
+			delegateAdapter.onDrawFrame();
+		}
 	}
 	
 }

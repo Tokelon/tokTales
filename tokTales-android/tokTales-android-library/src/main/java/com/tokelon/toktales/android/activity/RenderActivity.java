@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.integration.IGameIntegration;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
-import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
+import com.tokelon.toktales.android.render.opengl.IGLRenderView;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedCompatActivity;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
@@ -69,7 +69,9 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 
 	private boolean activityVisible;
 
-	private RenderGLSurfaceView activityContentView;
+	private IGLRenderView activityRenderView;
+	private View activityContentView;
+	
 	private final Handler activityHideHandler = new Handler();
 	
 	
@@ -107,13 +109,12 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 
 		super.onCreate(savedInstanceState); // Call this after assignment?
 		
-		
-		setContentView(R.layout.activity_render);
+		activityContentView = initContentView();
 		
 		activityVisible = true;
-		activityContentView = (RenderGLSurfaceView) findViewById(R.id.fullscreen_content);
+		activityRenderView = findRenderView();
 
-		surfaceViewIntegration.integrateRenderView(activityContentView);
+		surfaceViewIntegration.integrateRenderView(activityRenderView);
 	}
 	
 	@Override
@@ -122,6 +123,34 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 		
 		hide();
 	}
+	
+	
+	/** Sets the content for this activity and returns the content view.
+	 * This view will be used for UI calls.
+	 * <p>
+	 * Called in {@link #onCreate(Bundle)}.
+	 * <p>
+	 * Note: The content view does not have to be the top view and can be the same as the render view.
+	 * 
+	 * @return The content view.
+	 */
+	protected View initContentView() {
+		setContentView(R.layout.activity_render);
+		return findViewById(R.id.fullscreen_content);
+	}
+	
+	/** Finds and returns the render view.
+	 * This view will be used for rendering.
+	 * <p>
+	 * Called in {@link #onCreate(Bundle)} after {@link #initContentView()}.
+	 * 
+	 * @return The render view.
+	 */
+	protected IGLRenderView findRenderView() {
+		IGLRenderView renderView = (IGLRenderView) findViewById(R.id.fullscreen_content);
+		return renderView; 
+	}
+	
 	
 	private void toggle() {
 		if (activityVisible) {
