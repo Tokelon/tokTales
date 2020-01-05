@@ -26,7 +26,7 @@ import com.tokelon.toktales.android.render.AndroidRenderService;
 import com.tokelon.toktales.android.render.DefaultRenderViewAdapter;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
 import com.tokelon.toktales.android.render.IViewRenderer;
-import com.tokelon.toktales.android.render.opengl.GLViewRenderer;
+import com.tokelon.toktales.android.render.opengl.DefaultGameViewRenderer;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
 import com.tokelon.toktales.android.render.tools.UIControl;
 import com.tokelon.toktales.android.states.AndroidGameStateInput;
@@ -51,7 +51,6 @@ import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
 public class AndroidInjectModule extends AbstractInjectModule {
-	
 	/* When using providers, always create or inject the object once in the constructor,
 	 * this is to adhere to the scope of the provider.
 	 * 
@@ -97,7 +96,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
 		
 		
-		bind(IViewRenderer.IViewRendererFactory.class).to(GLViewRenderer.GLViewRendererFactory.class);
+		bind(IViewRenderer.IViewRendererFactory.class).to(DefaultGameViewRenderer.DefaultGameViewRendererFactory.class);
 		bind(IRenderViewAdapter.IRenderViewAdapterFactory.class).to(DefaultRenderViewAdapter.DefaultRenderViewAdapterFactory.class);
 		bind(IUIControlFactory.class).to(UIControl.UIControlFactory.class);
 	}
