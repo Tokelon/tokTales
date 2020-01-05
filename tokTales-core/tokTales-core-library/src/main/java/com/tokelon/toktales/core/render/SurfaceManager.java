@@ -1,43 +1,53 @@
-package com.tokelon.toktales.desktop.render;
+package com.tokelon.toktales.core.render;
+
+import javax.inject.Inject;
 
 import org.joml.Matrix4f;
 
+import com.tokelon.toktales.core.engine.render.ISurface;
+import com.tokelon.toktales.core.engine.render.ISurfaceController;
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
-import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 
-public class SurfaceManager {
+public class SurfaceManager implements ISurfaceManager {
 
 
 	private Surface surface;
 	
 	private final ISurfaceHandler surfaceHandler;
+	private final ISurfaceController surfaceController;
 
-	public SurfaceManager(ISurfaceHandler surfaceHandler) {
+	@Inject
+	public SurfaceManager(ISurfaceHandler surfaceHandler, ISurfaceController surfaceController) {
 		this.surfaceHandler = surfaceHandler;
+		this.surfaceController = surfaceController;
 	}
 	
 	
+	@Override
 	public void publishSurface() {
 		if(surface == null) {
 			throw new IllegalStateException("No surface has been created yet");
 		}
 		
-		surfaceHandler.publishSurface(surface, new GLSurfaceController());
+		surfaceHandler.publishSurface(surface, surfaceController);
 		this.updateSurface();
 	}
 	
+	@Override
 	public void updateSurface() {
 		surfaceHandler.updateSurface(surface);
 	}
 	
+	@Override
 	public void recallSurface() {
 		surfaceHandler.recallSurface(surface);
 	}
 	
 
+	@Override
 	public void createSurface(String name, int width, int height) {
 		IScreenViewport viewport = createViewport(width, height);
 		Matrix4f projectionMatrix = createProjectionMatrix(width, height);
@@ -45,10 +55,12 @@ public class SurfaceManager {
 		createSurface(name, viewport, projectionMatrix);
 	}
 	
+	@Override
 	public void createSurface(String name, IScreenViewport viewport, Matrix4f projectionMatrix) {
 		this.surface = new Surface(name, viewport, projectionMatrix);
 	}
 	
+	@Override
 	public void updateSurface(int width, int height) {
 		IScreenViewport viewport = createViewport(width, height);
 		Matrix4f projectionMatrix = createProjectionMatrix(width, height);
@@ -56,10 +68,16 @@ public class SurfaceManager {
 		updateSurface(viewport, projectionMatrix);
 	}
 	
+	@Override
 	public void updateSurface(IScreenViewport viewport, Matrix4f projectionMatrix) {
 		surface.update(viewport, projectionMatrix);
 		
 		updateSurface();
+	}
+	
+	@Override
+	public ISurface getSurface() {
+		return surface;
 	}
 	
 	

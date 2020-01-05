@@ -6,8 +6,10 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
+import com.tokelon.toktales.core.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.SurfaceManager;
+import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
-import com.tokelon.toktales.desktop.render.SurfaceManager;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 
 public class LWJGLWindowRenderer implements IWindowRenderer {
@@ -18,10 +20,10 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	private WindowSizeCallback windowSizeCallback;
 	private IWindow window;
 	
-	private SurfaceManager surfaceManager;
+	private final ISurfaceManager surfaceManager;
 	
 	public LWJGLWindowRenderer(ISurfaceHandler surfaceHandler) {
-		this.surfaceManager = new SurfaceManager(surfaceHandler);
+		this.surfaceManager = new SurfaceManager(surfaceHandler, new GLSurfaceController());
 	}
 	
 	
