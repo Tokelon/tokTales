@@ -65,7 +65,8 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 	public void onDrawFrame() {
 		engineDriver.update();
 		
-		engineDriver.render();
+		//engineDriver.render(); // Move this out of the renderer and into here?
+		viewRenderer.onDrawFrame();
 		
 		engineDriver.processInput(uiControl);
 	}

@@ -89,6 +89,7 @@ public class DefaultEngineLooper implements IEngineLooper {
 	protected void render(IEngineContext engineContext) {
 		getRenderer().prepareFrame();
 		
+		//engineDriver.render(); // Move this out of the renderer and into here?
 		getRenderer().drawFrame();
 		
 		getRenderer().commitFrame();
