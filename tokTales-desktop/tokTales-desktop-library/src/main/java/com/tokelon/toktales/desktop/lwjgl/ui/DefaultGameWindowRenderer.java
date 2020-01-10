@@ -1,14 +1,18 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
+import javax.inject.Inject;
+
 import org.lwjgl.opengl.GL11;
 
-import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.IEngineDriver;
+import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 
 public class DefaultGameWindowRenderer extends GameWindowRenderer {
 
 
-	public DefaultGameWindowRenderer(IEngineContext engineContext) {
-		super(engineContext);
+	@Inject
+	public DefaultGameWindowRenderer(IEngineDriver engineDriver, ISurfaceHandler surfaceHandler) {
+		super(engineDriver, surfaceHandler);
 	}
 	
 	

@@ -70,7 +70,7 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 		
 		effectiveInputDriver = useDefaultInputDriver ? createDefaultInputDriver(engineContext) : setInputDriver;
 		effectiveRenderer = setRenderer == null ? createDefaultRenderer(engineContext) : setRenderer;
-		effectiveLooper = setLooper == null ? createDefaultLooper(effectiveRenderer) : setLooper;
+		effectiveLooper = setLooper == null ? createDefaultLooper(engineContext, effectiveRenderer) : setLooper;
 
 		// Create window
 		effectiveWindow = getEffectiveWindowBuilder().build(new LWJGLWindowFactory());
@@ -198,10 +198,10 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 	}
 	
 	public IWindowRenderer createDefaultRenderer(IEngineContext engineContext) {
-		return new DefaultGameWindowRenderer(engineContext);
+		return new DefaultGameWindowRenderer(engineContext.getEngine().getEngineDriver(), engineContext.getEngine().getRenderService().getSurfaceHandler());
 	}
 
-	public IEngineLooper createDefaultLooper(IWindowRenderer renderer) {
+	public IEngineLooper createDefaultLooper(IEngineContext engineContext, IWindowRenderer renderer) {
 		return new DefaultEngineLooper(renderer, new LWJGLInputProcessor());
 	}
 	

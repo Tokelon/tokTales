@@ -3,10 +3,10 @@ package com.tokelon.toktales.android.render.opengl;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.render.IViewRenderer;
+import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.render.ISurfaceController;
-import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 
 import android.opengl.GLES20;
@@ -14,8 +14,8 @@ import android.opengl.GLES20;
 public class DefaultGameViewRenderer extends GLGameViewRenderer {
 
 
-	public DefaultGameViewRenderer(ILogging logging, IGame game, IRenderService renderService, ISurfaceController surfaceController) {
-		super(logging, game, renderService, surfaceController);
+	public DefaultGameViewRenderer(ILogging logging, IEngineDriver engineDriver, IRenderService renderService, ISurfaceController surfaceController) {
+		super(logging, engineDriver, renderService, surfaceController);
 	}
 	
 	
@@ -64,19 +64,19 @@ public class DefaultGameViewRenderer extends GLGameViewRenderer {
 	
 	public static class DefaultGameViewRendererFactory implements IViewRendererFactory {
 		private final ILogging logging;
-		private final IGame game;
+		private final IEngineDriver engineDriver;
 		private final IRenderService renderService;
 
 		@Inject
-		public DefaultGameViewRendererFactory(ILogging logging, IGame game, IRenderService renderService) {
+		public DefaultGameViewRendererFactory(ILogging logging, IEngineDriver engineDriver, IRenderService renderService) {
 			this.logging = logging;
-			this.game = game;
+			this.engineDriver = engineDriver;
 			this.renderService = renderService;
 		}
 		
 		@Override
 		public IViewRenderer create(ISurfaceController surfaceController) {
-			return new DefaultGameViewRenderer(logging, game, renderService, surfaceController);
+			return new DefaultGameViewRenderer(logging, engineDriver, renderService, surfaceController);
 		}
 	}
 

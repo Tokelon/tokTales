@@ -77,7 +77,7 @@ public class DefaultEngineLooper implements IEngineLooper {
 	 * @param engineContext
 	 */
 	protected void update(IEngineContext engineContext) {
-		engineContext.getGame().getGameControl().updateGame();
+		engineContext.getEngine().getEngineDriver().update();
 	}
 	
 	/** Runs the rendering of the engine.
@@ -101,7 +101,7 @@ public class DefaultEngineLooper implements IEngineLooper {
 	 * @param engineContext
 	 */
 	protected void processInput(IEngineContext engineContext) {
-		getInputProcessor().process();
+		engineContext.getEngine().getEngineDriver().processInput(inputProcessor);
 	}
 	
 	

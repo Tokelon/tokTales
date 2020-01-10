@@ -7,12 +7,15 @@ import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 
 public interface IEngine {
-
 	//public IConfigManager getConfigManager();
 
 	// Add support for custom services?
 	//public void addService(String name, IEngineService service);
 
+
+	public IEngineDriver getEngineDriver();
+	
+	
 	public IEnvironment getEnvironment();
 	
 	

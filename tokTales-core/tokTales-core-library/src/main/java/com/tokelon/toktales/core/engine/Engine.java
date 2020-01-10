@@ -11,15 +11,17 @@ import com.tokelon.toktales.core.engine.ui.IUIService;
 public class Engine implements IEngine {
 
 
-	private IEnvironment mEnvironment;
-	private IUIService mUIService;
-	private IContentService mContentService;
-	private IStorageService mStorageService;
-	private IRenderService mRenderService;
-	private IInputService mInputService;
+	private IEngineDriver engineDriver;
+	private IEnvironment environment;
+	private IUIService uiService;
+	private IContentService contentService;
+	private IStorageService storageService;
+	private IRenderService renderService;
+	private IInputService inputService;
 	
 	@Inject
 	public Engine(
+			IEngineDriver engineDriver,
 			IEnvironment environment,
 			IUIService uiService,
 			IContentService contentService,
@@ -27,44 +29,49 @@ public class Engine implements IEngine {
 			IRenderService renderService,
 			IInputService inputService
 	) {
-		this.mEnvironment = environment;
-		this.mUIService = uiService;
-		this.mContentService = contentService;
-		this.mStorageService = storageService;
-		this.mRenderService = renderService;
-		this.mInputService = inputService;
+		this.engineDriver = engineDriver;
+		this.environment = environment;
+		this.uiService = uiService;
+		this.contentService = contentService;
+		this.storageService = storageService;
+		this.renderService = renderService;
+		this.inputService = inputService;
 	}
 	
 	
+	@Override
+	public IEngineDriver getEngineDriver() {
+		return engineDriver;
+	}
 	
 	@Override
 	public IEnvironment getEnvironment() {
-		return mEnvironment;
+		return environment;
 	}
 
 	@Override
 	public IUIService getUIService() {
-		return mUIService;
+		return uiService;
 	}
 
 	@Override
 	public IContentService getContentService() {
-		return mContentService;
+		return contentService;
 	}
 
 	@Override
 	public IStorageService getStorageService() {
-		return mStorageService;
+		return storageService;
 	}
 
 	@Override
 	public IRenderService getRenderService() {
-		return mRenderService;
+		return renderService;
 	}
 
 	@Override
 	public IInputService getInputService() {
-		return mInputService;
+		return inputService;
 	}
 	
 }

@@ -119,6 +119,10 @@ public class UIControl implements IUIControl {
 	}
 	
 	
+	@Override
+	public void process() {
+		// TODO: Implement collecting motion events and processing them here
+	}
 	
 	
 	

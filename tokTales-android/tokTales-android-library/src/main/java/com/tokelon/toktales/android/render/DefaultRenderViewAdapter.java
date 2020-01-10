@@ -6,8 +6,8 @@ import com.tokelon.toktales.android.render.tools.IUIControl;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
 import com.tokelon.toktales.android.render.tools.IUIOverlay;
 import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
+import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.engine.render.ISurfaceController;
-import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 
 import android.view.MotionEvent;
@@ -15,13 +15,13 @@ import android.view.MotionEvent;
 public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 
 
-	private final IGame game;
+	private final IEngineDriver engineDriver;
 	private final IViewRenderer viewRenderer;
 	private final IUIControl uiControl;
 
 	@Inject
-	public DefaultRenderViewAdapter(IGame game, IViewRenderer viewRenderer, IUIControl uiControl) {
-		this.game = game;
+	public DefaultRenderViewAdapter(IEngineDriver engineDriver, IViewRenderer viewRenderer, IUIControl uiControl) {
+		this.engineDriver = engineDriver;
 		this.viewRenderer = viewRenderer;
 		this.uiControl = uiControl;
 	}
@@ -68,9 +68,11 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 	
 	@Override
 	public void onDrawFrame() {
-		game.getGameControl().updateGame();
-
-		viewRenderer.onDrawFrame();
+		engineDriver.update();
+		
+		engineDriver.render();
+		
+		engineDriver.processInput(uiControl);
 	}
 
 	@Override
@@ -85,20 +87,20 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 	
 	
 	public static class DefaultRenderViewAdapterFactory implements IRenderViewAdapterFactory {
-		private final IGame game;
+		private final IEngineDriver engineDriver;
 		private final IViewRendererFactory viewRendererFactory;
 		private final IUIControlFactory uiControlFactory;
 
 		@Inject
-		public DefaultRenderViewAdapterFactory(IGame game, IViewRendererFactory viewRendererFactory, IUIControlFactory uiControlFactory) {
-			this.game = game;
+		public DefaultRenderViewAdapterFactory(IEngineDriver engineDriver, IViewRendererFactory viewRendererFactory, IUIControlFactory uiControlFactory) {
+			this.engineDriver = engineDriver;
 			this.viewRendererFactory = viewRendererFactory;
 			this.uiControlFactory = uiControlFactory;
 		}
 		
 		@Override
 		public IRenderViewAdapter create(ISurfaceController surfaceController) {
-			return new DefaultRenderViewAdapter(game, viewRendererFactory.create(surfaceController), uiControlFactory.create(new DummyUIOverlayProvider()));
+			return new DefaultRenderViewAdapter(engineDriver, viewRendererFactory.create(surfaceController), uiControlFactory.create(new DummyUIOverlayProvider()));
 		}
 		
 	}

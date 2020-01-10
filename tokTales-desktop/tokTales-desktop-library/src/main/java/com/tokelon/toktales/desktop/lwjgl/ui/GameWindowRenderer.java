@@ -1,25 +1,28 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
-import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.game.IGame;
+import javax.inject.Inject;
+
+import com.tokelon.toktales.core.engine.IEngineDriver;
+import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
 
 public class GameWindowRenderer extends LWJGLWindowRenderer {
 
 
-	private IGame game;
+	private IEngineDriver engineDriver;
 
-	public GameWindowRenderer(IEngineContext engineContext) {
-		super(engineContext.getEngine().getRenderService().getSurfaceHandler());
+	@Inject
+	public GameWindowRenderer(IEngineDriver engineDriver, ISurfaceHandler surfaceHandler) {
+		super(surfaceHandler);
 		
-		this.game = engineContext.getGame();
+		this.engineDriver = engineDriver;
 	}
 	
 	
 	@Override
 	public void drawFrame() {
 		super.drawFrame();
-		
-		game.getGameControl().renderGame();
+
+		engineDriver.render();
 	}
 	
 }

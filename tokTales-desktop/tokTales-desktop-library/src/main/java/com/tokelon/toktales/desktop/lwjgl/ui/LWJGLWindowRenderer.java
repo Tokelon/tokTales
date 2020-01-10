@@ -1,5 +1,7 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
+import javax.inject.Inject;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.opengl.GL;
@@ -22,6 +24,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	
 	private final ISurfaceManager surfaceManager;
 	
+	@Inject
 	public LWJGLWindowRenderer(ISurfaceHandler surfaceHandler) {
 		this.surfaceManager = new SurfaceManager(surfaceHandler, new GLSurfaceController());
 	}
