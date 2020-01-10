@@ -36,6 +36,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 		
 		windowSizeCallback = new WindowSizeCallback();
 		GLFW.glfwSetWindowSizeCallback(window.getId(), windowSizeCallback);
+		
+		surfaceManager.setSurfaceName(window.getTitle());
 	}
 	
 	@Override
@@ -45,7 +47,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 		GL.createCapabilities();
 		
 		
-		surfaceManager.createSurface(window.getTitle(), window.getWidth(), window.getHeight());
+		surfaceManager.createSurface(window.getWidth(), window.getHeight());
 		surfaceManager.publishSurface();
 		
 		hasContext = true;

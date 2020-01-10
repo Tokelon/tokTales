@@ -4,8 +4,6 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
-import com.tokelon.toktales.android.render.IRenderViewAdapter.IRenderViewAdapterFactory;
-import com.tokelon.toktales.android.render.RenderViewSurfaceController;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
@@ -13,31 +11,34 @@ import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivi
 public class SurfaceViewIntegration implements ISurfaceViewIntegration {
 
 
+	private String surfaceName = null;
+	
 	private IRenderView renderView;
 	
-	private IRenderViewAdapter adapter;
-	
 	private final ILogger logger;
-	private final IRenderViewAdapterFactory adapterFactory;
+	private final IRenderViewAdapter renderViewAdapter;
 	
 	@Inject
-	public SurfaceViewIntegration(ILogging logging, IRenderViewAdapterFactory adapterFactory) {
+	public SurfaceViewIntegration(ILogging logging, IRenderViewAdapter renderViewAdapter) {
 		this.logger = logging.getLogger(getClass());
-		this.adapterFactory = adapterFactory;
+		this.renderViewAdapter = renderViewAdapter;
 	}
 	
 	
 	@Override
 	public void setRenderSurfaceName(String surfaceName) {
-		adapter.setSurfaceName(surfaceName); // TODO: Catch adapter null
+		this.surfaceName = surfaceName;
 	}
 	
 	@Override
 	public void integrateRenderView(IRenderView renderView) {
 		this.renderView = renderView;
-		this.adapter = adapterFactory.create(new RenderViewSurfaceController(renderView));
 		
-		renderView.setRenderViewAdapter(adapter);
+		if(surfaceName != null) {
+			renderView.setViewName(surfaceName);
+		}
+		
+		renderView.setRenderViewAdapter(renderViewAdapter);
 	}
 	
 	

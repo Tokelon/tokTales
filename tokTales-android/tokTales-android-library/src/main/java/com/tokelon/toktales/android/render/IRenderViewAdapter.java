@@ -1,6 +1,6 @@
 package com.tokelon.toktales.android.render;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceController;
+import com.tokelon.toktales.core.render.ISurfaceManager.ISurfaceManagerFactory;
 
 import android.view.MotionEvent;
 
@@ -16,10 +16,6 @@ public interface IRenderViewAdapter extends IViewRenderer {
 	public boolean onTouch(MotionEvent motionEvent);
 	
 	
-	
-	public interface IRenderViewAdapterFactory {
-		
-		public IRenderViewAdapter create(ISurfaceController surfaceController);
-	}
+	public ISurfaceManagerFactory getSurfaceManagerFactory();
 	
 }

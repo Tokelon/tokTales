@@ -4,11 +4,10 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.render.tools.IUIControl;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
-import com.tokelon.toktales.android.render.tools.IUIOverlay;
-import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
 import com.tokelon.toktales.core.engine.IEngineDriver;
-import com.tokelon.toktales.core.engine.render.ISurfaceController;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
+import com.tokelon.toktales.core.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.ISurfaceManager.ISurfaceManagerFactory;
 
 import android.view.MotionEvent;
 
@@ -18,18 +17,14 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 	private final IEngineDriver engineDriver;
 	private final IViewRenderer viewRenderer;
 	private final IUIControl uiControl;
+	private final ISurfaceManagerFactory surfaceManagerFactory;
 
 	@Inject
-	public DefaultRenderViewAdapter(IEngineDriver engineDriver, IViewRenderer viewRenderer, IUIControl uiControl) {
+	public DefaultRenderViewAdapter(IEngineDriver engineDriver, IViewRenderer viewRenderer, IUIControlFactory uiControlFactory, ISurfaceManagerFactory surfaceManagerFactory) {
 		this.engineDriver = engineDriver;
 		this.viewRenderer = viewRenderer;
-		this.uiControl = uiControl;
-	}
-
-	
-	@Override
-	public void setSurfaceName(String name) {
-		viewRenderer.setSurfaceName(name);
+		this.uiControl = uiControlFactory.create();
+		this.surfaceManagerFactory = surfaceManagerFactory;
 	}
 
 
@@ -45,8 +40,8 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 
 	
 	@Override
-	public void onSurfaceCreated() {
-		viewRenderer.onSurfaceCreated();
+	public void onSurfaceCreated(ISurfaceManager surfaceManager) {
+		viewRenderer.onSurfaceCreated(surfaceManager);
 	}
 
 	@Override
@@ -83,39 +78,11 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 		
 		return uiControl.onTouch(motionEvent);
 	}
-	
-	
-	
-	public static class DefaultRenderViewAdapterFactory implements IRenderViewAdapterFactory {
-		private final IEngineDriver engineDriver;
-		private final IViewRendererFactory viewRendererFactory;
-		private final IUIControlFactory uiControlFactory;
 
-		@Inject
-		public DefaultRenderViewAdapterFactory(IEngineDriver engineDriver, IViewRendererFactory viewRendererFactory, IUIControlFactory uiControlFactory) {
-			this.engineDriver = engineDriver;
-			this.viewRendererFactory = viewRendererFactory;
-			this.uiControlFactory = uiControlFactory;
-		}
-		
-		@Override
-		public IRenderViewAdapter create(ISurfaceController surfaceController) {
-			return new DefaultRenderViewAdapter(engineDriver, viewRendererFactory.create(surfaceController), uiControlFactory.create(new DummyUIOverlayProvider()));
-		}
-		
+	
+	@Override
+	public ISurfaceManagerFactory getSurfaceManagerFactory() {
+		return surfaceManagerFactory;
 	}
 	
-
-	private static class DummyUIOverlayProvider implements IUIOverlayProvider {
-		@Override
-		public boolean hasUIOverlay() {
-			return false;
-		}
-
-		@Override
-		public IUIOverlay getUIOverlay() {
-			return null;
-		}
-	}
-
 }

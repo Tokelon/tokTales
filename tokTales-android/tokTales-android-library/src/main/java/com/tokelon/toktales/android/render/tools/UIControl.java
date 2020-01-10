@@ -1209,6 +1209,12 @@ public class UIControl implements IUIControl {
 		
 		
 		@Override
+		public IUIControl create() {
+			IAndroidInputProducer inputProducer = androidInputService.getMainInputDispatch().getInputProducer();
+			return new UIControl(logging, eventPoolFactory, new DummyUIOverlayProvider(), inputProducer);
+		}
+		
+		@Override
 		public IUIControl create(IUIOverlayProvider overlayProvider) {
 			IAndroidInputProducer inputProducer = androidInputService.getMainInputDispatch().getInputProducer();
 			return new UIControl(logging, eventPoolFactory, overlayProvider, inputProducer);
@@ -1217,6 +1223,19 @@ public class UIControl implements IUIControl {
 		@Override
 		public IUIControl create(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer) {
 			return new UIControl(logging, eventPoolFactory, overlayProvider, inputProducer);
+		}
+	}
+	
+
+	private static class DummyUIOverlayProvider implements IUIOverlayProvider {
+		@Override
+		public boolean hasUIOverlay() {
+			return false;
+		}
+
+		@Override
+		public IUIOverlay getUIOverlay() {
+			return null;
 		}
 	}
 	

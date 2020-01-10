@@ -19,6 +19,7 @@ public interface IUIControl extends IEngineInputProcessor, Runnable {
 	
 	public interface IUIControlFactory {
 		
+		public IUIControl create();
 		public IUIControl create(IUIOverlayProvider overlayProvider);
 		public IUIControl create(IUIOverlayProvider overlayProvider, IAndroidInputProducer inputProducer);
 	}

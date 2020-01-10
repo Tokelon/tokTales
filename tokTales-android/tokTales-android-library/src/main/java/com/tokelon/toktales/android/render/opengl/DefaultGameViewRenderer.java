@@ -2,11 +2,8 @@ package com.tokelon.toktales.android.render.opengl;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.android.render.IViewRenderer;
 import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.engine.render.IRenderService;
-import com.tokelon.toktales.core.engine.render.ISurfaceController;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 
 import android.opengl.GLES20;
@@ -14,8 +11,9 @@ import android.opengl.GLES20;
 public class DefaultGameViewRenderer extends GLGameViewRenderer {
 
 
-	public DefaultGameViewRenderer(ILogging logging, IEngineDriver engineDriver, IRenderService renderService, ISurfaceController surfaceController) {
-		super(logging, engineDriver, renderService, surfaceController);
+	@Inject
+	public DefaultGameViewRenderer(ILogging logging, IEngineDriver engineDriver) {
+		super(logging, engineDriver);
 	}
 	
 	
@@ -37,7 +35,7 @@ public class DefaultGameViewRenderer extends GLGameViewRenderer {
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		
 
-		IScreenViewport viewport = getSurfaceManager().getSurface().getViewport();
+		IScreenViewport viewport = getCurrentSurfaceManager().getSurface().getViewport();
 		int width = (int) viewport.getWidth();
 		int height = (int) viewport.getHeight();
 		
@@ -58,26 +56,6 @@ public class DefaultGameViewRenderer extends GLGameViewRenderer {
 		
 		
 		super.onDrawFrame();
-	}
-	
-	
-	
-	public static class DefaultGameViewRendererFactory implements IViewRendererFactory {
-		private final ILogging logging;
-		private final IEngineDriver engineDriver;
-		private final IRenderService renderService;
-
-		@Inject
-		public DefaultGameViewRendererFactory(ILogging logging, IEngineDriver engineDriver, IRenderService renderService) {
-			this.logging = logging;
-			this.engineDriver = engineDriver;
-			this.renderService = renderService;
-		}
-		
-		@Override
-		public IViewRenderer create(ISurfaceController surfaceController) {
-			return new DefaultGameViewRenderer(logging, engineDriver, renderService, surfaceController);
-		}
 	}
 
 }

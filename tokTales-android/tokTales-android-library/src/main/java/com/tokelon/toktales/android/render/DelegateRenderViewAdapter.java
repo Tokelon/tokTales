@@ -1,5 +1,8 @@
 package com.tokelon.toktales.android.render;
 
+import com.tokelon.toktales.core.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.ISurfaceManager.ISurfaceManagerFactory;
+
 import android.view.MotionEvent;
 
 public class DelegateRenderViewAdapter implements IRenderViewAdapter {
@@ -15,7 +18,7 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 	private int currentWidth = 0;
 	private int currentHeight = 0;
 	
-	private String currentSurfaceName;
+	private ISurfaceManager currentSurfaceManager;
 	
 	
 	/** Sets the adapter.
@@ -28,12 +31,8 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 		this.adapter = adapter;
 		
 		if(adapter != null) {
-			if(currentSurfaceName != null) {
-				adapter.setSurfaceName(currentSurfaceName);
-			}
-			
 			if(surfaceCreated) {
-				adapter.onSurfaceCreated();
+				adapter.onSurfaceCreated(currentSurfaceManager);
 				
 				if(surfaceChanged) {
 					adapter.onSurfaceChanged(currentWidth, currentHeight);
@@ -48,31 +47,22 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 
 	
 	@Override
-	public void setSurfaceName(String name) {
-		this.currentSurfaceName = name;
+	public void onSurfaceCreated(ISurfaceManager surfaceManager) {
+		this.surfaceCreated = true;
+		this.surfaceChanged = false;
+		this.currentSurfaceManager = surfaceManager;
 		
 		if(adapter != null) {
-			adapter.setSurfaceName(name);
-		}
-	}
-
-	
-	@Override
-	public void onSurfaceCreated() {
-		surfaceCreated = true;
-		surfaceChanged = false;
-		
-		if(adapter != null) {
-			adapter.onSurfaceCreated();
+			adapter.onSurfaceCreated(surfaceManager);
 		}
 	}
 
 	@Override
 	public void onSurfaceChanged(int width, int height) {
-		currentWidth = width;
-		currentHeight = height;
+		this.currentWidth = width;
+		this.currentHeight = height;
 		
-		surfaceChanged = true;
+		this.surfaceChanged = true;
 		
 		if(adapter != null) {
 			adapter.onSurfaceChanged(width, height);
@@ -117,9 +107,20 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 	
 	
 	@Override
+	public ISurfaceManagerFactory getSurfaceManagerFactory() {
+		if(adapter != null) {
+			return adapter.getSurfaceManagerFactory();
+		}
+		
+		return null;
+	}
+	
+	
+	@Override
 	public void onSurfaceDestroyed() {
-		surfaceCreated = false;
-		surfaceChanged = false;
+		this.surfaceCreated = false;
+		this.surfaceChanged = false;
+		this.currentSurfaceManager = null;
 		
 		if(adapter != null) {
 			adapter.onSurfaceDestroyed();

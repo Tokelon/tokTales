@@ -6,6 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.tokelon.toktales.android.render.DelegateRenderViewAdapter;
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
+import com.tokelon.toktales.core.render.ISurfaceManager;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -22,6 +23,9 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	private final DelegateRenderViewAdapter delegateAdapter = new DelegateRenderViewAdapter();
 	private final DelegateRenderer delegateRenderer = new DelegateRenderer();
 	
+	private String viewName;
+	private ISurfaceManager surfaceManager;
+	
 	
 	public RenderGLSurfaceView(Context context) {
 		super(context);
@@ -36,6 +40,9 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	}
 
 	protected void init(Context context) {
+		// TODO: Test if this works consistent, otherwise implement creating a context in resume()
+		setPreserveEGLContextOnPause(true);
+		
 		// Create an OpenGL ES 2.0 context
 		setEGLContextClientVersion(2);
 
@@ -51,6 +58,12 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	
 	@Override
 	public void setRenderViewAdapter(IRenderViewAdapter adapter) {
+		this.surfaceManager = adapter.getSurfaceManagerFactory().create(this);
+		
+		if(viewName != null) {
+			this.surfaceManager.setSurfaceName(viewName);
+		}
+
 		// To guarantee thread safety this method must be called inside the renderer thread.
 		queueEvent(() -> delegateAdapter.setAdapter(adapter));
 	}
@@ -89,14 +102,24 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 		// TODO: Does this complement the renderer lifecycle correctly?
 		delegateAdapter.onSurfaceDestroyed();
 	}
+
 	
+	@Override
+	public String getViewName() {
+		return viewName;
+	}
+	
+	@Override
+	public void setViewName(String name) {
+		this.viewName = name;
+	}
 	
 	
 	protected class DelegateRenderer implements Renderer {
 		
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-			delegateAdapter.onSurfaceCreated();
+			delegateAdapter.onSurfaceCreated(surfaceManager);
 		}
 
 		@Override

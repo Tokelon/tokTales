@@ -96,8 +96,8 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IGameStateInputHandler.class).annotatedWith(For.forClass(InitialGamestate.class)).to(AndroidInitialGamestateInputHandler.class);
 		
 		
-		bind(IViewRenderer.IViewRendererFactory.class).to(DefaultGameViewRenderer.DefaultGameViewRendererFactory.class);
-		bind(IRenderViewAdapter.IRenderViewAdapterFactory.class).to(DefaultRenderViewAdapter.DefaultRenderViewAdapterFactory.class);
+		bind(IViewRenderer.class).to(DefaultGameViewRenderer.class);
+		bind(IRenderViewAdapter.class).to(DefaultRenderViewAdapter.class);
 		bind(IUIControlFactory.class).to(UIControl.UIControlFactory.class);
 	}
 	

@@ -14,6 +14,9 @@ import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 public class SurfaceManager implements ISurfaceManager {
 
 
+	public static int defaultSurfaceNameCounter = 0;
+	
+	private String surfaceName;
 	private Surface surface;
 	
 	private final ISurfaceHandler surfaceHandler;
@@ -23,6 +26,17 @@ public class SurfaceManager implements ISurfaceManager {
 	public SurfaceManager(ISurfaceHandler surfaceHandler, ISurfaceController surfaceController) {
 		this.surfaceHandler = surfaceHandler;
 		this.surfaceController = surfaceController;
+		this.surfaceName = getDefaultSurfaceName(defaultSurfaceNameCounter++);
+	}
+	
+	
+	/** Returns a default surface name for a given index.
+	 * 
+	 * @param index
+	 * @return A default surface name.
+	 */
+	public String getDefaultSurfaceName(int index) {
+		return ISurfaceManager.class.getSimpleName() + "Surface" + index;
 	}
 	
 	
@@ -48,16 +62,16 @@ public class SurfaceManager implements ISurfaceManager {
 	
 
 	@Override
-	public void createSurface(String name, int width, int height) {
+	public void createSurface(int width, int height) {
 		IScreenViewport viewport = createViewport(width, height);
 		Matrix4f projectionMatrix = createProjectionMatrix(width, height);
 		
-		createSurface(name, viewport, projectionMatrix);
+		createSurface(viewport, projectionMatrix);
 	}
 	
 	@Override
-	public void createSurface(String name, IScreenViewport viewport, Matrix4f projectionMatrix) {
-		this.surface = new Surface(name, viewport, projectionMatrix);
+	public void createSurface(IScreenViewport viewport, Matrix4f projectionMatrix) {
+		this.surface = new Surface(getSurfaceName(), viewport, projectionMatrix);
 	}
 	
 	@Override
@@ -79,14 +93,37 @@ public class SurfaceManager implements ISurfaceManager {
 	public ISurface getSurface() {
 		return surface;
 	}
+
+	
+	@Override
+	public String getSurfaceName() {
+		return surfaceName;
+	}
+	
+	@Override
+	public void setSurfaceName(String name) {
+		this.surfaceName = name;
+	}
 	
 	
+	/** Creates a viewport with the given properties.
+	 * 
+	 * @param width
+	 * @param height
+	 * @return A new viewport.
+	 */
 	protected IScreenViewport createViewport(int width, int height) {
 		AccurateViewport masterViewport = new AccurateViewport();
 		masterViewport.setSize(width, height);
 		return masterViewport;
 	}
 	
+	/** Creates a projection matrix with the given properties.
+	 * 
+	 * @param width
+	 * @param height
+	 * @return A new projection matrix.
+	 */
 	protected Matrix4f createProjectionMatrix(int width, int height) {
 		float glViewportWidth = width;
 		float glViewportHeight = height;
@@ -103,6 +140,21 @@ public class SurfaceManager implements ISurfaceManager {
 		);
 		
 		return projMatrix;
+	}
+	
+	
+	public static class SurfaceManagerFactory implements ISurfaceManagerFactory {
+		private final ISurfaceHandler surfaceHandler;
+
+		@Inject
+		public SurfaceManagerFactory(ISurfaceHandler surfaceHandler) {
+			this.surfaceHandler = surfaceHandler;
+		}
+
+		@Override
+		public ISurfaceManager create(ISurfaceController surfaceController) {
+			return new SurfaceManager(surfaceHandler, surfaceController);
+		}
 	}
 	
 }
