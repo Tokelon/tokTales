@@ -15,10 +15,12 @@ import com.tokelon.toktales.core.content.IResourceManager;
 import com.tokelon.toktales.core.content.ResourceManager;
 import com.tokelon.toktales.core.editor.EditorManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
+import com.tokelon.toktales.core.engine.DefaultEngineDriver;
 import com.tokelon.toktales.core.engine.Engine;
 import com.tokelon.toktales.core.engine.EngineContext;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.engine.inject.scope.EngineScope;
 import com.tokelon.toktales.core.engine.inject.scope.EngineScoped;
 import com.tokelon.toktales.core.engine.inject.scope.GameScope;
@@ -138,9 +140,9 @@ public class CoreInjectModule extends AbstractInjectModule {
 		 // EngineContext bindings
 		 bindInEngineScope(IEngine.class, Engine.class); // bindings in platform module
 		  // Engine bindings
+		  bindInEngineScope(IEngineDriver.class, DefaultEngineDriver.class);
 		  bindInEngineScopeAndForNotScoped(ISurfaceHandler.class, DefaultSurfaceHandler.class);
 		  bindInEngineScopeAndForNotScoped(IRenderAccess.class, DefaultRenderAccess.class);
-		 
 		 
 		 bindInGameScope(IGame.class, Game.class);
 		  // Game bindings
