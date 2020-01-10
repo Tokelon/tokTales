@@ -118,9 +118,9 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	}
 	
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		
+	protected void onResume() {
+		super.onResume();
+
 		hide();
 	}
 	
