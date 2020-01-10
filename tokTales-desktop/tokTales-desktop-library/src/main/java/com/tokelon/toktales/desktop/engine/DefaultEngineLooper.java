@@ -2,6 +2,7 @@ package com.tokelon.toktales.desktop.engine;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
+import com.tokelon.toktales.core.engine.IEngineInputProcessor;
 import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
