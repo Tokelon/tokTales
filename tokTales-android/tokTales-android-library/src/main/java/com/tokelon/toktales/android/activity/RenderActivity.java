@@ -3,7 +3,7 @@ package com.tokelon.toktales.android.activity;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.integration.IGameIntegration;
+import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedCompatActivity;
@@ -76,7 +76,7 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	
 	
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IGameIntegration gameIntegration;
+	private IEngineIntegration engineIntegration;
 	
 	
 	public RenderActivity() {
@@ -89,15 +89,15 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	
 
 	@Inject
-	protected void injectDependencies(ISurfaceViewIntegration surfaceViewIntegration, IGameIntegration gameIntegration) {
+	protected void injectDependencies(ISurfaceViewIntegration surfaceViewIntegration, IEngineIntegration engineIntegration) {
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.gameIntegration = gameIntegration;
+		this.engineIntegration = engineIntegration;
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, engineIntegration);
 		
 		return super.buildIntegrator(builder);
 	}

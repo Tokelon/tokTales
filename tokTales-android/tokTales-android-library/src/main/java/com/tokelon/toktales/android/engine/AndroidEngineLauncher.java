@@ -64,21 +64,19 @@ public class AndroidEngineLauncher extends BaseEngineLauncher {
 	 * This implementation does not call super.
 	 * 
 	 * @param engineContext
-	 * @throws EngineException
+	 * @throws EngineException If an error occurs during execution.
 	 */
 	@Override
 	protected void runEngine(IEngineContext engineContext) throws EngineException {
 		// Do NOT call super here
 		
-		// calls onCreate on adapter
-		engineContext.getGame().getGameControl().createGame();
-		
+
+		engineContext.getEngine().getEngineDriver().create();
 
 		// The Android lifecycle is a bit more dynamic, so we can not do this here
 		// These will have to be called in an activity or something like GameIntegration
-		//engineContext.getGame().getGameControl().startGame();
-		//engineContext.getGame().getGameControl().resumeGame();
-		
+		//engineContext.getEngine().getEngineDriver().start();
+		//engineContext.getEngine().getEngineDriver().resume();
 		
 		// TODO: Implement calling .destroy() somewhere
 	}

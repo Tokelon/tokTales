@@ -7,7 +7,7 @@ import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
 import com.tokelon.toktales.android.activity.SettingsActivity;
-import com.tokelon.toktales.android.activity.integration.IGameIntegration;
+import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
@@ -74,7 +74,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	private IEngineContext engineContext;
 	private ITaleLoader taleLoader;
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IGameIntegration gameIntegration;
+	private IEngineIntegration engineIntegration;
 	private ISimpleRequestPermissionsIntegration requestPermissionsIntegration;
 
 	
@@ -87,19 +87,19 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	}
 
 	@Inject
-	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader, ISurfaceViewIntegration surfaceViewIntegration, IGameIntegration gameIntegration, ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory) {
+	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader, ISurfaceViewIntegration surfaceViewIntegration, IEngineIntegration engineIntegration, ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory) {
 		this.logger = engineContext.getLogging().getLogger(getClass());
 		this.engineContext = engineContext;
 		this.taleLoader = taleLoader;
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.gameIntegration = gameIntegration;
+		this.engineIntegration = engineIntegration;
 		this.requestPermissionsIntegration = requestPermissionsIntegrationFactory.create(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, engineIntegration);
 		builder.addIntegration(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
 		return super.buildIntegrator(builder);

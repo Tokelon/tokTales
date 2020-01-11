@@ -16,6 +16,42 @@ public class DefaultEngineDriver implements IEngineDriver {
 	
 	
 	@Override
+	public void create() {
+		game.getGameControl().createGame();
+	}
+
+
+	@Override
+	public void start() {
+		game.getGameControl().startGame();
+	}
+
+
+	@Override
+	public void resume() {
+		game.getGameControl().resumeGame();
+	}
+
+
+	@Override
+	public void pause() {
+		game.getGameControl().pauseGame();
+	}
+
+
+	@Override
+	public void stop() {
+		game.getGameControl().stopGame();
+	}
+
+
+	@Override
+	public void destroy() {
+		game.getGameControl().destroyGame();
+	}
+	
+	
+	@Override
 	public void update() {
 		/*
 		if(game.getGameControl().getGameStatus() != IGameControl.GameStatus.RUNNING) {

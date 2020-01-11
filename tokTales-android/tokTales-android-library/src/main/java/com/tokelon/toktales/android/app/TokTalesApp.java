@@ -3,12 +3,12 @@ package com.tokelon.toktales.android.app;
 import com.tokelon.toktales.android.engine.AndroidEngineLauncher;
 import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
+import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.EmptyGameAdapter;
-import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
@@ -151,11 +151,11 @@ public class TokTalesApp extends Application {
 		 * TODO: Implement termination inside an activity (the main activity)
 		 */
 		
-		IGame game = TokTales.getGame(); // TODO: Replace with callback onEngineLaunch() ?
-		if(game != null) {
-			game.getGameControl().pauseGame();
-			game.getGameControl().stopGame();
-			game.getGameControl().destroyGame();	
+		IEngine engine = TokTales.getEngine(); // TODO: Replace with callback onEngineLaunch() ?
+		if(engine != null) {
+			engine.getEngineDriver().pause();
+			engine.getEngineDriver().stop();
+			engine.getEngineDriver().destroy();	
 		}
 	}
 

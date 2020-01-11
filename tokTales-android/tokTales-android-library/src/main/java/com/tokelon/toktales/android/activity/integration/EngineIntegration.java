@@ -2,38 +2,38 @@ package com.tokelon.toktales.android.activity.integration;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.game.IGame;
+import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
-public class GameIntegration implements IGameIntegration {
+public class EngineIntegration implements IEngineIntegration {
 
 
-	private final IGame game;
+	private final IEngineDriver engineDriver;
 	
 	@Inject
-	public GameIntegration(IGame game) {
-		this.game = game;
+	public EngineIntegration(IEngineDriver engineDriver) {
+		this.engineDriver = engineDriver;
 	}
 	
 	
 	@Override
 	public void onActivityStart(IIntegratedActivity activity) {
-		game.getGameControl().startGame();
+		engineDriver.start();
 	}
 	
 	@Override
 	public void onActivityResume(IIntegratedActivity activity) {
-		game.getGameControl().resumeGame();
+		engineDriver.resume();
 	}
 	
 	@Override
 	public void onActivityPause(IIntegratedActivity activity) {
-		game.getGameControl().pauseGame();
+		engineDriver.pause();
 	}
 	
 	@Override
 	public void onActivityStop(IIntegratedActivity activity) {
-		game.getGameControl().stopGame();
+		engineDriver.stop();
 	}
 	
 }

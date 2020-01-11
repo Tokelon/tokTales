@@ -1,7 +1,7 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.tokelon.toktales.android.activity.integration.GameIntegration;
-import com.tokelon.toktales.android.activity.integration.IGameIntegration;
+import com.tokelon.toktales.android.activity.integration.EngineIntegration;
+import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration.IKeyboardActivityIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
@@ -87,7 +87,7 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IKeyboardActivityIntegrationFactory.class).to(KeyboardActivityIntegrationFactory.class);
 		bind(ISimpleRequestPermissionsIntegrationFactory.class).to(SimpleRequestPermissionsIntegrationFactory.class);
 		bind(ISurfaceViewIntegration.class).to(SurfaceViewIntegration.class);
-		bind(IGameIntegration.class).to(GameIntegration.class);
+		bind(IEngineIntegration.class).to(EngineIntegration.class);
 		
 		
 		bind(IGameStateInput.class).to(IAndroidGameStateInput.class);

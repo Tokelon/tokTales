@@ -186,10 +186,10 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @throws EngineException If an error occurs during startup.
 	 */
 	protected void startupEngine(IEngineContext engineContext) throws EngineException {
-		engineContext.getGame().getGameControl().createGame(); // calls onCreate on adapter
+		engineContext.getEngine().getEngineDriver().create(); // calls onCreate on adapter
 
-		engineContext.getGame().getGameControl().startGame();
-		engineContext.getGame().getGameControl().resumeGame();
+		engineContext.getEngine().getEngineDriver().start();
+		engineContext.getEngine().getEngineDriver().resume();
 	}
 	
 	/** Runs the shutdown logic for the engine.
@@ -200,10 +200,10 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @throws EngineException If an error occurs during shutdown.
 	 */
 	protected void shutdownEngine(IEngineContext engineContext) throws EngineException {
-		engineContext.getGame().getGameControl().pauseGame();
-		engineContext.getGame().getGameControl().stopGame();
+		engineContext.getEngine().getEngineDriver().pause();
+		engineContext.getEngine().getEngineDriver().stop();
 		
-		engineContext.getGame().getGameControl().destroyGame();
+		engineContext.getEngine().getEngineDriver().destroy();
 	}
 	
 	

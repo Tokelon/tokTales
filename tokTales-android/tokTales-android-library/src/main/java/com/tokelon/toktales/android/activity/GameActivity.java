@@ -3,7 +3,7 @@ package com.tokelon.toktales.android.activity;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.integration.IGameIntegration;
+import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
@@ -53,7 +53,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 	private ILogger logger;
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IGameIntegration gameIntegration;
+	private IEngineIntegration engineIntegration;
 	
 	
 	public GameActivity() {
@@ -65,16 +65,16 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	}
 	
 	@Inject
-	protected void injectDependencies(ILogging logging, ISurfaceViewIntegration surfaceViewIntegration, IGameIntegration gameIntegration) {
+	protected void injectDependencies(ILogging logging, ISurfaceViewIntegration surfaceViewIntegration, IEngineIntegration engineIntegration) {
 		this.logger = logging.getLogger(getClass());
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.gameIntegration = gameIntegration;
+		this.engineIntegration = engineIntegration;
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, gameIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, engineIntegration);
 		
 		return super.buildIntegrator(builder);
 	}
