@@ -88,7 +88,7 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// If delegate adapter not set ?
+		// Do if actual adapter not set?
 		// return super.onTouchEvent(event);
 		
 		return delegateAdapter.onTouch(event);
@@ -97,10 +97,11 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		super.surfaceDestroyed(holder);
-		
 		// TODO: Does this complement the renderer lifecycle correctly?
-		delegateAdapter.onSurfaceDestroyed();
+		// -> No, this gets called even if the open gl context is preserved
+		//delegateAdapter.onSurfaceDestroyed();
+
+		super.surfaceDestroyed(holder);
 	}
 
 	
