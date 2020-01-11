@@ -6,12 +6,12 @@ import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.ISurfaceController;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager;
 import com.tokelon.toktales.core.engine.render.Surface;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 
-public class SurfaceManager implements ISurfaceManager {
+public class SurfaceHandler implements ISurfaceHandler {
 
 
 	public static int defaultSurfaceNameCounter = 0;
@@ -19,12 +19,12 @@ public class SurfaceManager implements ISurfaceManager {
 	private String surfaceName;
 	private Surface surface;
 	
-	private final ISurfaceHandler surfaceHandler;
+	private final ISurfaceManager surfaceManager;
 	private final ISurfaceController surfaceController;
 
 	@Inject
-	public SurfaceManager(ISurfaceHandler surfaceHandler, ISurfaceController surfaceController) {
-		this.surfaceHandler = surfaceHandler;
+	public SurfaceHandler(ISurfaceManager surfaceManager, ISurfaceController surfaceController) {
+		this.surfaceManager = surfaceManager;
 		this.surfaceController = surfaceController;
 		this.surfaceName = getDefaultSurfaceName(defaultSurfaceNameCounter++);
 	}
@@ -36,7 +36,7 @@ public class SurfaceManager implements ISurfaceManager {
 	 * @return A default surface name.
 	 */
 	public String getDefaultSurfaceName(int index) {
-		return ISurfaceManager.class.getSimpleName() + "Surface" + index;
+		return ISurfaceHandler.class.getSimpleName() + "Surface" + index;
 	}
 	
 	
@@ -46,18 +46,18 @@ public class SurfaceManager implements ISurfaceManager {
 			throw new IllegalStateException("No surface has been created yet");
 		}
 		
-		surfaceHandler.publishSurface(surface, surfaceController);
+		surfaceManager.publishSurface(surface, surfaceController);
 		this.updateSurface();
 	}
 	
 	@Override
 	public void updateSurface() {
-		surfaceHandler.updateSurface(surface);
+		surfaceManager.updateSurface(surface);
 	}
 	
 	@Override
 	public void recallSurface() {
-		surfaceHandler.recallSurface(surface);
+		surfaceManager.recallSurface(surface);
 	}
 	
 
@@ -143,17 +143,17 @@ public class SurfaceManager implements ISurfaceManager {
 	}
 	
 	
-	public static class SurfaceManagerFactory implements ISurfaceManagerFactory {
-		private final ISurfaceHandler surfaceHandler;
+	public static class SurfaceHandlerFactory implements ISurfaceHandlerFactory {
+		private final ISurfaceManager surfaceManager;
 
 		@Inject
-		public SurfaceManagerFactory(ISurfaceHandler surfaceHandler) {
-			this.surfaceHandler = surfaceHandler;
+		public SurfaceHandlerFactory(ISurfaceManager surfaceManager) {
+			this.surfaceManager = surfaceManager;
 		}
 
 		@Override
-		public ISurfaceManager create(ISurfaceController surfaceController) {
-			return new SurfaceManager(surfaceHandler, surfaceController);
+		public ISurfaceHandler create(ISurfaceController surfaceController) {
+			return new SurfaceHandler(surfaceManager, surfaceController);
 		}
 	}
 	

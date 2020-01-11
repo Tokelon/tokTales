@@ -8,7 +8,7 @@ import com.tokelon.toktales.android.render.IViewRenderer;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
-import com.tokelon.toktales.core.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.ISurfaceHandler;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
 
 public class GLViewRenderer implements IViewRenderer {
@@ -20,7 +20,7 @@ public class GLViewRenderer implements IViewRenderer {
 	private final Object surfaceLock = new Object(); // TODO: Remove if not needed
 
 	
-	private ISurfaceManager currentSurfaceManager;
+	private ISurfaceHandler currentSurfaceHandler;
 	
 	private final GLErrorUtils glErrorUtils;
 	
@@ -30,24 +30,24 @@ public class GLViewRenderer implements IViewRenderer {
 	}
 	
 	
-	/** Returns the surface manager that has been assigned in {@link #onSurfaceCreated(ISurfaceManager)}.
+	/** Returns the surface manager that has been assigned in {@link #onSurfaceCreated(ISurfaceHandler)}.
 	 * 
 	 * @return The current surface manager, or null if there is none.
 	 */
-	protected ISurfaceManager getCurrentSurfaceManager() {
-		return currentSurfaceManager;
+	protected ISurfaceHandler getCurrentSurfaceHandler() {
+		return currentSurfaceHandler;
 	}
 	
 	
 	@Override
-	public void onSurfaceCreated(ISurfaceManager surfaceManager) {
-		this.currentSurfaceManager = surfaceManager;
+	public void onSurfaceCreated(ISurfaceHandler surfaceHandler) {
+		this.currentSurfaceHandler = surfaceHandler;
 		
 		synchronized(surfaceLock) {
 			glErrorUtils.assertNoGLErrors();
 			
-			getCurrentSurfaceManager().createSurface(new AccurateViewport(), new Matrix4f());
-			getCurrentSurfaceManager().publishSurface();
+			getCurrentSurfaceHandler().createSurface(new AccurateViewport(), new Matrix4f());
+			getCurrentSurfaceHandler().publishSurface();
 			
 			glErrorUtils.assertNoGLErrors();
 		}
@@ -59,7 +59,7 @@ public class GLViewRenderer implements IViewRenderer {
 		synchronized(surfaceLock) {
 			glErrorUtils.assertNoGLErrors();
 
-			getCurrentSurfaceManager().updateSurface(width, height);
+			getCurrentSurfaceHandler().updateSurface(width, height);
 			
 			glErrorUtils.assertNoGLErrors();
 		}
@@ -69,9 +69,9 @@ public class GLViewRenderer implements IViewRenderer {
 	
 	@Override
 	public void onSurfaceDestroyed() {
-		getCurrentSurfaceManager().recallSurface();
+		getCurrentSurfaceHandler().recallSurface();
 		
-		this.currentSurfaceManager = null;
+		this.currentSurfaceHandler = null;
 	}
 
 	

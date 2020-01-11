@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.engine.render;
 
-public interface ISurfaceHandler {
+public interface ISurfaceManager {
 
 
 	public void publishSurface(ISurface surface, ISurfaceController surfaceController);

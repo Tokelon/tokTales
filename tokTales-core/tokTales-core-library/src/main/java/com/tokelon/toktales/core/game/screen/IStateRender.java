@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.game.screen;
 
 import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager.ISurfaceCallback;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;

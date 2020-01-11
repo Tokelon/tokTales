@@ -12,7 +12,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.ISurface;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler.ISurfaceCallback;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager.ISurfaceCallback;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.screen.IStateRender;
 import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
@@ -468,7 +468,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 	@Override
 	public void onEngage() {
-		getEngine().getRenderService().getSurfaceHandler().addCallback(currentSurfaceCallback = new StateSurfaceCallback());
+		getEngine().getRenderService().getSurfaceManager().addCallback(currentSurfaceCallback = new StateSurfaceCallback());
 		
 		
 		getIntegrator().onEngage();
@@ -506,7 +506,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	@Override
 	public void onDisengage() {
-		getEngine().getRenderService().getSurfaceHandler().removeCallback(currentSurfaceCallback);
+		getEngine().getRenderService().getSurfaceManager().removeCallback(currentSurfaceCallback);
 		
 		
 		getIntegrator().onDisengage();
@@ -887,12 +887,12 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 			throw new NullPointerException();
 		}
 		
-		getEngine().getRenderService().getSurfaceHandler().removeCallback(this.stateRender);
+		getEngine().getRenderService().getSurfaceManager().removeCallback(this.stateRender);
 		
 		gamestateInjector.injectInto(render);
 		this.stateRender = render;
 		
-		getEngine().getRenderService().getSurfaceHandler().addCallback(render);
+		getEngine().getRenderService().getSurfaceManager().addCallback(render);
 	}
 
 	/** Sets the state input handler.

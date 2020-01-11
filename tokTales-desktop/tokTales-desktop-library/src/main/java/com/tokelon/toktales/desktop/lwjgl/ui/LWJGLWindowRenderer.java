@@ -7,9 +7,9 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
-import com.tokelon.toktales.core.render.ISurfaceManager;
-import com.tokelon.toktales.core.render.SurfaceManager;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.ISurfaceHandler;
+import com.tokelon.toktales.core.render.SurfaceHandler;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
@@ -22,11 +22,11 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	private WindowSizeCallback windowSizeCallback;
 	private IWindow window;
 	
-	private final ISurfaceManager surfaceManager;
+	private final ISurfaceHandler surfaceHandler;
 	
 	@Inject
-	public LWJGLWindowRenderer(ISurfaceHandler surfaceHandler) {
-		this.surfaceManager = new SurfaceManager(surfaceHandler, new GLSurfaceController());
+	public LWJGLWindowRenderer(ISurfaceManager surfaceManager) {
+		this.surfaceHandler = new SurfaceHandler(surfaceManager, new GLSurfaceController());
 	}
 	
 	
@@ -37,7 +37,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 		windowSizeCallback = new WindowSizeCallback();
 		GLFW.glfwSetWindowSizeCallback(window.getId(), windowSizeCallback);
 		
-		surfaceManager.setSurfaceName(window.getTitle());
+		surfaceHandler.setSurfaceName(window.getTitle());
 	}
 	
 	@Override
@@ -47,8 +47,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 		GL.createCapabilities();
 		
 		
-		surfaceManager.createSurface(window.getWidth(), window.getHeight());
-		surfaceManager.publishSurface();
+		surfaceHandler.createSurface(window.getWidth(), window.getHeight());
+		surfaceHandler.publishSurface();
 		
 		hasContext = true;
 	}
@@ -57,7 +57,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	public void destroyContext() {
 		hasContext = false;
 
-		surfaceManager.recallSurface();
+		surfaceHandler.recallSurface();
 		
 		// Replace with window.detachContext() ?
 		GLFW.glfwMakeContextCurrent(MemoryUtil.NULL);
@@ -96,7 +96,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 		@Override
 		public void invoke(long window, int width, int height) {
 			if(hasContext) {
-				surfaceManager.updateSurface(width, height);
+				surfaceHandler.updateSurface(width, height);
 			}
 		}
 	}

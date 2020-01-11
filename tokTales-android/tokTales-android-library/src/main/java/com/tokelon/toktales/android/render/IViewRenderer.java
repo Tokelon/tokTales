@@ -1,6 +1,6 @@
 package com.tokelon.toktales.android.render;
 
-import com.tokelon.toktales.core.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.ISurfaceHandler;
 
 public interface IViewRenderer {
 	//Add these?
@@ -8,7 +8,7 @@ public interface IViewRenderer {
 	//public void onCommitFrame();
 
 
-	public void onSurfaceCreated(ISurfaceManager surfaceManager);
+	public void onSurfaceCreated(ISurfaceHandler surfaceHandler);
 	
 	public void onSurfaceChanged(int width, int height);
 	

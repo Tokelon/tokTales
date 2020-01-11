@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class DefaultSurfaceHandler implements ISurfaceHandler {
+public class DefaultSurfaceManager implements ISurfaceManager {
 
 
 	private final Map<ISurface, SurfaceData> surfaceMap;
 	
 	private final Set<ISurfaceCallback> callbackSet;
 	
-	public DefaultSurfaceHandler() {
+	public DefaultSurfaceManager() {
 		surfaceMap = Collections.synchronizedMap(new HashMap<ISurface, SurfaceData>());
 		callbackSet = Collections.synchronizedSet(new HashSet<ISurfaceCallback>());
 	}

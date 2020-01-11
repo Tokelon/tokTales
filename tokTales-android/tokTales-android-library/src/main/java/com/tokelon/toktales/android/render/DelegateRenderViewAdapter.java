@@ -1,7 +1,7 @@
 package com.tokelon.toktales.android.render;
 
-import com.tokelon.toktales.core.render.ISurfaceManager;
-import com.tokelon.toktales.core.render.ISurfaceManager.ISurfaceManagerFactory;
+import com.tokelon.toktales.core.render.ISurfaceHandler;
+import com.tokelon.toktales.core.render.ISurfaceHandler.ISurfaceHandlerFactory;
 
 import android.view.MotionEvent;
 
@@ -18,7 +18,7 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 	private int currentWidth = 0;
 	private int currentHeight = 0;
 	
-	private ISurfaceManager currentSurfaceManager;
+	private ISurfaceHandler currentSurfaceHandler;
 	
 	
 	/** Sets the adapter.
@@ -32,7 +32,7 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 		
 		if(adapter != null) {
 			if(surfaceCreated) {
-				adapter.onSurfaceCreated(currentSurfaceManager);
+				adapter.onSurfaceCreated(currentSurfaceHandler);
 				
 				if(surfaceChanged) {
 					adapter.onSurfaceChanged(currentWidth, currentHeight);
@@ -47,13 +47,13 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 
 	
 	@Override
-	public void onSurfaceCreated(ISurfaceManager surfaceManager) {
+	public void onSurfaceCreated(ISurfaceHandler surfaceHandler) {
 		this.surfaceCreated = true;
 		this.surfaceChanged = false;
-		this.currentSurfaceManager = surfaceManager;
+		this.currentSurfaceHandler = surfaceHandler;
 		
 		if(adapter != null) {
-			adapter.onSurfaceCreated(surfaceManager);
+			adapter.onSurfaceCreated(surfaceHandler);
 		}
 	}
 
@@ -107,9 +107,9 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 	
 	
 	@Override
-	public ISurfaceManagerFactory getSurfaceManagerFactory() {
+	public ISurfaceHandlerFactory getSurfaceHandlerFactory() {
 		if(adapter != null) {
-			return adapter.getSurfaceManagerFactory();
+			return adapter.getSurfaceHandlerFactory();
 		}
 		
 		return null;
@@ -120,7 +120,7 @@ public class DelegateRenderViewAdapter implements IRenderViewAdapter {
 	public void onSurfaceDestroyed() {
 		this.surfaceCreated = false;
 		this.surfaceChanged = false;
-		this.currentSurfaceManager = null;
+		this.currentSurfaceHandler = null;
 		
 		if(adapter != null) {
 			adapter.onSurfaceDestroyed();

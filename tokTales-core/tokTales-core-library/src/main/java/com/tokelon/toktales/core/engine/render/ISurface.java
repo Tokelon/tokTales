@@ -4,8 +4,10 @@ import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 
+/** A surface represents an area that can be used to render something.
+ */
 public interface ISurface {
-	// TODO: Maybe rename to IRenderSurface
+	// Maybe rename to IRenderSurface
 	// Rename methods to getCurrent*() ?
 	
 
@@ -22,6 +24,6 @@ public interface ISurface {
 	/**
 	 * @return The current projection matrix for the surface.
 	 */
-	public Matrix4f getProjectionMatrix(); // Replace with IMatrix4f if possible
+	public Matrix4f getProjectionMatrix();
 	
 }

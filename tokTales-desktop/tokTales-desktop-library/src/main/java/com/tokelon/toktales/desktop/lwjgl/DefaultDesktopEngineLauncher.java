@@ -198,7 +198,7 @@ public class DefaultDesktopEngineLauncher extends LWJGLEngineLauncher {
 	}
 	
 	public IWindowRenderer createDefaultRenderer(IEngineContext engineContext) {
-		return new DefaultGameWindowRenderer(engineContext.getEngine().getEngineDriver(), engineContext.getEngine().getRenderService().getSurfaceHandler());
+		return new DefaultGameWindowRenderer(engineContext.getEngine().getEngineDriver(), engineContext.getEngine().getRenderService().getSurfaceManager());
 	}
 
 	public IEngineLooper createDefaultLooper(IEngineContext engineContext, IWindowRenderer renderer) {

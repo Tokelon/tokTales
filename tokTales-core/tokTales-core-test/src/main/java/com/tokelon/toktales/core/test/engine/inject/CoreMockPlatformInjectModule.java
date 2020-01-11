@@ -17,7 +17,7 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.RenderDrivers;
 import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
 import com.tokelon.toktales.core.game.IGameAdapter;
@@ -62,11 +62,11 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 	private static final ITextureFontAssetDecoder textureFontAssetDecoderMock = mock(ITextureFontAssetDecoder.class);
 	private static final ICodepointAssetDecoder codepointAssetDecoderMock = mock(ICodepointAssetDecoder.class);
 	
-	private static final ISurfaceHandler surfaceHandlerMock = mock(ISurfaceHandler.class);
+	private static final ISurfaceManager surfaceManagerMock = mock(ISurfaceManager.class);
 	
 	static {
 		
-		when(renderServiceMock.getSurfaceHandler()).thenReturn(surfaceHandlerMock);
+		when(renderServiceMock.getSurfaceManager()).thenReturn(surfaceManagerMock);
 	}
 	
 	

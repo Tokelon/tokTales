@@ -8,7 +8,7 @@ public class RenderInjectModule extends AbstractInjectModule {
 
 	@Override
 	protected void configure() {
-		bind(ISurfaceManager.ISurfaceManagerFactory.class).to(SurfaceManager.SurfaceManagerFactory.class);
+		bind(ISurfaceHandler.ISurfaceHandlerFactory.class).to(SurfaceHandler.SurfaceHandlerFactory.class);
 		
 		bind(ITextureCoordinator.class).to(DefaultTextureCoordinator.class);
 		bind(ITextureCoordinatorFactory.class).to(DefaultTextureCoordinator.TextureCoordinatorFactory.class);

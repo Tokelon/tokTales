@@ -26,9 +26,9 @@ import com.tokelon.toktales.core.engine.inject.scope.EngineScoped;
 import com.tokelon.toktales.core.engine.inject.scope.GameScope;
 import com.tokelon.toktales.core.engine.inject.scope.GameScoped;
 import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
-import com.tokelon.toktales.core.engine.render.DefaultSurfaceHandler;
+import com.tokelon.toktales.core.engine.render.DefaultSurfaceManager;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager;
 import com.tokelon.toktales.core.game.Game;
 import com.tokelon.toktales.core.game.GameLogicManager;
 import com.tokelon.toktales.core.game.IGame;
@@ -141,7 +141,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		 bindInEngineScope(IEngine.class, Engine.class); // bindings in platform module
 		  // Engine bindings
 		  bindInEngineScope(IEngineDriver.class, DefaultEngineDriver.class);
-		  bindInEngineScopeAndForNotScoped(ISurfaceHandler.class, DefaultSurfaceHandler.class);
+		  bindInEngineScopeAndForNotScoped(ISurfaceManager.class, DefaultSurfaceManager.class);
 		  bindInEngineScopeAndForNotScoped(IRenderAccess.class, DefaultRenderAccess.class);
 		 
 		 bindInGameScope(IGame.class, Game.class);

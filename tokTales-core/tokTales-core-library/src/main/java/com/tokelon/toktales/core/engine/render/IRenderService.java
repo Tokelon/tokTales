@@ -8,7 +8,7 @@ public interface IRenderService extends IEngineService {
 	//public IActionScheduler getRenderingScheduler();
 	
 	
-	public ISurfaceHandler getSurfaceHandler();
+	public ISurfaceManager getSurfaceManager();
 	
 
 	public IRenderAccess getRenderAccess();

@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.engine.render.ISurface;
 import com.tokelon.toktales.core.engine.render.ISurfaceController;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 
-public interface ISurfaceManager {
+public interface ISurfaceHandler {
 	// Add these?
 	//public void createSurface(String name, int width, int height);
 	//public void createSurface(String name, IScreenViewport viewport, Matrix4f projectionMatrix);
@@ -82,9 +82,9 @@ public interface ISurfaceManager {
 	
 	
 	
-	public interface ISurfaceManagerFactory {
+	public interface ISurfaceHandlerFactory {
 		
-		public ISurfaceManager create(ISurfaceController surfaceController);
+		public ISurfaceHandler create(ISurfaceController surfaceController);
 	}
 	
 }

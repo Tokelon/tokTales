@@ -8,31 +8,31 @@ import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.annotation.services.RenderServiceExtensions;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
-import com.tokelon.toktales.core.engine.render.ISurfaceHandler;
+import com.tokelon.toktales.core.engine.render.ISurfaceManager;
 
 public class DesktopRenderService extends AbstractEngineService implements IRenderService {
 
 
-	private final ISurfaceHandler surfaceHandler;
+	private final ISurfaceManager surfaceManager;
 	private final IRenderAccess renderAccess;
 	
-	public DesktopRenderService(ISurfaceHandler surfaceHandler, IRenderAccess renderAccess) {
-		this.surfaceHandler = surfaceHandler;
+	public DesktopRenderService(ISurfaceManager surfaceManager, IRenderAccess renderAccess) {
+		this.surfaceManager = surfaceManager;
 		this.renderAccess = renderAccess;
 	}
 	
 	@Inject
-	public DesktopRenderService(ISurfaceHandler surfaceHandler, IRenderAccess renderAccess, @RenderServiceExtensions Map<String, IServiceExtension> extensions) {
+	public DesktopRenderService(ISurfaceManager surfaceManager, IRenderAccess renderAccess, @RenderServiceExtensions Map<String, IServiceExtension> extensions) {
 		super(extensions);
 		
-		this.surfaceHandler = surfaceHandler;
+		this.surfaceManager = surfaceManager;
 		this.renderAccess = renderAccess;
 	}
 	
 	
 	@Override
-	public ISurfaceHandler getSurfaceHandler() {
-		return surfaceHandler;
+	public ISurfaceManager getSurfaceManager() {
+		return surfaceManager;
 	}
 
 

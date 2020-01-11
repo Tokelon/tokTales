@@ -6,7 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.tokelon.toktales.android.render.DelegateRenderViewAdapter;
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
-import com.tokelon.toktales.core.render.ISurfaceManager;
+import com.tokelon.toktales.core.render.ISurfaceHandler;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -24,7 +24,7 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	private final DelegateRenderer delegateRenderer = new DelegateRenderer();
 	
 	private String viewName;
-	private ISurfaceManager surfaceManager;
+	private ISurfaceHandler surfaceHandler;
 	
 	
 	public RenderGLSurfaceView(Context context) {
@@ -58,10 +58,10 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 	
 	@Override
 	public void setRenderViewAdapter(IRenderViewAdapter adapter) {
-		this.surfaceManager = adapter.getSurfaceManagerFactory().create(this);
+		this.surfaceHandler = adapter.getSurfaceHandlerFactory().create(this);
 		
 		if(viewName != null) {
-			this.surfaceManager.setSurfaceName(viewName);
+			this.surfaceHandler.setSurfaceName(viewName);
 		}
 
 		// To guarantee thread safety this method must be called inside the renderer thread.
@@ -120,7 +120,7 @@ public class RenderGLSurfaceView extends GLSurfaceView implements IRenderView {
 		
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-			delegateAdapter.onSurfaceCreated(surfaceManager);
+			delegateAdapter.onSurfaceCreated(surfaceHandler);
 		}
 
 		@Override

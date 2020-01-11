@@ -6,8 +6,8 @@ import com.tokelon.toktales.android.render.tools.IUIControl;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
 import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
-import com.tokelon.toktales.core.render.ISurfaceManager;
-import com.tokelon.toktales.core.render.ISurfaceManager.ISurfaceManagerFactory;
+import com.tokelon.toktales.core.render.ISurfaceHandler;
+import com.tokelon.toktales.core.render.ISurfaceHandler.ISurfaceHandlerFactory;
 
 import android.view.MotionEvent;
 
@@ -17,14 +17,14 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 	private final IEngineDriver engineDriver;
 	private final IViewRenderer viewRenderer;
 	private final IUIControl uiControl;
-	private final ISurfaceManagerFactory surfaceManagerFactory;
+	private final ISurfaceHandlerFactory surfaceHandlerFactory;
 
 	@Inject
-	public DefaultRenderViewAdapter(IEngineDriver engineDriver, IViewRenderer viewRenderer, IUIControlFactory uiControlFactory, ISurfaceManagerFactory surfaceManagerFactory) {
+	public DefaultRenderViewAdapter(IEngineDriver engineDriver, IViewRenderer viewRenderer, IUIControlFactory uiControlFactory, ISurfaceHandlerFactory surfaceHandlerFactory) {
 		this.engineDriver = engineDriver;
 		this.viewRenderer = viewRenderer;
 		this.uiControl = uiControlFactory.create();
-		this.surfaceManagerFactory = surfaceManagerFactory;
+		this.surfaceHandlerFactory = surfaceHandlerFactory;
 	}
 
 
@@ -40,8 +40,8 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 
 	
 	@Override
-	public void onSurfaceCreated(ISurfaceManager surfaceManager) {
-		viewRenderer.onSurfaceCreated(surfaceManager);
+	public void onSurfaceCreated(ISurfaceHandler surfaceHandler) {
+		viewRenderer.onSurfaceCreated(surfaceHandler);
 	}
 
 	@Override
@@ -82,8 +82,8 @@ public class DefaultRenderViewAdapter implements IRenderViewAdapter {
 
 	
 	@Override
-	public ISurfaceManagerFactory getSurfaceManagerFactory() {
-		return surfaceManagerFactory;
+	public ISurfaceHandlerFactory getSurfaceHandlerFactory() {
+		return surfaceHandlerFactory;
 	}
 	
 }
