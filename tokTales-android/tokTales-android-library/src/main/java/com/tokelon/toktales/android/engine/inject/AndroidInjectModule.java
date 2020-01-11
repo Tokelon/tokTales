@@ -1,7 +1,5 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.tokelon.toktales.android.activity.integration.EngineIntegration;
-import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration.IKeyboardActivityIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
@@ -12,6 +10,14 @@ import com.tokelon.toktales.android.activity.integration.KeyboardActivityIntegra
 import com.tokelon.toktales.android.activity.integration.SimpleRequestPermissionsIntegration.SimpleRequestPermissionsIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.SurfaceViewIntegration;
 import com.tokelon.toktales.android.activity.integration.UIServiceIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.EnterActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.ExitActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.IEnterActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.IExitActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.IRunActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.ISingleActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.RunActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.SingleActivityEngineIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.data.AndroidContentService;
 import com.tokelon.toktales.android.input.AndroidInputService;
@@ -87,8 +93,10 @@ public class AndroidInjectModule extends AbstractInjectModule {
 		bind(IKeyboardActivityIntegrationFactory.class).to(KeyboardActivityIntegrationFactory.class);
 		bind(ISimpleRequestPermissionsIntegrationFactory.class).to(SimpleRequestPermissionsIntegrationFactory.class);
 		bind(ISurfaceViewIntegration.class).to(SurfaceViewIntegration.class);
-		bind(IEngineIntegration.class).to(EngineIntegration.class);
-		
+		bind(IEnterActivityEngineIntegration.class).to(EnterActivityEngineIntegration.class);
+		bind(IRunActivityEngineIntegration.class).to(RunActivityEngineIntegration.class);
+		bind(IExitActivityEngineIntegration.class).to(ExitActivityEngineIntegration.class);
+		bind(ISingleActivityEngineIntegration.class).to(SingleActivityEngineIntegration.class);
 		
 		bind(IGameStateInput.class).to(IAndroidGameStateInput.class);
 		bind(IAndroidGameStateInput.class).to(AndroidGameStateInput.class);

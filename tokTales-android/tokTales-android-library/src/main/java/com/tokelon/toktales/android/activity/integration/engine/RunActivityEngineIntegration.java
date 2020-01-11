@@ -1,17 +1,17 @@
-package com.tokelon.toktales.android.activity.integration;
+package com.tokelon.toktales.android.activity.integration.engine;
 
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.tools.android.activity.integration.IIntegratedActivity;
 
-public class EngineIntegration implements IEngineIntegration {
+public class RunActivityEngineIntegration implements IRunActivityEngineIntegration {
 
 
 	private final IEngineDriver engineDriver;
 	
 	@Inject
-	public EngineIntegration(IEngineDriver engineDriver) {
+	public RunActivityEngineIntegration(IEngineDriver engineDriver) {
 		this.engineDriver = engineDriver;
 	}
 	

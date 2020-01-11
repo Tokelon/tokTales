@@ -7,10 +7,10 @@ import com.tokelon.toktales.android.activity.IConsoleActivity;
 import com.tokelon.toktales.android.activity.IDebugActivity;
 import com.tokelon.toktales.android.activity.ProxyTextWatcher;
 import com.tokelon.toktales.android.activity.SettingsActivity;
-import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration;
 import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
+import com.tokelon.toktales.android.activity.integration.engine.IRunActivityEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.config.IConfigManager;
@@ -54,7 +54,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	public static final String ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH = "ACTIVITY_INTENT_DATA_TALE_DIR_APP_PATH";
 	
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "TaleActivity_Integration_SurfaceView";
-	public static final String ACTIVITY_INTEGRATION_GAME = "TaleActivity_Integration_Game";
+	public static final String ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE = "TaleActivity_Integration_RunActivityEngine";
 	public static final String ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS = "TaleActivity_Integration_RequestPermissions";
 	
 	
@@ -74,7 +74,7 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	private IEngineContext engineContext;
 	private ITaleLoader taleLoader;
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IEngineIntegration engineIntegration;
+	private IRunActivityEngineIntegration runActivityEngineIntegration;
 	private ISimpleRequestPermissionsIntegration requestPermissionsIntegration;
 
 	
@@ -87,19 +87,19 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	}
 
 	@Inject
-	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader, ISurfaceViewIntegration surfaceViewIntegration, IEngineIntegration engineIntegration, ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory) {
+	protected void injectDependencies(IEngineContext engineContext, ITaleLoader taleLoader, ISurfaceViewIntegration surfaceViewIntegration, IRunActivityEngineIntegration runActivityEngineIntegration, ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory) {
 		this.logger = engineContext.getLogging().getLogger(getClass());
 		this.engineContext = engineContext;
 		this.taleLoader = taleLoader;
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.engineIntegration = engineIntegration;
+		this.runActivityEngineIntegration = runActivityEngineIntegration;
 		this.requestPermissionsIntegration = requestPermissionsIntegrationFactory.create(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, engineIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE, runActivityEngineIntegration);
 		builder.addIntegration(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
 		
 		return super.buildIntegrator(builder);

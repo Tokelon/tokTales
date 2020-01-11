@@ -3,9 +3,9 @@ package com.tokelon.toktales.android.activity;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
-import com.tokelon.toktales.android.activity.integration.IEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.IRunActivityEngineIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
@@ -39,7 +39,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "GameActivity_Integration_SurfaceView";
-	public static final String ACTIVITY_INTEGRATION_GAME = "GameActivity_Integration_Game";
+	public static final String ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE = "GameActivity_Integration_RunActivityEngine";
 
 	
 	private View mRootView;
@@ -53,7 +53,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 	private ILogger logger;
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IEngineIntegration engineIntegration;
+	private IRunActivityEngineIntegration runActivityEngineIntegration;
 	
 	
 	public GameActivity() {
@@ -65,16 +65,16 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	}
 	
 	@Inject
-	protected void injectDependencies(ILogging logging, ISurfaceViewIntegration surfaceViewIntegration, IEngineIntegration engineIntegration) {
+	protected void injectDependencies(ILogging logging, ISurfaceViewIntegration surfaceViewIntegration, IRunActivityEngineIntegration runActivityEngineIntegration) {
 		this.logger = logging.getLogger(getClass());
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.engineIntegration = engineIntegration;
+		this.runActivityEngineIntegration = runActivityEngineIntegration;
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_GAME, engineIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE, runActivityEngineIntegration);
 		
 		return super.buildIntegrator(builder);
 	}
