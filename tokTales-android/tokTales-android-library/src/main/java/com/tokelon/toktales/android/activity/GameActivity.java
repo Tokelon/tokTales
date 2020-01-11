@@ -4,8 +4,9 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.integration.IKeyboardActivityIntegration;
+import com.tokelon.toktales.android.activity.integration.ISimpleRequestPermissionsIntegration.ISimpleRequestPermissionsIntegrationFactory;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
-import com.tokelon.toktales.android.activity.integration.engine.IRunActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.ISingleActivityEngineIntegration;
 import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
@@ -39,7 +40,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "GameActivity_Integration_SurfaceView";
-	public static final String ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE = "GameActivity_Integration_RunActivityEngine";
+	public static final String ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE = "GameActivity_Integration_SingleActivityEngine";
 
 	
 	private View mRootView;
@@ -53,7 +54,7 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 
 	private ILogger logger;
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IRunActivityEngineIntegration runActivityEngineIntegration;
+	private ISingleActivityEngineIntegration singleActivityEngineIntegration;
 	
 	
 	public GameActivity() {
@@ -65,16 +66,21 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	}
 	
 	@Inject
-	protected void injectDependencies(ILogging logging, ISurfaceViewIntegration surfaceViewIntegration, IRunActivityEngineIntegration runActivityEngineIntegration) {
+	protected void injectDependencies(
+			ILogging logging,
+			ISurfaceViewIntegration surfaceViewIntegration,
+			ISingleActivityEngineIntegration singleActivityEngineIntegration,
+			ISimpleRequestPermissionsIntegrationFactory requestPermissionsIntegrationFactory
+	) {
 		this.logger = logging.getLogger(getClass());
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.runActivityEngineIntegration = runActivityEngineIntegration;
+		this.singleActivityEngineIntegration = singleActivityEngineIntegration;
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE, runActivityEngineIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE, singleActivityEngineIntegration);
 		
 		return super.buildIntegrator(builder);
 	}

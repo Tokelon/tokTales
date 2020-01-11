@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.R;
 import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration;
-import com.tokelon.toktales.android.activity.integration.engine.IRunActivityEngineIntegration;
+import com.tokelon.toktales.android.activity.integration.engine.ISingleActivityEngineIntegration;
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedCompatActivity;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
@@ -20,7 +20,7 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 
 
 	public static final String ACTIVITY_INTEGRATION_SURFACE_VIEW = "RenderActivity_Integration_SurfaceView";
-	public static final String ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE = "RenderActivity_Integration_RunActivityEngine";
+	public static final String ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE = "RenderActivity_Integration_SingleActivityEngine";
 
 	/**
 	 * Some older devices needs a small delay between UI widget updates
@@ -76,7 +76,7 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	
 	
 	private ISurfaceViewIntegration surfaceViewIntegration;
-	private IRunActivityEngineIntegration runActivityEngineIntegration;
+	private ISingleActivityEngineIntegration singleActivityEngineIntegration;
 	
 	
 	public RenderActivity() {
@@ -89,15 +89,15 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	
 
 	@Inject
-	protected void injectDependencies(ISurfaceViewIntegration surfaceViewIntegration, IRunActivityEngineIntegration runActivityEngineIntegration) {
+	protected void injectDependencies(ISurfaceViewIntegration surfaceViewIntegration, ISingleActivityEngineIntegration singleActivityEngineIntegration) {
 		this.surfaceViewIntegration = surfaceViewIntegration;
-		this.runActivityEngineIntegration = runActivityEngineIntegration;
+		this.singleActivityEngineIntegration = singleActivityEngineIntegration;
 	}
 	
 	@Override
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
-		builder.addIntegration(ACTIVITY_INTEGRATION_RUN_ACTIVITY_ENGINE, runActivityEngineIntegration);
+		builder.addIntegration(ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE, singleActivityEngineIntegration);
 		
 		return super.buildIntegrator(builder);
 	}

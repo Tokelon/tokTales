@@ -3,9 +3,7 @@ package com.tokelon.toktales.android.app;
 import com.tokelon.toktales.android.engine.AndroidEngineLauncher;
 import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
-import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
-import com.tokelon.toktales.core.engine.TokTales;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.game.EmptyGameAdapter;
@@ -19,7 +17,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 
 public class TokTalesApp extends Application {
-	// TODO: Add callback onEngineLaunch(IEngineContext context) ?
+	// Add callback onEngineLaunch(IEngineContext context)?
 
 
 	private static final ILogger logger = LoggingManager.getLogger(TokTalesApp.class);
@@ -144,19 +142,10 @@ public class TokTalesApp extends Application {
 	
 	@Override
 	public void onTerminate() {
-		super.onTerminate();
-		
 		/* Not actually called in productive environment
 		 * Apparently this will never be called
-		 * TODO: Implement termination inside an activity (the main activity)
 		 */
-		
-		IEngine engine = TokTales.getEngine(); // TODO: Replace with callback onEngineLaunch() ?
-		if(engine != null) {
-			engine.getEngineDriver().pause();
-			engine.getEngineDriver().stop();
-			engine.getEngineDriver().destroy();	
-		}
+		super.onTerminate();
 	}
 
 	

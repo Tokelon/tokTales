@@ -58,27 +58,17 @@ public class AndroidEngineLauncher extends BaseEngineLauncher {
 	}
 	
 	
-	/** Creates the game.
-	 * Does not run a loop since Android works differently.
+	/** The default implementation does nothing.
 	 * <p>
-	 * This implementation does not call super.
+	 * Because of the way Android works, {@link #loop}, as well as {@link #startupEngine} and {@link #shutdownEngine} will not be called.<br>
+	 * Instead the main loop and the driver calls will be handled inside activities (integrations).
 	 * 
 	 * @param engineContext
-	 * @throws EngineException If an error occurs during execution.
 	 */
 	@Override
-	protected void runEngine(IEngineContext engineContext) throws EngineException {
+	protected void runEngine(IEngineContext engineContext) {
 		// Do NOT call super here
-		
-
-		engineContext.getEngine().getEngineDriver().create();
-
-		// The Android lifecycle is a bit more dynamic, so we can not do this here
-		// These will have to be called in an activity or something like GameIntegration
-		//engineContext.getEngine().getEngineDriver().start();
-		//engineContext.getEngine().getEngineDriver().resume();
-		
-		// TODO: Implement calling .destroy() somewhere
+		// The Android lifecycle is a bit more dynamic, so we can not start anything here
 	}
 	
 }
