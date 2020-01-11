@@ -14,7 +14,6 @@ import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.extens.def.android.R;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.Manifest;
@@ -61,10 +60,10 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 	}
 	
 	@Override
-	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+	protected void configureIntegrator(IActivityIntegratorBuilder builder) {
+		super.configureIntegrator(builder);
+
 		builder.addIntegration(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
-		
-		return super.buildIntegrator(builder);
 	}
 	
 	

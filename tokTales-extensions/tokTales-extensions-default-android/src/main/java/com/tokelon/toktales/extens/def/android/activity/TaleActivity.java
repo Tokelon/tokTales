@@ -21,7 +21,6 @@ import com.tokelon.toktales.extens.def.core.tale.ITaleLoader;
 import com.tokelon.toktales.extens.def.core.tale.TaleException;
 import com.tokelon.toktales.extens.def.core.values.GameStateExtensionsValues;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.Manifest;
@@ -97,12 +96,12 @@ public class TaleActivity extends AbstractIntegratedActivity implements IConsole
 	}
 	
 	@Override
-	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+	protected void configureIntegrator(IActivityIntegratorBuilder builder) {
+		super.configureIntegrator(builder);
+		
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		builder.addIntegration(ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE, singleActivityEngineIntegration);
 		builder.addIntegration(ACTIVITY_INTEGRATION_REQUEST_PERMISSIONS, requestPermissionsIntegration);
-		
-		return super.buildIntegrator(builder);
 	}
 	
 	

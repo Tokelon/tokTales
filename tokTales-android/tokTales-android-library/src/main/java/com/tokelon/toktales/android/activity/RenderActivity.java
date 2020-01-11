@@ -7,7 +7,6 @@ import com.tokelon.toktales.android.activity.integration.ISurfaceViewIntegration
 import com.tokelon.toktales.android.activity.integration.engine.ISingleActivityEngineIntegration;
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedCompatActivity;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.annotation.SuppressLint;
@@ -95,11 +94,11 @@ public class RenderActivity extends AbstractIntegratedCompatActivity {
 	}
 	
 	@Override
-	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+	protected void configureIntegrator(IActivityIntegratorBuilder builder) {
+		super.configureIntegrator(builder);
+		
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		builder.addIntegration(ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE, singleActivityEngineIntegration);
-		
-		return super.buildIntegrator(builder);
 	}
 	
 	

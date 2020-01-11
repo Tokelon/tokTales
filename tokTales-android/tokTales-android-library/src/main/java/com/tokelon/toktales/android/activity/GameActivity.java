@@ -11,7 +11,6 @@ import com.tokelon.toktales.android.render.opengl.RenderGLSurfaceView;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
-import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegrator;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
 
 import android.annotation.SuppressLint;
@@ -78,11 +77,11 @@ public class GameActivity extends AbstractIntegratedActivity implements IConsole
 	}
 	
 	@Override
-	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
+	protected void configureIntegrator(IActivityIntegratorBuilder builder) {
+		super.configureIntegrator(builder);
+		
 		builder.addIntegration(ACTIVITY_INTEGRATION_SURFACE_VIEW, surfaceViewIntegration);
 		builder.addIntegration(ACTIVITY_INTEGRATION_SINGLE_ACTIVITY_ENGINE, singleActivityEngineIntegration);
-		
-		return super.buildIntegrator(builder);
 	}
 
 	

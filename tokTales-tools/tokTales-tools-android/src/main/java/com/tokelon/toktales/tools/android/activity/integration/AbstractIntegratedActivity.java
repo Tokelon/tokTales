@@ -23,12 +23,18 @@ public abstract class AbstractIntegratedActivity extends Activity implements IIn
 		return initialIntegratorBuilder == null ? new SimpleIntegratorBuilder() : initialIntegratorBuilder;
 	}
 	
+	protected void configureIntegrator(IActivityIntegratorBuilder builder) {
+		// Nothing to configure here
+	}
+	
 	protected IActivityIntegrator buildIntegrator(IActivityIntegratorBuilder builder) {
 		return builder.build(this);
 	}
 	
 	protected void initializeIntegrations() {
-		integrator = buildIntegrator(createIntegrationBuilder());
+		IActivityIntegratorBuilder integrationBuilder = createIntegrationBuilder();
+		configureIntegrator(integrationBuilder);
+		this.integrator = buildIntegrator(integrationBuilder);
 	}
 	
 	
