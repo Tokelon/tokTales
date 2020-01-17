@@ -89,7 +89,7 @@ eclipse.classpath.file.withXml { xml ->
     }
 }
 
-// Only declared for eclipse - not used by android plugin!
+// Only declared for eclipse
 sourceSets {
 	main {
 		java {
@@ -102,6 +102,8 @@ sourceSets {
 		java {
 			srcDir 'src/test/java'
 			//srcDir 'src/androidTest/java // Ignore for now
+			
+			srcDir 'exp/test/java'
 		}
 	}
 }

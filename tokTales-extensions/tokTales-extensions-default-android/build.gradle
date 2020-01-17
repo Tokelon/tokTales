@@ -81,11 +81,15 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
+			
+			srcDir 'exp/main/java'
 		}
 	}
 	test {
 		java {
 			srcDir 'src/test/java'
+			
+			srcDir 'exp/test/java'
 		}
 	}
 }

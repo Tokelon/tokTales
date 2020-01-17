@@ -37,6 +37,8 @@ sourceSets {
 	test {
 		java {
 			srcDir 'src/test/java'
+			
+			srcDir 'exp/test/java'
 		}
 	}
 }
