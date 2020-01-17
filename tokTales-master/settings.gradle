@@ -87,11 +87,3 @@ include ':tokTales-extensions-android-test'
 project(':tokTales-extensions-android-test').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-android-test')
 include ':tokTales-extensions-desktop-test'
 project(':tokTales-extensions-desktop-test').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-desktop-test')
-
-
-def tokTalesDemos = new File(rootProject.projectDir, '../tokTales-demos')
-include ':tokTales-demos'
-project(':tokTales-demos').projectDir = tokTalesDemos
-
-include ':tokTales-demos-app'
-project(':tokTales-demos-app').projectDir = new File(tokTalesDemos, 'tokTales-demos-app')
