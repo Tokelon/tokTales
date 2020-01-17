@@ -4,11 +4,11 @@ import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.engine.inject.CoreOverrideInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopInjectConfig;
 import com.tokelon.toktales.desktop.engine.inject.DesktopOverrideInjectConfig;
-import com.tokelon.toktales.extensions.core.engine.inject.CoreDefExtensInjectConfig;
-import com.tokelon.toktales.extensions.core.engine.inject.CoreDefExtensOverrideInjectConfig;
+import com.tokelon.toktales.extensions.core.engine.inject.CoreExtensionsInjectConfig;
+import com.tokelon.toktales.extensions.core.engine.inject.CoreExtensionsOverrideInjectConfig;
 import com.tokelon.toktales.tools.core.sub.inject.config.MasterInjectConfig;
 
-public class MasterDesktopDefExtensInjectConfig extends MasterInjectConfig {
+public class MasterDesktopExtensionsInjectConfig extends MasterInjectConfig {
 
 
 	@Override
@@ -24,12 +24,12 @@ public class MasterDesktopDefExtensInjectConfig extends MasterInjectConfig {
         extendWithFilters(new DesktopInjectConfig());
         
         // Core DefaultExtensions
-        overrideWithFilters(new CoreDefExtensOverrideInjectConfig());
-        extendWithFilters(new CoreDefExtensInjectConfig());
+        overrideWithFilters(new CoreExtensionsOverrideInjectConfig());
+        extendWithFilters(new CoreExtensionsInjectConfig());
         
         // Desktop DefaultExtensions
-        overrideWithFilters(new DesktopDefExtensOverrideInjectConfig());
-        extendWithFilters(new DesktopDefExtensInjectConfig());
+        overrideWithFilters(new DesktopExtensionsOverrideInjectConfig());
+        extendWithFilters(new DesktopExtensionsInjectConfig());
 	}
 	
 }

@@ -9,14 +9,14 @@ import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 import com.tokelon.toktales.desktop.test.engine.inject.DesktopMockPlatformInjectModule;
-import com.tokelon.toktales.extensions.desktop.engine.inject.MasterDesktopDefExtensInjectConfig;
+import com.tokelon.toktales.extensions.desktop.engine.inject.MasterDesktopExtensionsInjectConfig;
 
-public class TestDesktopDefExtensInjection {
+public class TestDesktopExtensionsInjection {
 
 	
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
-		MasterDesktopDefExtensInjectConfig injectConfig = new MasterDesktopDefExtensInjectConfig();
+		MasterDesktopExtensionsInjectConfig injectConfig = new MasterDesktopExtensionsInjectConfig();
 		
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 		
@@ -26,7 +26,7 @@ public class TestDesktopDefExtensInjection {
 	
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		MasterDesktopDefExtensInjectConfig injectConfig = new MasterDesktopDefExtensInjectConfig();
+		MasterDesktopExtensionsInjectConfig injectConfig = new MasterDesktopExtensionsInjectConfig();
 
 		injectConfig.override(new DesktopMockPlatformInjectModule());
 		// No DesktopDefExtensPlatformInjectModule needed yet

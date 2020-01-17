@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.engine.inject.CoreInjectConfig;
 import com.tokelon.toktales.core.engine.inject.CoreOverrideInjectConfig;
 import com.tokelon.toktales.tools.core.sub.inject.config.MasterInjectConfig;
 
-public class MasterCoreDefExtensInjectConfig extends MasterInjectConfig {
+public class MasterCoreExtensionsInjectConfig extends MasterInjectConfig {
 
 
 	@Override
@@ -16,8 +16,8 @@ public class MasterCoreDefExtensInjectConfig extends MasterInjectConfig {
 		extendWithFilters(new CoreInjectConfig());
 		
         // Core DefaultExtensions
-        overrideWithFilters(new CoreDefExtensOverrideInjectConfig());
-        extendWithFilters(new CoreDefExtensInjectConfig());
+        overrideWithFilters(new CoreExtensionsOverrideInjectConfig());
+        extendWithFilters(new CoreExtensionsInjectConfig());
 	}
 	
 }

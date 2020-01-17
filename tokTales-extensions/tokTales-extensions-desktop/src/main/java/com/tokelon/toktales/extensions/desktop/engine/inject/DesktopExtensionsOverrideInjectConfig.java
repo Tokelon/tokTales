@@ -2,14 +2,14 @@ package com.tokelon.toktales.extensions.desktop.engine.inject;
 
 import com.tokelon.toktales.tools.core.sub.inject.config.HierarchicalInjectConfig;
 
-public class DesktopDefExtensOverrideInjectConfig extends HierarchicalInjectConfig {
+public class DesktopExtensionsOverrideInjectConfig extends HierarchicalInjectConfig {
 
 	
 	@Override
 	protected void configure() {
 		super.configure();
 		
-		extend(new DesktopDefExtensOverrideInjectModule());
+		extend(new DesktopExtensionsOverrideInjectModule());
 	}
 	
 }

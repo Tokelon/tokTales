@@ -6,7 +6,7 @@ import com.tokelon.toktales.extensions.core.game.states.integration.IConsoleInte
 import com.tokelon.toktales.extensions.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 import com.tokelon.toktales.extensions.desktop.game.states.integration.DesktopConsoleIntegrationControlHandler;
 
-public class DesktopDefExtensOverrideInjectModule extends AbstractInjectModule {
+public class DesktopExtensionsOverrideInjectModule extends AbstractInjectModule {
 
 	
 	@Override

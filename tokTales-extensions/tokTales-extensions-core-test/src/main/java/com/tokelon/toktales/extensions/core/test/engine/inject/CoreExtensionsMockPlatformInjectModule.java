@@ -13,7 +13,7 @@ import com.tokelon.toktales.tools.core.sub.inject.scope.For;
  * <p>
  * Mocks dependencies that are normally provided by platform implementations.
  */
-public class CoreDefExtensMockPlatformInjectModule extends AbstractInjectModule {
+public class CoreExtensionsMockPlatformInjectModule extends AbstractInjectModule {
 	
 	
 	@Override

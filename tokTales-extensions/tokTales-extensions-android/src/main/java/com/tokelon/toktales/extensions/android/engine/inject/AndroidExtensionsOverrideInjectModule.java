@@ -9,7 +9,7 @@ import com.tokelon.toktales.extensions.core.game.states.integration.IConsoleInte
 import com.tokelon.toktales.extensions.core.game.states.localmap.ILocalMapStateRenderer;
 import com.tokelon.toktales.extensions.core.game.states.localmap.ILocalMapStateRenderer.ILocalMapStateRendererFactory;
 
-public class AndroidDefExtensOverrideInjectModule extends AbstractInjectModule {
+public class AndroidExtensionsOverrideInjectModule extends AbstractInjectModule {
 
 
 	@Override

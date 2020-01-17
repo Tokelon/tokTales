@@ -50,7 +50,7 @@ import com.tokelon.toktales.extensions.core.tale.states.TaleGamescene;
 import com.tokelon.toktales.extensions.core.tale.states.TaleGamestate;
 import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
-public class CoreDefExtensInjectModule extends AbstractInjectModule {
+public class CoreExtensionsInjectModule extends AbstractInjectModule {
 
 	
     @Override

@@ -9,7 +9,7 @@ import com.tokelon.toktales.android.test.AndroidTestLib;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.test.CoreTestLib;
 
-public class AndroidDefExtensDepsIntegrity {
+public class AndroidExtensionsDepsIntegrity {
 	
 	
 	@Test

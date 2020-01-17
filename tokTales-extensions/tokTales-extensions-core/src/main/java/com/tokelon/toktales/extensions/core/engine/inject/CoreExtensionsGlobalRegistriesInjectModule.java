@@ -12,7 +12,7 @@ import com.tokelon.toktales.extensions.core.game.screen.DebugRenderer;
 import com.tokelon.toktales.extensions.core.game.states.console.ConsoleGamestate;
 import com.tokelon.toktales.extensions.core.game.states.localmap.LocalMapGamestate;
 
-public class CoreDefExtensGlobalRegistriesInjectModule extends AbstractInjectModule {
+public class CoreExtensionsGlobalRegistriesInjectModule extends AbstractInjectModule {
 
 
 	public static final String ASSET_KEY_NAME_FONT_M5X7 = "ASSET_KEY_NAME_FONT_M5X7"; //asset_key-font_m5x7
