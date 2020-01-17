@@ -13,7 +13,7 @@ public interface IWindowRenderer {
 	/*
 	 * Must be called from the thread that the renderer will be associated to.
 	 */
-	public void createContext();
+	public void createContext(); // TODO: Add ISurfaceManager here, similar to IViewRenderer?
 	
 	public void destroyContext();
 	

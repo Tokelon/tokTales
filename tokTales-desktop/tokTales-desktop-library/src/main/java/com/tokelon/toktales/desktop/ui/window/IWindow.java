@@ -1,6 +1,7 @@
 package com.tokelon.toktales.desktop.ui.window;
 
 public interface IWindow {
+	// TODO: Add state with enum values?
 
 
 	public static final int VSYNC_MODE_OFF = 0;
@@ -21,6 +22,7 @@ public interface IWindow {
 	public boolean shouldClose();
 	
 	public void makeContextCurrent();
+	//public void detachContext(); // TODO: Add this?
 	
 	public void swapBuffers();
 	

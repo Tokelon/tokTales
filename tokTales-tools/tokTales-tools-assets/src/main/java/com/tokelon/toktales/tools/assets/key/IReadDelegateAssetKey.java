@@ -1,8 +1,9 @@
 package com.tokelon.toktales.tools.assets.key;
 
 public interface IReadDelegateAssetKey {
-	
-	
+	// TODO: Implement delegation for decoding, storing and in general?
+
+
 	public Object getReadableKey(); // Would return IResourceKey, IFileKey etc.
 	
 	
