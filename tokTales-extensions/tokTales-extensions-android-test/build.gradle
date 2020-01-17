@@ -35,7 +35,7 @@ dependencies {
 	api project(':tokTales-android-test')
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle
-	implementation project(':tokTales-extensions-default-android')
+	implementation project(':tokTales-extensions-android')
 	
 	api (project(':tokTales-extensions-core-test')) {
 		exclude group: 'xmlpull', module: 'xmlpull'
@@ -58,7 +58,7 @@ eclipse.classpath.file.withXml { xml ->
 	
 	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-android-test' ])
 	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-core-test' ])
-	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-default-android' ]) // Cyclic dependency
+	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android' ]) // Cyclic dependency
 	
 	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-extensions-android-test/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
 	

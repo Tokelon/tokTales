@@ -9,7 +9,7 @@ dependencies {
 	api project(':tokTales-extensions-core-test')
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle
-    implementation project(':tokTales-extensions-default-core')
+    implementation project(':tokTales-extensions-core')
 }
 
 

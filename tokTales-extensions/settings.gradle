@@ -2,7 +2,7 @@
 
 rootProject.name = 'tokTales-extensions'
 
-include ':tokTales-extensions-default-core', ':tokTales-extensions-default-desktop', ':tokTales-extensions-default-android'
+include ':tokTales-extensions-core', ':tokTales-extensions-desktop', ':tokTales-extensions-android'
 include ':tokTales-extensions-core-test', ':tokTales-extensions-android-test', ':tokTales-extensions-desktop-test'
 
 

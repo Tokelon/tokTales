@@ -72,12 +72,12 @@ def tokTalesExtensions = new File(rootProject.projectDir, '../tokTales-extension
 include ':tokTales-extensions'
 project(':tokTales-extensions').projectDir = tokTalesExtensions
 
-include ':tokTales-extensions-default-android'
-project(':tokTales-extensions-default-android').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-default-android')
-include ':tokTales-extensions-default-core'
-project(':tokTales-extensions-default-core').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-default-core')
-include ':tokTales-extensions-default-desktop'
-project(':tokTales-extensions-default-desktop').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-default-desktop')
+include ':tokTales-extensions-android'
+project(':tokTales-extensions-android').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-android')
+include ':tokTales-extensions-core'
+project(':tokTales-extensions-core').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-core')
+include ':tokTales-extensions-desktop'
+project(':tokTales-extensions-desktop').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-desktop')
 
 include ':tokTales-extensions-core-test'
 project(':tokTales-extensions-core-test').projectDir = new File(tokTalesExtensions, 'tokTales-extensions-core-test')

@@ -40,7 +40,7 @@ dependencies {
 
     api project(':tokTales-android-library')
 	
-	api (project(':tokTales-extensions-default-core')) {
+	api (project(':tokTales-extensions-core')) {
 		exclude group: 'xmlpull', module: 'xmlpull'
 		exclude group: 'xpp3', module: 'xpp3_min'
 		exclude group: 'com.google.inject', module: 'guice'
@@ -63,9 +63,9 @@ eclipse.classpath.file.withXml { xml ->
     node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android-test' ])
     
     node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-android-library' ])
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-default-core' ])
+    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-core' ])
     
-	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-extensions-default-android/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-extensions-android/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
 	
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
     node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])

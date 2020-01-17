@@ -42,12 +42,12 @@ project(':tokTales-android-library').projectDir = new File('../tokTales-android/
 include ':tokTales-android-test'
 project(':tokTales-android-test').projectDir = new File('../tokTales-android/tokTales-android-test')
 
-include ':tokTales-extensions-default-android'
-project(':tokTales-extensions-default-android').projectDir = new File('../tokTales-extensions/tokTales-extensions-default-android')
-include ':tokTales-extensions-default-core'
-project(':tokTales-extensions-default-core').projectDir = new File('../tokTales-extensions/tokTales-extensions-default-core')
-include ':tokTales-extensions-default-desktop'
-project(':tokTales-extensions-default-desktop').projectDir = new File('../tokTales-extensions/tokTales-extensions-default-desktop')
+include ':tokTales-extensions-android'
+project(':tokTales-extensions-android').projectDir = new File('../tokTales-extensions/tokTales-extensions-android')
+include ':tokTales-extensions-core'
+project(':tokTales-extensions-core').projectDir = new File('../tokTales-extensions/tokTales-extensions-core')
+include ':tokTales-extensions-desktop'
+project(':tokTales-extensions-desktop').projectDir = new File('../tokTales-extensions/tokTales-extensions-desktop')
 include ':tokTales-extensions-android-test'
 project(':tokTales-extensions-android-test').projectDir = new File('../tokTales-extensions/tokTales-extensions-android-test')
 include ':tokTales-extensions-core-test'
