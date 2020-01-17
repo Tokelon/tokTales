@@ -2,7 +2,7 @@
 
 rootProject.name = 'tokTales-android'
 
-include ':tokTales-android-app', ':tokTales-android-library', ':tokTales-android-test'
+include ':tokTales-android-library', ':tokTales-android-test'
 
 
 includeFlat 'tokTales-tools'

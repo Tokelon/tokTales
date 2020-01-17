@@ -41,5 +41,3 @@ include ':tokTales-android-library'
 project(':tokTales-android-library').projectDir = new File('../tokTales-android/tokTales-android-library')
 include ':tokTales-android-test'
 project(':tokTales-android-test').projectDir = new File('../tokTales-android/tokTales-android-test')
-include ':tokTales-android-app'
-project(':tokTales-android-app').projectDir = new File('../tokTales-android/tokTales-android-app')

@@ -44,8 +44,6 @@ include ':tokTales-android-library'
 project(':tokTales-android-library').projectDir = new File(tokTalesAndroid, 'tokTales-android-library')
 include ':tokTales-android-test'
 project(':tokTales-android-test').projectDir = new File(tokTalesAndroid, 'tokTales-android-test')
-include ':tokTales-android-app'
-project(':tokTales-android-app').projectDir = new File(tokTalesAndroid, 'tokTales-android-app')
 
 
 def tokTalesDesktop = new File(rootProject.projectDir, '../tokTales-desktop')
