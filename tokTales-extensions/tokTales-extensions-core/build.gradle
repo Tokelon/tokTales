@@ -1,4 +1,4 @@
-// tokTales-extensions-default-core build.gradle
+// tokTales-extensions-core build.gradle
 group "com.tokelon.toktales"
 version "0.0.1"
 

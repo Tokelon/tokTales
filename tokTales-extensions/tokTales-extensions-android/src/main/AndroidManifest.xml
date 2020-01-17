@@ -1,19 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tokelon.toktales.extens.def.android" >
+    package="com.tokelon.toktales.extensions.android" >
 
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 	<application>
-		<activity android:name="com.tokelon.toktales.extens.def.android.activity.LoadTaleActivity"></activity>
+		<activity android:name="com.tokelon.toktales.extensions.android.activity.LoadTaleActivity"></activity>
 
 		<activity
-			android:name="com.tokelon.toktales.extens.def.android.activity.TaleActivity"
+			android:name="com.tokelon.toktales.extensions.android.activity.TaleActivity"
 			android:screenOrientation="portrait"
 			android:configChanges="orientation|screenSize">
 		</activity>
 		
-        <activity android:name="com.tokelon.toktales.extens.def.android.activity.LoadMapActivity"></activity>
-        <activity android:name="com.tokelon.toktales.extens.def.android.activity.CreateMapActivity"></activity>
+        <activity android:name="com.tokelon.toktales.extensions.android.activity.LoadMapActivity"></activity>
+        <activity android:name="com.tokelon.toktales.extensions.android.activity.CreateMapActivity"></activity>
 		
 	</application>
 </manifest>
