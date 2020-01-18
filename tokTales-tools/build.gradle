@@ -50,7 +50,7 @@ subprojects { -> project
             }
             publications {
                 gpr(MavenPublication) {
-                    version project.version + (project.findProperty("buildNumber") ?: '-SNAPSHOT')
+                    version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
                     from(components.java)
                 }
             }
@@ -73,7 +73,7 @@ subprojects { -> project
             }
             publications {
                 mavenAar(MavenPublication) {
-                    version project.version + (project.findProperty("buildNumber") ?: '-SNAPSHOT')
+                    version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
                     from components.android
                 }
             }
