@@ -17,3 +17,11 @@ jobs:
     - name: Build with Gradle
       working-directory: tokTales-tools
       run: ./gradlew build
+    - name: Generate build number
+      uses: einaregilsson/build-number@v2
+      with:
+        token: ${{secrets.github_token}}
+        prefix: tokTales-tools-0.0.0
+    - name: Publish to GitHub Packages
+      working-directory: tokTales-tools
+      run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
