@@ -23,5 +23,7 @@ jobs:
         token: ${{secrets.github_token}}
         prefix: tokTales-tools-0.0.0
     - name: Publish to GitHub Packages
+      env:
+        GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-tools
       run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
