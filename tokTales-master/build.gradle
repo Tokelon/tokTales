@@ -13,6 +13,8 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.4.1'
 
         classpath "net.swisstech:gradle-elasticdependencies:1.0.0"
+
+        classpath 'digital.wup:android-maven-publish:3.6.3'
     }
 }
 
@@ -36,4 +38,53 @@ task wrapperCustom(type: Wrapper) {
     group 'build setup'
     gradleVersion = '5.1.1'
     distributionType = Wrapper.DistributionType.ALL
+}
+
+
+subprojects { -> project
+    plugins.withType(JavaLibraryPlugin) {
+        project.apply plugin: 'maven-publish'
+
+        publishing {
+            repositories {
+                maven {
+                    name = "GitHubPackages"
+                    url = uri("https://maven.pkg.github.com/" + (project.findProperty("gpr.repo") ?: System.getenv("GITHUB_REPOSITORY")))
+                    credentials {
+                        username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                    }
+                }
+            }
+            publications {
+                gpr(MavenPublication) {
+                    version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
+                    from(components.java)
+                }
+            }
+        }
+    }
+
+    plugins.withType(com.android.build.gradle.LibraryPlugin) {
+        project.apply plugin: 'digital.wup.android-maven-publish'
+
+        publishing {
+            repositories {
+                maven {
+                    name = "GitHubPackages"
+                    url = uri("https://maven.pkg.github.com/" + (project.findProperty("gpr.repo") ?: System.getenv("GITHUB_REPOSITORY")))
+                    credentials {
+                        username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                    }
+                }
+            }
+            publications {
+                mavenAar(MavenPublication) {
+                    version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
+                    from components.android
+                }
+            }
+        }
+    }
 }
