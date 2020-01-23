@@ -81,13 +81,11 @@ dependencies {
 	
 	// LWJGL
 	api "org.lwjgl:lwjgl:$lwjglVersion"
-	api "org.lwjgl:lwjgl-assimp:$lwjglVersion" // Include assimp?
 	api "org.lwjgl:lwjgl-glfw:$lwjglVersion"
 	api "org.lwjgl:lwjgl-openal:$lwjglVersion"
 	api "org.lwjgl:lwjgl-opengl:$lwjglVersion"
 	api "org.lwjgl:lwjgl-stb:$lwjglVersion"
 	api "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-assimp:$lwjglVersion:$lwjglNatives"
 	api "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
 	api "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
 	api "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
