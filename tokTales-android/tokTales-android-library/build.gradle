@@ -46,9 +46,6 @@ dependencies {
 	api project(':tokTales-tools-android')
 	
     api (project(':tokTales-core-library')) {
-	    // Exclude these because of duplicate class XmlPullParserException that Android includes
-	    exclude group: 'xmlpull', module: 'xmlpull'
-	    exclude group: 'xpp3', module: 'xpp3_min'
 	    // We need to exclude the Guice AOP version here because forcing alone (below) does not override the dependency classifier
 	    exclude group: 'com.google.inject', module: 'guice'
 	    // This is necessary because otherwise projects depending on this, still get the jre version

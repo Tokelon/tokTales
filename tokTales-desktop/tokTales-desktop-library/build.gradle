@@ -67,8 +67,11 @@ dependencies {
 		// Whether we have to exclude and force depends on whether the overridden version is newer
 		force true
 	}
-	
-	
+
+	// Redeclare to include xmlpull and xpp3 from tokTales-tools-tiled (excluded in tokTales-core)
+	implementation 'com.thoughtworks.xstream:xstream:1.4.8'
+
+
 	/* Lib dependencies */
 	
 	// LWJGL

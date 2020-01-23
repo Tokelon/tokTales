@@ -59,9 +59,15 @@ dependencies {
 	// Tools
 	api project(':tokTales-tools-core')
 	api project(':tokTales-tools-script')
-	api project(':tokTales-tools-tiled')
 	api project(':tokTales-tools-assets')
 	api project(':tokTales-tools-core-inject')
+	api (project(':tokTales-tools-tiled')) {
+		// Exclude these because of duplicate classes that Android already contains
+		// Include where needed by redeclaring XStream dependency (e.g. Desktop)
+		exclude group: 'xmlpull', module: 'xmlpull'
+		exclude group: 'xpp3', module: 'xpp3_min'
+	}
+
 	
 	
 	// Guice
