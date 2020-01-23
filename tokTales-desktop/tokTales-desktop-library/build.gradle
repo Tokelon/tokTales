@@ -61,9 +61,14 @@ dependencies {
 	api (project(':tokTales-core-library')) {
 		// This is necessary because otherwise projects depending on this, might get the android version (if the version is newer)
 		exclude group: 'com.google.guava', module: 'guava'
+		exclude group: 'com.google.inject', module: 'guice'
+	}
+	api ('com.google.inject:guice:4.2.1') {
+		// Replace Guice dependency with AOP version
+		force = true
 	}
 	api ('com.google.guava:guava:26.0-jre') {
-		// Force override transient depdencies from Guice and tokTales-core-library with the version we want
+		// Force override transient dependencies from Guice and tokTales-core-library with the version we want
 		// Whether we have to exclude and force depends on whether the overridden version is newer
 		force true
 	}

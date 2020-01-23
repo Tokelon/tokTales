@@ -42,17 +42,8 @@ dependencies {
 	implementation 'com.android.support:appcompat-v7:28.0.0'
 	implementation 'com.android.support:support-v4:28.0.0'
 	
-	api (project(':tokTales-core-test')) {
-		exclude group: 'com.google.inject', module: 'guice'
-		exclude group: 'com.google.guava', module: 'guava'
-	}
-	api ('com.google.inject:guice:4.2.1:no_aop') {
-		force = true
-	}
-	api ('com.google.guava:guava:26.0-android') {
-		force true
-	}
-	
+	api project(':tokTales-core-test')
+
 	// Cyclic dependency, see tokTales-core-library build.gradle
 	implementation project(':tokTales-android-library')
 	
