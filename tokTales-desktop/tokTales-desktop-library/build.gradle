@@ -35,21 +35,6 @@ targetCompatibility = "1.8"
 // LWJGL configuration
 project.ext.lwjglVersion = "3.1.6"
 
-import org.gradle.internal.os.OperatingSystem
-
-switch ( OperatingSystem.current() ) {
-	case OperatingSystem.WINDOWS:
-		project.ext.lwjglNatives = "natives-windows"
-		break
-	case OperatingSystem.LINUX:
-		project.ext.lwjglNatives = "natives-linux"
-		break
-	case OperatingSystem.MAC_OS:
-		project.ext.lwjglNatives = "natives-macos"
-		break
-}
-
-
 dependencies {
 	/* Test dependencies */
 	testImplementation project(':tokTales-desktop-test')
@@ -85,9 +70,22 @@ dependencies {
 	api "org.lwjgl:lwjgl-openal:$lwjglVersion"
 	api "org.lwjgl:lwjgl-opengl:$lwjglVersion"
 	api "org.lwjgl:lwjgl-stb:$lwjglVersion"
-	api "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
-	api "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+
+	runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-windows"
+	runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-windows"
+
+	runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-linux"
+	runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-linux"
+	runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-linux"
+	runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-linux"
+	runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-linux"
+
+	runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-macos"
+	runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-macos"
+	runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-macos"
+	runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-macos"
+	runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-macos"
 }
