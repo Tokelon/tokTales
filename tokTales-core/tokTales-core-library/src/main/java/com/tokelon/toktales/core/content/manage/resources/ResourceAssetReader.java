@@ -10,7 +10,6 @@ import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.core.storage.IStructuredLocation;
-import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.assets.exception.AssetLoadException;
 import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
@@ -18,7 +17,7 @@ import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 public class ResourceAssetReader implements IResourceAssetReader {
 
-	
+
 	private final IStorageService storageService;
 	private final IContentService contentService;
 
@@ -55,17 +54,12 @@ public class ResourceAssetReader implements IResourceAssetReader {
 	
 	@Override
 	public InputStream readAsset(IStructuredLocation location, String fileName, IOptions options) throws AssetException {
-		ApplicationLocationWrapper locationWrapper = ApplicationLocationWrapper.getObjectPool().newObject();
-		locationWrapper.objectReset();
 		try {
-			locationWrapper.setActualLocation(location);
-			
 			switch(location.getPrefix()) {
-			case INTERNAL:	// Have internal the same as asset?
-			case ASSET:
-				return contentService.readAppFileOnAssets(locationWrapper, fileName);
-			case EXTERNAL:
-				return storageService.readAppFileOnExternal(locationWrapper, fileName);
+			case CONTENT:
+				return contentService.readAppFileOnAssets(location, fileName);
+			case STORAGE:
+				return storageService.readAppFileOnExternal(location, fileName);
 			default:
 				throw new AssetLoadException(String.format("Unable to load file \"%s\" from location \"%s\" (Unsupported location)", fileName, location.getOriginalValue()));
 			}
@@ -73,8 +67,6 @@ public class ResourceAssetReader implements IResourceAssetReader {
 			throw new AssetLoadException(e);
 		} catch (ContentException e) {
 			throw new AssetLoadException(e);
-		} finally {
-			ApplicationLocationWrapper.getObjectPool().free(locationWrapper);
 		}
 	}
 

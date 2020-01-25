@@ -4,17 +4,21 @@ import com.tokelon.toktales.core.storage.IApplicationLocation;
 
 public class LocationImpl implements IApplicationLocation {
 
-	
-	private final MutablePathImpl mPath;
+
+	private final ILocationPath path;
 	
 	public LocationImpl(String path) {
-		mPath = new MutablePathImpl(path);
+		this.path = new MutablePathImpl(path);
+	}
+	
+	public LocationImpl(ILocationPath path) {
+		this.path = path;
 	}
 	
 	
 	@Override
-	public MutablePathImpl getLocationPath() {
-		return mPath;
+	public ILocationPath getLocationPath() {
+		return path;
 	}
 
 }

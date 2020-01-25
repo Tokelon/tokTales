@@ -1,12 +1,12 @@
 package com.tokelon.toktales.core.storage;
 
-import com.tokelon.toktales.core.storage.utils.IConformedPath;
+import com.tokelon.toktales.core.storage.utils.ILocationPath;
 
-/** A LOCATION on the filesystem, represented by a path.
- *
+/** A location, represented by a path.
  */
 public interface ILocation {
 
-	public IConformedPath getLocationPath();
+
+	public ILocationPath getLocationPath();
 	
 }

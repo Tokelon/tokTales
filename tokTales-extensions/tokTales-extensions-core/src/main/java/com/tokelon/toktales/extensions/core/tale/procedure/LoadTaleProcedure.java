@@ -29,6 +29,7 @@ import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.resources.IResourceType;
 import com.tokelon.toktales.core.resources.Resource;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
+import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
@@ -82,7 +83,6 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		// Root directory of the Tale
 		LocationImpl taleLocation = new LocationImpl(taleAppPath);
 
-		
 		
 		// List the files in the Tale directory
 		String[] fileNames;
@@ -204,7 +204,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 
 	
 	
-	private ITaleGamescene loadTale(IGame game, LocationImpl taleLocation, String mainFileName) throws TaleException, StorageException, ConfigFormatException, ConfigDataException {
+	private ITaleGamescene loadTale(IGame game, IApplicationLocation taleLocation, String mainFileName) throws TaleException, StorageException, ConfigFormatException, ConfigDataException {
 		logger.debug("Reading Tale: Started");
 		
 		
@@ -288,7 +288,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	}
 	
 	
-	private void setupPlayerEntity(IWorld world, LocationImpl taleLocation, ITaleConfig taleConfig, ITaleGamescene taleScene) {
+	private void setupPlayerEntity(IWorld world, IApplicationLocation taleLocation, ITaleConfig taleConfig, ITaleGamescene taleScene) {
 		IPlayerController playerController = taleScene.getPlayerController();
 		IPlayer player = playerController.getPlayer();
 		IActor playerActor = player.getActor();
@@ -472,13 +472,13 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	}
 	
 	
-	private IBlockMap readTiledMap(IWorld world, LocationImpl location, String fileName) {
+	private IBlockMap readTiledMap(IWorld world, LocationImpl locationImpl, String fileName) {
 		// Tiled Map loader
 		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(logging, storageService, world);
 		
 		
 		try {
-			loader.setTarget(location, fileName);
+			loader.setTarget(locationImpl, fileName);
 			
 		} catch (StorageException se) {
 			logger.error("StorageException while configuring loader:", se);
@@ -508,7 +508,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	
 	
 
-	private boolean loadMapIntoGame(IGame game, IBlockMap map, ITaleConfig taleConfig, LocationImpl taleLocation, ITaleGamescene taleScene) {
+	private boolean loadMapIntoGame(IGame game, IBlockMap map, ITaleConfig taleConfig, IApplicationLocation taleLocation, ITaleGamescene taleScene) {
 		try {
 			taleScene.runSetMap(setMapProcedure.toSupplier(game, map));
 		} catch (TaleException te) {
@@ -522,21 +522,21 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		
 		
 		
-		StructuredLocation tilesetLocation = new StructuredLocation(LocationPrefix.EXTERNAL, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGTilesetDirectory()));
+		StructuredLocation tilesetLocation = new StructuredLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGTilesetDirectory()));
 		
-		Resource mapTilesetResource = new Resource(IResourceType.Type.SPRITE_SET, map.getFileName()+"-tilesets", tilesetLocation);
+		Resource mapTilesetResource = new Resource(map.getFileName()+"-tilesets", tilesetLocation, IResourceType.Type.SPRITE_SET);
 		map.getResources().addResource(mapTilesetResource);
 		
 		
-		StructuredLocation spriteLocation = new StructuredLocation(LocationPrefix.EXTERNAL, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGSpriteDirectory()));
+		StructuredLocation spriteLocation = new StructuredLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGSpriteDirectory()));
 		
-		Resource mapSpritesResource = new Resource(IResourceType.Type.SPRITE, map.getFileName()+"-sprites", spriteLocation);
+		Resource mapSpritesResource = new Resource(map.getFileName()+"-sprites", spriteLocation, IResourceType.Type.SPRITE);
 		map.getResources().addResource(mapSpritesResource);
 
 		
-		StructuredLocation playerLocation = new StructuredLocation(LocationPrefix.EXTERNAL, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGPlayerDirectory()));
+		StructuredLocation playerLocation = new StructuredLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGPlayerDirectory()));
 		
-		Resource mapPlayerResource = new Resource(IResourceType.Type.SPRITE_SET, map.getFileName()+"-player", playerLocation);
+		Resource mapPlayerResource = new Resource(map.getFileName()+"-player", playerLocation, IResourceType.Type.SPRITE_SET);
 		map.getResources().addResource(mapPlayerResource);
 		
 		

@@ -1,7 +1,8 @@
 package com.tokelon.toktales.core.storage.utils;
 
+import java.io.File;
+
 /** Reference implementation for {@link IMutablePath}.
- * 
  */
 public class MutablePathImpl implements IMutablePath {
 
@@ -11,16 +12,16 @@ public class MutablePathImpl implements IMutablePath {
 
 	
 	public MutablePathImpl() {
-		this.fileSep = SUt.FSEP;
-		this.currentLocation = "";		// TODO: Should this be the empty string or null ?
+		this.fileSep = File.separator;
+		this.currentLocation = ""; // TODO: Should this be the empty string or null ?
 	}
 	
 	
-	public MutablePathImpl(IConformedPath initialPath) {
-		this(initialPath, SUt.FSEP);
+	public MutablePathImpl(ILocationPath initialPath) {
+		this(initialPath, File.separator);
 	}
 	
-	public MutablePathImpl(IConformedPath initialPath, String fileSeparator) {
+	public MutablePathImpl(ILocationPath initialPath, String fileSeparator) {
 		if(fileSeparator == null || fileSeparator.isEmpty()) {
 			throw new IllegalArgumentException("Bad file separator: " +fileSeparator);
 		}
@@ -31,7 +32,7 @@ public class MutablePathImpl implements IMutablePath {
 	
 	
 	public MutablePathImpl(String initialValue) {
-		this(initialValue, SUt.FSEP);
+		this(initialValue, File.separator);
 	}
 	
 	public MutablePathImpl(String initialValue, String fileSeparator) {
@@ -56,7 +57,7 @@ public class MutablePathImpl implements IMutablePath {
 
 	
 	@Override
-	public MutablePathImpl setPath(IConformedPath path) {
+	public MutablePathImpl setPath(ILocationPath path) {
 		currentLocation = path.getLocation();
 		return this;
 	}
@@ -68,7 +69,7 @@ public class MutablePathImpl implements IMutablePath {
 	}
 
 	@Override
-	public MutablePathImpl append(IConformedPath path) {
+	public MutablePathImpl append(ILocationPath path) {
 		if(currentLocation == null) {
 			currentLocation = path.getLocation();
 		}
@@ -92,7 +93,7 @@ public class MutablePathImpl implements IMutablePath {
 	}
 
 	@Override
-	public MutablePathImpl cutLastPlace() {
+	public MutablePathImpl setToParent() {
 		currentLocation = currentLocation.substring(0, currentLocation.lastIndexOf(fileSep));
 		return this;
 	}
@@ -111,7 +112,7 @@ public class MutablePathImpl implements IMutablePath {
 	}
 
 	@Override
-	public String getLastPlace() {
+	public String getLocationName() {
 		return currentLocation.substring(currentLocation.lastIndexOf(fileSep) + fileSep.length());
 	}
 	
@@ -127,19 +128,18 @@ public class MutablePathImpl implements IMutablePath {
 	}
 
 	@Override
-	public IExtendedPath newPathByAppend(IConformedPath path) {
+	public ILocationPath newPathByAppend(ILocationPath path) {
 		return new MutablePathImpl(currentLocation).append(path);
 	}
 
 	@Override
-	public IExtendedPath newPathByAppend(String value) {
+	public ILocationPath newPathByAppend(String value) {
 		return new MutablePathImpl(currentLocation).append(value);
 	}
 
 	@Override
-	public IExtendedPath newPathByCutLastPlace() {
-		return new MutablePathImpl(currentLocation).cutLastPlace();
+	public ILocationPath newPathByParent() {
+		return new MutablePathImpl(currentLocation).setToParent();
 	}
-
 	
 }

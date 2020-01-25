@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.values.LocationsAndPlaces;
+import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.extensions.android.R;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
 
@@ -23,6 +23,8 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 
 
 	public static final String ACTIVITY_RESULT_MAP_FILE_NAME = "ACTIVITY_RESULT_MAP_FILE_NAME";
+	
+	public static final String LOCATION_MAPS = "maps";
 
 
 	private ListView mapList;
@@ -59,7 +61,7 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 		mapList = new ListView(this);
 		
 		try {
-			maps = storageService.listAppDirOnExternal(LocationsAndPlaces.LOCATION_EXTERNAL_MAPS);
+			maps = storageService.listAppDirOnExternal(new LocationImpl(LOCATION_MAPS));
 			if(maps != null) {
 				initList(maps);
 			}

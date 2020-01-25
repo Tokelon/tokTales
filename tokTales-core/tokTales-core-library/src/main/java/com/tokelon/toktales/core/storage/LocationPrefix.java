@@ -3,15 +3,13 @@ package com.tokelon.toktales.core.storage;
 import com.tokelon.toktales.core.values.LocationPrefixValues;
 
 public enum LocationPrefix {
-	
-	CUSTOM(null),
+
+
+	UNKNOWN(null),
 	NONE(""),
 	
-	INTERNAL(LocationPrefixValues.PREFIX_LOCATION_INTERNAL),
-	EXTERNAL(LocationPrefixValues.PREFIX_LOCATION_EXTERNAL),
-	ASSET(LocationPrefixValues.PREFIX_LOCATION_ASSET),
-	
-	INT_SPRITES(LocationPrefixValues.PREFIX_LOCATION_INT_SPRITES),
+	STORAGE(LocationPrefixValues.PREFIX_LOCATION_STORAGE),
+	CONTENT(LocationPrefixValues.PREFIX_LOCATION_CONTENT),
 	;
 	
 	
@@ -37,6 +35,7 @@ public enum LocationPrefix {
 			}
 		}
 		
-		return CUSTOM;
+		return UNKNOWN;
 	}
+	
 }

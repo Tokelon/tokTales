@@ -48,11 +48,11 @@ public class TiledTileElementFactory {
 		String srcName;
 		if(imgSource.contains("/")) {
 			MutablePathImpl path = new MutablePathImpl(imgSource, "/");
-			srcName = path.getLastPlace();
+			srcName = path.getLocationName();
 		}
 		else if(imgSource.contains("\\")) {
 			MutablePathImpl path = new MutablePathImpl(imgSource, "\\");
-			srcName = path.getLastPlace();
+			srcName = path.getLocationName();
 		}
 		else {
 			srcName = imgSource;

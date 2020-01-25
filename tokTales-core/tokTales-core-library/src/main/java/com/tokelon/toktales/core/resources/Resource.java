@@ -1,21 +1,29 @@
 package com.tokelon.toktales.core.resources;
 
+import com.tokelon.toktales.core.resources.IResourceType.Type;
 import com.tokelon.toktales.core.storage.IStructuredLocation;
+import com.tokelon.toktales.core.storage.LocationPrefix;
 import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
-
-
 public class Resource implements IResource {
-	
-	
+	// Add ResourceBuilder?
+
+
 	private final int hashcode;
 	
 	private final IResourceType type;
 	private final String name;
 	private final IStructuredLocation location;
 	
+	public Resource(String name, String location, LocationPrefix locationPrefix) {
+		this(name, new StructuredLocation(locationPrefix, location), Type.UNKNOWN);
+	}
 	
-	public Resource(IResourceType type, String name, IStructuredLocation location) {
+	public Resource(String name, IStructuredLocation location) {
+		this(name, location, Type.UNKNOWN);
+	}
+
+	public Resource(String name, IStructuredLocation location, IResourceType type) {
 		if(type == null || name == null || location == null) {
 			throw new NullPointerException();
 		}
@@ -24,9 +32,9 @@ public class Resource implements IResource {
 		this.name = name;
 		this.location = location;
 		
-		hashcode = 37 + 17*name.hashCode() + 17*location.hashCode() + 17*type.hashCode();
+		hashcode = 37 + 17 * name.hashCode() + 17 * location.hashCode() + 17 * type.hashCode();
 	}
-
+	
 
 
 	@Override
@@ -46,14 +54,13 @@ public class Resource implements IResource {
 
 	
 	
-	
 	@Override
 	public int hashCode() {
 		return hashcode;
 	}
 	
 	@Override
-	public boolean equals(Object obj) {		// TODO: Test equals
+	public boolean equals(Object obj) { // TODO: Test equals
 		if(obj == this) {
 			return true;
 		}
@@ -67,79 +74,6 @@ public class Resource implements IResource {
 		}
 		
 		return false;
-	}
-	
-	
-	
-	public static class ResourceFactory {
-		
-		private String rName;
-		private IResourceType rType;
-		private IStructuredLocation rLocation;
-		
-		public Resource build() {
-			return new Resource(rType, rName, rLocation);
-		}
-		
-		public ResourceFactory setName(String name) {
-			rName = name;
-			return this;
-		}
-	
-		public ResourceFactory setType(IResourceType resourceType) {
-			rType = resourceType;
-			return this;
-		}
-		public ResourceFactory setType(String type) {
-			rType = new ResourceType(type);
-			return this;
-		}
-		
-		public ResourceFactory setLocation(IStructuredLocation structuredLocation) {
-			rLocation = structuredLocation;
-			return this;
-		}
-		
-		public ResourceFactory setStructuredLocation(String location) {
-			rLocation = new StructuredLocation(location);
-			return this;
-		}
-		
-	}
-	
-	
-	private static class ResourceType implements IResourceType {
-
-		private final String id;
-		
-		public ResourceType(String id) {
-			this.id = id;
-		}
-		
-		@Override
-		public String getTypeID() {
-			return id;
-		}
-		
-		
-		@Override
-		public int hashCode() {
-			return id.hashCode();
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(obj == this) {
-				return true;
-			}
-			if(!(obj instanceof IResourceType)) {	// TODO: Check if using the interface is correct
-				return false;
-			}
-			IResourceType rt = (IResourceType)obj;
-			
-			return id.equals(rt.getTypeID());
-		}
-		
 	}
 	
 }

@@ -4,9 +4,9 @@ package com.tokelon.toktales.core.storage;
  * This structure has a prefix (might be empty), a prefix delimiter (separator) and a location value.<br>
  * Ex. "prefix://path" where "://" the prefix delimiter, "prefix" the prefix value, "path" the path value.
  */
-public interface IStructuredLocation extends ILocation {
+public interface IStructuredLocation extends IApplicationLocation {
 
-	
+
 	/** 
 	 * @return The prefix for this location.
 	 */

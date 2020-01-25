@@ -23,13 +23,14 @@ import com.tokelon.toktales.core.resources.IResourceSet;
 import com.tokelon.toktales.core.resources.ListingBatch;
 import com.tokelon.toktales.core.resources.ResourceFilterView;
 import com.tokelon.toktales.core.resources.ResourceSet;
-import com.tokelon.toktales.core.storage.utils.ApplicationLocationWrapper;
 
 public class ResourceManager implements IResourceManager {
+	// TODO: Clean up
+	// TODO: Important - Check all maps sets etc. and related classes for thread safety and document it
 
 
 	public static final String LOOSE_RESOURCES_IDENTIFIER = "resource_manager_loose_resources_identifier"; 
-	public static final String TEMP_RESOURCES_IDENTIFIER = "resource_manager_temp_resources_identifier";
+	private static final String TEMP_RESOURCES_IDENTIFIER = "resource_manager_temp_resources_identifier";
 	
 	
 	private final ILogger logger;
@@ -64,7 +65,7 @@ public class ResourceManager implements IResourceManager {
 		resourceSetsMap.put(LOOSE_RESOURCES_IDENTIFIER, looseResources);
 		listingBatchesMap.put(looseResources, new ListingBatch());
 		
-		/*
+		/* TODO: Remove
 		// Add temp resources
 		ResourceSet tempResources = new ResourceSet();
 		resourceSetsMap.put(TEMP_RESOURCES_IDENTIFIER, tempResources);
@@ -72,9 +73,6 @@ public class ResourceManager implements IResourceManager {
 		*/
 	}
 	
-	/* TODO: Important - Check all maps sets etc. and related classes for thread safety and document it
-	 * 
-	 */
 	
 
 	@Override
@@ -208,27 +206,18 @@ public class ResourceManager implements IResourceManager {
 	@Override
 	public IListing scanResource(IResource resource) throws ContentException, StorageException {
 		IListing listing = null;
-		ApplicationLocationWrapper relLocation = ApplicationLocationWrapper.getObjectPool().newObject();	// Get the object
-
 		
 		switch(resource.getLocation().getPrefix()) {
-		case INTERNAL:
-		case ASSET:
-			relLocation.setActualLocation(resource.getLocation());		// Set the object data
-			
-			listing = contentService.createAssetListing(relLocation);	// Use the object			
+		case CONTENT:
+			listing = contentService.createAssetListing(resource.getLocation());	// Use the object			
 			break;
-		case EXTERNAL:
-			relLocation.setActualLocation(resource.getLocation());		// Set the object data
-			
-			listing = storageService.createFileListing(relLocation);
+		case STORAGE:
+			listing = storageService.createFileListing(resource.getLocation());
 			break;
 		default:
-			
-			throw new ContentException("Unsupported location for resource: " +resource.getName());
+			throw new ContentException("Unsupported location for resource: " + resource.getName());
 		}
 		
-		ApplicationLocationWrapper.getObjectPool().free(relLocation);	// Free the object
 		return listing;
 	}
 
@@ -354,7 +343,6 @@ public class ResourceManager implements IResourceManager {
 	}
 	*/
 	
-
 	
 	/*
 	// TODO: Maybe put in different interface, say "dynamic functions" or something

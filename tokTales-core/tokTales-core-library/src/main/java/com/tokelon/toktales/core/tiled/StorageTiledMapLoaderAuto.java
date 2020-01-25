@@ -17,8 +17,8 @@ import com.tokelon.toktales.core.game.logic.map.MapLoaderException;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.utils.DynamicApplicationLocation;
-import com.tokelon.toktales.core.storage.utils.IMutablePath;
+import com.tokelon.toktales.core.storage.utils.LocationImpl;
+import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ConfigFormatException;
 import com.tokelon.toktales.tools.core.config.ICiniConfig;
@@ -269,9 +269,6 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 		
 		
 
-		DynamicApplicationLocation tilesetLocation = new DynamicApplicationLocation();
-		IMutablePath tilesetLocationPath = tilesetLocation.editLocationPath(); 
-		
 		Iterator<? extends ITiledMapTileset> mapTilesetsIt = mapTilesets.iterator();
 		ITiledMapTileset tileset;
 		while(mapTilesetsIt.hasNext()) {
@@ -316,16 +313,15 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 				}
 				
 				
-				tilesetLocationPath.setPath(mapfilelocation.getLocationPath());
+				MutablePathImpl tilesetLocationPath = new MutablePathImpl(mapfilelocation.getLocationPath());
 				if(tilesetPath != null) {
 					tilesetLocationPath.append(tilesetPath);
 				}
 				
 				
-				
 				InputStream tilesetInput;
 				try {
-					tilesetInput = storageService.readAppFileOnExternal(tilesetLocation, tilesetFilename);
+					tilesetInput = storageService.readAppFileOnExternal(new LocationImpl(tilesetLocationPath), tilesetFilename);
 				} catch (StorageException e) {
 					logger.warn("WARNING: External tileset source could not be read. Tileset will be ignored: {}", externalSource);
 					

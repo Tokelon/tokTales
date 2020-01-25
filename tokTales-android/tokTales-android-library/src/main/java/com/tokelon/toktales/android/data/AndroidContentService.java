@@ -73,7 +73,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		/* Note that the location will be the same object for all file descriptors.
 		 * This is fine as long as they all are in the same location and because StructuredLocation is immutable. 
 		 */
-		StructuredLocation singleLocation = new StructuredLocation(LocationPrefix.ASSET, location.getLocationPath().getLocation());
+		StructuredLocation singleLocation = new StructuredLocation(LocationPrefix.CONTENT, location.getLocationPath().getLocation());
 		for(String fileName: fileList) {
 			IListing.FileDescriptor fd = new Listing.FileDescriptorImpl(fileName, singleLocation);
 			listingFileList.add(fd);

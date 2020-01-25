@@ -88,7 +88,7 @@ public class StructuredLocation implements IStructuredLocation {
 	}
 
 	@Override
-	public IConformedPath getLocationPath() {
+	public ILocationPath getLocationPath() {
 		return locationPath;
 	}	
 	
