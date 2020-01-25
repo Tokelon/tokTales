@@ -20,7 +20,7 @@ import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.engine.storage.StorageUnavailableException;
 import com.tokelon.toktales.core.location.ApplicationLocation;
 import com.tokelon.toktales.core.location.IApplicationLocation;
-import com.tokelon.toktales.core.location.LocationPrefix;
+import com.tokelon.toktales.core.location.LocationScheme;
 import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
@@ -76,7 +76,7 @@ public class AndroidStorageService extends AbstractEngineService implements ISto
 		/* Note that the location will be the same object for all file descriptors.
 		 * This is fine as long as they all are in the same location and because StructuredLocation is immutable. 
 		 */
-		UniformLocation singleLocation = new UniformLocation(LocationPrefix.STORAGE, location.getLocationPath().getLocation());
+		UniformLocation singleLocation = new UniformLocation(LocationScheme.STORAGE, location.getLocationPath().getLocation());
 		for(String fileName: fileList) {
 			IListing.FileDescriptor fd = new Listing.FileDescriptorImpl(fileName, singleLocation);
 			listingFileList.add(fd);

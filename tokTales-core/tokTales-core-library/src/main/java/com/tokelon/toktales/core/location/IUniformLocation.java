@@ -5,18 +5,17 @@ package com.tokelon.toktales.core.location;
  * e.g. "prefix://path" where "://" the prefix delimiter, "prefix" the prefix value, "path" the path value.
  */
 public interface IUniformLocation extends IApplicationLocation {
-	// TODO: Add interface for Prefix?
 
 
 	/** 
 	 * @return The prefix for this location.
 	 */
-	public LocationPrefix getPrefix();
+	public ILocationScheme getScheme();
 	
 	/**
 	 * @return The string value of this location's prefix.
 	 */
-	public String getPrefixValue();
+	public String getSchemeIdentifier();
 	
 	/**
 	 * @return The string representation of the complete location.
@@ -26,6 +25,6 @@ public interface IUniformLocation extends IApplicationLocation {
 	/** 
 	 * @return The string value of the this locations's prefix delimiters.
 	 */
-	public String getPrefixDelimiter();
+	public String getSchemeDelimiter();
 	
 }

@@ -14,6 +14,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
+import com.tokelon.toktales.core.location.LocationScheme;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.IListing.FileDescriptor;
 import com.tokelon.toktales.core.resources.IListingBatch;
@@ -205,15 +206,22 @@ public class ResourceManager implements IResourceManager {
 
 	@Override
 	public IListing scanResource(IResource resource) throws ContentException, StorageException {
-		IListing listing = null;
+		if(!(resource.getLocation().getScheme() instanceof LocationScheme)) {
+			throw new ContentException(String.format("Unable to scan resource \"%s\" with location \"%s\" (Unsupported location)", resource.getName(), resource.getLocation().getOriginalValue()));
+		}
+		LocationScheme scheme = (LocationScheme) resource.getLocation().getScheme();
 		
-		switch(resource.getLocation().getPrefix()) {
+		
+		IListing listing = null;
+		switch(scheme) {
 		case CONTENT:
-			listing = contentService.createAssetListing(resource.getLocation());	// Use the object			
+			listing = contentService.createAssetListing(resource.getLocation());			
 			break;
 		case STORAGE:
 			listing = storageService.createFileListing(resource.getLocation());
 			break;
+		case NONE:
+		case UNKNOWN:
 		default:
 			throw new ContentException("Unsupported location for resource: " + resource.getName());
 		}

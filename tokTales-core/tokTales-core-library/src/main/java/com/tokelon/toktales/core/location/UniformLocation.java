@@ -3,86 +3,85 @@ package com.tokelon.toktales.core.location;
 public class UniformLocation implements IUniformLocation {
 
 
-	public static final String DEFAULT_PREFIX_DELIMITER = "://";
+	public static final String DEFAULT_SCHEME_DELIMITER = "://";
 
 	
-	private final String value;
+	private final String originalValue;
 	
-	private final LocationPrefix prefix;
-	private final String prefixValue;
+	private final ILocationScheme scheme;
+	private final String schemeIdentifier;
 	
-	private final String prefixDelimiter;
+	private final String schemeDelimiter;
 	
 	private final MutableLocationPath locationPath = new MutableLocationPath();
-	
 
 	
 	public UniformLocation(String value) {
-		this(value, DEFAULT_PREFIX_DELIMITER);
+		this(value, DEFAULT_SCHEME_DELIMITER);
 	}
 	
-	public UniformLocation(String value, String prefixDelimiter) {
+	public UniformLocation(String value, String schemeDelimiter) {
 		// Maybe use URI?
-		if(value == null || prefixDelimiter == null) {
+		if(value == null || schemeDelimiter == null) {
 			throw new NullPointerException();
 		}
 		
 		
-		this.value = value;
-		this.prefixDelimiter = prefixDelimiter;
+		this.originalValue = value;
+		this.schemeDelimiter = schemeDelimiter;
 		
-		int locPrefixPos = value.indexOf(prefixDelimiter);
+		int locPrefixPos = value.indexOf(schemeDelimiter);
 		if(locPrefixPos != -1) {
-			prefixValue = value.substring(0, locPrefixPos);
-			locationPath.set(value.substring(locPrefixPos + prefixDelimiter.length()));
+			schemeIdentifier = value.substring(0, locPrefixPos);
+			locationPath.set(value.substring(locPrefixPos + schemeDelimiter.length()));
 		}
 		else {
-			prefixValue = "";
+			schemeIdentifier = "";
 			locationPath.set(value);
 		}
 		
-		prefix = LocationPrefix.prefixFromID(prefixValue);
+		scheme = LocationScheme.getForIdentifier(schemeIdentifier);
 	}
 	
 	
 	
-	public UniformLocation(LocationPrefix prefix, String location) {
-		this(prefix, location, DEFAULT_PREFIX_DELIMITER);
+	public UniformLocation(ILocationScheme scheme, String location) {
+		this(scheme, location, DEFAULT_SCHEME_DELIMITER);
 	}
 	
-	public UniformLocation(LocationPrefix prefix, String location, String prefixDelimiter) {
-		if(prefix == null || location == null || prefixDelimiter == null) {
+	public UniformLocation(ILocationScheme scheme, String location, String schemeDelimiter) {
+		if(scheme == null || location == null || schemeDelimiter == null) {
 			throw new NullPointerException();
 		}
 	
-		this.prefix = prefix;
-		this.prefixValue = prefix.getPrefixID();
-		this.prefixDelimiter = prefixDelimiter;
+		this.scheme = scheme;
+		this.schemeIdentifier = scheme.getIdentifier();
+		this.schemeDelimiter = schemeDelimiter;
 		
 		locationPath.set(location);
-		this.value = prefixValue + prefixDelimiter + location;
+		this.originalValue = schemeIdentifier + schemeDelimiter + location;
 	}
 	
 	
 
 	@Override
-	public LocationPrefix getPrefix() {
-		return prefix;
+	public ILocationScheme getScheme() {
+		return scheme;
 	}
 
 	@Override
-	public String getPrefixValue() {
-		return prefixValue;
+	public String getSchemeIdentifier() {
+		return schemeIdentifier;
 	}
 
 	@Override
 	public String getOriginalValue() {
-		return value;
+		return originalValue;
 	}
 
 	@Override
-	public String getPrefixDelimiter() {
-		return prefixDelimiter;
+	public String getSchemeDelimiter() {
+		return schemeDelimiter;
 	}
 
 	@Override

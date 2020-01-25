@@ -9,6 +9,7 @@ import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.core.location.IUniformLocation;
+import com.tokelon.toktales.core.location.LocationScheme;
 import com.tokelon.toktales.core.resources.IResource;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.assets.exception.AssetLoadException;
@@ -54,14 +55,21 @@ public class ResourceAssetReader implements IResourceAssetReader {
 	
 	@Override
 	public InputStream readAsset(IUniformLocation location, String fileName, IOptions options) throws AssetException {
+		if(!(location.getScheme() instanceof LocationScheme)) {
+			throw new AssetLoadException(String.format("Unable to load file \"%s\" from location \"%s\" (Unsupported location)", fileName, location.getOriginalValue()));
+		}
+		LocationScheme scheme = (LocationScheme) location.getScheme();
+		
 		try {
-			switch(location.getPrefix()) {
+			switch(scheme) {
 			case CONTENT:
 				return contentService.readAppFileOnAssets(location, fileName);
 			case STORAGE:
 				return storageService.readAppFileOnExternal(location, fileName);
+			case NONE: // TODO: Use storage or content for NONE?
+			case UNKNOWN:
 			default:
-				throw new AssetLoadException(String.format("Unable to load file \"%s\" from location \"%s\" (Unsupported location)", fileName, location.getOriginalValue()));
+				throw new AssetLoadException(String.format("Unable to load file \"%s\" from location \"%s\" (Unknown scheme)", fileName, location.getOriginalValue()));
 			}
 		} catch (StorageException e) {
 			throw new AssetLoadException(e);

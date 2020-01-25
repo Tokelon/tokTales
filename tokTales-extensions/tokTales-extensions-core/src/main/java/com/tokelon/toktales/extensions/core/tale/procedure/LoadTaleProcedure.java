@@ -28,7 +28,7 @@ import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.location.IApplicationLocation;
 import com.tokelon.toktales.core.location.ApplicationLocation;
-import com.tokelon.toktales.core.location.LocationPrefix;
+import com.tokelon.toktales.core.location.LocationScheme;
 import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IResourceType;
 import com.tokelon.toktales.core.resources.Resource;
@@ -522,19 +522,19 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		
 		
 		
-		UniformLocation tilesetLocation = new UniformLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGTilesetDirectory()));
+		UniformLocation tilesetLocation = new UniformLocation(LocationScheme.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGTilesetDirectory()));
 		
 		Resource mapTilesetResource = new Resource(map.getFileName()+"-tilesets", tilesetLocation, IResourceType.Type.SPRITE_SET);
 		map.getResources().addResource(mapTilesetResource);
 		
 		
-		UniformLocation spriteLocation = new UniformLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGSpriteDirectory()));
+		UniformLocation spriteLocation = new UniformLocation(LocationScheme.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGSpriteDirectory()));
 		
 		Resource mapSpritesResource = new Resource(map.getFileName()+"-sprites", spriteLocation, IResourceType.Type.SPRITE);
 		map.getResources().addResource(mapSpritesResource);
 
 		
-		UniformLocation playerLocation = new UniformLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGPlayerDirectory()));
+		UniformLocation playerLocation = new UniformLocation(LocationScheme.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGPlayerDirectory()));
 		
 		Resource mapPlayerResource = new Resource(map.getFileName()+"-player", playerLocation, IResourceType.Type.SPRITE_SET);
 		map.getResources().addResource(mapPlayerResource);
