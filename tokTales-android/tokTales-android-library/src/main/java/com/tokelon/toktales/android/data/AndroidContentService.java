@@ -13,11 +13,11 @@ import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
+import com.tokelon.toktales.core.location.IApplicationLocation;
+import com.tokelon.toktales.core.location.LocationPrefix;
+import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.LocationPrefix;
-import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
 import android.content.Context;
 
@@ -73,7 +73,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		/* Note that the location will be the same object for all file descriptors.
 		 * This is fine as long as they all are in the same location and because StructuredLocation is immutable. 
 		 */
-		StructuredLocation singleLocation = new StructuredLocation(LocationPrefix.CONTENT, location.getLocationPath().getLocation());
+		UniformLocation singleLocation = new UniformLocation(LocationPrefix.CONTENT, location.getLocationPath().getLocation());
 		for(String fileName: fileList) {
 			IListing.FileDescriptor fd = new Listing.FileDescriptorImpl(fileName, singleLocation);
 			listingFileList.add(fd);

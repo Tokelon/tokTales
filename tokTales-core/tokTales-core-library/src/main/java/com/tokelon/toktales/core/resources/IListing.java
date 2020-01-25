@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.resources;
 
 import java.util.List;
 
-import com.tokelon.toktales.core.storage.IStructuredLocation;
+import com.tokelon.toktales.core.location.IUniformLocation;
 
 public interface IListing {
 	
@@ -28,7 +28,7 @@ public interface IListing {
 	public interface FileDescriptor {
 		
 		public String getName();
-		public IStructuredLocation getLocation();
+		public IUniformLocation getLocation();
 	}
 	
 }

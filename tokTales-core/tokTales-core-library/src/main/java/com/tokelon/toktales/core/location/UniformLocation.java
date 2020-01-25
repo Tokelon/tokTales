@@ -1,9 +1,7 @@
-package com.tokelon.toktales.core.storage.utils;
+package com.tokelon.toktales.core.location;
 
-import com.tokelon.toktales.core.storage.IStructuredLocation;
-import com.tokelon.toktales.core.storage.LocationPrefix;
+public class UniformLocation implements IUniformLocation {
 
-public class StructuredLocation implements IStructuredLocation {
 
 	public static final String DEFAULT_PREFIX_DELIMITER = "://";
 
@@ -15,15 +13,15 @@ public class StructuredLocation implements IStructuredLocation {
 	
 	private final String prefixDelimiter;
 	
-	private final MutablePathImpl locationPath = new MutablePathImpl();
+	private final MutableLocationPath locationPath = new MutableLocationPath();
 	
 
 	
-	public StructuredLocation(String value) {
+	public UniformLocation(String value) {
 		this(value, DEFAULT_PREFIX_DELIMITER);
 	}
 	
-	public StructuredLocation(String value, String prefixDelimiter) {
+	public UniformLocation(String value, String prefixDelimiter) {
 		// Maybe use URI?
 		if(value == null || prefixDelimiter == null) {
 			throw new NullPointerException();
@@ -36,11 +34,11 @@ public class StructuredLocation implements IStructuredLocation {
 		int locPrefixPos = value.indexOf(prefixDelimiter);
 		if(locPrefixPos != -1) {
 			prefixValue = value.substring(0, locPrefixPos);
-			locationPath.setPath(value.substring(locPrefixPos + prefixDelimiter.length()));
+			locationPath.set(value.substring(locPrefixPos + prefixDelimiter.length()));
 		}
 		else {
 			prefixValue = "";
-			locationPath.setPath(value);
+			locationPath.set(value);
 		}
 		
 		prefix = LocationPrefix.prefixFromID(prefixValue);
@@ -48,11 +46,11 @@ public class StructuredLocation implements IStructuredLocation {
 	
 	
 	
-	public StructuredLocation(LocationPrefix prefix, String location) {
+	public UniformLocation(LocationPrefix prefix, String location) {
 		this(prefix, location, DEFAULT_PREFIX_DELIMITER);
 	}
 	
-	public StructuredLocation(LocationPrefix prefix, String location, String prefixDelimiter) {
+	public UniformLocation(LocationPrefix prefix, String location, String prefixDelimiter) {
 		if(prefix == null || location == null || prefixDelimiter == null) {
 			throw new NullPointerException();
 		}
@@ -61,7 +59,7 @@ public class StructuredLocation implements IStructuredLocation {
 		this.prefixValue = prefix.getPrefixID();
 		this.prefixDelimiter = prefixDelimiter;
 		
-		locationPath.setPath(location);
+		locationPath.set(location);
 		this.value = prefixValue + prefixDelimiter + location;
 	}
 	

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tokelon.toktales.core.content.sprite.ISpriteset;
-import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
+import com.tokelon.toktales.core.location.MutableLocationPath;
 import com.tokelon.toktales.tools.tiled.model.ITMXImage;
 import com.tokelon.toktales.tools.tiled.model.ITMXTile;
 import com.tokelon.toktales.tools.tiled.model.ITiledMapTileset;
@@ -47,11 +47,11 @@ public class TiledTileElementFactory {
 		String imgSource = img.getSource();
 		String srcName;
 		if(imgSource.contains("/")) {
-			MutablePathImpl path = new MutablePathImpl(imgSource, "/");
+			MutableLocationPath path = new MutableLocationPath(imgSource, "/");
 			srcName = path.getLocationName();
 		}
 		else if(imgSource.contains("\\")) {
-			MutablePathImpl path = new MutablePathImpl(imgSource, "\\");
+			MutableLocationPath path = new MutableLocationPath(imgSource, "\\");
 			srcName = path.getLocationName();
 		}
 		else {

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.storage.utils;
+package com.tokelon.toktales.core.location;
 
 /* A path to a location (not a datafile), on a traditional filesystem.
  * It is guaranteed that the path being returned by a method conforms to certain syntactic rules, as denoted by the method documentation. 
@@ -8,7 +8,6 @@ package com.tokelon.toktales.core.storage.utils;
  * location paths are directories separated by a delimiter character or file-separator, most often being back-slash or forward-slash.
  */
 public interface ILocationPath {
-	// TODO: Refactor this interface
 
 
 	/**
@@ -27,14 +26,19 @@ public interface ILocationPath {
 	public String getLocationName();
 	
 
-	public String getPathAppendedBy(String value);
+	public String getChildPath(String value);
 	
-	public String getLocationAppendedBy(String value);
+	public String getChildLocation(String value);
+	
+	public String getParentPath();
+	
+	public String getParentLocation();
+	
 
-	public ILocationPath newPathByAppend(ILocationPath path);
+	public ILocationPath getChild(ILocationPath path);
 	
-	public ILocationPath newPathByAppend(String value);
+	public ILocationPath getChild(String value);
 	
-	public ILocationPath newPathByParent();
+	public ILocationPath getParent();
 	
 }

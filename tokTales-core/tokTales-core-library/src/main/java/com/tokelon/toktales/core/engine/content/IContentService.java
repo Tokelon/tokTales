@@ -3,8 +3,8 @@ package com.tokelon.toktales.core.engine.content;
 import java.io.InputStream;
 
 import com.tokelon.toktales.core.engine.IEngineService;
+import com.tokelon.toktales.core.location.IApplicationLocation;
 import com.tokelon.toktales.core.resources.IListing;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
 
 public interface IContentService extends IEngineService {
 

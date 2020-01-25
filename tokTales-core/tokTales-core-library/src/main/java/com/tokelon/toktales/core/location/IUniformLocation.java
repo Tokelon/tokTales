@@ -1,16 +1,17 @@
-package com.tokelon.toktales.core.storage;
+package com.tokelon.toktales.core.location;
 
-/** A LOCATION that has additional information attached to it, apart from the regular path, with a defined structure for string representation.<br><br>
+/* A location that has additional information attached to it, apart from the regular path, with a defined structure for string representation.<br><br>
  * This structure has a prefix (might be empty), a prefix delimiter (separator) and a location value.<br>
- * Ex. "prefix://path" where "://" the prefix delimiter, "prefix" the prefix value, "path" the path value.
+ * e.g. "prefix://path" where "://" the prefix delimiter, "prefix" the prefix value, "path" the path value.
  */
-public interface IStructuredLocation extends IApplicationLocation {
+public interface IUniformLocation extends IApplicationLocation {
+	// TODO: Add interface for Prefix?
 
 
 	/** 
 	 * @return The prefix for this location.
 	 */
-	public LocationPrefix getPrefix();		// Interface for Prefix?
+	public LocationPrefix getPrefix();
 	
 	/**
 	 * @return The string value of this location's prefix.

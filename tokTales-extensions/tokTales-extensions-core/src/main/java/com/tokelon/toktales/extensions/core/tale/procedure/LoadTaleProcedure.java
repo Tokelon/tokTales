@@ -26,13 +26,13 @@ import com.tokelon.toktales.core.game.model.IPlayer;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.world.ICrossDirection;
 import com.tokelon.toktales.core.game.world.IWorld;
+import com.tokelon.toktales.core.location.IApplicationLocation;
+import com.tokelon.toktales.core.location.ApplicationLocation;
+import com.tokelon.toktales.core.location.LocationPrefix;
+import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IResourceType;
 import com.tokelon.toktales.core.resources.Resource;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.LocationPrefix;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
-import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 import com.tokelon.toktales.core.tiled.StorageTiledMapLoaderAuto;
 import com.tokelon.toktales.extensions.core.tale.ITaleScriptModule;
 import com.tokelon.toktales.extensions.core.tale.TaleException;
@@ -81,7 +81,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	@Override
 	public ITaleGamescene run(IGame game, String taleAppPath) throws TaleException {
 		// Root directory of the Tale
-		LocationImpl taleLocation = new LocationImpl(taleAppPath);
+		ApplicationLocation taleLocation = new ApplicationLocation(taleAppPath);
 
 		
 		// List the files in the Tale directory
@@ -172,7 +172,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		
 		
 		// Add resource finder for the tale script directory
-		LocationImpl taleScriptLocation = new LocationImpl(taleLocation.getLocationPath().getPathAppendedBy(TALE_SCRIPTS_DIRECTORY));
+		ApplicationLocation taleScriptLocation = new ApplicationLocation(taleLocation.getLocationPath().getChildPath(TALE_SCRIPTS_DIRECTORY));
 		StorageLocationResourceFinder taleScriptFinder = new StorageLocationResourceFinder(storageService, taleScriptLocation);
 		game.getScriptManager().getResourceFinder().addResourceFinder(taleScriptFinder);
 		
@@ -253,7 +253,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 
 		
 		// Setup the initial map location
-		LocationImpl mapsLocation = new LocationImpl(taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesMapDirectory()));
+		ApplicationLocation mapsLocation = new ApplicationLocation(taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesMapDirectory()));
 		String initialMapfileName = taleConfig.getConfigTaleInitialMapfileName();
 		if(initialMapfileName.trim().isEmpty()) {
 			logger.error("Loading Tale failed: No initial map");
@@ -308,7 +308,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		
 		
 		// Animations
-		LocationImpl animationsLocation = new LocationImpl(taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesAnimationDirectory()));
+		ApplicationLocation animationsLocation = new ApplicationLocation(taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesAnimationDirectory()));
 		
 		CiniConfigStreamReader ciniReader = new CiniConfigStreamReader();
 
@@ -360,7 +360,7 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		playerController.playerLook(ICrossDirection.DOWN);
 	}
 	
-	private void loadAnimationIntoActor(IWorld world, LocationImpl animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IActor actor) {
+	private void loadAnimationIntoActor(IWorld world, ApplicationLocation animLocation, String animFilename, CiniConfigStreamReader ciniReader, String animCode, IActor actor) {
 		/* Default for if walk animations do not define their time
 		 * Do either this or set default animation time to 1
 		 */
@@ -472,13 +472,13 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 	}
 	
 	
-	private IBlockMap readTiledMap(IWorld world, LocationImpl locationImpl, String fileName) {
+	private IBlockMap readTiledMap(IWorld world, ApplicationLocation applicationLocation, String fileName) {
 		// Tiled Map loader
 		StorageTiledMapLoaderAuto loader = new StorageTiledMapLoaderAuto(logging, storageService, world);
 		
 		
 		try {
-			loader.setTarget(locationImpl, fileName);
+			loader.setTarget(applicationLocation, fileName);
 			
 		} catch (StorageException se) {
 			logger.error("StorageException while configuring loader:", se);
@@ -522,19 +522,19 @@ public class LoadTaleProcedure implements ILoadTaleProcedure {
 		
 		
 		
-		StructuredLocation tilesetLocation = new StructuredLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGTilesetDirectory()));
+		UniformLocation tilesetLocation = new UniformLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGTilesetDirectory()));
 		
 		Resource mapTilesetResource = new Resource(map.getFileName()+"-tilesets", tilesetLocation, IResourceType.Type.SPRITE_SET);
 		map.getResources().addResource(mapTilesetResource);
 		
 		
-		StructuredLocation spriteLocation = new StructuredLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGSpriteDirectory()));
+		UniformLocation spriteLocation = new UniformLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGSpriteDirectory()));
 		
 		Resource mapSpritesResource = new Resource(map.getFileName()+"-sprites", spriteLocation, IResourceType.Type.SPRITE);
 		map.getResources().addResource(mapSpritesResource);
 
 		
-		StructuredLocation playerLocation = new StructuredLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getPathAppendedBy(taleConfig.getConfigResourcesGPlayerDirectory()));
+		UniformLocation playerLocation = new UniformLocation(LocationPrefix.STORAGE, taleLocation.getLocationPath().getChildPath(taleConfig.getConfigResourcesGPlayerDirectory()));
 		
 		Resource mapPlayerResource = new Resource(map.getFileName()+"-player", playerLocation, IResourceType.Type.SPRITE_SET);
 		map.getResources().addResource(mapPlayerResource);

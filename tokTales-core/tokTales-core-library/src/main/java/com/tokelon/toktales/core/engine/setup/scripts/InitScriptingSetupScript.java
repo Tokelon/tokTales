@@ -3,8 +3,8 @@ package com.tokelon.toktales.core.engine.setup.scripts;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.location.ApplicationLocation;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
 
@@ -26,7 +26,7 @@ public class InitScriptingSetupScript implements ISetupScript {
 	public void run(IEngineContext context) throws EngineException {
 		ILogger logger = context.getLogging().getLogger(getClass());
 		
-		LocationImpl scriptsLocation = new LocationImpl(SCRIPTS_PATH);
+		ApplicationLocation scriptsLocation = new ApplicationLocation(SCRIPTS_PATH);
 		StorageLocationResourceFinder finder = new StorageLocationResourceFinder(context.getEngine().getStorageService(), scriptsLocation);
 		context.getGame().getScriptManager().getResourceFinder().addResourceFinder(finder);
 

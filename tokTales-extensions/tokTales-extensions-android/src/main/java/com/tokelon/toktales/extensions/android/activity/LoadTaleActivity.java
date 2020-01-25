@@ -9,9 +9,9 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
-import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
+import com.tokelon.toktales.core.location.IApplicationLocation;
+import com.tokelon.toktales.core.location.ApplicationLocation;
+import com.tokelon.toktales.core.location.MutableLocationPath;
 import com.tokelon.toktales.extensions.android.R;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
 import com.tokelon.toktales.tools.android.activity.integration.IActivityIntegratorBuilder;
@@ -33,7 +33,7 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 	public static final String ACTIVITY_RESULT_TALE_DIR_APP_PATH = "ACTIVITY_RESULT_TALE_DIR_APP_PATH";
 
 	private static final String TALES_LOCATION_PATH = "Tales";	// TODO: Static location! Implement with configs
-	private static final IApplicationLocation talesLocation = new LocationImpl(TALES_LOCATION_PATH);
+	private static final IApplicationLocation talesLocation = new ApplicationLocation(TALES_LOCATION_PATH);
 	
 
 	private ListView taleListView;
@@ -114,7 +114,7 @@ public class LoadTaleActivity extends AbstractIntegratedActivity {
 			
 			String taleDirName = taleList[position];
 			
-			String taleDirAppPath = new MutablePathImpl(talesLocation.getLocationPath()).getPathAppendedBy(taleDirName);
+			String taleDirAppPath = new MutableLocationPath(talesLocation.getLocationPath()).getChildPath(taleDirName);
 			
 			
 			Intent returnIntent = new Intent();

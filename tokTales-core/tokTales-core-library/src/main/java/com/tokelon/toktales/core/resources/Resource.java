@@ -1,9 +1,9 @@
 package com.tokelon.toktales.core.resources;
 
+import com.tokelon.toktales.core.location.IUniformLocation;
+import com.tokelon.toktales.core.location.LocationPrefix;
+import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IResourceType.Type;
-import com.tokelon.toktales.core.storage.IStructuredLocation;
-import com.tokelon.toktales.core.storage.LocationPrefix;
-import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
 public class Resource implements IResource {
 	// Add ResourceBuilder?
@@ -13,17 +13,17 @@ public class Resource implements IResource {
 	
 	private final IResourceType type;
 	private final String name;
-	private final IStructuredLocation location;
+	private final IUniformLocation location;
 	
 	public Resource(String name, String location, LocationPrefix locationPrefix) {
-		this(name, new StructuredLocation(locationPrefix, location), Type.UNKNOWN);
+		this(name, new UniformLocation(locationPrefix, location), Type.UNKNOWN);
 	}
 	
-	public Resource(String name, IStructuredLocation location) {
+	public Resource(String name, IUniformLocation location) {
 		this(name, location, Type.UNKNOWN);
 	}
 
-	public Resource(String name, IStructuredLocation location, IResourceType type) {
+	public Resource(String name, IUniformLocation location, IResourceType type) {
 		if(type == null || name == null || location == null) {
 			throw new NullPointerException();
 		}
@@ -48,7 +48,7 @@ public class Resource implements IResource {
 	}
 
 	@Override
-	public IStructuredLocation getLocation() {
+	public IUniformLocation getLocation() {
 		return location;
 	}
 

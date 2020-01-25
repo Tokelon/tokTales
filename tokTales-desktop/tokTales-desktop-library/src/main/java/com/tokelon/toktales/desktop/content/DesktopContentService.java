@@ -14,8 +14,8 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.IStorageService.IStorageServiceFactory;
 import com.tokelon.toktales.core.engine.storage.StorageException;
+import com.tokelon.toktales.core.location.IApplicationLocation;
 import com.tokelon.toktales.core.resources.IListing;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
 import com.tokelon.toktales.desktop.engine.inject.annotation.AssetRoot;
 
 public class DesktopContentService extends AbstractEngineService implements IContentService {

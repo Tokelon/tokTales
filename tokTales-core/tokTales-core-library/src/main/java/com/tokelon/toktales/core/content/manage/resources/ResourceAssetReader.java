@@ -8,8 +8,8 @@ import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
+import com.tokelon.toktales.core.location.IUniformLocation;
 import com.tokelon.toktales.core.resources.IResource;
-import com.tokelon.toktales.core.storage.IStructuredLocation;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.assets.exception.AssetLoadException;
 import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
@@ -53,7 +53,7 @@ public class ResourceAssetReader implements IResourceAssetReader {
 	}
 	
 	@Override
-	public InputStream readAsset(IStructuredLocation location, String fileName, IOptions options) throws AssetException {
+	public InputStream readAsset(IUniformLocation location, String fileName, IOptions options) throws AssetException {
 		try {
 			switch(location.getPrefix()) {
 			case CONTENT:

@@ -1,6 +1,4 @@
-package com.tokelon.toktales.core.storage;
-
-import com.tokelon.toktales.core.storage.utils.ILocationPath;
+package com.tokelon.toktales.core.location;
 
 /** A location, represented by a path.
  */

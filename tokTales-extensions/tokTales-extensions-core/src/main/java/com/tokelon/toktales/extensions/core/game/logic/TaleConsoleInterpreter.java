@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.model.IConsole;
 import com.tokelon.toktales.core.game.states.InjectGameState;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
-import com.tokelon.toktales.core.storage.utils.MutablePathImpl;
+import com.tokelon.toktales.core.location.ApplicationLocation;
+import com.tokelon.toktales.core.location.MutableLocationPath;
 import com.tokelon.toktales.extensions.core.game.states.console.IConsoleGamestate;
 import com.tokelon.toktales.extensions.core.tale.ITaleLoader;
 import com.tokelon.toktales.extensions.core.tale.TaleException;
@@ -57,7 +57,7 @@ public class TaleConsoleInterpreter implements IConsoleInterpreter {
 		console.print("Loading tale " + talename);
 
 		
-		String taleDirAppPath = new MutablePathImpl(new LocationImpl("Tales").getLocationPath()).getPathAppendedBy(talename);
+		String taleDirAppPath = new MutableLocationPath(new ApplicationLocation("Tales").getLocationPath()).getChildPath(talename);
 		
 		String sceneName = talename;
 		String stateName = GameStateExtensionsValues.STATE_LOCAL_MAP;

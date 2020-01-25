@@ -7,7 +7,7 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
+import com.tokelon.toktales.core.location.ApplicationLocation;
 import com.tokelon.toktales.extensions.android.R;
 import com.tokelon.toktales.tools.android.activity.integration.AbstractIntegratedActivity;
 
@@ -61,7 +61,7 @@ public class LoadMapActivity extends AbstractIntegratedActivity {
 		mapList = new ListView(this);
 		
 		try {
-			maps = storageService.listAppDirOnExternal(new LocationImpl(LOCATION_MAPS));
+			maps = storageService.listAppDirOnExternal(new ApplicationLocation(LOCATION_MAPS));
 			if(maps != null) {
 				initList(maps);
 			}

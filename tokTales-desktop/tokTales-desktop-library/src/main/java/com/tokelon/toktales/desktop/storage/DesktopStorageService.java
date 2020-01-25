@@ -17,17 +17,17 @@ import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 import com.tokelon.toktales.core.engine.inject.annotation.services.StorageServiceExtensions;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
+import com.tokelon.toktales.core.location.ApplicationLocation;
+import com.tokelon.toktales.core.location.IApplicationLocation;
+import com.tokelon.toktales.core.location.LocationPrefix;
+import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
-import com.tokelon.toktales.core.storage.LocationPrefix;
-import com.tokelon.toktales.core.storage.utils.LocationImpl;
-import com.tokelon.toktales.core.storage.utils.StructuredLocation;
 
 public class DesktopStorageService extends AbstractEngineService implements IStorageService {
 	/* Most implementation is copied from AndroidStorageService */
 
-	private static final IApplicationLocation ROOT_LOCATION = new LocationImpl(""); // Is empty | TODO: Should this mirror extStorageRoot?
+	private static final IApplicationLocation ROOT_LOCATION = new ApplicationLocation(""); // Is empty | TODO: Should this mirror extStorageRoot?
 
 	
 	private final String storageRoot;
@@ -69,7 +69,7 @@ public class DesktopStorageService extends AbstractEngineService implements ISto
 		/* Note that the location will be the same object for all file descriptors.
 		 * This is fine as long as they all are in the same location and because StructuredLocation is immutable. 
 		 */
-		StructuredLocation singleLocation = new StructuredLocation(LocationPrefix.STORAGE, location.getLocationPath().getLocation());
+		UniformLocation singleLocation = new UniformLocation(LocationPrefix.STORAGE, location.getLocationPath().getLocation());
 		for(String fileName: fileList) {
 			IListing.FileDescriptor fd = new Listing.FileDescriptorImpl(fileName, singleLocation);
 			listingFileList.add(fd);

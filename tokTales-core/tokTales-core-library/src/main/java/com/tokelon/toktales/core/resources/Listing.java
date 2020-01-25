@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tokelon.toktales.core.storage.IStructuredLocation;
+import com.tokelon.toktales.core.location.IUniformLocation;
 
 public class Listing implements IListing {
 
@@ -173,10 +173,10 @@ public class Listing implements IListing {
 	public static class FileDescriptorImpl implements FileDescriptor {
 
 		private final String name;
-		private final IStructuredLocation location;
+		private final IUniformLocation location;
 		
 		
-		public FileDescriptorImpl(String name, IStructuredLocation location) {
+		public FileDescriptorImpl(String name, IUniformLocation location) {
 			this.name = name;
 			this.location = location;
 		}
@@ -188,7 +188,7 @@ public class Listing implements IListing {
 		}
 		
 		@Override
-		public IStructuredLocation getLocation() {
+		public IUniformLocation getLocation() {
 			return location;
 		}
 		

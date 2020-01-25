@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.storage;
+package com.tokelon.toktales.core.location;
 
 import com.tokelon.toktales.core.values.LocationPrefixValues;
 

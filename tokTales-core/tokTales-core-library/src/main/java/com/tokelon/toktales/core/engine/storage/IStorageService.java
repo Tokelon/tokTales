@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import com.tokelon.toktales.core.engine.IEngineService;
+import com.tokelon.toktales.core.location.IApplicationLocation;
 import com.tokelon.toktales.core.resources.IListing;
-import com.tokelon.toktales.core.storage.IApplicationLocation;
 
 public interface IStorageService extends IEngineService {
 	// TODO: Make same listing methods as in content framework
