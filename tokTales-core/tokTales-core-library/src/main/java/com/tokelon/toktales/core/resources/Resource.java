@@ -3,7 +3,6 @@ package com.tokelon.toktales.core.resources;
 import com.tokelon.toktales.core.location.IUniformLocation;
 import com.tokelon.toktales.core.location.LocationScheme;
 import com.tokelon.toktales.core.location.UniformLocation;
-import com.tokelon.toktales.core.resources.IResourceType.Type;
 
 public class Resource implements IResource {
 	// Add ResourceBuilder?
@@ -16,11 +15,11 @@ public class Resource implements IResource {
 	private final IUniformLocation location;
 	
 	public Resource(String name, String location, LocationScheme locationScheme) {
-		this(name, new UniformLocation(locationScheme, location), Type.UNKNOWN);
+		this(name, new UniformLocation(locationScheme, location), ResourceType.UNKNOWN);
 	}
 	
 	public Resource(String name, IUniformLocation location) {
-		this(name, location, Type.UNKNOWN);
+		this(name, location, ResourceType.UNKNOWN);
 	}
 
 	public Resource(String name, IUniformLocation location, IResourceType type) {

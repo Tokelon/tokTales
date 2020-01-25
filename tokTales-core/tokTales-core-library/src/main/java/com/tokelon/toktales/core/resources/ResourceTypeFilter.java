@@ -1,8 +1,7 @@
 package com.tokelon.toktales.core.resources;
 
 public enum ResourceTypeFilter {
-	F_SPRITE(IResourceType.Type.SPRITE_SET, IResourceType.Type.SPRITE),
-	
+	F_SPRITE(ResourceType.SPRITE_SET, ResourceType.SPRITE),
 	;
 	
 	
@@ -13,9 +12,9 @@ public enum ResourceTypeFilter {
 	}
 	
 	
-	public boolean contains(IResourceType.Type type) {
+	public boolean contains(ResourceType resourceType) {
 		for(IResourceType t: filters) {
-			if(t == type) {
+			if(t == resourceType) {
 				return true;
 			}
 		}
@@ -24,12 +23,12 @@ public enum ResourceTypeFilter {
 	}
 	
 	public boolean applies(IResourceType type) {
-		return applies(type.getTypeID());
+		return applies(type.getIdentifier());
 	}
 	
 	public boolean applies(String typeID) {
 		for(IResourceType f: filters) {
-			if(f.getTypeID().equals(typeID)) {
+			if(f.getIdentifier().equals(typeID)) {
 				return true;
 			}
 		}
