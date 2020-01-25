@@ -110,11 +110,12 @@ public abstract class AbstractExecutorServiceAssetLoader<T, K, O> implements IEx
 		executorLock.lock();
 		try {
 			this.currentExecutorService = getExecutorServiceProvider().get();
-			getLogger().info("Starting asset loader with executor service: {}", getCurrentExecutorService());
+			getLogger().info("Starting asset loader");
+			getLogger().debug("Asset asset loader uses executor service: {}", getCurrentExecutorService());
 			
 			List<Runnable> waitingTasks = getWaitingTasks();
 			synchronized (waitingTasks) {
-				getLogger().info("Adding {} waiting tasks to executor service", waitingTasks.size());
+				getLogger().debug("Adding {} waiting tasks to executor service", waitingTasks.size());
 				
 				for(Runnable task: waitingTasks) {
 					CompletableFuture.runAsync(task, getCurrentExecutorService());

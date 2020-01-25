@@ -77,8 +77,7 @@ public class GameStateControl implements IGameStateControl {
 		
 		IGameState newState = states.get(stateName);
 
-		//logger.d(TAG, String.format("State change in [%s]", this));
-		logger.info("State was changed: '{}' -> '{}' | [{}] -> [{}]", currentStateName, stateName, currentState, newState);
+		logger.debug("State was changed: '{}' -> '{}' | [{}] -> [{}]", currentStateName, stateName, currentState, newState);
 		
 		currentState = newState;
 		currentStateName = stateName;
@@ -96,8 +95,7 @@ public class GameStateControl implements IGameStateControl {
 		states.put(name, state);
 		state.onEngage();
 		
-		//logger.d(TAG, String.format("State addition in [%s]", this));
-		logger.info("State was added: '{}' | [{}]", name, state);
+		logger.debug("State was added: '{}' | [{}]", name, state);
 	}
 	
 	
@@ -121,7 +119,7 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public synchronized IGameState getState(String stateName) {
 		if(logAcessState) {
-			logger.debug("Access to state: {}", stateName);
+			logger.trace("Access to state: {}", stateName);
 			
 			StringBuilder sb = new StringBuilder();
 			for(StackTraceElement el: Thread.currentThread().getStackTrace()) {
@@ -133,7 +131,7 @@ public class GameStateControl implements IGameStateControl {
 				}
 			}
 			
-			logger.debug(sb.toString());
+			logger.trace(sb.toString());
 		}
 		
 		
@@ -145,7 +143,7 @@ public class GameStateControl implements IGameStateControl {
 	@Override
 	public IGameState getActiveState() {
 		if(logAcessCurrentState) {
-			logger.debug("Access to current state ({})", currentStateName);
+			logger.trace("Access to current state ({})", currentStateName);
 			
 			StringBuilder sb = new StringBuilder();
 			for(StackTraceElement el: Thread.currentThread().getStackTrace()) {
@@ -157,7 +155,7 @@ public class GameStateControl implements IGameStateControl {
 				}
 			}
 			
-			logger.debug(sb.toString());
+			logger.trace(sb.toString());
 		}
 		
 		

@@ -198,7 +198,7 @@ public class BaseGamescene implements IGameScene {
 
 		ICamera camera = getSceneCamera();
 		camera.setSize(cameraWidth, cameraHeight);
-		getLogger().info(String.format("Camera size was set to default %.2fx%.2f", cameraWidth, cameraHeight));
+		getLogger().debug(String.format("Camera size was set to default %.2fx%.2f", cameraWidth, cameraHeight));
 	}
 	
 	

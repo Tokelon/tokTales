@@ -165,7 +165,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		/* Register map render order if needed */
 		if(initialMapRenderRegistrationPending) {
 			initialMapRenderRegistrationPending = false;
-			getLogger().warn("Registering map render callbacks to previously unavailable gamestate");
+			getLogger().debug("Registering map render callbacks to previously unavailable gamestate");
 
 			unregisterMapRenderCallbacks(getGamestate());
 			registerMapRenderCallbacks(getGamestate(), getMapController());
@@ -208,7 +208,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	protected void onMapControllerChange(IMapController mapController) {
 		IGameState gamestate = getGamestate();
 		if(gamestate == null) {
-			getLogger().info("Cannot register map render callbacks: no gamestate assigned yet");
+			getLogger().debug("Cannot register map render callbacks: no gamestate assigned yet");
 			initialMapRenderRegistrationPending = true;
 			return;
 		}
