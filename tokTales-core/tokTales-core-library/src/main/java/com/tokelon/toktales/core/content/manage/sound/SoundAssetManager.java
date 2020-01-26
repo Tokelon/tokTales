@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.slf4j.ILoggerFactory;
 
+import com.tokelon.toktales.tools.assets.key.IReadableAssetKey;
 import com.tokelon.toktales.tools.assets.loader.IAssetLoader;
 import com.tokelon.toktales.tools.assets.manager.DefaultAssetManager;
 import com.tokelon.toktales.tools.assets.manager.IAssetStore;
@@ -14,8 +15,19 @@ public class SoundAssetManager extends DefaultAssetManager<ISoundAsset, ISoundAs
 
 
 	@Inject
-	public SoundAssetManager(ILoggerFactory loggerFactory, ISpecialAssetManager<ISoundAsset> specialAssetManager, IAssetStore<ISoundAsset, ISoundAssetKey> assetStore, IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions> assetLoader) {
+	public SoundAssetManager(
+			ILoggerFactory loggerFactory,
+			ISpecialAssetManager<ISoundAsset> specialAssetManager,
+			IAssetStore<ISoundAsset, ISoundAssetKey> assetStore,
+			IAssetLoader<ISoundAsset, ISoundAssetKey, INamedOptions> assetLoader
+	) {
 		super(loggerFactory, specialAssetManager, assetStore, assetLoader);
 	}
 
+	
+	@Override
+	public ISoundAssetKey keyOf(IReadableAssetKey readableKey) {
+		return new ReadDelegateSoundAssetKey(readableKey);
+	}
+	
 }

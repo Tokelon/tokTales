@@ -4,14 +4,14 @@ import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.assets.key.IReadableAssetKey;
 
 public class ReadDelegateSpriteAssetKey implements ISpriteAssetKey, IReadDelegateAssetKey {
-	
-	
-	private final String spriteName;
-	private final IReadableAssetKey readableAssetKey;
 
-	public ReadDelegateSpriteAssetKey(String spriteName, IReadableAssetKey readableAssetKey) {
+
+	private final String spriteName;
+	private final IReadableAssetKey readableKey;
+
+	public ReadDelegateSpriteAssetKey(String spriteName, IReadableAssetKey readableKey) {
 		this.spriteName = spriteName;
-		this.readableAssetKey = readableAssetKey;
+		this.readableKey = readableKey;
 	}
 
 	
@@ -23,7 +23,7 @@ public class ReadDelegateSpriteAssetKey implements ISpriteAssetKey, IReadDelegat
 	
 	@Override
 	public IReadableAssetKey getReadableKey() {
-		return readableAssetKey;
+		return readableKey;
 	}
 
 
