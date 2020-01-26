@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.content.manage.contents;
 
+import com.tokelon.toktales.core.location.ApplicationLocation;
 import com.tokelon.toktales.core.location.IApplicationLocation;
 
 public class ContentKey implements IContentKey {
@@ -7,6 +8,10 @@ public class ContentKey implements IContentKey {
 
 	private final String name;
 	private final IApplicationLocation location;
+
+	public ContentKey(String name, String path) {
+		this(name, new ApplicationLocation(path));
+	}
 
 	public ContentKey(String name, IApplicationLocation location) {
 		this.name = name;
