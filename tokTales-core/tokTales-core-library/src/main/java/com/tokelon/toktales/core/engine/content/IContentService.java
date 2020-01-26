@@ -8,7 +8,9 @@ import com.tokelon.toktales.core.resources.IListing;
 
 public interface IContentService extends IEngineService {
 
-	
+
+	public String getRoot();
+
 	/* The fact to this returns a string array is a pure android limitation.
 	 * There should be additional support for systems where it is possible to use File classes and such.
 	 * 

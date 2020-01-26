@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
+import com.tokelon.toktales.core.engine.inject.annotation.ContentRoot;
 import com.tokelon.toktales.core.engine.inject.annotation.StorageRoot;
 
 import android.content.Context;
@@ -14,6 +15,7 @@ public class AndroidValuesInjectModule extends AbstractInjectModule {
 	@Override
 	protected void configure() {
 		bind(String.class).annotatedWith(StorageRoot.class).toProvider(StorageRootProvider.class);
+		bind(String.class).annotatedWith(ContentRoot.class).toInstance("");
 	}
 	
 	

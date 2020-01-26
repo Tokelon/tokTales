@@ -10,11 +10,14 @@ import javax.inject.Inject;
 import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.content.ContentException;
 import com.tokelon.toktales.core.engine.content.IContentService;
+import com.tokelon.toktales.core.engine.inject.annotation.ContentRoot;
 import com.tokelon.toktales.core.engine.inject.annotation.services.ContentServiceExtensions;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.location.IApplicationLocation;
+import com.tokelon.toktales.core.location.ILocationPath;
 import com.tokelon.toktales.core.location.LocationScheme;
+import com.tokelon.toktales.core.location.MutableLocationPath;
 import com.tokelon.toktales.core.location.UniformLocation;
 import com.tokelon.toktales.core.resources.IListing;
 import com.tokelon.toktales.core.resources.Listing;
@@ -24,20 +27,35 @@ import android.content.Context;
 public class AndroidContentService extends AbstractEngineService implements IContentService {
 
 
+	private final ILocationPath contentPath;
+	private final String contentRoot;
 	private final Context globalContext;
 	private final ILogger logger;
 	
-	public AndroidContentService(ILogging logging, Context globalContext) {
+	public AndroidContentService(
+			ILogging logging,
+			Context globalContext,
+			@ContentRoot String contentRoot
+	) {
 		this.logger = logging.getLogger(getClass());
 		this.globalContext = globalContext;
+		this.contentRoot = contentRoot;
+		this.contentPath = new MutableLocationPath(contentRoot);
 	}
 	
 	@Inject
-	public AndroidContentService(ILogging logging, Context globalContext, @ContentServiceExtensions Map<String, IServiceExtension> extensions) {
+	public AndroidContentService(
+			ILogging logging,
+			Context globalContext,
+			@ContentRoot String contentRoot,
+			@ContentServiceExtensions Map<String, IServiceExtension> extensions
+	) {
 		super(extensions);
 		
 		this.logger = logging.getLogger(getClass());
 		this.globalContext = globalContext;
+		this.contentRoot = contentRoot;
+		this.contentPath = new MutableLocationPath(contentRoot);
 	}
 	
 	
@@ -47,10 +65,15 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 
 	
 	@Override
+	public String getRoot() {
+		return contentRoot;
+	}
+	
+	@Override
 	public String[] listAssetDir(IApplicationLocation location) throws ContentException {
 		String[] list;
 		try {
-			list = globalContext.getAssets().list(location.getLocationPath().getLocation());
+			list = globalContext.getAssets().list(contentPath.getChildLocation(location.getLocationPath().getLocation()));
 		} catch (IOException e) {
 			throw new ContentException(e);
 		}
@@ -86,7 +109,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 	@Override
 	public InputStream readAppFileOnAssets(IApplicationLocation location, String fileName) throws ContentException {
 		try {
-			return globalContext.getAssets().open(location.getLocationPath().getPath() + fileName);
+			return globalContext.getAssets().open(contentPath.getChildLocation(location.getLocationPath().getPath() + fileName));
 		} catch (IOException e) {
 			throw new ContentException(e);
 		}
