@@ -43,6 +43,27 @@ task wrapperCustom(type: Wrapper) {
 
 subprojects { -> project
     plugins.withType(JavaLibraryPlugin) {
+        task sourcesJar(type: Jar, dependsOn: classes) {
+            classifier = 'sources'
+            from sourceSets.main.allSource
+        }
+
+        project.javadoc {
+            //failOnError = false
+            options.addBooleanOption('Xdoclint:none', true)
+        }
+
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
+
+        artifacts {
+            archives sourcesJar
+            archives javadocJar
+        }
+
+
         project.apply plugin: 'maven-publish'
 
         publishing {
@@ -60,12 +81,45 @@ subprojects { -> project
                 gpr(MavenPublication) {
                     version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
                     from(components.java)
+                    artifact sourcesJar
+                    artifact javadocJar
                 }
             }
         }
     }
 
     plugins.withType(com.android.build.gradle.LibraryPlugin) {
+        afterEvaluate {
+            task sourcesJar(type: Jar) {
+                from android.sourceSets.main.java.srcDirs
+                classifier = 'sources'
+            }
+
+            task javadoc(type: Javadoc, dependsOn: 'assembleRelease') {
+                //failOnError false
+                options.addBooleanOption('Xdoclint:none', true)
+
+                source = android.sourceSets.main.java.srcDirs
+                classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+                android.libraryVariants.all { variant ->
+                    if (variant.name == 'release') {
+                        owner.classpath += variant.javaCompileProvider.get().classpath
+                    }
+                }
+            }
+
+            task javadocJar(type: Jar, dependsOn: javadoc) {
+                classifier = 'javadoc'
+                from javadoc.destinationDir
+            }
+
+            artifacts {
+                archives javadocJar
+                archives sourcesJar
+            }
+        }
+
+
         project.apply plugin: 'digital.wup.android-maven-publish'
 
         publishing {
