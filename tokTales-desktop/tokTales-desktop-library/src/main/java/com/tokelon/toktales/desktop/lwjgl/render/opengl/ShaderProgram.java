@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.render;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl;
 
 import java.nio.FloatBuffer;
 

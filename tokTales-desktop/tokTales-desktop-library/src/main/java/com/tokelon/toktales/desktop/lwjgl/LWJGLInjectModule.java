@@ -11,8 +11,8 @@ import com.tokelon.toktales.desktop.lwjgl.data.STBBitmapDecoder;
 import com.tokelon.toktales.desktop.lwjgl.data.STBCodepointDecoder;
 import com.tokelon.toktales.desktop.lwjgl.data.STBFontDecoder;
 import com.tokelon.toktales.desktop.lwjgl.data.STBVorbisSoundDecoder;
-import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit;
-import com.tokelon.toktales.desktop.lwjgl.render.DesktopRenderToolkit.DesktopRenderToolkitFactory;
+import com.tokelon.toktales.desktop.lwjgl.render.opengl.DesktopRenderToolkit;
+import com.tokelon.toktales.desktop.lwjgl.render.opengl.DesktopRenderToolkit.DesktopRenderToolkitFactory;
 
 public class LWJGLInjectModule extends AbstractInjectModule {
 

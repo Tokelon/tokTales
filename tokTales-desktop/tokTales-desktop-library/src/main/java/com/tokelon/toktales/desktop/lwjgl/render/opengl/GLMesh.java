@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.render;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
@@ -19,7 +20,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
-public class GLSpriteMesh {
+public class GLMesh {
 	
 	
 	private final int vaoId;
@@ -28,13 +29,11 @@ public class GLSpriteMesh {
 	
 	private final int idxVboId;
 	
-	private final int texVboId;
-
 	
 	
 	private final int vertexCount;
 	
-	public GLSpriteMesh(float[] positions, int[] indices) {
+	public GLMesh(int[] indices) {
 		
 		vertexCount = indices.length;
 
@@ -43,21 +42,12 @@ public class GLSpriteMesh {
 		glBindVertexArray(vaoId);		// Bind VAO to current to use it
 
 		
-		// VBO
-		FloatBuffer posBuffer = BufferUtils.createFloatBuffer(positions.length);
-		posBuffer.put(positions).flip();
-		
+		// VBO		
 		posVboId = glGenBuffers();			// Generate VBO
 		glBindBuffer(GL_ARRAY_BUFFER, posVboId);	// Bind VBO to use it
-		glBufferData(GL_ARRAY_BUFFER, posBuffer, GL_STATIC_DRAW);	// Pass VBO Data
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);				// Set the organization for VAO
 		
-		
-		texVboId = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, texVboId);
-		//glBufferData(target, data, usage)
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 		
 		
 		// VBO IDX
@@ -78,17 +68,14 @@ public class GLSpriteMesh {
 	}
 	
 	
-	public void setTextureCoords(FloatBuffer textureCoordsBuffer) {
-		//FloatBuffer texBuffer = BufferUtils.createFloatBuffer(texCoords.length);
-		//texBuffer.put(texCoords).flip();
-		
-		
-		glBindBuffer(GL_ARRAY_BUFFER, texVboId);
-		glBufferData(GL_ARRAY_BUFFER, textureCoordsBuffer, GL_STATIC_DRAW);
-		
+	public void setCoords(FloatBuffer coordsBuffer) {
+				
+		glBindBuffer(GL_ARRAY_BUFFER, posVboId);	// Bind VBO to use it
+		glBufferData(GL_ARRAY_BUFFER, coordsBuffer, GL_STATIC_DRAW);	// Pass VBO Data
+
 		// Is this needed ?
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-		
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);				// Set the organization for VAO
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	
@@ -99,6 +86,11 @@ public class GLSpriteMesh {
 	
 	public int getVertexCount() {
 		return vertexCount;
+	}
+	
+	public void bind() {
+		glBindVertexArray(vaoId);
+		glEnableVertexAttribArray(0);
 	}
 	
 	

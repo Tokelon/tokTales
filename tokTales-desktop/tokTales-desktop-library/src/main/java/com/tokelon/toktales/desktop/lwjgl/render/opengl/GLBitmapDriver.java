@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.render;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;

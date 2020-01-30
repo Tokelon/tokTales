@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.render;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.render;
+package com.tokelon.toktales.desktop.lwjgl.render.opengl;
 
 import com.google.inject.multibindings.Multibinder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
