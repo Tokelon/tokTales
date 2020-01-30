@@ -40,7 +40,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		this.logger = logging.getLogger(getClass());
 		this.globalContext = globalContext;
 		this.contentRoot = contentRoot;
-		this.contentPath = new MutableLocationPath(contentRoot);
+		this.contentPath = contentRoot.isEmpty() ? new MutableLocationPath("", "") : new MutableLocationPath(contentRoot);
 	}
 	
 	@Inject
@@ -55,7 +55,7 @@ public class AndroidContentService extends AbstractEngineService implements ICon
 		this.logger = logging.getLogger(getClass());
 		this.globalContext = globalContext;
 		this.contentRoot = contentRoot;
-		this.contentPath = new MutableLocationPath(contentRoot);
+		this.contentPath = contentRoot.isEmpty() ? new MutableLocationPath("", "") : new MutableLocationPath(contentRoot);
 	}
 	
 	
