@@ -8,9 +8,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.nio.FloatBuffer;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -18,8 +16,6 @@ import javax.inject.Provider;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
-import com.tokelon.toktales.core.content.IContentUtils;
-import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.model.Rectangle2iImpl;
@@ -29,17 +25,13 @@ import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.model.IFontModel;
 import com.tokelon.toktales.core.render.model.IRenderModel;
-import com.tokelon.toktales.core.render.model.ISpriteFontModel;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
-import com.tokelon.toktales.tools.core.annotations.condition.Experimental;
-import com.tokelon.toktales.tools.core.annotations.condition.Unmaintained;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.params.IParams;
 
-@Unmaintained
-@Experimental
-public class GLSpriteFontDriver implements IRenderDriver {
+public class GLFontDriver implements IRenderDriver {
 
 
 	private static final String VS_Sprite = 
@@ -67,26 +59,19 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	
 	
-	private final FloatBuffer textureCoordinateBuffer;
 	
-	private Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
-	
-
-	private ShaderProgram mShader;
-
 	private GLSpriteMesh spriteMesh;
 	
-	private final Map<ISprite, ITexture> textureMap;
+	private ShaderProgram mShader;
+	
+	private final Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
 	
 	private final ILogger logger;
-	private final IContentUtils contentUtils;
+	private final FloatBuffer textureCoordinateBuffer;
 	
 	@Inject
-	public GLSpriteFontDriver(ILogging logging, IContentUtils contentUtils) {
-		this.logger = logging.getLogger(getClass());
-		this.contentUtils = contentUtils;
-		
-		textureMap = new HashMap<>();
+	public GLFontDriver(ILogging logging) {
+		logger = logging.getLogger(getClass());
 
 		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
 	}
@@ -166,43 +151,22 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
-		if(!(renderModel instanceof ISpriteFontModel)) {
+		if(!(renderModel instanceof IFontModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
-		ISpriteFontModel fontModel = (ISpriteFontModel) renderModel;
+		IFontModel fontModel = (IFontModel) renderModel;
 		
-		
-		ISprite fontSprite = fontModel.getTargetSprite();
-		ITexture fontTexture = fontModel.getTargetTexture();
-		
-		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
-		ITextureManager globalTextureManager = textureCoordinator.getTextureManager();
-		
-		
-		if(!fontSprite.isEnclosed()) {
-			// What about special sprites? (error etc)
-			//throw new RenderException("Font sprite must be enclosed");
-		}
-		
-		
-		ITexture finalTexture = textureMap.get(fontSprite);
-		if(finalTexture == null) {
-			
-			spriteSourceCoords.set(0, 0, fontSprite.getSpriteset().getSpriteWidth(), fontSprite.getSpriteset().getSpriteHeight());
-			
-			int spriteOffHor = fontSprite.getSpriteset().getHorizontalOffsetFor(fontSprite.getSpritesetIndex());
-			int spriteOffVer = fontSprite.getSpriteset().getVerticalOffsetFor(fontSprite.getSpritesetIndex());
-			
-			spriteSourceCoords.moveBy(spriteOffHor, spriteOffVer);
 
+		ITexture fontTexture = fontModel.getTargetTexture();
+		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
+		ITextureManager textureManager = textureCoordinator.getTextureManager();
+		
+		if(!textureManager.hasTextureLoaded(fontTexture)) {
+			spriteSourceCoords.set(0, 0, fontTexture.getBitmap().getWidth(), fontTexture.getBitmap().getHeight());
 			
-			ITexture textureRegion = contentUtils.cropTexture(fontTexture, spriteSourceCoords);
-			
-			textureMap.put(fontSprite, textureRegion);
-			finalTexture = textureRegion;
+			textureManager.loadTexture(fontTexture);
 		}
 		
-		globalTextureManager.loadTexture(finalTexture);
 		
 		
 		Matrix4f modelMatrix = fontModel.applyModelMatrix();
@@ -214,7 +178,7 @@ public class GLSpriteFontDriver implements IRenderDriver {
 		spriteMesh.setTextureCoords(textureCoordinateBuffer);
 
 		
-		int textureIndex = textureCoordinator.bindTexture(finalTexture);
+		int textureIndex = textureCoordinator.bindTexture(fontTexture);
 
 		mShader.setUniform("uModelMatrix", modelMatrix);
 		mShader.setUniform("samplerTexture", textureIndex);
@@ -246,24 +210,26 @@ public class GLSpriteFontDriver implements IRenderDriver {
 	}
 	
 	
+	
 	@Override
 	public boolean supports(String target) {
 		return supportedTarget().equals(target);
 	}
 	
+	
 	private static String supportedTarget() {
-		return ISpriteFontModel.class.getName();
+		return IFontModel.class.getName();
 	}
 	
 	
-	public static class GLSpriteFontDriverFactory implements IRenderDriverFactory {
-		private final Provider<GLSpriteFontDriver> driverProvider;
+	public static class GLFontDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLFontDriver> driverProvider;
 		
 		@Inject
-		public GLSpriteFontDriverFactory(Provider<GLSpriteFontDriver> driverProvider) {
+		public GLFontDriverFactory(Provider<GLFontDriver> driverProvider) {
 			this.driverProvider = driverProvider;
 		}
-		
+
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);

@@ -1,11 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.render;
-
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+package com.tokelon.toktales.android.render.opengl;
 
 import java.nio.FloatBuffer;
 import java.util.List;
@@ -14,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
@@ -25,60 +17,68 @@ import com.tokelon.toktales.core.render.ITexture;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.core.render.model.IFontModel;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
+import com.tokelon.toktales.core.render.model.IRenderModel;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.params.IParams;
 
-public class GLBitmapFontDriver implements IRenderDriver {
+import android.opengl.GLES20;
+
+public class GLFontDriver implements IRenderDriver {
 
 
 	private static final String VS_Sprite = 
-			"#version 330\n" +
-			"layout(location = 0) in vec3 vPosition;\n" +
-			"layout(location = 1) in vec2 vTexCoord;\n" +
-			"out vec2 exTexCoord;\n" +
-			"uniform mat4 uMVPMatrix;\n" +
-			"uniform mat4 uModelMatrix;\n" +
-			"void main() {\n" +
-			"  gl_Position = uMVPMatrix * uModelMatrix * vec4(vPosition, 1.0);\n" +
-			"  exTexCoord = vTexCoord;\n" +
-			"}\n";
+			"uniform mat4 uMVPMatrix;" +
+			"uniform mat4 uModelMatrix;" +
+			"attribute vec4 vPosition;" +
+			"attribute vec2 a_vTexCoord;" +
+			"varying vec2 v_vTexCoord;" +
+			"void main() {" +
+			"  gl_Position = uMVPMatrix * uModelMatrix * vPosition;" +
+			"  v_vTexCoord = a_vTexCoord;" +
+			"}";
 	
 	private static final String FS_Sprite = 
-			"#version 330\n" +
-			//"precision mediump float;" +
-			"in vec2 exTexCoord;\n" +
-			"uniform sampler2D samplerTexture;\n" +
-			"uniform vec4 colorOver;\n" +
-			"void main() {\n" +
-			"  vec4 texCol = texture2D(samplerTexture, exTexCoord);\n" +
-			"  gl_FragColor = vec4(colorOver.x, colorOver.y, colorOver.z, texCol.w);\n" +
-			"}\n";
+			"precision mediump float;" +
+			"varying vec2 v_vTexCoord;" +
+			"uniform sampler2D samplerTexture;" +
+			"uniform vec4 colorOver;" +
+			"void main() {" +
+			"  vec4 texCol = texture2D(samplerTexture, v_vTexCoord);" +
+			"  gl_FragColor = vec4(colorOver.x, colorOver.y, colorOver.z, texCol.w);" +
+			"}";
 	
+
 	
-	
-	
-	private GLSpriteMesh spriteMesh;
-	
+	private Rectangle2iImpl rectSpriteSourceCoordsStatic = new Rectangle2iImpl();
+
+
 	private ShaderProgram mShader;
 	
-	private final Rectangle2iImpl spriteSourceCoords = new Rectangle2iImpl();
-	
+	private final GLSpriteMesh spriteMesh;
+
 	private final ILogger logger;
-	private final FloatBuffer textureCoordinateBuffer;
 	
 	@Inject
-	public GLBitmapFontDriver(ILogging logging) {
+	public GLFontDriver(ILogging logging) {
 		logger = logging.getLogger(getClass());
 
-		textureCoordinateBuffer = BufferUtils.createFloatBuffer(8);
+		float[] vertices = new float[]
+				{
+					0.0f,  1.0f, 0.0f,
+					0.0f, 0.0f, 0.0f,
+					1.0f, 0.0f, 0.0f,
+					1.0f,  1.0f, 0.0f,
+				};
+		
+		
+		spriteMesh = new GLSpriteMesh(vertices);
 	}
 	
 	
 	@Override
 	public void create() {
+		
 		
 		try {
 			mShader = new ShaderProgram();
@@ -94,28 +94,16 @@ public class GLBitmapFontDriver implements IRenderDriver {
 			mShader.createUniform("samplerTexture");
 			mShader.createUniform("colorOver");
 			
-		} catch (LWJGLException e) {
-			logger.error("Failed to create shader program:", e);
+			mShader.createAttribute("vPosition");
+			mShader.createAttribute("a_vTexCoord");
+		}
+		catch (OpenGLException oglex) {
+			logger.error("Failed to create shader program:", oglex);
 			return;
 		}
 		
-		
-		float[] positions = new float[]{
-				0.0f,  1.0f, -1.05f,
-				0.0f, 0.0f, -1.05f,
-				1.0f, 0.0f, -1.05f,
-				1.0f,  1.0f, -1.05f,
-		};
-		
-
-		int[] indices = new int[]{
-				0, 1, 3, 3, 1, 2,
-		};
-		
-		
-		spriteMesh = new GLSpriteMesh(positions, indices);
-		
 	}
+
 	
 	@Override
 	public void destroy() {
@@ -123,7 +111,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 		mShader = null;
 	}
 	
-	
+
 	
 	@Override
 	public void drawQuick(Matrix4f matrixProjectionView, IRenderModel renderModel, INamedOptions options) {
@@ -137,62 +125,68 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	
 	@Override
 	public void use(Matrix4f matrixProjectionView) {
-		
+
 		mShader.bind();
 		
 		mShader.setUniform("uMVPMatrix", matrixProjectionView);
+		
+		
+		FloatBuffer vertexBuffer = spriteMesh.getPositions();
 
+		mShader.setAttribute("vPosition", 3, vertexBuffer);
+		
+		
+		GLES20.glEnableVertexAttribArray(mShader.getAttributeLocation("vPosition"));
+		GLES20.glEnableVertexAttribArray(mShader.getAttributeLocation("a_vTexCoord"));
 
-		glBindVertexArray(spriteMesh.getVaoId());
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
 	}
-	
-	
+
+
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
 		if(!(renderModel instanceof IFontModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
 		IFontModel fontModel = (IFontModel) renderModel;
-		
 
+		
 		ITexture fontTexture = fontModel.getTargetTexture();
 		ITextureCoordinator textureCoordinator = fontModel.getTextureCoordinator();
 		ITextureManager textureManager = textureCoordinator.getTextureManager();
 		
 		if(!textureManager.hasTextureLoaded(fontTexture)) {
-			spriteSourceCoords.set(0, 0, fontTexture.getBitmap().getWidth(), fontTexture.getBitmap().getHeight());
+			rectSpriteSourceCoordsStatic.set(0, 0, fontTexture.getBitmap().getWidth(), fontTexture.getBitmap().getHeight());
+
+			rectSpriteSourceCoordsStatic.moveBy(0, 0);	// needed?
 			
 			textureManager.loadTexture(fontTexture);
 		}
+
 		
-		
-		
+
 		Matrix4f modelMatrix = fontModel.applyModelMatrix();
-		
-		float[] textureCoordinates = fontModel.applyTextureCoordinates();
-		textureCoordinateBuffer.position(0);
-		textureCoordinateBuffer.put(textureCoordinates).position(0);
-		
-		spriteMesh.setTextureCoords(textureCoordinateBuffer);
 
-		
+		float[] textureCoords = fontModel.applyTextureCoordinates();
+		FloatBuffer textureCoordinateBuffer = spriteMesh.setTextureCoords(textureCoords);
+
+
+
 		int textureIndex = textureCoordinator.bindTexture(fontTexture);
-
+		
 		mShader.setUniform("uModelMatrix", modelMatrix);
 		mShader.setUniform("samplerTexture", textureIndex);
 		mShader.setUniform("colorOver", fontModel.getTargetColor());
 		
+		mShader.setAttribute("a_vTexCoord", 2, textureCoordinateBuffer);
 
-		glDrawElements(GL_TRIANGLES, spriteMesh.getVertexCount(), GL_UNSIGNED_INT, 0);
+		
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, spriteMesh.getVertexCount());
 		
 	}
-	
-	
+
+
 	@Override
 	public void drawBatch(List<IRenderModel> modelList, INamedOptions options) {
-
 		for(IRenderModel model: modelList) {
 			draw(model, options);
 		}
@@ -201,11 +195,10 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	
 	@Override
 	public void release() {
-		
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glBindVertexArray(0);
-		
+
+		GLES20.glDisableVertexAttribArray(mShader.getAttributeLocation("vPosition"));
+		GLES20.glDisableVertexAttribArray(mShader.getAttributeLocation("a_vTexCoord"));
+
 		mShader.unbind();
 	}
 	
@@ -216,20 +209,19 @@ public class GLBitmapFontDriver implements IRenderDriver {
 		return supportedTarget().equals(target);
 	}
 	
-	
 	private static String supportedTarget() {
 		return IFontModel.class.getName();
 	}
 	
 	
-	public static class GLBitmapFontDriverFactory implements IRenderDriverFactory {
-		private final Provider<GLBitmapFontDriver> driverProvider;
-		
+	public static class GLFontDriverFactory implements IRenderDriverFactory {
+		private final Provider<GLFontDriver> driverProvider;
+
 		@Inject
-		public GLBitmapFontDriverFactory(Provider<GLBitmapFontDriver> driverProvider) {
+		public GLFontDriverFactory(Provider<GLFontDriver> driverProvider) {
 			this.driverProvider = driverProvider;
 		}
-
+		
 		@Override
 		public boolean supports(String target) {
 			return supportedTarget().equals(target);
