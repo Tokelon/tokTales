@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.state.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.core.game.state.scene.IGameSceneControl.IModifiableGameSceneControl;
 
 public class GameSceneControl<T extends IGameScene> implements IModifiableGameSceneControl<T> {
 

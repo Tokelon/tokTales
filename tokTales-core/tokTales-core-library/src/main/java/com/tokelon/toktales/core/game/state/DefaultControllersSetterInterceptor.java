@@ -6,6 +6,7 @@ import com.tokelon.toktales.core.game.controller.IControllerChangeListener;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
+import com.tokelon.toktales.core.game.state.scene.ExtendedGamescene;
 import com.tokelon.toktales.core.values.ControllerValues;
 
 public class DefaultControllersSetterInterceptor implements IControllerChangeListener {

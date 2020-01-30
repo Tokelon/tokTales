@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
+import com.tokelon.toktales.core.game.state.scene.IGameScene;
 
 public class BaseGamestateProvider<T extends IGameScene> implements Provider<BaseGamestate<T>> {
 

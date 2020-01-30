@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IPlayerController;

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import javax.inject.Inject;
 
@@ -10,6 +10,8 @@ import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
+import com.tokelon.toktales.core.game.state.IControlHandler;
+import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.render.IStateRender;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.order.IRenderLayerStack;

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

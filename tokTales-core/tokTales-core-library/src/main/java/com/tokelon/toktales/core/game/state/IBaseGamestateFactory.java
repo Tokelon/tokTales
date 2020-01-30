@@ -3,6 +3,7 @@ package com.tokelon.toktales.core.game.state;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.tokelon.toktales.core.game.state.scene.IGameScene;
 
 public interface IBaseGamestateFactory {
 

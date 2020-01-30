@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.game.state.integration;
 
-import com.tokelon.toktales.core.game.state.IGameScene;
 import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.game.state.scene.IGameScene;
 
 public interface IGameStateIntegration {
 

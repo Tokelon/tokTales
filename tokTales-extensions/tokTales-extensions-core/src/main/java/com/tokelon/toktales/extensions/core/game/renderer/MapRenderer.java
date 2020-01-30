@@ -26,9 +26,9 @@ import com.tokelon.toktales.core.game.model.map.elements.IMapElement.IElementTyp
 import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
 import com.tokelon.toktales.core.game.model.map.predef.IGroundElement;
 import com.tokelon.toktales.core.game.state.GameStateSuppliers;
-import com.tokelon.toktales.core.game.state.IExtendedGameScene;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.ITypedGameState;
+import com.tokelon.toktales.core.game.state.scene.IExtendedGameScene;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.RenderException;

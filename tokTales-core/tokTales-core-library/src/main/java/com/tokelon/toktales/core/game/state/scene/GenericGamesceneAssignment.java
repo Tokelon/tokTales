@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import java.lang.reflect.Type;
 

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import javax.inject.Inject;
 
@@ -12,6 +12,8 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.state.IControlHandler;
+import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector.IParameterInjectorFactory;
 import com.tokelon.toktales.tools.core.sub.inject.annotations.RequiresInjection;

@@ -6,6 +6,7 @@ import com.tokelon.toktales.core.game.controller.ICameraController;
 import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
+import com.tokelon.toktales.core.game.state.scene.IExtendedGameScene;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.values.ControllerValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;

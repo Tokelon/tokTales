@@ -1,5 +1,8 @@
 package com.tokelon.toktales.core.game.state;
 
+import com.tokelon.toktales.core.game.state.scene.IGameScene;
+import com.tokelon.toktales.core.game.state.scene.IGameSceneControl;
+
 public interface ITypedGameState<T extends IGameScene> extends IGameState {
 
 	

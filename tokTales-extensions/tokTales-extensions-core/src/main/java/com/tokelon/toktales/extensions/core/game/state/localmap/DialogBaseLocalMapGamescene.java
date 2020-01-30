@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.game.state.InjectGameScene;
+import com.tokelon.toktales.core.game.state.scene.InjectGameScene;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.order.IRenderCallback;
 import com.tokelon.toktales.core.render.order.IRenderOrder;

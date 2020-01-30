@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.game.state.IControlScheme;
-import com.tokelon.toktales.core.game.state.IGameSceneControl.IModifiableGameSceneControl;
+import com.tokelon.toktales.core.game.state.scene.IGameSceneControl.IModifiableGameSceneControl;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateControlHandler.IEngineGamestateControlHandlerFactory;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;

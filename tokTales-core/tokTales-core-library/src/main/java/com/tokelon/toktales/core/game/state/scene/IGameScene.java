@@ -1,7 +1,9 @@
-package com.tokelon.toktales.core.game.state;
+package com.tokelon.toktales.core.game.state.scene;
 
 import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.game.state.IControlHandler;
+import com.tokelon.toktales.core.game.state.IGameState;
 
 public interface IGameScene {
 	// Add getters for context access?

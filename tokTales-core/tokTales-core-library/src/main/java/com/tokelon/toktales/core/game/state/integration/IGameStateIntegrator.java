@@ -2,8 +2,8 @@ package com.tokelon.toktales.core.game.state.integration;
 
 import java.util.Map;
 
-import com.tokelon.toktales.core.game.state.IGameScene;
 import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.game.state.scene.IGameScene;
 
 public interface IGameStateIntegrator {
 	// TODO: Document and possibly add more event callbacks

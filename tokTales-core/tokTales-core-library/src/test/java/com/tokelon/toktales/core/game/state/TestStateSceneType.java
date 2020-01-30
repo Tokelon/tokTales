@@ -11,10 +11,10 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
-import com.tokelon.toktales.core.game.state.BaseGamescene;
 import com.tokelon.toktales.core.game.state.BaseGamestate;
 import com.tokelon.toktales.core.game.state.BaseGamestateProvider;
-import com.tokelon.toktales.core.game.state.IGameScene;
+import com.tokelon.toktales.core.game.state.scene.BaseGamescene;
+import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.core.test.engine.inject.CoreInjectorTestHelper;
 
 @SuppressWarnings("serial")

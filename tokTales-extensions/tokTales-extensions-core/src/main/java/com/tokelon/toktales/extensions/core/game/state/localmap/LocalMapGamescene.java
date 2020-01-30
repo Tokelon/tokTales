@@ -7,8 +7,8 @@ import com.tokelon.toktales.core.game.controller.IControllerManager;
 import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.game.state.ExtendedGamescene;
 import com.tokelon.toktales.core.game.state.IControlHandler;
+import com.tokelon.toktales.core.game.state.scene.ExtendedGamescene;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.extensions.core.game.logic.IConsoleInterpreter;
 
