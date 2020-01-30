@@ -4,7 +4,7 @@ import com.tokelon.toktales.android.render.opengl.gl20.AndroidGLTextureDriver;
 import com.tokelon.toktales.android.states.AndroidGameStateControl;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.game.states.IGameStateControl;
-import com.tokelon.toktales.core.render.ITextureDriver;
+import com.tokelon.toktales.core.render.texture.ITextureDriver;
 
 public class AndroidOverrideInjectModule extends AbstractInjectModule {
 

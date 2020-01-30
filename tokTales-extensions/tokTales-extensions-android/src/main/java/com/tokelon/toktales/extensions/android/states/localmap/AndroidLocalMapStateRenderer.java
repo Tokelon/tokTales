@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
-import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.extensions.core.game.screen.IDebugRenderer.IDebugRendererFactory;
 import com.tokelon.toktales.extensions.core.game.screen.IEntityRenderer.IEntityRendererFactory;
 import com.tokelon.toktales.extensions.core.game.screen.IMapRenderer.IMapRendererFactory;

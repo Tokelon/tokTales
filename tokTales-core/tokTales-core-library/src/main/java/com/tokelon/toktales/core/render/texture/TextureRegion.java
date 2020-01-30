@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.texture;
 
 public class TextureRegion implements ITextureRegion {
 

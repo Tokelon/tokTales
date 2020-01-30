@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.texture;
 
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;

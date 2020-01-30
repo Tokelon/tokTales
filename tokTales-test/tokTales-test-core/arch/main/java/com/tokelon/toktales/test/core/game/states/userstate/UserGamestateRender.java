@@ -2,7 +2,7 @@ package com.tokelon.toktales.test.core.game.states.userstate;
 
 import com.tokelon.toktales.core.game.screen.AbstractStateRender;
 import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 
 public class UserGamestateRender extends AbstractStateRender {
 

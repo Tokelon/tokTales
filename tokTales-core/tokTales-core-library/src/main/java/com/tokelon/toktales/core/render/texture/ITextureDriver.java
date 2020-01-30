@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.texture;
 
 /** Provides access to low level GPU functionality for managing textures.
  */

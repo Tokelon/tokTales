@@ -3,7 +3,7 @@ package com.tokelon.toktales.desktop.lwjgl.data;
 import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.texture.ITexture;
 import com.tokelon.toktales.tools.core.dispose.IDisposer;
 
 public class STBCodepoint implements ICodepoint {

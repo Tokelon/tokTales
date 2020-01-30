@@ -2,9 +2,9 @@ package com.tokelon.toktales.core.render.opengl.gl20;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.render.ITexture;
-import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
+import com.tokelon.toktales.core.render.texture.ITexture;
+import com.tokelon.toktales.core.render.texture.ITextureDriver;
 
 /** Default texture driver, cross-platform using OpenGL CompatWrapper.
  */

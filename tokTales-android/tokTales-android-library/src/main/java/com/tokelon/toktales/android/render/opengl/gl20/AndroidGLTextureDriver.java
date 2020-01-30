@@ -4,9 +4,9 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.android.data.IAndroidBitmap;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
-import com.tokelon.toktales.core.render.ITexture;
-import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
+import com.tokelon.toktales.core.render.texture.ITexture;
+import com.tokelon.toktales.core.render.texture.ITextureDriver;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;

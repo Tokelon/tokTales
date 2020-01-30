@@ -97,8 +97,8 @@ import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.game.world.World;
 import com.tokelon.toktales.core.game.world.Worldspace;
-import com.tokelon.toktales.core.render.DefaultTextureManager;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.texture.DefaultTextureManager;
+import com.tokelon.toktales.core.render.texture.ITextureManager;
 
 public class CoreInjectModule extends AbstractInjectModule {
 

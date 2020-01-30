@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.manage.font.IFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.texture.ITextureManager;
 
 public interface IContentManager {
 

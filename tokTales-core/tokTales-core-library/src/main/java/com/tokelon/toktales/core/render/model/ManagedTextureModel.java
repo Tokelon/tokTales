@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.render.model;
 
-import com.tokelon.toktales.core.render.ITexture;
-import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.texture.ITexture;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 
 public class ManagedTextureModel extends TexturedModel implements IManagedTextureModel {
 

@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.render.renderer;
 
-import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.texture.ITexture;
 
 public interface IImageRenderer extends IChunkRenderer {
 

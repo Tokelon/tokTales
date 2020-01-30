@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content.sprite;
 
 import com.tokelon.toktales.core.content.manage.texture.TextureAsset;
-import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.texture.ITexture;
 
 public class SpriteAsset extends TextureAsset implements ISpriteAsset {
 

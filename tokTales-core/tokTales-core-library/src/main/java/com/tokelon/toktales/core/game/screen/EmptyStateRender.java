@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.game.screen;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 
 public class EmptyStateRender extends AbstractStateRender {
 

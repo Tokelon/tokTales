@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.game.screen.AbstractStateRender;
-import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 
 public class EngineGamestateRender extends AbstractStateRender implements IEngineGamestateRender {
 

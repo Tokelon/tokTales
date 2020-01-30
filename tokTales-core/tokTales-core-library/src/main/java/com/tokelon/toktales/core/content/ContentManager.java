@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.content.manage.font.IFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.render.ITextureManager;
+import com.tokelon.toktales.core.render.texture.ITextureManager;
 
 public class ContentManager implements IContentManager {
 

@@ -2,7 +2,6 @@ package com.tokelon.toktales.core.render.opengl;
 
 import com.google.inject.Scopes;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.render.ITextureDriver;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
 import com.tokelon.toktales.core.render.opengl.gl20.GLTextureDriver;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.GLFactory;
@@ -11,6 +10,7 @@ import com.tokelon.toktales.core.render.opengl.gl20.facade.GLShader;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLFactory;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLProgram;
 import com.tokelon.toktales.core.render.opengl.gl20.facade.IGLShader;
+import com.tokelon.toktales.core.render.texture.ITextureDriver;
 
 public class CoreGLInjectModule extends AbstractInjectModule {
 

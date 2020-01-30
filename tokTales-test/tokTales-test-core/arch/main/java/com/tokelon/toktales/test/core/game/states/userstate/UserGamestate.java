@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.game.states.IControlHandler;
 import com.tokelon.toktales.core.game.states.IControlScheme;
 import com.tokelon.toktales.core.game.states.IGameScene;
 import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.core.render.DefaultTextureCoordinator;
+import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 
 public class UserGamestate extends BaseGamestate<IGameScene> {
 

@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.content.text;
 
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.texture.ITexture;
 import com.tokelon.toktales.tools.core.dispose.IDisposable;
 
 public interface ICodepoint extends IDisposable {

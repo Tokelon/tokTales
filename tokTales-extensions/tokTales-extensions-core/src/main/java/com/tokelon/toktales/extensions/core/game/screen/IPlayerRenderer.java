@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
 import com.tokelon.toktales.core.game.states.IExtendedGameScene;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.ITypedGameState;
-import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
 
 public interface IPlayerRenderer extends ISegmentRenderer {

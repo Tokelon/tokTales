@@ -6,8 +6,8 @@ import java.nio.ByteOrder;
 import com.tokelon.toktales.core.content.graphics.BitmapImpl;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.core.render.ITexture;
-import com.tokelon.toktales.core.render.Texture;
+import com.tokelon.toktales.core.render.texture.ITexture;
+import com.tokelon.toktales.core.render.texture.Texture;
 
 public class ContentUtils implements IContentUtils {
 
