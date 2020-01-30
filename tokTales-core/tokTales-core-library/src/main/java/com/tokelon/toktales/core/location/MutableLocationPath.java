@@ -14,7 +14,7 @@ public class MutableLocationPath implements IMutableLocationPath {
 	
 	public MutableLocationPath() {
 		this.fileSep = File.separator;
-		this.currentLocation = ""; // TODO: Should this be the empty string or null ?
+		this.currentLocation = "";
 	}
 	
 	
@@ -23,11 +23,11 @@ public class MutableLocationPath implements IMutableLocationPath {
 	}
 	
 	public MutableLocationPath(ILocationPath initialPath, String fileSeparator) {
-		if(fileSeparator == null || fileSeparator.isEmpty()) {
-			throw new IllegalArgumentException("File separator cannot be null or empty: " + fileSeparator);
+		if(fileSeparator == null) {
+			throw new NullPointerException();
 		}
-		this.fileSep = fileSeparator;
 		
+		this.fileSep = fileSeparator;
 		set(initialPath);
 	}
 	
@@ -37,11 +37,11 @@ public class MutableLocationPath implements IMutableLocationPath {
 	}
 	
 	public MutableLocationPath(String initialValue, String fileSeparator) {
-		if(fileSeparator == null || fileSeparator.isEmpty()) {
-			throw new IllegalArgumentException("File separator cannot be null or empty: " + fileSeparator);
+		if(fileSeparator == null) {
+			throw new NullPointerException();
 		}
+
 		this.fileSep = fileSeparator;
-		
 		set(initialValue);
 	}
 
@@ -59,43 +59,47 @@ public class MutableLocationPath implements IMutableLocationPath {
 	
 	@Override
 	public MutableLocationPath set(ILocationPath path) {
-		currentLocation = path.getLocation();
+		if(path == null) {
+			throw new NullPointerException();
+		}
+		
+		currentLocation = removeLastSeparatorIfExists(path.getLocation());
 		return this;
 	}
 
 	@Override
 	public MutableLocationPath set(String value) {
+		if(value == null) {
+			throw new NullPointerException();
+		}
+		
 		currentLocation = removeLastSeparatorIfExists(value);
 		return this;
 	}
 
 	@Override
 	public MutableLocationPath setToChild(ILocationPath path) {
-		if(currentLocation == null) {
-			currentLocation = path.getLocation();
-		}
-		else {
-			currentLocation = currentLocation + fileSep + path.getLocation();
+		if(path == null) {
+			throw new NullPointerException();
 		}
 		
+		set(getPath() + path.getLocation());
 		return this;
 	}
 
 	@Override
 	public MutableLocationPath setToChild(String value) {
-		if(currentLocation == null) {
-			set(value);
-		}
-		else {
-			set(currentLocation + fileSep + value);
+		if(value == null) {
+			throw new NullPointerException();
 		}
 		
+		set(getPath() + value);
 		return this;
 	}
 
 	@Override
 	public MutableLocationPath setToParent() {
-		currentLocation = currentLocation.substring(0, currentLocation.lastIndexOf(fileSep));
+		currentLocation = getParentLocation();
 		return this;
 	}
 	
@@ -113,13 +117,19 @@ public class MutableLocationPath implements IMutableLocationPath {
 
 	@Override
 	public String getLocationName() {
-		return currentLocation.substring(currentLocation.lastIndexOf(fileSep) + fileSep.length());
+		int lastIndexOfFileSep = currentLocation.lastIndexOf(fileSep);
+		if(lastIndexOfFileSep == -1) {
+			return currentLocation;
+		}
+		else {
+			return currentLocation.substring(lastIndexOfFileSep + fileSep.length());
+		}
 	}
 	
 	
 	@Override
 	public String getChildPath(String value) {
-		return getPath() + removeLastSeparatorIfExists(value) + fileSep;
+		return getChildLocation(value) + fileSep;
 	}
 
 	@Override
@@ -129,12 +139,18 @@ public class MutableLocationPath implements IMutableLocationPath {
 	
 	@Override
 	public String getParentPath() {
-		return currentLocation.substring(0, currentLocation.lastIndexOf(fileSep)) + fileSep;
+		return getParentLocation() + fileSep;
 	}
 	
 	@Override
 	public String getParentLocation() {
-		return currentLocation.substring(0, currentLocation.lastIndexOf(fileSep));
+		int lastIndexOfFileSep = currentLocation.lastIndexOf(fileSep);
+		if(lastIndexOfFileSep == -1) {
+			return currentLocation;
+		}
+		else {
+			return currentLocation.substring(0, lastIndexOfFileSep);
+		}
 	}
 	
 
