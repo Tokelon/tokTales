@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.renderer;
 
 import javax.inject.Inject;
 
@@ -13,6 +13,11 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.model.IFontModel;
+import com.tokelon.toktales.core.render.FontTextSizeHelper;
+import com.tokelon.toktales.core.render.IRenderDriver;
+import com.tokelon.toktales.core.render.ITexture;
+import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 

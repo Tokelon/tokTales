@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.renderer;
 
 public interface IChunkRenderer extends IRenderer {
 	/* Maybe even put these into IRenderer

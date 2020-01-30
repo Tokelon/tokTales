@@ -12,8 +12,8 @@ import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.renderer.IRenderer;
 
 public abstract class AbstractStateRender implements IStateRender {
 

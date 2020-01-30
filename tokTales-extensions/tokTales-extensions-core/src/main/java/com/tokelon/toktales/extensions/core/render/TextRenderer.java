@@ -8,12 +8,12 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager
 import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IFontModel;
+import com.tokelon.toktales.core.render.renderer.AbstractRenderer;
 import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.extensions.core.game.model.ITextBox;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;

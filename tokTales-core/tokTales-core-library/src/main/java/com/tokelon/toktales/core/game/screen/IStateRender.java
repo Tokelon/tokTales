@@ -5,8 +5,8 @@ import com.tokelon.toktales.core.engine.render.ISurfaceManager.ISurfaceCallback;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
 import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.render.IRenderer;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
+import com.tokelon.toktales.core.render.renderer.IRenderer;
 
 /** Manages the rendering context for a state.
  * Can be used as the main renderer.

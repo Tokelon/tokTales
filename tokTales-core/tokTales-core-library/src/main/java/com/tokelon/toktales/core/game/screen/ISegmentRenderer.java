@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.screen;
 
-import com.tokelon.toktales.core.render.IRenderer;
+import com.tokelon.toktales.core.render.renderer.IRenderer;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public interface ISegmentRenderer extends IRenderer {

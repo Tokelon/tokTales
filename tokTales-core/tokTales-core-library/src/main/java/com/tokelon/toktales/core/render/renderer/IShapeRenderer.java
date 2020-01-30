@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.renderer;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.render.shapes.ILineShape;

@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render;
+package com.tokelon.toktales.core.render.renderer;
 
 import javax.inject.Inject;
 
@@ -6,6 +6,8 @@ import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
+import com.tokelon.toktales.core.render.IRenderDriver;
+import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.ILineModel;
 import com.tokelon.toktales.core.render.model.IPointModel;
 import com.tokelon.toktales.core.render.model.IRectangleModel;
