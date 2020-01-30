@@ -42,17 +42,17 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	private final ILogger logger;
 	private final IRenderAccess renderAccess;
 	private final ICodepointAssetManager codepointManager;
-	
+
 	@Inject
 	public CharRenderer(ILogging logging, IRenderAccess renderAccess, ITextureCoordinator textureCoordinator, ICodepointAssetManager codepointManager) {
 		this.logger = logging.getLogger(getClass());
 		this.renderAccess = renderAccess;
 		this.codepointManager = codepointManager;
-		
+
 		fontModel.setTextureCoordinator(textureCoordinator);
 		fontModel.setInvertYAxis(true);
 	}
-	
+
 
 	@Override
 	protected void onContextCreated() {
@@ -68,7 +68,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	protected void onContextChanged() {
 		// Nothing
 	}
-	
+
 	@Override
 	protected void onContextDestroyed() {
 		if(fontDriver != null) {
@@ -115,8 +115,8 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 		
 		float textPixelSize = getViewTransformer().cameraToViewportY(textSize);
-		float fontPixelHeight = FontTextSizeHelper.getBestFontPixelHeight(font, textPixelSize);
-		ICodepointAsset asset = codepointManager.getCodepointAsset(font, codepoint, fontPixelHeight);
+		float fontHeight = FontTextSizeHelper.getBestFontPixelHeight(font, textPixelSize);
+		ICodepointAsset asset = codepointManager.getCodepointAsset(font, codepoint, fontHeight);
 		if(!codepointManager.isAssetValid(asset)) {
 			return;
 		}
@@ -125,41 +125,48 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		
 		ITexture texture = assetCodepoint.getTexture();
 		
+		// Calculate texture scaling and translation
 		int textureOffsetX = assetCodepoint.getBitmapOffsetX();
 		int textureOffsetY = assetCodepoint.getBitmapOffsetY();
-		
 		
 		float texScale = textSize / assetCodepoint.getFontPixelHeight();
 		
 		float tileTop = texScale * textureOffsetY;
 		float tileLeft = texScale * textureOffsetX;
 
-		// Fixed the bug here as well (with the Y value)
-		fontModel.setTranslation2D(getViewTransformer().cameraToScreenX(positionX), getViewTransformer().cameraToScreenY(positionY));
+		// Translate to position
+		float posTranslationX = getViewTransformer().cameraToScreenX(positionX);
+		float posTranslationY = getViewTransformer().cameraToScreenY(positionY);
+		fontModel.setTranslation2D(posTranslationX, posTranslationY);
 
-		fontModel.translate2D(getViewTransformer().cameraToScreenX(tileLeft), getViewTransformer().cameraToScreenY(tileTop));	// Translate the codepoint glyph to the right y offset
+		// Translate to glyph offset
+		float glyphTranslationX = getViewTransformer().cameraToScreenX(tileLeft);
+		float glyphTranslationY = getViewTransformer().cameraToScreenY(tileTop);
+		fontModel.translate2D(glyphTranslationX, glyphTranslationY);
 
-		
-		float scale = textSize / assetCodepoint.getFontPixelHeight();
-		
-		
-		float worldCharWidth = assetCodepoint.getPixelWidth() * scale;
-		float worldCharHeight = assetCodepoint.getPixelHeight() * scale;
+
+		float widthScale = assetCodepoint.getPixelWidth() / assetCodepoint.getFontPixelHeight();
+		float heightScale = assetCodepoint.getPixelHeight() / assetCodepoint.getFontPixelHeight();
+		float worldCharWidth = width * widthScale;
+		float worldCharHeight = height * heightScale;
 		
 		float pixelCharWidth = getViewTransformer().cameraToScreenX(worldCharWidth);
-		float pixelCharHeight = getViewTransformer().cameraToScreenY(worldCharHeight);
+		float pixelCharHeight = getViewTransformer().cameraToScreenX(worldCharHeight);
+
 		fontModel.setScaling2D(pixelCharWidth, pixelCharHeight);
+
 		
 		fontModel.setTargetTexture(texture);
-		
+
+
 		if(isInBatchDraw) {
 			fontDriver.draw(fontModel, drawingOptions);
 		}
 		else {
 			fontDriver.drawQuick(getMatrixProjectionAndView(), fontModel, drawingOptions);	
 		}
-		
 	}
+	
 	
 
 	@Override
