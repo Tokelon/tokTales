@@ -392,7 +392,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 					gamestate.getEngine(),
 					gamestate.getGame().getWorld(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_CONSOLE, IConsoleController.class)
 			);
 		}
@@ -403,7 +403,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 					gamestate.getEngine(),
 					gamestate.getGame().getWorld(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					consoleControllerSupplier
 			);
 		}

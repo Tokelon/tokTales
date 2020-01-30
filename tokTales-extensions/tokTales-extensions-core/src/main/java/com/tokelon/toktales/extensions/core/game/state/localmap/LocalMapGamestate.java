@@ -17,7 +17,7 @@ import com.tokelon.toktales.core.game.state.BaseGamestate;
 import com.tokelon.toktales.core.game.state.IControlHandler;
 import com.tokelon.toktales.core.game.state.IControlScheme;
 import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.ExtendedGamescene;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultConsoleController;
@@ -93,7 +93,7 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	
 	@Override
 	protected void initStateDependencies(
-			IStateRender defaultRender,
+			IGameStateRenderer defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
@@ -120,14 +120,14 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 	
 	
-	/** Use instead of {@link #setStateRender(IStateRender)}.
+	/** Use instead of {@link #setStateRenderer(IGameStateRenderer)}.
 	 * 
 	 * @param renderer
 	 */
 	protected void setStateRenderCustom(ILocalMapStateRenderer renderer) {
 		this.customRenderer = renderer;
 		
-		setStateRender(renderer); // Important	
+		setStateRenderer(renderer); // Important	
 	}
 	
 	@Override

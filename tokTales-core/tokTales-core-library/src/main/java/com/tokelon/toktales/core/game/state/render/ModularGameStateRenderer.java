@@ -19,7 +19,7 @@ import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 
-public class DefaultModularStateRender implements IModularStateRender {
+public class ModularGameStateRenderer implements IModularGameStateRenderer {
 
 	
 	private static final double CALLBACK_RENDER = 0d;
@@ -44,7 +44,7 @@ public class DefaultModularStateRender implements IModularStateRender {
 	private final IRenderingStrategy mStrategy;
 	private final IGameState mGamestate;
 	
-	public DefaultModularStateRender(IRenderingStrategy strategy, IGameState gamestate) {
+	public ModularGameStateRenderer(IRenderingStrategy strategy, IGameState gamestate) {
 		this.mStrategy = strategy;
 		this.mGamestate = gamestate;
 
@@ -228,7 +228,7 @@ public class DefaultModularStateRender implements IModularStateRender {
 			ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
 			
 			
-			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(DefaultModularStateRender.this, masterViewport, getCurrentCamera(), rendererName);
+			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(ModularGameStateRenderer.this, masterViewport, getCurrentCamera(), rendererName);
 			viewTransformerList.add(rendererViewTransformer);
 			
 			renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);

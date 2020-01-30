@@ -8,14 +8,14 @@ import com.tokelon.toktales.core.game.state.scene.IGameSceneControl.IModifiableG
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateControlHandler.IEngineGamestateControlHandlerFactory;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
-import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
+import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateRenderer.IEngineGamestateRendererFactory;
 
 public class SubEngineGamestate extends EngineGamestate<ISubEngineGamescene> implements ISubEngineGamestate {
 
 	
 	@Inject
 	public SubEngineGamestate(
-			IEngineGamestateRenderFactory renderFactory,
+			IEngineGamestateRendererFactory renderFactory,
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,
 			@IEngineGamestateType IControlScheme controlScheme,
 			IEngineGamestateControlHandlerFactory controlHandlerFactory
@@ -28,7 +28,7 @@ public class SubEngineGamestate extends EngineGamestate<ISubEngineGamescene> imp
 	protected SubEngineGamestate(
 			Provider<SubEngineGamescene> defaultSceneProvider, // Use the implementation type here, as an example
 			IModifiableGameSceneControl<ISubEngineGamescene> defaultSceneControl,
-			IEngineGamestateRenderFactory renderFactory,
+			IEngineGamestateRendererFactory renderFactory,
 			IEngineGamestateInputHandlerFactory inputHandlerFactory,
 			@IEngineGamestateType IControlScheme controlScheme,
 			IEngineGamestateControlHandlerFactory controlHandlerFactory

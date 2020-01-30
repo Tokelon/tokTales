@@ -295,7 +295,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(gamestate)
 			);
 		}
@@ -306,7 +306,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 					typedGamestate.getLogging(),
 					typedGamestate.getEngine(),
 					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
-					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					() -> typedGamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromGamestate(typedGamestate)
 			);
 		}

@@ -438,7 +438,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 					gamestate.getEngineContext(),
 					gamestate.getGame().getContentManager(),
 					assetKeyRegistry,
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(gamestate),
 					worlspaceSupplier
 			);
@@ -450,7 +450,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 					typedGamestate.getEngineContext(),
 					typedGamestate.getGame().getContentManager(),
 					assetKeyRegistry,
-					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					() -> typedGamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
 			);
@@ -501,7 +501,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 					engineContext == null ? engineContextProvider.get() : engineContext,
 					contentManager == null ? contentManagerProvider.get() : contentManager,
 					assetKeyRegistry == null ? assetKeyRegistryProvider.get() : assetKeyRegistry,
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(gamestate),
 					worlspaceSupplier
 			);
@@ -513,7 +513,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 					engineContext == null ? engineContextProvider.get() : engineContext,
 					contentManager == null ? contentManagerProvider.get() : contentManager,
 					assetKeyRegistry == null ? assetKeyRegistryProvider.get() : assetKeyRegistry,
-					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					() -> typedGamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofPlayerControllerFromManager(typedGamestate),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
 			);

@@ -14,7 +14,7 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
 import com.tokelon.toktales.core.game.state.integration.IGameStateIntegrator;
 import com.tokelon.toktales.core.game.state.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.GenericGamesceneAssignment;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneAssignment;
@@ -73,7 +73,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	/* State objects */
 	private Provider<? extends T> stateSceneProvider; // Can be used with subclasses of T
 	private IModifiableGameSceneControl<T> stateSceneControl; // Must have type T to allow for adding objects
-	private IStateRender stateRender;
+	private IGameStateRenderer gameStateRenderer;
 	
 	private IGameStateInputHandler stateInputHandler;
 	private IControlScheme stateControlScheme;
@@ -196,7 +196,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @throws NullPointerException If sceneType is null.
 	 */
 	protected BaseGamestate(
-			IStateRender defaultRender,
+			IGameStateRenderer defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
@@ -232,7 +232,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	protected BaseGamestate(
 			Provider<? extends T> defaultSceneProvider,
 			IModifiableGameSceneControl<T> defaultSceneControl,
-			IStateRender defaultRender,
+			IGameStateRenderer defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
@@ -242,7 +242,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		// Any of these can be null
 		this.stateSceneProvider = defaultSceneProvider;
 		this.stateSceneControl = defaultSceneControl;
-		this.stateRender = defaultRender;
+		this.gameStateRenderer = defaultRender;
 		this.stateInputHandler = defaultInputHandler;
 		this.stateControlScheme = defaultControlScheme;
 		this.stateControlHandler = defaultControlHandler;
@@ -265,7 +265,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 			IEngineContext engineContext,
 			IGameStateInput gamestateInput,
 			IGameSceneControlFactory gamesceneControlFactory,
-			IStateRender render,
+			IGameStateRenderer render,
 			IGameStateInputHandler inputHandler,
 			IControlScheme controlScheme,
 			IControlHandler controlHandler
@@ -290,7 +290,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		
 		
 		// Determine the default state dependencies
-		IStateRender defaultStateRender = stateRender == null ? render : stateRender;
+		IGameStateRenderer defaultStateRender = gameStateRenderer == null ? render : gameStateRenderer;
 		IGameStateInputHandler defaultStateInputHandler = stateInputHandler == null ? inputHandler : stateInputHandler;
 		IControlScheme defaultStateControlScheme = stateControlScheme == null ? controlScheme : stateControlScheme;
 		IControlHandler defaultStateControlHandler = stateControlHandler == null ? controlHandler : stateControlHandler;
@@ -394,12 +394,12 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * @see #afterInitStateDependencies
 	 */
 	protected void initStateDependencies(
-			IStateRender defaultRender,
+			IGameStateRenderer defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
 	) {
-		setStateRender(defaultRender);
+		setStateRenderer(defaultRender);
 		setStateInputHandler(defaultInputHandler);
 		setStateControlScheme(defaultControlScheme);
 		setStateControlHandler(defaultControlHandler);
@@ -677,7 +677,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		}
 
 		getSceneControl().changeScene(name);
-		getStateRender().updateCamera(scene.getSceneCamera());
+		getStateRenderer().updateCamera(scene.getSceneCamera());
 		
 		
 		getIntegrator().onSceneChange(name);
@@ -739,8 +739,8 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 
 	@Override
-	public IStateRender getStateRender() {
-		return stateRender;
+	public IGameStateRenderer getStateRenderer() {
+		return gameStateRenderer;
 	}
 
 	@Override
@@ -882,20 +882,20 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	 * <p>
 	 * The given render will be registered as a {@link ISurfaceCallback} and the previous render will be unregistered.
 	 * 
-	 * @param render
-	 * @throws NullPointerException If stateRender is null.
+	 * @param renderer
+	 * @throws NullPointerException If renderer is null.
 	 */
-	protected void setStateRender(IStateRender render) {
-		if(render == null) {
+	protected void setStateRenderer(IGameStateRenderer renderer) {
+		if(renderer == null) {
 			throw new NullPointerException();
 		}
 		
-		getEngine().getRenderService().getSurfaceManager().removeCallback(this.stateRender);
+		getEngine().getRenderService().getSurfaceManager().removeCallback(this.gameStateRenderer);
 		
-		gamestateInjector.injectInto(render);
-		this.stateRender = render;
+		gamestateInjector.injectInto(renderer);
+		this.gameStateRenderer = renderer;
 		
-		getEngine().getRenderService().getSurfaceManager().addCallback(render);
+		getEngine().getRenderService().getSurfaceManager().addCallback(renderer);
 	}
 
 	/** Sets the state input handler.

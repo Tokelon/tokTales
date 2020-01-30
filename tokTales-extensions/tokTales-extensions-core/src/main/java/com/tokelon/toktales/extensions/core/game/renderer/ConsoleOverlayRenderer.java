@@ -240,7 +240,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					codepointManager,
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_CONSOLE, IConsoleController.class)
 			);
 		}
@@ -251,7 +251,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					codepointManager,
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					consoleControllerSupplier
 			);
 		}

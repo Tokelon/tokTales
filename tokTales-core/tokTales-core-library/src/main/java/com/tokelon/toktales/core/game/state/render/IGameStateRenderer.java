@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.screen.view.IViewTransformer;
 /** Manages the rendering context for a state.
  * Can be used as the main renderer.
  */
-public interface IStateRender extends ISurfaceCallback, IRenderCallback {
+public interface IGameStateRenderer extends ISurfaceCallback, IRenderCallback {
 	/* TODO:
 	 * 1. Rename to something more ?
 	 * 2. Move render order into here?

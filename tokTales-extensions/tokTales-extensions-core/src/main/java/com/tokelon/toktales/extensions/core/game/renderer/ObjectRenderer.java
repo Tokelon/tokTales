@@ -423,7 +423,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromManager(gamestate)
 			);
 		}
@@ -434,7 +434,7 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromGamestate(gamestate)
 			);
 		}

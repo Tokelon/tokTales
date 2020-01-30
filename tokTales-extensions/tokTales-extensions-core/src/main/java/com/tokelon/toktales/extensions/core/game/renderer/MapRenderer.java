@@ -398,7 +398,7 @@ public class MapRenderer implements IMapRenderer {
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
 					gamestate.getGame().getWorld(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromManager(gamestate)
 			);
 		}
@@ -410,7 +410,7 @@ public class MapRenderer implements IMapRenderer {
 					typedGamestate.getEngine(),
 					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
 					typedGamestate.getGame().getWorld(),
-					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					() -> typedGamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofMapControllerFromGamestate(typedGamestate)
 			);
 		}

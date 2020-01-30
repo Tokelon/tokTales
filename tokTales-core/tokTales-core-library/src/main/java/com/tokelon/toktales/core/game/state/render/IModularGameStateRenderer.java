@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.tokelon.toktales.core.game.state.IGameState;
 
-public interface IModularStateRender extends IStateRender {
+public interface IModularGameStateRenderer extends IGameStateRenderer {
 	
 	public IGameState getGamestate(); // TODO: Remove gamestate dependency if possible
 	

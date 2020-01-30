@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.state.BaseGamestate;
 import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
-import com.tokelon.toktales.core.game.state.render.DefaultModularStateRender;
+import com.tokelon.toktales.core.game.state.render.ModularGameStateRenderer;
 import com.tokelon.toktales.core.game.state.render.IRenderingStrategy;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultConsoleController;
@@ -125,7 +125,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 
 		// State renderer
-		DefaultModularStateRender baseStateRenderer = new DefaultModularStateRender(renderingStrategy, this);
+		ModularGameStateRenderer baseStateRenderer = new ModularGameStateRenderer(renderingStrategy, this);
 		
 		baseStateRenderer.addSegmentRenderer(RENDERER_CONSOLE_NAME, consoleSegmentRenderer);
 		baseStateRenderer.addSegmentRenderer(RENDERER_DIALOG_NAME, dialogSegmentRenderer);
@@ -134,7 +134,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		
 		
 		baseStateRenderer.updateCamera(getActiveScene().getSceneCamera());
-		setStateRender(baseStateRenderer);
+		setStateRenderer(baseStateRenderer);
 	}
 	
 	

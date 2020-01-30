@@ -11,7 +11,7 @@ import com.tokelon.toktales.test.core.game.state.CoreTestStatesInjectModule;
 import com.tokelon.toktales.test.core.game.state.enginestate.DefaultEngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateControlHandler;
-import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateRender;
+import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateRenderer;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamescene;
 
 public class TestCoreStateInjection {
@@ -24,7 +24,7 @@ public class TestCoreStateInjection {
 		
 		EngineGamestate<IEngineGamescene> gamestate = injector.getInstance(DefaultEngineGamestate.class);
 		
-		assertTrue(gamestate.getStateRender().getClass() == EngineGamestateRender.class);
+		assertTrue(gamestate.getStateRenderer().getClass() == EngineGamestateRenderer.class);
 		assertTrue(gamestate.getStateControlHandler().getClass() == EngineGamestateControlHandler.class);
 	}
 	
@@ -39,7 +39,7 @@ public class TestCoreStateInjection {
 
 		assertNotSame(gamestate01.getRenderOrder(), gamestate02.getRenderOrder());
 		
-		assertNotSame(gamestate01.getStateRender(), gamestate02.getStateRender());
+		assertNotSame(gamestate01.getStateRenderer(), gamestate02.getStateRenderer());
 		assertNotSame(gamestate01.getStateControlHandler(), gamestate02.getStateControlHandler());
 	}
 	
@@ -49,7 +49,7 @@ public class TestCoreStateInjection {
 		
 		EngineGamestate<IEngineGamescene> gamestate = injector.getInstance(DefaultEngineGamestate.class);
 		
-		assertSame(gamestate, ((EngineGamestateRender)gamestate.getStateRender()).getGamestate());		
+		assertSame(gamestate, ((EngineGamestateRenderer)gamestate.getStateRenderer()).getGamestate());		
 		assertSame(gamestate, ((EngineGamestateControlHandler)gamestate.getStateControlHandler()).getGamestate());
 	}
 	

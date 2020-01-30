@@ -15,7 +15,7 @@ import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 
-public abstract class AbstractStateRender implements IStateRender {
+public abstract class AbstractGameStateRenderer implements IGameStateRenderer {
 
 
 	private final AccurateViewport contextViewport = new AccurateViewport();
@@ -32,7 +32,7 @@ public abstract class AbstractStateRender implements IStateRender {
 
 	private final ITextureCoordinator textureCoordinator;
 	
-	public AbstractStateRender(ITextureCoordinator textureCoordinator) {
+	public AbstractGameStateRenderer(ITextureCoordinator textureCoordinator) {
 		this.textureCoordinator = textureCoordinator;
 		
 		this.managedRendererMap = Collections.synchronizedMap(new HashMap<String, IRenderer>());

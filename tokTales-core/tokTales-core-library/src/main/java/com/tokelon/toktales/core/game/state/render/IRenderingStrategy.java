@@ -8,14 +8,14 @@ public interface IRenderingStrategy {
 
 	// TODO: Remove these two and only allow one call for one layer? -> Extend from IRenderCall?
 	public String getDescription();
-	public void renderCall(IModularStateRender baseRenderer, String layer, double position);
+	public void renderCall(IModularGameStateRenderer baseRenderer, String layer, double position);
 
 	// TODO: Refactor these?
-	public void prepareFrame(IModularStateRender baseRenderer);
-	public void renderFrame(IModularStateRender baseRenderer);
-	public void renderLayer(IModularStateRender baseRenderer, String layer);
+	public void prepareFrame(IModularGameStateRenderer baseRenderer);
+	public void renderFrame(IModularGameStateRenderer baseRenderer);
+	public void renderLayer(IModularGameStateRenderer baseRenderer, String layer);
 	
-	public IViewTransformer createViewTransformerForRenderer(IModularStateRender baseRenderer, IScreenViewport masterViewport, ICamera camera, String rendererName);
+	public IViewTransformer createViewTransformerForRenderer(IModularGameStateRenderer baseRenderer, IScreenViewport masterViewport, ICamera camera, String rendererName);
 	
 	//public void handleSurfaceChange(ISurface surface);
 	

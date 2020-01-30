@@ -312,7 +312,7 @@ public class EntityRenderer implements IEntityRenderer {
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getSpriteAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					worldspaceSupplier
 			);
 		}
@@ -323,7 +323,7 @@ public class EntityRenderer implements IEntityRenderer {
 					typedGamestate.getLogging(),
 					typedGamestate.getEngine(),
 					typedGamestate.getGame().getContentManager().getSpriteAssetManager(),
-					() -> typedGamestate.getStateRender().getTextureCoordinator(),
+					() -> typedGamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofWorldspaceFromGamestate(typedGamestate)
 			);
 		}

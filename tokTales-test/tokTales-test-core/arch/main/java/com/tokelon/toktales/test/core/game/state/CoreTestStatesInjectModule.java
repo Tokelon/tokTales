@@ -13,16 +13,16 @@ import com.tokelon.toktales.core.test.engine.inject.CoreMockPlatformInjectModule
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamescene;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateControlHandler;
-import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateRender;
+import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateRenderer;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamescene;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateControlHandler;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateInputHandler;
-import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateRender;
+import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateRenderer;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestate.IEngineGamestateType;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateControlHandler.IEngineGamestateControlHandlerFactory;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateInputHandler.IEngineGamestateInputHandlerFactory;
-import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateRender.IEngineGamestateRenderFactory;
+import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamestateRenderer.IEngineGamestateRendererFactory;
 import com.tokelon.toktales.test.core.game.state.enginestate.subenginestate.ISubEngineGamescene;
 import com.tokelon.toktales.test.core.game.state.enginestate.subenginestate.ISubEngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.subenginestate.SubEngineGamescene;
@@ -43,8 +43,8 @@ public class CoreTestStatesInjectModule extends AbstractInjectModule {
 		// EngineGamestate
 		bind(IEngineGamestate.class).to(EngineGamestate.class);
 		install(new FactoryModuleBuilder()
-				.implement(IEngineGamestateRender.class, EngineGamestateRender.class)
-				.build(IEngineGamestateRenderFactory.class));
+				.implement(IEngineGamestateRenderer.class, EngineGamestateRenderer.class)
+				.build(IEngineGamestateRendererFactory.class));
 		install(new FactoryModuleBuilder()
 				.implement(IEngineGamestateControlHandler.class, EngineGamestateControlHandler.class)
 				.build(IEngineGamestateControlHandlerFactory.class));

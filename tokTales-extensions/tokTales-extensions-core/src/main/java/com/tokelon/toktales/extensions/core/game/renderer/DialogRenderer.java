@@ -183,7 +183,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_DIALOG, IDialogController.class)
 			);
 		}
@@ -194,7 +194,7 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					dialogControllerSupplier
 			);
 		}

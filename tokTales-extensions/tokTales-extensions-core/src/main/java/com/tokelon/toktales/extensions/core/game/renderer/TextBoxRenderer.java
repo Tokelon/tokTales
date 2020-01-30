@@ -121,7 +121,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					GameStateSuppliers.ofControllerFromManager(gamestate, ControllerExtensionsValues.CONTROLLER_TEXTBOX, ITextBoxController.class)
 			);
 		}
@@ -131,7 +131,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 					gamestate.getLogging(),
 					gamestate.getEngine(),
 					gamestate.getGame().getContentManager().getCodepointAssetManager(),
-					() -> gamestate.getStateRender().getTextureCoordinator(),
+					() -> gamestate.getStateRenderer().getTextureCoordinator(),
 					textBoxControllerSupplier
 			);
 		}

@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.game.state.render.IModularStateRender;
+import com.tokelon.toktales.core.game.state.render.IModularGameStateRenderer;
 import com.tokelon.toktales.core.game.state.render.IRenderingStrategy;
 import com.tokelon.toktales.core.game.state.render.ISegmentRenderer;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
@@ -32,7 +32,7 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	
 	
 	@Override
-	public void renderCall(IModularStateRender baseRenderer, String layerName, double stackPosition) {
+	public void renderCall(IModularGameStateRenderer baseRenderer, String layerName, double stackPosition) {
 		renderLayer(baseRenderer, layerName);
 	}
 	
@@ -42,12 +42,12 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	}
 
 	@Override
-	public void prepareFrame(IModularStateRender baseRenderer) {
+	public void prepareFrame(IModularGameStateRenderer baseRenderer) {
 		// Nothing
 	}
 	
 	@Override
-	public void renderFrame(IModularStateRender baseRenderer) {
+	public void renderFrame(IModularGameStateRenderer baseRenderer) {
 		// Clear render canvas
 		gl11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		gl11.glClear(IGL11.GL_COLOR_BUFFER_BIT | IGL11.GL_DEPTH_BUFFER_BIT);
@@ -76,7 +76,7 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	}
 	
 	@Override
-	public void renderLayer(IModularStateRender baseRenderer, String layer) {
+	public void renderLayer(IModularGameStateRenderer baseRenderer, String layer) {
 		if(RENDER_LAYER_MAIN.equals(layer)) {
 			renderFrame(baseRenderer);
 		}
@@ -84,7 +84,7 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 
 	
 	@Override
-	public IViewTransformer createViewTransformerForRenderer(IModularStateRender baseRenderer, IScreenViewport masterViewport, ICamera camera, String rendererName) {
+	public IViewTransformer createViewTransformerForRenderer(IModularGameStateRenderer baseRenderer, IScreenViewport masterViewport, ICamera camera, String rendererName) {
 		DefaultViewTransformer viewTransformer = new DefaultViewTransformer(camera, masterViewport);
 		return viewTransformer;
 	}

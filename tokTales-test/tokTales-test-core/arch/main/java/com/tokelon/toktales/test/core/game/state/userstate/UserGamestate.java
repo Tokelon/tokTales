@@ -4,7 +4,7 @@ import com.tokelon.toktales.core.game.state.BaseGamestate;
 import com.tokelon.toktales.core.game.state.IControlHandler;
 import com.tokelon.toktales.core.game.state.IControlScheme;
 import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 
@@ -16,7 +16,7 @@ public class UserGamestate extends BaseGamestate<IGameScene> {
 	
 	@Override
 	protected void initStateDependencies(
-			IStateRender defaultRender,
+			IGameStateRenderer defaultRender,
 			IGameStateInputHandler defaultInputHandler,
 			IControlScheme defaultControlScheme,
 			IControlHandler defaultControlHandler
@@ -24,7 +24,7 @@ public class UserGamestate extends BaseGamestate<IGameScene> {
 		
 		UserGamestateControlHandler controlHandler = new UserGamestateControlHandler(this);
 		
-		UserGamestateRender render = new UserGamestateRender(new DefaultTextureCoordinator(getGame().getContentManager().getTextureManager()), this);
+		UserGamestateRenderer render = new UserGamestateRenderer(new DefaultTextureCoordinator(getGame().getContentManager().getTextureManager()), this);
 		
 		
 		super.initStateDependencies(render, defaultInputHandler, defaultControlScheme, controlHandler);

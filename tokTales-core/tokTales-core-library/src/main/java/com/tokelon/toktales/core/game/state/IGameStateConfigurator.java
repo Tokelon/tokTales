@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.state;
 
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 
 public interface IGameStateConfigurator<T extends IGameState> {
 
@@ -13,7 +13,7 @@ public interface IGameStateConfigurator<T extends IGameState> {
 	public void configureState(T gamestate);
 	
 	
-	public default IStateRender createStateRender(T gamestate) { return null; }
+	public default IGameStateRenderer createStateRender(T gamestate) { return null; }
 	
 	public default IGameStateInput createStateInput(T gamestate) { return null; }
 	

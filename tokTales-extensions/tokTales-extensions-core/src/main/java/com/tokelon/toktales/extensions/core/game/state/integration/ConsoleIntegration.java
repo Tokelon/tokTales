@@ -87,12 +87,12 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		}
 		
 		public void register() {
-			gamestate.getStateRender().addManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME, renderer);
+			gamestate.getStateRenderer().addManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME, renderer);
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
 		}
 		
 		public void unregister() {
-			gamestate.getStateRender().removeManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME);
+			gamestate.getStateRenderer().removeManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME);
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION);
 		}
 		

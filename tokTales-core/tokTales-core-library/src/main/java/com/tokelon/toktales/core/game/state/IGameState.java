@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneAssignment;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneControl;
@@ -156,7 +156,7 @@ public interface IGameState {
 	 * 
 	 * @return A state render.
 	 */
-	public IStateRender getStateRender(); // getRenderModule or getStateRenderModule?
+	public IGameStateRenderer getStateRenderer();
 
 	
 	/** The state input is a manager that collects input handlers,

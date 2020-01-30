@@ -78,8 +78,8 @@ import com.tokelon.toktales.core.game.state.ITypedGameState;
 import com.tokelon.toktales.core.game.state.InitialGamestate;
 import com.tokelon.toktales.core.game.state.integration.GamestateIntegrator;
 import com.tokelon.toktales.core.game.state.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
-import com.tokelon.toktales.core.game.state.render.EmptyStateRender;
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.EmptyGameStateRenderer;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.BaseGamescene;
 import com.tokelon.toktales.core.game.state.scene.GameSceneControl;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
@@ -178,7 +178,7 @@ public class CoreInjectModule extends AbstractInjectModule {
 		
 		bind(IGameStateIntegratorFactory.class).to(GamestateIntegrator.GamestateIntegratorFactory.class);
 		bind(IRenderOrder.class).to(RenderOrder.class);
-		bind(IStateRender.class).to(EmptyStateRender.class);
+		bind(IGameStateRenderer.class).to(EmptyGameStateRenderer.class);
 		bind(IGameStateInputHandler.class).to(IGameStateInputHandler.EmptyGameStateInputHandler.class);
 		bind(IControlScheme.class).to(IControlScheme.EmptyControlScheme.class);
 		bind(IControlHandler.class).to(IControlHandler.EmptyControlHandler.class);

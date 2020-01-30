@@ -12,7 +12,7 @@ import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.game.state.IControlHandler;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.game.state.render.IStateRender;
+import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.order.IRenderLayerStack;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
@@ -225,7 +225,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 		IBlockMap map = mapController.getMap();
 		
 		IRenderOrder renderOrder = gamestate.getRenderOrder();
-		IStateRender renderer = gamestate.getStateRender();
+		IGameStateRenderer renderer = gamestate.getStateRenderer();
 		synchronized (renderOrder) {
 			
 			int index = 1;
