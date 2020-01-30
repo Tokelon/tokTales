@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.engine.setup.scripts;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.game.state.InitialGamestate;
 import com.tokelon.toktales.core.values.GameStateValues;
 
 public class AddInitialGamestateSetupScript implements ISetupScript {

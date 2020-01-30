@@ -4,10 +4,10 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.game.model.IConsole;
-import com.tokelon.toktales.core.game.states.InjectGameState;
+import com.tokelon.toktales.core.game.state.InjectGameState;
 import com.tokelon.toktales.core.location.ApplicationLocation;
 import com.tokelon.toktales.core.location.MutableLocationPath;
-import com.tokelon.toktales.extensions.core.game.states.console.IConsoleGamestate;
+import com.tokelon.toktales.extensions.core.game.state.console.IConsoleGamestate;
 import com.tokelon.toktales.extensions.core.tale.ITaleLoader;
 import com.tokelon.toktales.extensions.core.tale.TaleException;
 import com.tokelon.toktales.extensions.core.values.GameStateExtensionsValues;

@@ -39,7 +39,7 @@ import com.tokelon.toktales.extensions.core.tale.TaleException;
 import com.tokelon.toktales.extensions.core.tale.config.CiniAnimConfig;
 import com.tokelon.toktales.extensions.core.tale.config.CiniTaleConfig;
 import com.tokelon.toktales.extensions.core.tale.config.ITaleConfig;
-import com.tokelon.toktales.extensions.core.tale.states.ITaleGamescene;
+import com.tokelon.toktales.extensions.core.tale.state.ITaleGamescene;
 import com.tokelon.toktales.tools.core.config.CiniConfigStreamReader;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ConfigFormatException;

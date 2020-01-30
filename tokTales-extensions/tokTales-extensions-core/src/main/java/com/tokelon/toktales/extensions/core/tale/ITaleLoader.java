@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extensions.core.tale;
 
-import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.extensions.core.tale.states.ITaleGamescene;
+import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.extensions.core.tale.state.ITaleGamescene;
 
 public interface ITaleLoader {
 

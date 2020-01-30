@@ -19,8 +19,8 @@ import com.tokelon.toktales.core.game.model.IRectangle2f;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.map.IBlock;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.core.game.states.IGameScene;
-import com.tokelon.toktales.core.game.states.InjectGameScene;
+import com.tokelon.toktales.core.game.state.IGameScene;
+import com.tokelon.toktales.core.game.state.InjectGameScene;
 import com.tokelon.toktales.core.values.ControllerValues;
 
 @InjectGameScene

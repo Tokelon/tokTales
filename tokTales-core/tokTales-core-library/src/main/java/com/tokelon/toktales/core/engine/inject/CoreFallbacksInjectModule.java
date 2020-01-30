@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.engine.inject;
 
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
 import com.tokelon.toktales.tools.core.sub.inject.scope.ForClass;
 
 public class CoreFallbacksInjectModule extends AbstractInjectModule {

@@ -8,8 +8,8 @@ import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.editor.IEditorManager;
 import com.tokelon.toktales.core.game.control.IGameControl;
 import com.tokelon.toktales.core.game.control.ITimeManager;
-import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.core.game.states.IGameStateControl;
+import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.game.state.IGameStateControl;
 import com.tokelon.toktales.core.game.world.IWorld;
 
 public class Game implements IGame {

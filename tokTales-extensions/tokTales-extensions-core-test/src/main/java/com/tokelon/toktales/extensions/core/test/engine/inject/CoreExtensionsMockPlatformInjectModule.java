@@ -3,10 +3,10 @@ package com.tokelon.toktales.extensions.core.test.engine.inject;
 import static org.mockito.Mockito.mock;
 
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.extensions.core.game.states.console.ConsoleGamestate;
-import com.tokelon.toktales.extensions.core.game.states.localmap.ILocalMapControlScheme;
-import com.tokelon.toktales.extensions.core.game.states.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
+import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
+import com.tokelon.toktales.extensions.core.game.state.console.ConsoleGamestate;
+import com.tokelon.toktales.extensions.core.game.state.localmap.ILocalMapControlScheme;
+import com.tokelon.toktales.extensions.core.game.state.localmap.ILocalMapInputHandler.ILocalMapInputHandlerFactory;
 import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
 /** Core Default Extensions inject module used for testing.

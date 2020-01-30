@@ -13,7 +13,7 @@ import com.tokelon.toktales.core.game.model.map.elements.IMapElement;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementImpl;
 import com.tokelon.toktales.core.game.model.map.elements.MapElementTypes;
 import com.tokelon.toktales.extensions.core.tale.TaleException;
-import com.tokelon.toktales.extensions.core.tale.states.ITaleGamescene;
+import com.tokelon.toktales.extensions.core.tale.state.ITaleGamescene;
 
 public class SetMapTaleProcedure implements ISetMapTaleProcedure {
 

@@ -20,6 +20,9 @@ import com.tokelon.toktales.android.activity.integration.engine.RunActivityEngin
 import com.tokelon.toktales.android.activity.integration.engine.SingleActivityEngineIntegration;
 import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.data.AndroidContentService;
+import com.tokelon.toktales.android.game.state.AndroidGameStateInput;
+import com.tokelon.toktales.android.game.state.AndroidInitialGamestateInputHandler;
+import com.tokelon.toktales.android.game.state.IAndroidGameStateInput;
 import com.tokelon.toktales.android.input.AndroidInputService;
 import com.tokelon.toktales.android.input.IAndroidInputService;
 import com.tokelon.toktales.android.input.dispatch.AndroidInputConsumer;
@@ -35,9 +38,6 @@ import com.tokelon.toktales.android.render.IViewRenderer;
 import com.tokelon.toktales.android.render.opengl.DefaultGameViewRenderer;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
 import com.tokelon.toktales.android.render.tools.UIControl;
-import com.tokelon.toktales.android.states.AndroidGameStateInput;
-import com.tokelon.toktales.android.states.AndroidInitialGamestateInputHandler;
-import com.tokelon.toktales.android.states.IAndroidGameStateInput;
 import com.tokelon.toktales.android.storage.AndroidStorageService;
 import com.tokelon.toktales.android.ui.AndroidUIService;
 import com.tokelon.toktales.android.ui.IAndroidUIService;
@@ -51,9 +51,9 @@ import com.tokelon.toktales.core.engine.input.IInputService;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.ui.IUIService;
-import com.tokelon.toktales.core.game.states.IGameStateInput;
-import com.tokelon.toktales.core.game.states.IGameStateInputHandler;
-import com.tokelon.toktales.core.game.states.InitialGamestate;
+import com.tokelon.toktales.core.game.state.IGameStateInput;
+import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
+import com.tokelon.toktales.core.game.state.InitialGamestate;
 import com.tokelon.toktales.tools.core.sub.inject.scope.For;
 
 public class AndroidInjectModule extends AbstractInjectModule {

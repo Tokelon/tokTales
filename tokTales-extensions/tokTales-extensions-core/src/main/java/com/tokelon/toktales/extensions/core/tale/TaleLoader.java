@@ -6,10 +6,10 @@ import javax.inject.Provider;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.extensions.core.tale.procedure.ILoadTaleProcedure;
-import com.tokelon.toktales.extensions.core.tale.states.ITaleGamescene;
-import com.tokelon.toktales.extensions.core.tale.states.ITaleGamestate;
+import com.tokelon.toktales.extensions.core.tale.state.ITaleGamescene;
+import com.tokelon.toktales.extensions.core.tale.state.ITaleGamestate;
 
 public class TaleLoader implements ITaleLoader {
 
