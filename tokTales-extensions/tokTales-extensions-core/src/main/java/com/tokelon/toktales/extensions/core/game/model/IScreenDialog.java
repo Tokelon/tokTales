@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extensions.core.game.model;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
-import com.tokelon.toktales.core.content.text.IFont;
+import com.tokelon.toktales.core.content.text.ITextureFont;
 
 public interface IScreenDialog extends ITextBox {
 
@@ -26,15 +26,14 @@ public interface IScreenDialog extends ITextBox {
 		public void setOffsetX(float offsetx);
 		public void setOffsetY(float offsety);
 		
-		public IFont getFont();	// ITextureFont
-		public void setFont(IFont font);
+		public ITextureFont getFont();
+		public void setFont(ITextureFont font);
 		
 		public float getSize();
 		public void setSize(float size);
 
 		public IRGBAColor getColor();
 		public void setColor(IRGBAColor color);
-		
 	}
 	
 }

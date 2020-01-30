@@ -1,6 +1,8 @@
 package com.tokelon.toktales.core.content.text;
 
-public interface ITextureFont extends IFont {
+import com.tokelon.toktales.tools.core.dispose.IDisposable;
+
+public interface ITextureFont extends IDisposable {
 	// TODO: Add?
 	//public int getCodepointKernAdvance(int firstCodepoint, int secondCodepoint);
 
