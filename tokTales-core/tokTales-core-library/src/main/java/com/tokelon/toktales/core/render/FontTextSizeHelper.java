@@ -14,13 +14,13 @@ public class FontTextSizeHelper {
 		if(font.getFontTextSize() > 0) {
 			result = font.getFontTextSize();
 		}
-		else if(targetTextSizePixels < 32) {
+		else if(targetTextSizePixels <= 32) {
 			result = 32;
 		}
-		else if(targetTextSizePixels < 64) {
+		else if(targetTextSizePixels <= 64) {
 			result = 64;
 		}
-		else if(targetTextSizePixels < 128) {
+		else if(targetTextSizePixels <= 128) {
 			result = 128;
 		}
 		else {
