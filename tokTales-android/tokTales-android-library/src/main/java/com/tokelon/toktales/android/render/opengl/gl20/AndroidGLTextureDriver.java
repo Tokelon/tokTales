@@ -2,7 +2,7 @@ package com.tokelon.toktales.android.render.opengl.gl20;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.android.data.IAndroidBitmap;
+import com.tokelon.toktales.android.content.IAndroidBitmap;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.render.opengl.IGLErrorUtils;
 import com.tokelon.toktales.core.render.texture.ITexture;

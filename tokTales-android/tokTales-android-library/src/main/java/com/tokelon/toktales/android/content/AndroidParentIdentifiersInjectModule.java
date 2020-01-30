@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.data;
+package com.tokelon.toktales.android.content;
 
 import java.io.File;
 

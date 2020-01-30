@@ -1,6 +1,6 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.tokelon.toktales.android.data.AndroidParentIdentifiersInjectModule;
+import com.tokelon.toktales.android.content.AndroidParentIdentifiersInjectModule;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderDriversInjectModule;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGLInjectModule;
 import com.tokelon.toktales.android.ui.AndroidUIServiceExtensionsInjectModule;

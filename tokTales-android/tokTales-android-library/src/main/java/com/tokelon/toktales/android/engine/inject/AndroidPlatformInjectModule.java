@@ -1,9 +1,9 @@
 package com.tokelon.toktales.android.engine.inject;
 
-import com.tokelon.toktales.android.data.AndroidBitmapDecoder;
-import com.tokelon.toktales.android.data.AndroidCodepointDecoder;
-import com.tokelon.toktales.android.data.AndroidSoundDecoder;
-import com.tokelon.toktales.android.data.AndroidFontDecoder;
+import com.tokelon.toktales.android.content.AndroidBitmapDecoder;
+import com.tokelon.toktales.android.content.AndroidCodepointDecoder;
+import com.tokelon.toktales.android.content.AndroidFontDecoder;
+import com.tokelon.toktales.android.content.AndroidSoundDecoder;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit;
 import com.tokelon.toktales.android.render.opengl.AndroidRenderToolkit.AndroidRenderToolkitFactory;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;

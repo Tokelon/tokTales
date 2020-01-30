@@ -1,11 +1,12 @@
-package com.tokelon.toktales.android.data;
+package com.tokelon.toktales.desktop.lwjgl.content;
 
 import com.tokelon.toktales.core.content.text.ICodepoint;
 import com.tokelon.toktales.core.content.text.ICodepointTexture;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
 import com.tokelon.toktales.core.render.texture.ITexture;
+import com.tokelon.toktales.tools.core.dispose.IDisposer;
 
-public class AndroidCodepoint implements ICodepoint {
+public class STBCodepoint implements ICodepoint {
 
 
 	private boolean disposed = false;
@@ -17,8 +18,9 @@ public class AndroidCodepoint implements ICodepoint {
 	private final int leftSideBearing;
 	private final int bitmapOffsetX;
 	private final int bitmapOffsetY;
+	private final IDisposer<STBCodepoint> disposer;
 
-	public AndroidCodepoint(ICodepointTexture texture, IRectangle2i bitmapBox, float fontPixelHeight, int advanceWidth, int leftSideBearing, int bitmapOffsetX, int bitmapOffsetY) {
+	public STBCodepoint(ICodepointTexture texture, IRectangle2i bitmapBox, float fontPixelHeight, int advanceWidth, int leftSideBearing, int bitmapOffsetX, int bitmapOffsetY, IDisposer<STBCodepoint> disposer) {
 		this.texture = texture;
 		this.bitmapBox = bitmapBox;
 		this.fontPixelHeight = fontPixelHeight;
@@ -26,6 +28,7 @@ public class AndroidCodepoint implements ICodepoint {
 		this.leftSideBearing = leftSideBearing;
 		this.bitmapOffsetX = bitmapOffsetX;
 		this.bitmapOffsetY = bitmapOffsetY;
+		this.disposer = disposer;
 	}
 
 
@@ -51,7 +54,7 @@ public class AndroidCodepoint implements ICodepoint {
 
 	@Override
 	public int getPixelHeight() {
-		return bitmapBox.height(); // We count from bottom to top
+		return -bitmapBox.height(); // We count from top to bottom
 	}
 
 	@Override
@@ -79,7 +82,7 @@ public class AndroidCodepoint implements ICodepoint {
 		if(!disposed) {
 			disposed = true;
 			
-			texture.getBitmap().dispose();
+			disposer.dispose(this);
 			
 			this.texture = null;
 		}

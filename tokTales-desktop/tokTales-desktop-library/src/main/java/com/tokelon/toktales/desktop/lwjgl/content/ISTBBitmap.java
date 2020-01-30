@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.data;
+package com.tokelon.toktales.desktop.lwjgl.content;
 
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 

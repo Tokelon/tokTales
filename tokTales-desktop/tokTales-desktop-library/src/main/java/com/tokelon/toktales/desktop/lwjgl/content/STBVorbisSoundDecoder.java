@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl.data;
+package com.tokelon.toktales.desktop.lwjgl.content;
 
 import java.io.IOException;
 import java.io.InputStream;

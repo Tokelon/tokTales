@@ -7,8 +7,8 @@ import org.lwjgl.system.MemoryUtil;
 import com.tokelon.toktales.core.content.ContentUtils;
 import com.tokelon.toktales.core.content.graphics.IBitmap;
 import com.tokelon.toktales.core.game.model.IRectangle2i;
-import com.tokelon.toktales.desktop.lwjgl.data.ISTBBitmap;
-import com.tokelon.toktales.desktop.lwjgl.data.STBBitmap;
+import com.tokelon.toktales.desktop.lwjgl.content.ISTBBitmap;
+import com.tokelon.toktales.desktop.lwjgl.content.STBBitmap;
 
 public class DesktopContentUtils extends ContentUtils {
 

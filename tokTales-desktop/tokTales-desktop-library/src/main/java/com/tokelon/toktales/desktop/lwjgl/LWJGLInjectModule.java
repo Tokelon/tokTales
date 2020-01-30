@@ -7,10 +7,10 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
-import com.tokelon.toktales.desktop.lwjgl.data.STBBitmapDecoder;
-import com.tokelon.toktales.desktop.lwjgl.data.STBCodepointDecoder;
-import com.tokelon.toktales.desktop.lwjgl.data.STBFontDecoder;
-import com.tokelon.toktales.desktop.lwjgl.data.STBVorbisSoundDecoder;
+import com.tokelon.toktales.desktop.lwjgl.content.STBBitmapDecoder;
+import com.tokelon.toktales.desktop.lwjgl.content.STBCodepointDecoder;
+import com.tokelon.toktales.desktop.lwjgl.content.STBFontDecoder;
+import com.tokelon.toktales.desktop.lwjgl.content.STBVorbisSoundDecoder;
 import com.tokelon.toktales.desktop.lwjgl.render.opengl.DesktopRenderToolkit;
 import com.tokelon.toktales.desktop.lwjgl.render.opengl.DesktopRenderToolkit.DesktopRenderToolkitFactory;
 
