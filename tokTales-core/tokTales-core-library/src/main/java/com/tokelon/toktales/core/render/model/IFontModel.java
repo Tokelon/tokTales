@@ -4,7 +4,7 @@ import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.render.model.IManagedTextureModel;
 
-public interface ITextureFontModel extends IManagedTextureModel {
+public interface IFontModel extends IManagedTextureModel {
 
 	
 	public Vector4f getTargetColor();

@@ -29,20 +29,20 @@ public class AndroidCodepointDecoder implements ICodepointAssetDecoder {
 
 	@Override
 	public ICodepointAsset decode(InputStream inputstream, ICodepointAssetKey key, INamedOptions options) throws AssetException {
-		if(!(key.getFont() instanceof AndroidTextureFont)) {
-			throw new IllegalArgumentException("font must be of type: " + AndroidTextureFont.class.getSimpleName());
+		if(!(key.getFont() instanceof AndroidFont)) {
+			throw new IllegalArgumentException("font must be of type: " + AndroidFont.class.getSimpleName());
 		}
-		AndroidTextureFont textureFont = (AndroidTextureFont) key.getFont();
+		AndroidFont font = (AndroidFont) key.getFont();
 		int codepoint = key.getCodepoint();
 		float fontPixelHeight = key.getFontPixelHeight();
 		
-		ICodepoint fontCodepoint = createCodepoint(textureFont, codepoint, fontPixelHeight, options);
+		ICodepoint fontCodepoint = createCodepoint(font, codepoint, fontPixelHeight, options);
 		return new CodepointAsset(fontCodepoint);
 	}
 	
 	
-	public ICodepoint createCodepoint(AndroidTextureFont textureFont, int codepoint, float fontPixelHeight, INamedOptions options) {
-		Paint codepointPaint = makePaint(textureFont, fontPixelHeight, options);
+	public ICodepoint createCodepoint(AndroidFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
+		Paint codepointPaint = makePaint(font, fontPixelHeight, options);
 		return createCodepointWithPaint(codepointPaint, codepoint, fontPixelHeight, options);
 	}
 	
@@ -60,18 +60,18 @@ public class AndroidCodepointDecoder implements ICodepointAssetDecoder {
 	}
 
 	
-	private Paint makePaint(AndroidTextureFont textureFont, float fontPixelHeight, INamedOptions options) {
+	private Paint makePaint(AndroidFont font, float fontPixelHeight, INamedOptions options) {
 		Paint paint;
 		Paint optionPaint = options == null ? null : options.getAs(OPTION_CODEPOINT_PAINT, Paint.class);
 		if(optionPaint == null) {
-			paint = new Paint(textureFont.getPaint());
+			paint = new Paint(font.getPaint());
 			
 			boolean aaEnabled = options == null ? DEFAULT_CODEPOINT_AA_ENABLED : options.getAsOrDefault(OPTION_CODEPOINT_AA_ENABLED, DEFAULT_CODEPOINT_AA_ENABLED, Boolean.class);	
 			paint.setAntiAlias(aaEnabled);
 		}
 		else {
 			paint = new Paint(optionPaint);
-			paint.setTypeface(textureFont.getTypeface());
+			paint.setTypeface(font.getTypeface());
 		}
 		
 		paint.setTextSize(fontPixelHeight);

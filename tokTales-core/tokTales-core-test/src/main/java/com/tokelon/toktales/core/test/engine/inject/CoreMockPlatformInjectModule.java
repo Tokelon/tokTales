@@ -9,7 +9,7 @@ import java.util.Set;
 import com.google.inject.TypeLiteral;
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetDecoder;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetDecoder;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetDecoder;
 import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.IEnvironment;
 import com.tokelon.toktales.core.engine.content.IContentService;
@@ -59,7 +59,7 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 
 	private static final ISoundAssetDecoder soundAssetDecoderMock = mock(ISoundAssetDecoder.class);
 	private static final IBitmapAssetDecoder bitmapAssetDecoderMock = mock(IBitmapAssetDecoder.class);
-	private static final ITextureFontAssetDecoder textureFontAssetDecoderMock = mock(ITextureFontAssetDecoder.class);
+	private static final IFontAssetDecoder fontAssetDecoderMock = mock(IFontAssetDecoder.class);
 	private static final ICodepointAssetDecoder codepointAssetDecoderMock = mock(ICodepointAssetDecoder.class);
 	
 	private static final ISurfaceManager surfaceManagerMock = mock(ISurfaceManager.class);
@@ -91,7 +91,7 @@ public class CoreMockPlatformInjectModule extends AbstractInjectModule {
 		
 		bind(ISoundAssetDecoder.class).toInstance(soundAssetDecoderMock);
 		bind(IBitmapAssetDecoder.class).toInstance(bitmapAssetDecoderMock);
-		bind(ITextureFontAssetDecoder.class).toInstance(textureFontAssetDecoderMock);
+		bind(IFontAssetDecoder.class).toInstance(fontAssetDecoderMock);
 		bind(ICodepointAssetDecoder.class).toInstance(codepointAssetDecoderMock);
 		
 		bind(new TypeLiteral<Set<IRenderDriverFactory>>() {}).annotatedWith(RenderDrivers.class).toInstance(new HashSet<>());

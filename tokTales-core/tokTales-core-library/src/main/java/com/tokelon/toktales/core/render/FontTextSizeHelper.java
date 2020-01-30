@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.render;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 
 public class FontTextSizeHelper {
 	// TODO: Convert to instance class and inject?
@@ -9,7 +9,7 @@ public class FontTextSizeHelper {
 	private FontTextSizeHelper() {}
 	
 	
-	public static float getBestFontPixelHeight(ITextureFont font, float targetTextSizePixels) {
+	public static float getBestFontPixelHeight(IFont font, float targetTextSizePixels) {
 		float result;
 		if(font.getFontTextSize() > 0) {
 			result = font.getFontTextSize();

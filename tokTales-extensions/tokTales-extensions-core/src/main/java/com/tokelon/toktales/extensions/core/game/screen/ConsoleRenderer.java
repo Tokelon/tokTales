@@ -6,7 +6,7 @@ import org.joml.Vector4f;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -29,8 +29,8 @@ import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.render.model.ITextureFontModel;
-import com.tokelon.toktales.core.render.model.TextureFontModel;
+import com.tokelon.toktales.core.render.model.IFontModel;
+import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
@@ -51,7 +51,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	private final DrawingMeta dmeta = new DrawingMeta();
 
 
-	private final TextureFontModel fontModel = new TextureFontModel();
+	private final FontModel fontModel = new FontModel();
 	
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
 	
@@ -93,9 +93,9 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	@Override
 	public void contextCreated() {
 		
-		fontDriver = renderService.getRenderAccess().requestDriver(ITextureFontModel.class.getName());
+		fontDriver = renderService.getRenderAccess().requestDriver(IFontModel.class.getName());
 		if(fontDriver == null) {
-			throw new RenderException("No render driver found for: " +ITextureFontModel.class.getName());
+			throw new RenderException("No render driver found for: " +IFontModel.class.getName());
 		}
 		
 		fontDriver.create();
@@ -171,7 +171,7 @@ public class ConsoleRenderer implements ISegmentRenderer {
 		
 		
 		IConsole console = consoleController.getConsole();
-		ITextureFont font = consoleController.getFont();
+		IFont font = consoleController.getFont();
 		if(font == null) {
 			return; // Can't render without a font
 		}

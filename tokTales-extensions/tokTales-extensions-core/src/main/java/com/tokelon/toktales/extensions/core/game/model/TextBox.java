@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extensions.core.game.model;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.game.model.entity.GameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 
@@ -27,7 +27,7 @@ public class TextBox implements ITextBox {
 	private String mText = "";
 	private String[] mWords = new String[0];
 	
-	private ITextureFont mFont;
+	private IFont mFont;
 	
 	public TextBox(float worldWidth, float worldHeight, float textSize) {
 		
@@ -110,12 +110,12 @@ public class TextBox implements ITextBox {
 	}
 	
 	@Override
-	public void setFont(ITextureFont spriteFont) {
+	public void setFont(IFont spriteFont) {
 		mFont = spriteFont;
 	}
 	
 	@Override
-	public ITextureFont getFont() {
+	public IFont getFont() {
 		return mFont;
 	}
 	

@@ -1,17 +1,17 @@
 package com.tokelon.toktales.android.data;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
-public class AndroidTextureFont implements ITextureFont {
+public class AndroidFont implements IFont {
 
 
 	private final Paint paint;
 	
-	protected AndroidTextureFont(Typeface typeface, float fontTextSize) {
+	protected AndroidFont(Typeface typeface, float fontTextSize) {
 		this.paint = new Paint();
 		
 		paint.setTypeface(typeface);
@@ -19,7 +19,7 @@ public class AndroidTextureFont implements ITextureFont {
 		paint.setColor(Color.WHITE);
 	}
 	
-	protected AndroidTextureFont(Paint paint) {
+	protected AndroidFont(Paint paint) {
 		this.paint = new Paint(paint);
 	}
 	

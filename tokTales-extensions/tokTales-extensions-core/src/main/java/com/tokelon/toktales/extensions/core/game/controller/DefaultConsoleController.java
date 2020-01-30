@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extensions.core.game.controller;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.game.controller.AbstractController;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.IConsole;
@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.game.model.IConsole;
 public class DefaultConsoleController extends AbstractController implements IConsoleController {
 
 	
-	private ITextureFont mFont;
+	private IFont mFont;
 	
 	private boolean isOpen = false;
 
@@ -28,12 +28,12 @@ public class DefaultConsoleController extends AbstractController implements ICon
 	
 	
 	@Override
-	public ITextureFont getFont() {
+	public IFont getFont() {
 		return mFont;
 	}
 	
 	@Override
-	public void setFont(ITextureFont font) {
+	public void setFont(IFont font) {
 		this.mFont = font;
 	}
 	

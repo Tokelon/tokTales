@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
@@ -18,7 +18,7 @@ public class ContentManager implements IContentManager {
 	private final IBitmapAssetManager bitmapAssetManager;
 	private final ISpriteAssetManager spriteAssetManager;
 	private final ITextureManager textureManager;
-	private final ITextureFontAssetManager fontManager;
+	private final IFontAssetManager fontManager;
 	private final ICodepointAssetManager codepointManager;
 	
 	@Inject
@@ -28,7 +28,7 @@ public class ContentManager implements IContentManager {
 			IBitmapAssetManager bitmapAssetManager,
 			ISpriteAssetManager spriteAssetManager,
 			ITextureManager textureManager,
-			ITextureFontAssetManager fontManager,
+			IFontAssetManager fontManager,
 			ICodepointAssetManager codepointManager
 	) {
 		this.logger = logging.getLogger(getClass());
@@ -81,7 +81,7 @@ public class ContentManager implements IContentManager {
 	}
 
 	@Override
-	public ITextureFontAssetManager getFontAssetManager() {
+	public IFontAssetManager getFontAssetManager() {
 		return fontManager;
 	}
 	

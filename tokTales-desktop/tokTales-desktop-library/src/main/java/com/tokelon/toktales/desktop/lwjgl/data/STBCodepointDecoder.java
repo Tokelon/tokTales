@@ -26,20 +26,20 @@ public class STBCodepointDecoder implements ICodepointAssetDecoder {
 
 	@Override
 	public ICodepointAsset decode(InputStream inputstream, ICodepointAssetKey key, INamedOptions options) throws AssetException {
-		if(!(key.getFont() instanceof STBTextureFont)) {
-			throw new IllegalArgumentException("font must be of type: " + STBTextureFont.class.getSimpleName());
+		if(!(key.getFont() instanceof STBFont)) {
+			throw new IllegalArgumentException("font must be of type: " + STBFont.class.getSimpleName());
 		}
-		STBTextureFont textureFont = (STBTextureFont) key.getFont();
+		STBFont font = (STBFont) key.getFont();
 		int codepoint = key.getCodepoint();
 		float fontPixelHeight = key.getFontPixelHeight();
 		
-		ICodepoint fontCodepoint = createCodepoint(textureFont, codepoint, fontPixelHeight);
+		ICodepoint fontCodepoint = createCodepoint(font, codepoint, fontPixelHeight);
 		return new CodepointAsset(fontCodepoint);
 	}
 	
 	
-	public ICodepoint createCodepoint(STBTextureFont textureFont, int codepoint, float fontPixelHeight) {
-		STBTTFontinfo fontInfo = textureFont.getFontInfo();
+	public ICodepoint createCodepoint(STBFont font, int codepoint, float fontPixelHeight) {
+		STBTTFontinfo fontInfo = font.getFontInfo();
 		float fontScale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontPixelHeight);
 		
 		ICodepointTexture texture = makeCodepointTexture(fontInfo, codepoint, fontScale);
@@ -60,7 +60,7 @@ public class STBCodepointDecoder implements ICodepointAssetDecoder {
 		
 		// Do these need to be multiplied by fontScale?
 		int bitmapOffsetX = texture.getOriginOffsetX();
-		int bitmapOffsetY = texture.getOriginOffsetY() + Math.round(textureFont.getFontPixelAscent() * fontScale); // Add the font ascend so it counts from the top instead of the origin;
+		int bitmapOffsetY = texture.getOriginOffsetY() + Math.round(font.getFontPixelAscent() * fontScale); // Add the font ascend so it counts from the top instead of the origin;
 		
 		// TODO: Check disposer
 		IDisposer<STBCodepoint> disposer = (cp) -> STBTruetype.stbtt_FreeBitmap(cp.getTexture().getBitmap().getData()); // Needs user data?

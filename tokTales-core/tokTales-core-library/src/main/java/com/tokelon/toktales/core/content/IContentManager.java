@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.content;
 
 import com.tokelon.toktales.core.content.manage.bitmap.IBitmapAssetManager;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetManager;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetManager;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.render.ITextureManager;
 
@@ -21,7 +21,7 @@ public interface IContentManager {
 
 	public ITextureManager getTextureManager(); // Move somewhere else? IRenderService?
 	
-	public ITextureFontAssetManager getFontAssetManager();
+	public IFontAssetManager getFontAssetManager();
 	
 	public ICodepointAssetManager getCodepointAssetManager();
 

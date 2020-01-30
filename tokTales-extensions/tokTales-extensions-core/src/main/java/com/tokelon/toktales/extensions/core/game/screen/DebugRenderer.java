@@ -7,9 +7,9 @@ import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.IContentManager;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.manage.font.IFontAsset;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetKey;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyRegistry;
@@ -402,9 +402,9 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	}
 	
 	
-	private ITextureFont getFont() {
-		ITextureFontAssetKey fontAssetKey = assetKeyRegistry.resolveAs(ASSET_KEY_ID_FONT_MAIN, ITextureFontAssetKey.class);
-		ITextureFontAsset asset = contentManager.getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
+	private IFont getFont() {
+		IFontAssetKey fontAssetKey = assetKeyRegistry.resolveAs(ASSET_KEY_ID_FONT_MAIN, IFontAssetKey.class);
+		IFontAsset asset = contentManager.getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
 		return contentManager.getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
 	}
 	

@@ -6,22 +6,22 @@ import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.render.AbstractRenderer;
 import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.render.model.ITextureFontModel;
-import com.tokelon.toktales.core.render.model.TextureFontModel;
+import com.tokelon.toktales.core.render.model.IFontModel;
+import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.extensions.core.game.model.ITextBox;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 
 	
-	private final TextureFontModel fontModel = new TextureFontModel();
+	private final FontModel fontModel = new FontModel();
 	private final Vector4f colorVector = new Vector4f();
 
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
@@ -47,9 +47,9 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 	
 	@Override
 	protected void onContextCreated() {
-		fontDriver = renderAccess.requestDriver(ITextureFontModel.class.getName());
+		fontDriver = renderAccess.requestDriver(IFontModel.class.getName());
 		if(fontDriver == null) {
-			throw new RenderException("No render driver found for: " +ITextureFontModel.class.getName());
+			throw new RenderException("No render driver found for: " +IFontModel.class.getName());
 		}
 		
 		fontDriver.create();
@@ -106,7 +106,7 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 
 		int textBoxWordCount = textBox.getWordCount();
 		
-		ITextureFont font = textBox.getFont();
+		IFont font = textBox.getFont();
 		if(font == null) {
 			// Cannot draw without a font
 			return;
@@ -229,7 +229,7 @@ public class TextRenderer extends AbstractRenderer implements ITextRenderer {
 	}
 	
 	
-	private float getWordWidth(ITextureFont font, float textSize, String word) {
+	private float getWordWidth(IFont font, float textSize, String word) {
 		int wordCodepointCount = word.codePointCount(0, word.length());
 		
 		float wordWidth = 0.0f;

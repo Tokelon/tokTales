@@ -6,9 +6,9 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.config.IFileConfig;
 import com.tokelon.toktales.core.config.IFileConfig.OnConfigChangeListener;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.manage.font.IFontAsset;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetKey;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.logic.ActionTakerImpl;
@@ -222,10 +222,10 @@ public class LocalMapGamestate extends BaseGamestate<ILocalMapGamescene> impleme
 	}
 
 
-	private ITextureFont getFont() {
+	private IFont getFont() {
 		// TODO: Enable injecting your own registry?
-		ITextureFontAssetKey fontAssetKey = getGame().getRegistryManager().getAssetKeyRegistry().resolveAs(ASSET_KEY_ID_FONT_MAIN, ITextureFontAssetKey.class);
-		ITextureFontAsset asset = getGame().getContentManager().getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
+		IFontAssetKey fontAssetKey = getGame().getRegistryManager().getAssetKeyRegistry().resolveAs(ASSET_KEY_ID_FONT_MAIN, IFontAssetKey.class);
+		IFontAsset asset = getGame().getContentManager().getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
 		return getGame().getContentManager().getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
 	}
 	

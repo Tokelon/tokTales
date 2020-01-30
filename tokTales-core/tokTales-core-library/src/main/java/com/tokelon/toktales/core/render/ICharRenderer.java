@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.render;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 
 public interface ICharRenderer extends IChunkRenderer {
 	// Maybe use ICharPaint object that contains the properties below and pass when drawing?
@@ -12,7 +12,7 @@ public interface ICharRenderer extends IChunkRenderer {
 	public void drawCodepoint(int codepoint);
 
 	
-	public void setFont(ITextureFont font);
+	public void setFont(IFont font);
 	
 	public void setColor(IRGBAColor color);
 	

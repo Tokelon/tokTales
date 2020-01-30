@@ -5,10 +5,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTruetype;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.tools.core.dispose.IDisposer;
 
-public class STBTextureFont implements ITextureFont {
+public class STBFont implements IFont {
 	/* Possible optimizations, improvements
 	 * 
 	 * - Use glyphs for improved performance
@@ -29,9 +29,9 @@ public class STBTextureFont implements ITextureFont {
 	private final int fontPixelAscent;
 	private final int fontPixelDescent;
 	private final int fontPixelLineGap;
-	private final IDisposer<STBTextureFont> disposer;
+	private final IDisposer<STBFont> disposer;
 	
-	public STBTextureFont(ByteBuffer data, STBTTFontinfo fontInfo, int ascent, int descent, int lineGap, IDisposer<STBTextureFont> disposer) {
+	public STBFont(ByteBuffer data, STBTTFontinfo fontInfo, int ascent, int descent, int lineGap, IDisposer<STBFont> disposer) {
 		this.fontDataBuffer = data;
 		this.fontInfo = fontInfo;
 		this.fontPixelAscent = ascent;

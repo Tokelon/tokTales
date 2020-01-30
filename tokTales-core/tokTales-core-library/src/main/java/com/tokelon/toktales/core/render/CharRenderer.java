@@ -8,18 +8,18 @@ import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAsset;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.ICodepoint;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.render.model.ITextureFontModel;
-import com.tokelon.toktales.core.render.model.TextureFontModel;
+import com.tokelon.toktales.core.render.model.IFontModel;
+import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 
-	private ITextureFont font;
+	private IFont font;
 	//private IRGBAColor color;
 	
 	private float positionX;
@@ -28,7 +28,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	private float height;
 	
 
-	private final TextureFontModel fontModel = new TextureFontModel();
+	private final FontModel fontModel = new FontModel();
 	
 	private final Vector4f colorVector = new Vector4f();
 	
@@ -56,9 +56,9 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 	@Override
 	protected void onContextCreated() {
-		fontDriver = renderAccess.requestDriver(ITextureFontModel.class.getName());
+		fontDriver = renderAccess.requestDriver(IFontModel.class.getName());
 		if(fontDriver == null) {
-			throw new RenderException("No render driver found for: " + ITextureFontModel.class.getName());
+			throw new RenderException("No render driver found for: " + IFontModel.class.getName());
 		}
 		
 		fontDriver.create();
@@ -170,7 +170,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	
 
 	@Override
-	public void setFont(ITextureFont font) {
+	public void setFont(IFont font) {
 		this.font = font;
 	}
 

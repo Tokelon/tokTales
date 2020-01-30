@@ -1,6 +1,6 @@
 package com.tokelon.toktales.extensions.core.game.model;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 
 public interface ITextBox {
@@ -37,8 +37,8 @@ public interface ITextBox {
 	
 	
 	// Maybe make font just IFont?
-	public void setFont(ITextureFont spriteFont);
-	public ITextureFont getFont();
+	public void setFont(IFont spriteFont);
+	public IFont getFont();
 	
 	
 	/**

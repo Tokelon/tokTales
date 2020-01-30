@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.controller;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.game.controller.IController;
 import com.tokelon.toktales.core.game.model.IConsole;
 
@@ -12,9 +12,9 @@ public interface IConsoleController extends IController {
 	
 	// Maybe have the font in the renderer rather than the controller?
 	//public ISpriteFont getFont();
-	public ITextureFont getFont();
+	public IFont getFont();
 	
-	public void setFont(ITextureFont font);
+	public void setFont(IFont font);
 	
 	
 	

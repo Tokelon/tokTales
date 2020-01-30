@@ -8,10 +8,10 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import com.google.common.io.ByteStreams;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetDecoder;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.manage.font.TextureFontAssetImpl;
+import com.tokelon.toktales.core.content.manage.font.IFontAsset;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetDecoder;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetKey;
+import com.tokelon.toktales.core.content.manage.font.FontAssetImpl;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.core.engine.storage.StorageException;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
@@ -20,7 +20,7 @@ import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
 import android.graphics.Typeface;
 
-public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
+public class AndroidFontDecoder implements IFontAssetDecoder {
 	// TODO: Implement support for loading from assets via Typeface.createFromAsset()
 	
 	public static final int DEFAULT_FONT_PIXEL_HEIGHT = 32;
@@ -29,21 +29,21 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 	private final IStorageService storageService;
 	
 	@Inject
-	public AndroidTextureFontDecoder(IStorageService storageService) {
+	public AndroidFontDecoder(IStorageService storageService) {
 		this.storageService = storageService;
 	}
 	
 	
 	@Override
-	public ITextureFontAsset decode(InputStream inputstream, ITextureFontAssetKey key, IOptions options) throws AssetException {
+	public IFontAsset decode(InputStream inputstream, IFontAssetKey key, IOptions options) throws AssetException {
 		int textSize = options == null ? DEFAULT_FONT_PIXEL_HEIGHT : options.getAsOrDefault(OPTION_FONT_PIXEL_HEIGHT, DEFAULT_FONT_PIXEL_HEIGHT, Integer.class);
 		
 		if(key instanceof IFileKey) {
 			IFileKey fileKey = (IFileKey) key;
 			Typeface typeface = Typeface.createFromFile(fileKey.getFile().getPath()); // Does this throw any exceptions?
 			
-			AndroidTextureFont font = new AndroidTextureFont(typeface, textSize);
-			return new TextureFontAssetImpl(font);
+			AndroidFont font = new AndroidFont(typeface, textSize);
+			return new FontAssetImpl(font);
 		}
 		else {
 			// TODO: Convert to cache file and do not delete?
@@ -63,8 +63,8 @@ public class AndroidTextureFontDecoder implements ITextureFontAssetDecoder {
 				
 				Typeface typeface = Typeface.createFromFile(tmpFile); // Does this throw any exceptions?
 				
-				AndroidTextureFont font = new AndroidTextureFont(typeface, textSize);
-				return new TextureFontAssetImpl(font);
+				AndroidFont font = new AndroidFont(typeface, textSize);
+				return new FontAssetImpl(font);
 			}
 			finally {
 				tmpFile.delete();

@@ -3,12 +3,12 @@ package com.tokelon.toktales.core.content.manage.font;
 import com.tokelon.toktales.tools.assets.key.IReadDelegateAssetKey;
 import com.tokelon.toktales.tools.assets.key.IReadableAssetKey;
 
-public class ReadDelegateTextureFontAssetKey implements ITextureFontAssetKey, IReadDelegateAssetKey {
+public class ReadDelegateFontAssetKey implements IFontAssetKey, IReadDelegateAssetKey {
 
 	
 	private final IReadableAssetKey readableKey;
 
-	public ReadDelegateTextureFontAssetKey(IReadableAssetKey readableKey) {
+	public ReadDelegateFontAssetKey(IReadableAssetKey readableKey) {
 		this.readableKey = readableKey;
 	}
 	
@@ -35,7 +35,7 @@ public class ReadDelegateTextureFontAssetKey implements ITextureFontAssetKey, IR
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof ITextureFontAssetKey)) {
+		if (!(obj instanceof IFontAssetKey)) {
 			return false;
 		}
 		if (!(obj instanceof IReadDelegateAssetKey)) {

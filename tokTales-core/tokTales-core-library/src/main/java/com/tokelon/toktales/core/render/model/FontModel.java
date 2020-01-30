@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.render.model;
 
 import org.joml.Vector4f;
 
-public class TextureFontModel extends ManagedTextureModel implements ITextureFontModel {
+public class FontModel extends ManagedTextureModel implements IFontModel {
 
 	
 	private Vector4f color;

@@ -3,7 +3,7 @@ package com.tokelon.toktales.extensions.core.game.screen;
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
@@ -149,7 +149,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		}
 		
 		
-		ITextureFont cFont = consoleController.getFont();
+		IFont cFont = consoleController.getFont();
 		if(cFont == null) {
 			return;
 		}

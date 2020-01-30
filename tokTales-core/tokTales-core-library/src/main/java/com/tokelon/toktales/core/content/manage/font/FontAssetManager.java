@@ -11,23 +11,23 @@ import com.tokelon.toktales.tools.assets.manager.IAssetStore;
 import com.tokelon.toktales.tools.assets.manager.ISpecialAssetManager;
 import com.tokelon.toktales.tools.core.objects.options.IOptions;
 
-public class TextureFontAssetManager extends DefaultAssetManager<ITextureFontAsset, ITextureFontAssetKey, IOptions> implements ITextureFontAssetManager {
+public class FontAssetManager extends DefaultAssetManager<IFontAsset, IFontAssetKey, IOptions> implements IFontAssetManager {
 
 
 	@Inject
-	public TextureFontAssetManager(
+	public FontAssetManager(
 			ILoggerFactory loggerFactory,
-			ISpecialAssetManager<ITextureFontAsset> specialAssetManager,
-			IAssetStore<ITextureFontAsset, ITextureFontAssetKey> assetStore,
-			IAssetLoader<ITextureFontAsset, ITextureFontAssetKey, IOptions> assetLoader
+			ISpecialAssetManager<IFontAsset> specialAssetManager,
+			IAssetStore<IFontAsset, IFontAssetKey> assetStore,
+			IAssetLoader<IFontAsset, IFontAssetKey, IOptions> assetLoader
 	) {
 		super(loggerFactory, specialAssetManager, assetStore, assetLoader);
 	}
 
 	
 	@Override
-	public ITextureFontAssetKey keyOf(IReadableAssetKey readableKey) {
-		return new ReadDelegateTextureFontAssetKey(readableKey);
+	public IFontAssetKey keyOf(IReadableAssetKey readableKey) {
+		return new ReadDelegateFontAssetKey(readableKey);
 	}
 	
 }

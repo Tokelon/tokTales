@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.slf4j.ILoggerFactory;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.tools.assets.loader.IAssetLoader;
 import com.tokelon.toktales.tools.assets.manager.DefaultAssetManager;
 import com.tokelon.toktales.tools.assets.manager.IAssetStore;
@@ -28,7 +28,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 
 	@Override
-	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, float fontPixelHeight) {
+	public ICodepointAsset getCodepointAsset(IFont font, int codepoint, float fontPixelHeight) {
 		if(useObjectPool) {
 			return getCodepointAssetInternal(font, codepoint, fontPixelHeight, null);
 		}
@@ -38,7 +38,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 	}
 
 	@Override
-	public ICodepointAsset getCodepointAsset(ITextureFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
+	public ICodepointAsset getCodepointAsset(IFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
 		if(useObjectPool) {
 			return getCodepointAssetInternal(font, codepoint, fontPixelHeight, options);
 		}
@@ -47,7 +47,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 		}
 	}
 
-	protected ICodepointAsset getCodepointAssetInternal(ITextureFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
+	protected ICodepointAsset getCodepointAssetInternal(IFont font, int codepoint, float fontPixelHeight, INamedOptions options) {
 		MutableCodepointKey key = codepointKeyPool.newObject();
 		key.setFont(font);
 		key.setCodepoint(codepoint);
@@ -72,11 +72,11 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 
 	protected class MutableCodepointKey implements ICodepointAssetKey { 
-		private ITextureFont font;
+		private IFont font;
 		private int codepoint;
 		private float fontPixelHeight;
 
-		public void setFont(ITextureFont font) {
+		public void setFont(IFont font) {
 			this.font = font;
 		}
 
@@ -90,7 +90,7 @@ public class CodepointAssetManager extends DefaultAssetManager<ICodepointAsset, 
 
 
 		@Override
-		public ITextureFont getFont() {
+		public IFont getFont() {
 			return font;
 		}
 

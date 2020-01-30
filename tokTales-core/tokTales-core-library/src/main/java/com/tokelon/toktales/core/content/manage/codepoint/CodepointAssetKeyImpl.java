@@ -1,15 +1,15 @@
 package com.tokelon.toktales.core.content.manage.codepoint;
 
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.text.IFont;
 
 public class CodepointAssetKeyImpl implements ICodepointAssetKey {
 
 	
-	private final ITextureFont font;
+	private final IFont font;
 	private final int codepoint;
 	private final float fontPixelHeight;
 
-	public CodepointAssetKeyImpl(ITextureFont font, int codepoint, float fontPixelHeight) {
+	public CodepointAssetKeyImpl(IFont font, int codepoint, float fontPixelHeight) {
 		if(font == null) {
 			throw new NullPointerException();
 		}
@@ -21,7 +21,7 @@ public class CodepointAssetKeyImpl implements ICodepointAssetKey {
 	
 	
 	@Override
-	public ITextureFont getFont() {
+	public IFont getFont() {
 		return font;
 	}
 

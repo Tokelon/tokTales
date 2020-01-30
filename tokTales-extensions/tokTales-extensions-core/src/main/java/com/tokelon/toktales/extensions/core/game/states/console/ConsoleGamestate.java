@@ -3,9 +3,9 @@ package com.tokelon.toktales.extensions.core.game.states.console;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAsset;
-import com.tokelon.toktales.core.content.manage.font.ITextureFontAssetKey;
-import com.tokelon.toktales.core.content.text.ITextureFont;
+import com.tokelon.toktales.core.content.manage.font.IFontAsset;
+import com.tokelon.toktales.core.content.manage.font.IFontAssetKey;
+import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
@@ -147,9 +147,9 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 	
 
 	private void updateFont() {
-		ITextureFontAssetKey fontAssetKey = getGame().getRegistryManager().getAssetKeyRegistry().resolveAs(ASSET_KEY_ID_FONT_MAIN, ITextureFontAssetKey.class);
-		ITextureFontAsset asset = getGame().getContentManager().getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
-		ITextureFont font = getGame().getContentManager().getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
+		IFontAssetKey fontAssetKey = getGame().getRegistryManager().getAssetKeyRegistry().resolveAs(ASSET_KEY_ID_FONT_MAIN, IFontAssetKey.class);
+		IFontAsset asset = getGame().getContentManager().getFontAssetManager().getAssetIfKeyValid(fontAssetKey, ASSET_KEY_ID_FONT_MAIN);
+		IFont font = getGame().getContentManager().getFontAssetManager().isAssetValid(asset) ? asset.getFont() : null;
 
 		consoleController.setFont(font);
 		textBoxController.getModel().setFont(font);

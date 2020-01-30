@@ -18,7 +18,7 @@ import com.tokelon.toktales.core.render.ITextureCoordinator;
 import com.tokelon.toktales.core.render.ITextureManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.IRenderModel;
-import com.tokelon.toktales.core.render.model.ITextureFontModel;
+import com.tokelon.toktales.core.render.model.IFontModel;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.params.IParams;
 
@@ -144,10 +144,10 @@ public class GLBitmapFontDriver implements IRenderDriver {
 
 	@Override
 	public void draw(IRenderModel renderModel, INamedOptions options) {
-		if(!(renderModel instanceof ITextureFontModel)) {
+		if(!(renderModel instanceof IFontModel)) {
 			throw new RenderException("Unsupported model type: " +renderModel.getClass());
 		}
-		ITextureFontModel fontModel = (ITextureFontModel) renderModel;
+		IFontModel fontModel = (IFontModel) renderModel;
 
 		
 		ITexture fontTexture = fontModel.getTargetTexture();
@@ -210,7 +210,7 @@ public class GLBitmapFontDriver implements IRenderDriver {
 	}
 	
 	private static String supportedTarget() {
-		return ITextureFontModel.class.getName();
+		return IFontModel.class.getName();
 	}
 	
 	
