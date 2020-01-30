@@ -2,7 +2,7 @@ package com.tokelon.toktales.extensions.core.game.state.console;
 
 import javax.inject.Inject;
 
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 import com.tokelon.toktales.core.content.manage.font.IFontAsset;
 import com.tokelon.toktales.core.content.manage.font.IFontAssetKey;
 import com.tokelon.toktales.core.content.text.IFont;
@@ -119,7 +119,7 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 
 		
 		TextBoxRenderer textSegmentRenderer = new TextBoxRendererFactory().createForGamestate(this);
-		textSegmentRenderer.setColor(RGBAColorImpl.createFromCode("#FFE688"));
+		textSegmentRenderer.setColor(RGBAColor.createFromCode("#FFE688"));
 		textBoxController = new DefaultTextBoxController(textBox);
 		getActiveScene().getControllerManager().setController(ControllerExtensionsValues.CONTROLLER_TEXTBOX, textBoxController);
 		

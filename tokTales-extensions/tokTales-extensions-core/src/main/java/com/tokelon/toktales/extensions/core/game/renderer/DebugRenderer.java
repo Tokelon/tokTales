@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.tokelon.toktales.core.content.IContentManager;
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 import com.tokelon.toktales.core.content.manage.font.IFontAsset;
 import com.tokelon.toktales.core.content.manage.font.IFontAssetKey;
 import com.tokelon.toktales.core.content.text.IFont;
@@ -47,12 +47,12 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	public static final String ASSET_KEY_ID_FONT_MAIN = "DEBUG_RENDERER-ASSET_KEY_ID_FONT_MAIN";
 
 	
-	private static final RGBAColorImpl gridColor = RGBAColorImpl.createFromCode("FF0000", 0.5f);
-	private static final RGBAColorImpl cameraOriginColor = RGBAColorImpl.createFromCode("00FF00");
-	private static final RGBAColorImpl playerCollisionBoxColor = RGBAColorImpl.createFromCode("42F4F4");
-	private static final RGBAColorImpl entityCollisionBoxColor = RGBAColorImpl.createFromCode("F28D44");
-	private static final RGBAColorImpl frameInfoColor = RGBAColorImpl.createFromCode("00FF00");
-	private static final RGBAColorImpl flashColor = RGBAColorImpl.createFromCode("FF0000A0");
+	private static final RGBAColor gridColor = RGBAColor.createFromCode("FF0000", 0.5f);
+	private static final RGBAColor cameraOriginColor = RGBAColor.createFromCode("00FF00");
+	private static final RGBAColor playerCollisionBoxColor = RGBAColor.createFromCode("42F4F4");
+	private static final RGBAColor entityCollisionBoxColor = RGBAColor.createFromCode("F28D44");
+	private static final RGBAColor frameInfoColor = RGBAColor.createFromCode("00FF00");
+	private static final RGBAColor flashColor = RGBAColor.createFromCode("FF0000A0");
 
 	private static final float gridLineWidth = 1.0f;
 	private static final float fontSize = 8f;

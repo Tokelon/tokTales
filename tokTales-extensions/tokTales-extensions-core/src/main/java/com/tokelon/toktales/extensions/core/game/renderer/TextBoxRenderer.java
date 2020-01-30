@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extensions.core.game.renderer;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.engine.IEngine;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -10,8 +10,8 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.state.GameStateSuppliers;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.game.state.render.ISegmentRenderer;
 import com.tokelon.toktales.core.render.renderer.AbstractRenderer;
+import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.extensions.core.game.controller.ITextBoxController;
 import com.tokelon.toktales.extensions.core.game.model.ITextBox;
@@ -23,7 +23,7 @@ import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 public class TextBoxRenderer extends AbstractRenderer implements ISegmentRenderer {
 
 
-	private IRGBAColor color = RGBAColorImpl.createFromCode("FFF");
+	private IRGBAColor color = RGBAColor.createFromCode("FFF");
 	
 	private TextRenderer textRenderer;
 

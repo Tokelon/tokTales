@@ -3,6 +3,7 @@ package com.tokelon.toktales.core.game.state.render;
 import java.util.Map;
 
 import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
 
 public interface IModularGameStateRenderer extends IGameStateRenderer {
 	

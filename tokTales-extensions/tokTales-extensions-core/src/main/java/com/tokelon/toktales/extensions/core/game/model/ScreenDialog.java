@@ -1,17 +1,17 @@
 package com.tokelon.toktales.extensions.core.game.model;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 
 public class ScreenDialog extends TextBox implements IScreenDialog {
 
 	
-	private IRGBAColor textColor = RGBAColorImpl.createFromCode("#FFF");
+	private IRGBAColor textColor = RGBAColor.createFromCode("#FFF");
 	
-	private IRGBAColor borderColor = RGBAColorImpl.createFromCode("FFF");
+	private IRGBAColor borderColor = RGBAColor.createFromCode("FFF");
 	private float borderSize = 3f;
 	
-	private IRGBAColor backgroundColor = RGBAColorImpl.createFromCodeWithAlpha("#FFFFFF", 0.3f);
+	private IRGBAColor backgroundColor = RGBAColor.createFromCodeWithAlpha("#FFFFFF", 0.3f);
 	
 	public ScreenDialog(float wWidth, float wHeight, float textSize) {
 		super(wWidth, wHeight, textSize);

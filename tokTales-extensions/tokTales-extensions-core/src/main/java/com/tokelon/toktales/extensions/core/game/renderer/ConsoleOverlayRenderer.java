@@ -1,7 +1,7 @@
 package com.tokelon.toktales.extensions.core.game.renderer;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.IEngine;
@@ -31,7 +31,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 	private float startX;
 	private float startY;
 	
-	private IRGBAColor color = RGBAColorImpl.createFromCode("FFF");
+	private IRGBAColor color = RGBAColor.createFromCode("FFF");
 	private float textSize = 32f;
 	
 

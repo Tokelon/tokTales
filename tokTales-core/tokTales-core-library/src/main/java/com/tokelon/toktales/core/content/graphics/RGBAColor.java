@@ -18,22 +18,22 @@ import com.tokelon.toktales.core.content.graphics.IRGBAColor.IMutableRGBAColor;
  * 
  *
  */
-public class RGBAColorImpl implements IMutableRGBAColor {
+public class RGBAColor implements IMutableRGBAColor {
 
-	
+
 	private float red;
 	private float green;
 	private float blue;
 	private float alpha;
 	
-	public RGBAColorImpl() {
+	public RGBAColor() {
 		this.red = 1.0f;
 		this.green = 1.0f;
 		this.blue = 1.0f;
 		this.alpha = 1.0f;
 	}
 	
-	public RGBAColorImpl(float red, float green, float blue, float alpha) {
+	public RGBAColor(float red, float green, float blue, float alpha) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
@@ -105,7 +105,7 @@ public class RGBAColorImpl implements IMutableRGBAColor {
 	 * @return
 	 * @throws IllegalArgumentException If the given code could not be parsed.
 	 */
-	public static RGBAColorImpl createFromCode(String code) throws IllegalArgumentException {
+	public static RGBAColor createFromCode(String code) throws IllegalArgumentException {
 		return createFromCodeInternal(code, 1.0f, false);
 	}
 	
@@ -116,7 +116,7 @@ public class RGBAColorImpl implements IMutableRGBAColor {
 	 * @return
 	 * @throws IllegalArgumentException If the given code could not be parsed.
 	 */
-	public static RGBAColorImpl createFromCode(String code, float defaultAlpha) throws IllegalArgumentException {
+	public static RGBAColor createFromCode(String code, float defaultAlpha) throws IllegalArgumentException {
 		return createFromCodeInternal(code, defaultAlpha, false);
 	}
 
@@ -127,12 +127,12 @@ public class RGBAColorImpl implements IMutableRGBAColor {
 	 * @return
 	 * @throws IllegalArgumentException If the given code could not be parsed.
 	 */
-	public static RGBAColorImpl createFromCodeWithAlpha(String code, float alpha) throws IllegalArgumentException {
+	public static RGBAColor createFromCodeWithAlpha(String code, float alpha) throws IllegalArgumentException {
 		return createFromCodeInternal(code, alpha, true);
 	}
 	
 	
-	private static RGBAColorImpl createFromCodeInternal(String code, float alpha, boolean overrideGivenAlpha) {
+	private static RGBAColor createFromCodeInternal(String code, float alpha, boolean overrideGivenAlpha) {
 		if(code == null) {
 			throw new IllegalArgumentException("code must not be null");
 		}
@@ -180,7 +180,7 @@ public class RGBAColorImpl implements IMutableRGBAColor {
 			colAlpha = alpha;
 		}
 
-		RGBAColorImpl color = new RGBAColorImpl(colRed, colGreen, colBlue, colAlpha);
+		RGBAColor color = new RGBAColor(colRed, colGreen, colBlue, colAlpha);
 		return color;
 	}
 	
@@ -216,6 +216,5 @@ public class RGBAColorImpl implements IMutableRGBAColor {
 	private static String subIndex(String value, int index, int count) {
 		return value.substring(index * count, index * count + count);
 	}
-
 	
 }

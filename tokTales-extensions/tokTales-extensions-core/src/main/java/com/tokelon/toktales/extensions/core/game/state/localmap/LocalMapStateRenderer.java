@@ -8,7 +8,7 @@ import org.joml.Matrix4f;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.ILevelReference;
@@ -46,7 +46,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private static final double CALLBACK_POSITION_PREPARE = -100d;
 	private static final double CALLBACK_POSITION_DEBUG = 5d;
 	
-	private static final RGBAColorImpl CLEAR_COLOR = RGBAColorImpl.createFromCode("#000");
+	private static final RGBAColor CLEAR_COLOR = RGBAColor.createFromCode("#000");
 
 	
 	private final NamedOptionsImpl options = new NamedOptionsImpl();

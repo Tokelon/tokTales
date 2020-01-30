@@ -5,7 +5,7 @@ import java.util.Map;
 import org.joml.Vector4f;
 
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
-import com.tokelon.toktales.core.content.graphics.RGBAColorImpl;
+import com.tokelon.toktales.core.content.graphics.RGBAColor;
 import com.tokelon.toktales.core.content.manage.sprite.ISpriteAssetManager;
 import com.tokelon.toktales.core.content.sprite.ISprite;
 import com.tokelon.toktales.core.content.sprite.ISpriteAsset;
@@ -55,25 +55,25 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	
 	private final Rectangle2fImpl objectRectCoordinates = new Rectangle2fImpl();
 	private final RectangleModel objectRectModel = new RectangleModel();
-	private final IRGBAColor colorRectangle = RGBAColorImpl.createFromCodeWithAlpha("#F0F", 0.5f);
+	private final IRGBAColor colorRectangle = RGBAColor.createFromCodeWithAlpha("#F0F", 0.5f);
 	private final Vector4f colorVectorRectangle = new Vector4f(colorRectangle.getRed(), colorRectangle.getGreen(), colorRectangle.getBlue(), colorRectangle.getAlpha());
 	
 	private final Rectangle2fImpl objectEllipseCoordinates = new Rectangle2fImpl();
 	private final RectangleModel objectEllipseModel = new RectangleModel();
-	private final IRGBAColor colorEllipse = RGBAColorImpl.createFromCodeWithAlpha("#0FA", 0.5f);
+	private final IRGBAColor colorEllipse = RGBAColor.createFromCodeWithAlpha("#0FA", 0.5f);
 	private final Vector4f colorVectorEllipse = new Vector4f(colorEllipse.getRed(), colorEllipse.getGreen(), colorEllipse.getBlue(), colorEllipse.getAlpha());
 
 	private final Point2fImpl objectPolylineCoordinatesFirst = new Point2fImpl();
 	private final Point2fImpl objectPolylineCoordinatesSecond = new Point2fImpl();
 	private final LineModel objectPolylineModel = new LineModel();
-	private final IRGBAColor colorPolyline = RGBAColorImpl.createFromCodeWithAlpha("#FF0", 1.0f);
+	private final IRGBAColor colorPolyline = RGBAColor.createFromCodeWithAlpha("#FF0", 1.0f);
 	private final Vector4f colorVectorPolyline = new Vector4f(colorPolyline.getRed(), colorPolyline.getGreen(), colorPolyline.getBlue(), colorPolyline.getAlpha());
 
 	private final Point2fImpl objectPolygonCoordinatesFirst = new Point2fImpl();
 	private final Point2fImpl objectPolygonCoordinatesSecond = new Point2fImpl();
 	private final Point2fImpl objectPolygonCoordinatesThird = new Point2fImpl();
 	private final TriangleModel objectPolygonModel = new TriangleModel();
-	private final IRGBAColor colorPolygon = RGBAColorImpl.createFromCodeWithAlpha("#5F0", 0.5f);
+	private final IRGBAColor colorPolygon = RGBAColor.createFromCodeWithAlpha("#5F0", 0.5f);
 	private final Vector4f colorVectorPolygon = new Vector4f(colorPolygon.getRed(), colorPolygon.getGreen(), colorPolygon.getBlue(), colorPolygon.getAlpha());
 	
 	private final SpriteModel spriteModel = new SpriteModel();

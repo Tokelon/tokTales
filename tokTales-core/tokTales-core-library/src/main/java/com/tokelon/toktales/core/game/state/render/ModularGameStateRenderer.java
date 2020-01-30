@@ -11,6 +11,7 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.core.render.renderer.IRenderer;
+import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
 import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;

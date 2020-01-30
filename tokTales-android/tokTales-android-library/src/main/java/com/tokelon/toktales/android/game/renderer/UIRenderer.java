@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.game.screen;
+package com.tokelon.toktales.android.game.renderer;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -14,8 +14,8 @@ import com.tokelon.toktales.android.render.tools.IUIOverlay;
 import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.state.render.ISegmentRenderer;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
