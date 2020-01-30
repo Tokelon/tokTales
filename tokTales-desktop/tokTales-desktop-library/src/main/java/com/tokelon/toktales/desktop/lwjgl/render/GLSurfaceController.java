@@ -1,6 +1,6 @@
 package com.tokelon.toktales.desktop.lwjgl.render;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceController;
+import com.tokelon.toktales.core.screen.surface.ISurfaceController;
 
 public class GLSurfaceController implements ISurfaceController {
 

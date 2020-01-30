@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyAliases;
 import com.tokelon.toktales.core.engine.inject.annotation.GlobalAssetKeyEntries;
 import com.tokelon.toktales.core.values.AssetValues;
-import com.tokelon.toktales.extensions.core.game.screen.DebugRenderer;
+import com.tokelon.toktales.extensions.core.game.renderer.DebugRenderer;
 import com.tokelon.toktales.extensions.core.game.states.console.ConsoleGamestate;
 import com.tokelon.toktales.extensions.core.game.states.localmap.LocalMapGamestate;
 

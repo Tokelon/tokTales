@@ -3,14 +3,14 @@ package com.tokelon.toktales.extensions.core.game.states.console;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.game.screen.IModularStateRender;
-import com.tokelon.toktales.core.game.screen.IRenderingStrategy;
-import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
-import com.tokelon.toktales.core.game.screen.view.DefaultViewTransformer;
-import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
-import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
 import com.tokelon.toktales.core.game.states.IGameState;
+import com.tokelon.toktales.core.game.states.render.IModularStateRender;
+import com.tokelon.toktales.core.game.states.render.IRenderingStrategy;
+import com.tokelon.toktales.core.game.states.render.ISegmentRenderer;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
+import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
+import com.tokelon.toktales.core.screen.view.IScreenViewport;
+import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class ConsoleRenderingStrategy implements IRenderingStrategy {

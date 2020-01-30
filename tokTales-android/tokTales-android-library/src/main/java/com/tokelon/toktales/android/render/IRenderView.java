@@ -1,6 +1,6 @@
 package com.tokelon.toktales.android.render;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceController;
+import com.tokelon.toktales.core.screen.surface.ISurfaceController;
 
 public interface IRenderView extends ISurfaceController {
 	//public boolean fireTouchEvent(MotionEvent event); // Add this?

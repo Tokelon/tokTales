@@ -2,7 +2,7 @@ package com.tokelon.toktales.android.render.tools;
 
 import com.tokelon.toktales.android.input.dispatch.IAndroidInputProducer;
 import com.tokelon.toktales.core.engine.IEngineInputProcessor;
-import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
+import com.tokelon.toktales.core.screen.view.IScreenViewport;
 
 import android.view.MotionEvent;
 

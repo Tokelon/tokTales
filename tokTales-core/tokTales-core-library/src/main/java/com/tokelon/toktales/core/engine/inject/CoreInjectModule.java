@@ -26,9 +26,7 @@ import com.tokelon.toktales.core.engine.inject.scope.EngineScoped;
 import com.tokelon.toktales.core.engine.inject.scope.GameScope;
 import com.tokelon.toktales.core.engine.inject.scope.GameScoped;
 import com.tokelon.toktales.core.engine.render.DefaultRenderAccess;
-import com.tokelon.toktales.core.engine.render.DefaultSurfaceManager;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.engine.render.ISurfaceManager;
 import com.tokelon.toktales.core.game.Game;
 import com.tokelon.toktales.core.game.GameLogicManager;
 import com.tokelon.toktales.core.game.IGame;
@@ -66,10 +64,6 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.model.entity.IGameEntityModel;
 import com.tokelon.toktales.core.game.model.map.EmptyBlockMap;
 import com.tokelon.toktales.core.game.model.map.IBlockMap;
-import com.tokelon.toktales.core.game.screen.EmptyStateRender;
-import com.tokelon.toktales.core.game.screen.IStateRender;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.screen.order.RenderOrder;
 import com.tokelon.toktales.core.game.states.BaseGamescene;
 import com.tokelon.toktales.core.game.states.BaseGamestate;
 import com.tokelon.toktales.core.game.states.BaseGamestateProvider;
@@ -91,14 +85,22 @@ import com.tokelon.toktales.core.game.states.ITypedGameState;
 import com.tokelon.toktales.core.game.states.InitialGamestate;
 import com.tokelon.toktales.core.game.states.integration.GamestateIntegrator;
 import com.tokelon.toktales.core.game.states.integration.IGameStateIntegrator.IGameStateIntegratorFactory;
+import com.tokelon.toktales.core.game.states.render.EmptyStateRender;
+import com.tokelon.toktales.core.game.states.render.IStateRender;
 import com.tokelon.toktales.core.game.world.DefaultCollisionStrategy;
 import com.tokelon.toktales.core.game.world.ICollisionStrategy;
 import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.game.world.World;
 import com.tokelon.toktales.core.game.world.Worldspace;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
+import com.tokelon.toktales.core.render.order.RenderOrder;
 import com.tokelon.toktales.core.render.texture.DefaultTextureManager;
 import com.tokelon.toktales.core.render.texture.ITextureManager;
+import com.tokelon.toktales.core.screen.surface.DefaultSurfaceManager;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
+import com.tokelon.toktales.core.screen.surface.SurfaceHandler;
 
 public class CoreInjectModule extends AbstractInjectModule {
 
@@ -161,7 +163,8 @@ public class CoreInjectModule extends AbstractInjectModule {
 		  bindInGameScopeAndForNotScoped(IWorld.class, World.class);
 		  
 		bind(IContentUtils.class).to(ContentUtils.class);
-		
+		bind(ISurfaceHandler.ISurfaceHandlerFactory.class).to(SurfaceHandler.SurfaceHandlerFactory.class);
+
 		// Other
 		bind(IGameState.class).to(DefaultGamestate.class);
 		bind(IGameScene.class).to(BaseGamescene.class);

@@ -8,7 +8,7 @@ import com.tokelon.toktales.core.engine.AbstractEngineService;
 import com.tokelon.toktales.core.engine.inject.annotation.services.RenderServiceExtensions;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
 import com.tokelon.toktales.core.engine.render.IRenderService;
-import com.tokelon.toktales.core.engine.render.ISurfaceManager;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 
 public class DesktopRenderService extends AbstractEngineService implements IRenderService {
 

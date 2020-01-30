@@ -5,9 +5,9 @@ import javax.inject.Inject;
 import com.tokelon.toktales.android.render.tools.IUIControl;
 import com.tokelon.toktales.android.render.tools.IUIControl.IUIControlFactory;
 import com.tokelon.toktales.core.engine.IEngineDriver;
-import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
-import com.tokelon.toktales.core.render.ISurfaceHandler;
-import com.tokelon.toktales.core.render.ISurfaceHandler.ISurfaceHandlerFactory;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler.ISurfaceHandlerFactory;
+import com.tokelon.toktales.core.screen.view.AccurateViewport;
 
 import android.view.MotionEvent;
 

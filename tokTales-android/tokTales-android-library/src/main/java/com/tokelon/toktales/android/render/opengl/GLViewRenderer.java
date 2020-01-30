@@ -7,9 +7,9 @@ import org.joml.Matrix4f;
 import com.tokelon.toktales.android.render.IViewRenderer;
 import com.tokelon.toktales.android.render.opengl.gl20.AndroidGL11;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.screen.view.AccurateViewport;
-import com.tokelon.toktales.core.render.ISurfaceHandler;
 import com.tokelon.toktales.core.render.opengl.gl20.GLErrorUtils;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
+import com.tokelon.toktales.core.screen.view.AccurateViewport;
 
 public class GLViewRenderer implements IViewRenderer {
 	// Add checks for whether lifecycle has correctly run?

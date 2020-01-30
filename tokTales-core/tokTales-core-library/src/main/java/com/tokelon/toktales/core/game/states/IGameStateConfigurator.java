@@ -1,6 +1,6 @@
 package com.tokelon.toktales.core.game.states;
 
-import com.tokelon.toktales.core.game.screen.IStateRender;
+import com.tokelon.toktales.core.game.states.render.IStateRender;
 
 public interface IGameStateConfigurator<T extends IGameState> {
 

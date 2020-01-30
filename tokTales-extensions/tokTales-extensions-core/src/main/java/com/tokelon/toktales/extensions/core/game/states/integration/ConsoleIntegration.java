@@ -2,11 +2,11 @@ package com.tokelon.toktales.extensions.core.game.states.integration;
 
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
-import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.IGameState;
-import com.tokelon.toktales.extensions.core.game.screen.IConsoleOverlayRenderer;
-import com.tokelon.toktales.extensions.core.game.screen.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
+import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
+import com.tokelon.toktales.extensions.core.game.renderer.IConsoleOverlayRenderer;
+import com.tokelon.toktales.extensions.core.game.renderer.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
 import com.tokelon.toktales.extensions.core.game.states.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 
 public class ConsoleIntegration implements IConsoleIntegration {

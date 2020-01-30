@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.lwjgl.opengl.GL11;
 
 import com.tokelon.toktales.core.engine.IEngineDriver;
-import com.tokelon.toktales.core.engine.render.ISurfaceManager;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 
 public class DefaultGameWindowRenderer extends GameWindowRenderer {
 

@@ -14,9 +14,9 @@ import com.tokelon.toktales.android.render.tools.IUIOverlay;
 import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.screen.ISegmentRenderer;
-import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.game.states.render.ISegmentRenderer;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 import android.graphics.Color;

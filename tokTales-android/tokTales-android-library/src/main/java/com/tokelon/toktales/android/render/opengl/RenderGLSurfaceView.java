@@ -6,7 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.tokelon.toktales.android.render.DelegateRenderViewAdapter;
 import com.tokelon.toktales.android.render.IRenderView;
 import com.tokelon.toktales.android.render.IRenderViewAdapter;
-import com.tokelon.toktales.core.render.ISurfaceHandler;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

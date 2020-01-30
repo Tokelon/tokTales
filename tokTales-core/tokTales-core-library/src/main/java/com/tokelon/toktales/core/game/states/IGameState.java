@@ -5,8 +5,8 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.game.IGame;
-import com.tokelon.toktales.core.game.screen.IStateRender;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
+import com.tokelon.toktales.core.game.states.render.IStateRender;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
 
 public interface IGameState {
 

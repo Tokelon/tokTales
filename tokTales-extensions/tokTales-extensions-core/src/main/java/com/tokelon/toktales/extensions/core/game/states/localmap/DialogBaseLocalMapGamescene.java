@@ -8,17 +8,17 @@ import com.tokelon.toktales.core.game.controller.IPlayerController;
 import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
-import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
 import com.tokelon.toktales.core.game.states.IGameState;
 import com.tokelon.toktales.core.game.states.InjectGameScene;
 import com.tokelon.toktales.core.game.world.IWorldspace;
+import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extensions.core.game.controller.IDialogController;
 import com.tokelon.toktales.extensions.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extensions.core.game.model.ScreenDialog;
-import com.tokelon.toktales.extensions.core.game.screen.DialogRenderer;
-import com.tokelon.toktales.extensions.core.game.screen.DialogRenderer.DialogRendererFactory;
+import com.tokelon.toktales.extensions.core.game.renderer.DialogRenderer;
+import com.tokelon.toktales.extensions.core.game.renderer.DialogRenderer.DialogRendererFactory;
 import com.tokelon.toktales.extensions.core.game.states.localmap.ILocalMapControlHandler.EmptyLocalMapControlHandler;
 
 public class DialogBaseLocalMapGamescene extends LocalMapGamescene {

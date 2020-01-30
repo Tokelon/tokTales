@@ -3,11 +3,11 @@ package com.tokelon.toktales.core.render;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.tokelon.toktales.core.game.screen.order.IRenderCallback;
-import com.tokelon.toktales.core.game.screen.order.IRenderLayerStack;
-import com.tokelon.toktales.core.game.screen.order.IRenderOrder;
-import com.tokelon.toktales.core.game.screen.order.RenderOrder;
-import com.tokelon.toktales.core.game.screen.order.RenderRunner;
+import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.order.IRenderLayerStack;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
+import com.tokelon.toktales.core.render.order.RenderOrder;
+import com.tokelon.toktales.core.render.order.RenderRunner;
 
 public class TestRenderOrder {
 

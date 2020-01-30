@@ -1,7 +1,7 @@
 package com.tokelon.toktales.android.render;
 
-import com.tokelon.toktales.core.render.ISurfaceHandler;
-import com.tokelon.toktales.core.render.ISurfaceHandler.ISurfaceHandlerFactory;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler.ISurfaceHandlerFactory;
 
 import android.view.MotionEvent;
 

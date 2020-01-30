@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.render.renderer;
 
 import org.joml.Matrix4f;
 
-import com.tokelon.toktales.core.game.screen.view.IViewTransformer;
+import com.tokelon.toktales.core.screen.view.IViewTransformer;
 
 public abstract class AbstractRenderer implements IRenderer {
 

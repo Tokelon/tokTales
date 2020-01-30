@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.engine.render;
 
 import com.tokelon.toktales.core.engine.IEngineService;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 
 public interface IRenderService extends IEngineService {
 

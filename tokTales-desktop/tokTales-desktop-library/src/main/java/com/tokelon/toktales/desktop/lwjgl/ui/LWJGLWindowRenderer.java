@@ -7,9 +7,9 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
-import com.tokelon.toktales.core.engine.render.ISurfaceManager;
-import com.tokelon.toktales.core.render.ISurfaceHandler;
-import com.tokelon.toktales.core.render.SurfaceHandler;
+import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
+import com.tokelon.toktales.core.screen.surface.SurfaceHandler;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;

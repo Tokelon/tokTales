@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
+import com.tokelon.toktales.core.screen.view.IScreenViewport;
 
 import android.graphics.Rect;
 

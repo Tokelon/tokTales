@@ -3,7 +3,7 @@ package com.tokelon.toktales.desktop.lwjgl.ui;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.IEngineDriver;
-import com.tokelon.toktales.core.engine.render.ISurfaceManager;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 
 public class GameWindowRenderer extends LWJGLWindowRenderer {
 

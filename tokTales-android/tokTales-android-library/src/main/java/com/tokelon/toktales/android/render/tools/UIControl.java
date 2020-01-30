@@ -16,7 +16,7 @@ import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent.Screen
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent.ScreenPressInputEvent;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
+import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
 import android.support.v4.view.MotionEventCompat;

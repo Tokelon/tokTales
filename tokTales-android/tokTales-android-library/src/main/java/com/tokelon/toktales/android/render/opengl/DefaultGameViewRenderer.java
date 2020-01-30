@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.engine.log.ILogging;
-import com.tokelon.toktales.core.game.screen.view.IScreenViewport;
+import com.tokelon.toktales.core.screen.view.IScreenViewport;
 
 import android.opengl.GLES20;
 
