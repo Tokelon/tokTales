@@ -30,6 +30,7 @@ public class DefaultGameWindowRenderer extends GameWindowRenderer {
 		
 		//GL11.glClearColor(0.33f, 0.59f, 0.729f, 0.0f); // Light blue
 		GL11.glClearColor(0f, 0f, 0f, 0f); // Black
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
 		
 		GL11.glEnable(GL11.GL_BLEND);
