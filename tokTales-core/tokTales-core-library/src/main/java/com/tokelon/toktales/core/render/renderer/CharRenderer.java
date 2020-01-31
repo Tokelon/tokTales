@@ -12,20 +12,19 @@ import com.tokelon.toktales.core.content.text.IFont;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.engine.render.IRenderAccess;
-import com.tokelon.toktales.core.render.model.IFontModel;
-import com.tokelon.toktales.core.render.texture.ITexture;
-import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.model.FontModel;
+import com.tokelon.toktales.core.render.model.IFontModel;
+import com.tokelon.toktales.core.render.texture.ITexture;
+import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 
 	private IFont font;
-	//private IRGBAColor color;
 	
 	private float positionX;
 	private float positionY;
@@ -34,9 +33,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	
 
 	private final FontModel fontModel = new FontModel();
-	
 	private final Vector4f colorVector = new Vector4f();
-	
 	private final NamedOptionsImpl drawingOptions = new NamedOptionsImpl();
 
 	
@@ -99,21 +96,21 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 	
 	
 	@Override
-	public void drawChar(char ch) {
-		drawCodepoint((int) ch);
+	public float drawChar(char ch) {
+		return drawCodepoint((int) ch);
 	}
 
 	
-	public void drawCodepoint(int codepoint) {
+	public float drawCodepoint(int codepoint) {
 		if(!hasView()) {
 			logger.warnOnce("Cannot draw without view");
 			assert false : "Cannot draw without view";
-			return;
+			return 0f;
 		}
 		
 		if(font == null) {
 			logger.warnOnce("Cannot draw: no font");
-			return;
+			return 0f;
 		}
 		
 		float textSize = height > width ? height : width;
@@ -123,7 +120,7 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		float fontHeight = FontTextSizeHelper.getBestFontPixelHeight(font, textPixelSize);
 		ICodepointAsset asset = codepointManager.getCodepointAsset(font, codepoint, fontHeight);
 		if(!codepointManager.isAssetValid(asset)) {
-			return;
+			return 0f;
 		}
 		ICodepoint assetCodepoint = asset.getCodepoint();
 		
@@ -170,6 +167,8 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 		else {
 			fontDriver.drawQuick(getMatrixProjectionAndView(), fontModel, drawingOptions);	
 		}
+		
+		return worldCharWidth;
 	}
 	
 	

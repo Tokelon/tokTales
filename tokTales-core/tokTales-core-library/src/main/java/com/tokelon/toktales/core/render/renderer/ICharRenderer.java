@@ -7,9 +7,19 @@ public interface ICharRenderer extends IChunkRenderer {
 	// Maybe use ICharPaint object that contains the properties below and pass when drawing?
 
 
-	public void drawChar(char ch);
+	/** Draws the given char at the current position.
+	 * 
+	 * @param ch
+	 * @return The world width that the char was drawn at, or 0 if nothing was drawn.
+	 */
+	public float drawChar(char ch);
 	
-	public void drawCodepoint(int codepoint);
+	/** Draws the given codepoint at the current position.
+	 * 
+	 * @param codepoint
+	 * @return The world width that the codepoint was drawn at, or 0 if nothing was drawn.
+	 */
+	public float drawCodepoint(int codepoint);
 
 	
 	public void setFont(IFont font);
