@@ -63,7 +63,7 @@ public class Resource implements IResource {
 		if(obj == this) {
 			return true;
 		}
-		if(!(obj instanceof Resource)) {
+		if(!(obj instanceof Resource)) { // TODO: Test against IResource?
 			return false;
 		}
 		Resource r = (Resource)obj;

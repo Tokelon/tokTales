@@ -4,6 +4,7 @@ import com.tokelon.toktales.core.render.order.IRenderOrder.IOrderNavigator;
 
 public class RenderRunner {
 
+
 	private final IRenderOrder renderOrder;
 	private final IOrderNavigator navigator;
 	
@@ -14,13 +15,12 @@ public class RenderRunner {
 	
 	
 	public void run() {
-		
 		synchronized (renderOrder) {
 			if(navigator.navigateToFirstValidPosition()) {
 				do {
-					int currentIndex = navigator.getCurrentIndex();
+					//int currentIndex = navigator.getCurrentIndex();
+					//IRenderLayerStack currentStack = navigator.getCurrentStack();
 					String currentLayer = navigator.getCurrentLayer();
-					IRenderLayerStack currentStack = navigator.getCurrentStack();
 					
 					double currentPosition = navigator.getCurrentPosition();
 					IRenderCallback callback = navigator.getCurrentCallback();
@@ -28,13 +28,9 @@ public class RenderRunner {
 					//System.out.println(String.format("%d : %s | ", currentIndex, currentPosition));
 					callback.renderCall(currentLayer, currentPosition);
 				}
-				while(navigator.navigateToNextValidPosition());
-				
-				//System.out.println();
+				while (navigator.navigateToNextValidPosition());
 			}
 		}
-		
 	}
-	
 	
 }

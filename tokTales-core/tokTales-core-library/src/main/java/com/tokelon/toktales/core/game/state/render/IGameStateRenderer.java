@@ -13,15 +13,12 @@ import com.tokelon.toktales.core.screen.view.IViewTransformer;
  */
 public interface IGameStateRenderer extends ISurfaceCallback, IRenderCallback {
 	/* TODO:
-	 * 1. Rename to something more ?
-	 * 2. Move render order into here?
-	 * 
-	 */
-	
-	// Maybe add prepare() and call in gamestate before calling render order
-	// Maybe add current* prefix to indicate that surface camera etc can change?
-	
-	
+	 * Move render order into here?
+	 * Maybe add prepare() and call in gamestate before calling render order
+	 * Maybe add current* prefix to indicate that surface camera etc can change?
+	*/
+
+
 	/**
 	 * @return True if there is a surface, false if not.
 	 */
