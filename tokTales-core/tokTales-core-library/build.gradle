@@ -30,9 +30,6 @@ sourceSets {
 			
 			srcDir 'exp/main/java'
 		}
-		resources {
-			srcDir 'src/main/resources'
-		}
 	}
 	test {
 		java {
