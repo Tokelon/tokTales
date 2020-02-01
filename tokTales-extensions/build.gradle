@@ -5,28 +5,28 @@ version "0.0.1"
 
 
 buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
-    }
+	repositories {
+		google()
+		jcenter()
+	}
+
+	dependencies {
+		classpath 'com.android.tools.build:gradle:3.4.1'
+	}
 }
 
 allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
+	repositories {
+		google()
+		jcenter()
+	}
 
-    apply plugin: 'eclipse'
+	apply plugin: 'eclipse'
 }
 
 
 task wrapperCustom(type: Wrapper) {
-    group 'build setup'
-    gradleVersion = '5.1.1'
-    distributionType = Wrapper.DistributionType.ALL
+	group 'build setup'
+	gradleVersion = '5.1.1'
+	distributionType = Wrapper.DistributionType.ALL
 }

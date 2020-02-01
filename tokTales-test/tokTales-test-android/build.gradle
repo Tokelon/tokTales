@@ -6,80 +6,80 @@ version "0.0.1"
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+	compileSdkVersion 28
 
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "0.0.1"
+	defaultConfig {
+		minSdkVersion 21
+		targetSdkVersion 28
+		versionCode 1
+		versionName "0.0.1"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
 }
 
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    
-    
-    api project(':tokTales-extensions-android-test')
-    
-    // Cyclic dependency, see tokTales-core-library build.gradle
-    implementation project(':tokTales-extensions-android')
-    
-    api project(':tokTales-test-core')
+	implementation 'com.android.support:appcompat-v7:28.0.0'
+	implementation 'com.android.support:support-v4:28.0.0'
+
+
+	api project(':tokTales-extensions-android-test')
+
+	// Cyclic dependency, see tokTales-core-library build.gradle
+	implementation project(':tokTales-extensions-android')
+
+	api project(':tokTales-test-core')
 }
 
 
 // Only for eclipse
 eclipse.classpath.file.withXml { xml ->
-    def node = xml.asNode()
+	def node = xml.asNode()
 
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-test-core' ])
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-android-test' ])
-    node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android' ]) // Cyclic dependency
+	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-test-core' ])
+	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-android-test' ])
+	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android' ]) // Cyclic dependency
 
 	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-test-android/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
 
-    node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
-    node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])
-    node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-classes.jar' ])
-    node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-internal.jar' ])
-    if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
-        node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
-    }
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-classes.jar' ])
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-internal.jar' ])
+	if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
+		node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
+	}
 }
 
 // Only for eclipse
 sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-            srcDir 'arch/main/java'
-            
-            srcDir 'exp/main/java'
-        }
-    }
-    test {
-        java {
-            srcDir 'src/test/java'
-            srcDir 'arch/test/java'
-            
-            srcDir 'exp/test/java'
-        }
-    }
+	main {
+		java {
+			srcDir 'src/main/java'
+			srcDir 'arch/main/java'
+
+			srcDir 'exp/main/java'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+			srcDir 'arch/test/java'
+
+			srcDir 'exp/test/java'
+		}
+	}
 }
