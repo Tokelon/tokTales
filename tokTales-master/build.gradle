@@ -81,6 +81,34 @@ subprojects { -> project
 					from(components.java)
 					artifact sourcesJar
 					artifact javadocJar
+
+					pom {
+						name = 'tokTales Engine'
+						description = 'Part of tokTales Engine, a neat game engine.'
+						url = 'https://github.com/Tokelon/tokTales'
+						licenses {
+							license {
+								name = 'MIT License'
+								url = 'https://opensource.org/licenses/MIT'
+							}
+						}
+						developers {
+							developer {
+								id = 'Tokelon'
+								name = 'Elias Paralikes'
+								email = 'tokelontales@gmail.com'
+							}
+						}
+						scm {
+							url = 'https://github.com/Tokelon/tokTales'
+							connection = 'scm:git:https://github.com/Tokelon/tokTales.git'
+							developerConnection = 'scm:git:https://github.com/Tokelon/tokTales.git'
+						}
+						issueManagement {
+							system = 'GitHub Issues'
+							url = 'https://github.com/Tokelon/tokTales/issues'
+						}
+					}
 				}
 			}
 		}
@@ -135,6 +163,34 @@ subprojects { -> project
 				mavenAar(MavenPublication) {
 					version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
 					from components.android
+
+					pom {
+						name = 'tokTales Engine'
+						description = 'Part of tokTales Engine, a neat game engine.'
+						url = 'https://github.com/Tokelon/tokTales'
+						licenses {
+							license {
+								name = 'MIT License'
+								url = 'https://opensource.org/licenses/MIT'
+							}
+						}
+						developers {
+							developer {
+								id = 'Tokelon'
+								name = 'Elias Paralikes'
+								email = 'tokelontales@gmail.com'
+							}
+						}
+						scm {
+							url = 'https://github.com/Tokelon/tokTales'
+							connection = 'scm:git:https://github.com/Tokelon/tokTales.git'
+							developerConnection = 'scm:git:https://github.com/Tokelon/tokTales.git'
+						}
+						issueManagement {
+							system = 'GitHub Issues'
+							url = 'https://github.com/Tokelon/tokTales/issues'
+						}
+					}
 				}
 			}
 		}
