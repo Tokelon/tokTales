@@ -12,8 +12,6 @@ buildscript {
 	dependencies {
 		classpath 'com.android.tools.build:gradle:3.4.1'
 
-		classpath "net.swisstech:gradle-elasticdependencies:1.0.0"
-
 		classpath 'digital.wup:android-maven-publish:3.6.3'
 	}
 }
