@@ -32,7 +32,41 @@ Not everything has Javadoc attached and the Wiki and Readme need to be expanded.
 
 ## Installation
 
-*[Coming Soon]*
+Add the package repository to your root project **build.gradle**.
+
+```gradle
+repositories {
+    maven {
+        url 'https://dl.bintray.com/tokelon/tokTales'
+    }
+}
+```
+
+Add the respective dependency to your subproject **build.gradle**.
+
+### Core
+
+```gradle
+dependencies {
+    implementation 'com.tokelon.toktales:tokTales-core-library:0.1.0'
+}
+```
+
+### Desktop
+
+```gradle
+dependencies {
+    implementation 'com.tokelon.toktales:tokTales-desktop-library:0.1.0'
+}
+```
+
+### Android
+
+```gradle
+dependencies {
+    implementation 'com.tokelon.toktales:tokTales-android-library:0.1.0'
+}
+```
 
 ## Documentation
 
