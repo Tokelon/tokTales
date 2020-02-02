@@ -13,6 +13,8 @@ buildscript {
 		classpath 'com.android.tools.build:gradle:3.4.1'
 
 		classpath 'digital.wup:android-maven-publish:3.6.3'
+
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 	}
 }
 
@@ -39,7 +41,41 @@ task wrapperCustom(type: Wrapper) {
 }
 
 
+
+def pomConfig = {
+	name = 'tokTales Engine'
+	description = 'Part of tokTales Engine, a neat game engine.'
+	url = 'https://github.com/Tokelon/tokTales'
+	licenses {
+		license {
+			name = 'MIT License'
+			url = 'https://opensource.org/licenses/MIT'
+		}
+	}
+	developers {
+		developer {
+			id = 'Tokelon'
+			name = 'Elias Paralikes'
+			email = 'tokelontales@gmail.com'
+		}
+	}
+	scm {
+		url = 'https://github.com/Tokelon/tokTales'
+		connection = 'scm:git:https://github.com/Tokelon/tokTales.git'
+		developerConnection = 'scm:git:https://github.com/Tokelon/tokTales.git'
+	}
+	issueManagement {
+		system = 'GitHub Issues'
+		url = 'https://github.com/Tokelon/tokTales/issues'
+	}
+}
+
 subprojects { -> project
+	apply plugin: 'com.jfrog.bintray'
+
+	// Disable publish task which we don't need, because it throws an exception (probably related to the root project)
+	bintrayPublish.enabled = false
+
 	plugins.withType(JavaLibraryPlugin) {
 		task sourcesJar(type: Jar, dependsOn: classes) {
 			classifier = 'sources'
@@ -76,39 +112,38 @@ subprojects { -> project
 				}
 			}
 			publications {
-				gpr(MavenPublication) {
-					version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
+				maven(MavenPublication) {
+					version project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))
 					from(components.java)
 					artifact sourcesJar
 					artifact javadocJar
 
-					pom {
-						name = 'tokTales Engine'
-						description = 'Part of tokTales Engine, a neat game engine.'
-						url = 'https://github.com/Tokelon/tokTales'
-						licenses {
-							license {
-								name = 'MIT License'
-								url = 'https://opensource.org/licenses/MIT'
-							}
-						}
-						developers {
-							developer {
-								id = 'Tokelon'
-								name = 'Elias Paralikes'
-								email = 'tokelontales@gmail.com'
-							}
-						}
-						scm {
-							url = 'https://github.com/Tokelon/tokTales'
-							connection = 'scm:git:https://github.com/Tokelon/tokTales.git'
-							developerConnection = 'scm:git:https://github.com/Tokelon/tokTales.git'
-						}
-						issueManagement {
-							system = 'GitHub Issues'
-							url = 'https://github.com/Tokelon/tokTales/issues'
-						}
-					}
+					pom pomConfig
+				}
+			}
+		}
+
+		bintray {
+			user = project.findProperty('bintray.user')
+			key = project.findProperty('bintray.key')
+			publications = ['maven']
+			publish = false
+			override = false
+			dryRun = false
+
+			pkg {
+				repo = 'tokTales'
+				name = 'tokTales'
+				desc = 'A neat game engine.'
+				licenses = ['MIT']
+				websiteUrl = 'https://github.com/Tokelon/tokTales'
+				issueTrackerUrl = 'https://github.com/Tokelon/tokTales/issues'
+				vcsUrl = 'https://github.com/Tokelon/tokTales.git'
+				githubRepo = 'Tokelon/tokTales'
+				version {
+					name = project.version
+					desc = project.version
+					released  = new Date()
 				}
 			}
 		}
@@ -143,6 +178,31 @@ subprojects { -> project
 				archives javadocJar
 				archives sourcesJar
 			}
+
+			bintray {
+				user = project.findProperty('bintray.user')
+				key = project.findProperty('bintray.key')
+				publications = ['maven']
+				publish = false
+				override = false
+				dryRun = false
+
+				pkg {
+					repo = 'tokTales'
+					name = 'tokTales'
+					desc = 'A neat game engine.'
+					licenses = ['MIT']
+					websiteUrl = 'https://github.com/Tokelon/tokTales'
+					issueTrackerUrl = 'https://github.com/Tokelon/tokTales/issues'
+					vcsUrl = 'https://github.com/Tokelon/tokTales.git'
+					githubRepo = 'Tokelon/tokTales'
+					version {
+						name = project.version
+						desc = project.version
+						released  = new Date()
+					}
+				}
+			}
 		}
 
 
@@ -160,37 +220,11 @@ subprojects { -> project
 				}
 			}
 			publications {
-				mavenAar(MavenPublication) {
-					version project.version + "-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")
+				maven(MavenPublication) {
+					version project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))
 					from components.android
 
-					pom {
-						name = 'tokTales Engine'
-						description = 'Part of tokTales Engine, a neat game engine.'
-						url = 'https://github.com/Tokelon/tokTales'
-						licenses {
-							license {
-								name = 'MIT License'
-								url = 'https://opensource.org/licenses/MIT'
-							}
-						}
-						developers {
-							developer {
-								id = 'Tokelon'
-								name = 'Elias Paralikes'
-								email = 'tokelontales@gmail.com'
-							}
-						}
-						scm {
-							url = 'https://github.com/Tokelon/tokTales'
-							connection = 'scm:git:https://github.com/Tokelon/tokTales.git'
-							developerConnection = 'scm:git:https://github.com/Tokelon/tokTales.git'
-						}
-						issueManagement {
-							system = 'GitHub Issues'
-							url = 'https://github.com/Tokelon/tokTales/issues'
-						}
-					}
+					pom pomConfig
 				}
 			}
 		}
