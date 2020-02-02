@@ -1,6 +1,6 @@
 // tokTales-desktop-library build.gradle
 group "com.tokelon.toktales"
-version "0.0.1"
+version "0.1.0"
 
 
 // Apply the java-library plugin to add support for Java Library
