@@ -17,6 +17,13 @@ jobs:
     - name: Build with Gradle
       working-directory: tokTales-master
       run: ./gradlew build
+    - name: Deploy to Bintray
+      if: github.ref == 'refs/heads/release'
+      env:
+        BINTRAY_USER: ${{secrets.BINTRAY_USER}}
+        BINTRAY_KEY: ${{secrets.BINTRAY_KEY}}
+      working-directory: tokTales-master
+      run: ./gradlew bintrayUpload -Pbintray.version -Pbintray.user=$BINTRAY_USER -Pbintray.key=$BINTRAY_KEY
     - name: Generate build number
       uses: einaregilsson/build-number@v2
       with:
