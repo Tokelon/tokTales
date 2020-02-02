@@ -1,6 +1,6 @@
 // tokTales-master build.gradle
 group "com.tokelon.toktales"
-version "1.0"
+version "0.1.0"
 
 
 buildscript {
