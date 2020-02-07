@@ -39,9 +39,9 @@ Not everything has Javadoc attached and the Wiki and Readme need to be expanded.
 Add the package repository to your root project **build.gradle**.
 
 ```gradle
-repositories {
-    maven {
-        url 'https://dl.bintray.com/tokelon/tokTales'
+allprojects {
+    repositories {
+        jcenter()
     }
 }
 ```
