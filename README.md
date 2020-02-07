@@ -80,6 +80,30 @@ Each module contains one or more libraries: `core-library` and `core-test` in Co
 The modules are built as a hierarchical structure in which platform libraries have dependencies on Core libraries, but never one platform on another. Meaning that, for example, you can use the Desktop libraries without ever getting involved with Android. But you can also develop for both and put the shared code into a core library.
 
 There are also mixed modules like **Tools**, that contain libraries for more than one platform.
+
+## Building
+
+The build system used is **[Gradle](https://gradle.org/)**.
+
+### Prerequisites
+
+- An internet connection for downloading Gradle and project dependencies
+- **[Java Development Kit](https://jdk.java.net/)** version 8 or higher for running Gradle
+- **[Android SDK](https://developer.android.com/)** when building Android projects
+
+### Building a project
+
+To build the master project that includes all other projects, run the following in a shell (Windows).
+
+    git clone https://github.com/Tokelon/tokTales.git
+    cd tokTales-master
+    .\gradlew build
+
+### Project structure
+
+Each of the [engine modules](#modules) is configured as a Gradle root project and contains one or more subprojects (libraries).  
+In addition there is the master project which contains all other projects and is used for developing and publishing, as well as other tooling purposes.
+
 ## Documentation
 
 *[Coming Soon]*
