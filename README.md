@@ -76,7 +76,21 @@ dependencies {
 
 *[Coming Soon]*
 
-## Licence
+## Technologies
 
-- **[MIT license](https://opensource.org/licenses/MIT)**
+Below listed are some of the technologies used in this project.
+
+- **[Java](https://www.java.com/)** - The programming language
+- **[Gradle](https://gradle.org/)** - The build system
+- **[LWJGL](https://www.lwjgl.org/)** (Desktop) - Bindings to native libraries
+- **[Android SDK](https://developer.android.com/studio)** (Android) - Android API and toolchain
+- **[OpenGL](https://www.opengl.org/)** - The default graphics API
+- **[JOML](https://github.com/JOML-CI/JOML)** - OpenGL math
+- **[Guice](https://github.com/google/guice)** - Dependency injection
+- **[SLF4J](http://www.slf4j.org/)** - Logging
+- **[Tiled Map Editor](https://www.mapeditor.org/)** (Optional) - Level design
+
+## License
+
+- **[MIT License](https://opensource.org/licenses/MIT)**
 - Copyright 2020 © Elias Paralikes
