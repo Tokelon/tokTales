@@ -8,6 +8,17 @@
 
 A cross-platform game engine written in Java.
 
+## Contents
+
+- [About](#about)
+- [Disclaimer](#disclaimer)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Building](#building)
+- [Documentation](#documentation)
+- [Technologies](#technologies)
+- [License](#license)
+
 ## About
 
 The **tokTales Engine** is a personal project of mine that I've been working on in my free time for the past couple of years.  
