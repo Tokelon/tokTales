@@ -72,6 +72,14 @@ dependencies {
 }
 ```
 
+### Modules
+
+The engine is divided into modules: **Core**, **Desktop**, **Android**, etc.  
+Each module contains one or more libraries: `core-library` and `core-test` in Core, `desktop-library` and `desktop-test` in Desktop, and so on.
+
+The modules are built as a hierarchical structure in which platform libraries have dependencies on Core libraries, but never one platform on another. Meaning that, for example, you can use the Desktop libraries without ever getting involved with Android. But you can also develop for both and put the shared code into a core library.
+
+There are also mixed modules like **Tools**, that contain libraries for more than one platform.
 ## Documentation
 
 *[Coming Soon]*
