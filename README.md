@@ -94,13 +94,13 @@ There are also mixed modules like **Tools**, that contain libraries for more tha
 
 ## Building
 
-The build system used is **[Gradle](https://gradle.org/)**.
+The build system used is **[Gradle](https://docs.gradle.org/current/userguide/userguide.html)**.
 
 ### Prerequisites
 
 - An internet connection for downloading Gradle and project dependencies
 - **[Java Development Kit](https://jdk.java.net/)** version 8 or higher for running Gradle
-- **[Android SDK](https://developer.android.com/)** when building Android projects
+- **[Android SDK](https://developer.android.com/studio)** when building Android projects
 
 ### Building a project
 
@@ -126,7 +126,7 @@ Below listed are some of the technologies used in this project.
 - **[Java](https://www.java.com/)** - The programming language
 - **[Gradle](https://gradle.org/)** - The build system
 - **[LWJGL](https://www.lwjgl.org/)** (Desktop) - Bindings to native libraries
-- **[Android SDK](https://developer.android.com/studio)** (Android) - Android API and toolchain
+- **[Android SDK](https://developer.android.com/)** (Android) - Android API and toolchain
 - **[OpenGL](https://www.opengl.org/)** - The default graphics API
 - **[JOML](https://github.com/JOML-CI/JOML)** - OpenGL math
 - **[Guice](https://github.com/google/guice)** - Dependency injection
