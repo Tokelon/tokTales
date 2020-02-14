@@ -104,7 +104,8 @@ The build system used is **[Gradle](https://docs.gradle.org/current/userguide/us
 
 ### Building a project
 
-To build the master project that includes all other projects, run the following in a shell (Windows).
+To build a project, navigate into the project directory and use the Gradle Wrapper to execute the `build` task.  
+For example, to download and build the master project, run the following in a shell (Windows).
 
     git clone https://github.com/Tokelon/tokTales.git
     cd tokTales-master
@@ -113,7 +114,7 @@ To build the master project that includes all other projects, run the following 
 ### Project structure
 
 Each of the [engine modules](#modules) is configured as a Gradle root project and contains one or more subprojects (libraries).  
-In addition there is the master project which contains all other projects and is used for developing and publishing, as well as other tooling purposes.
+In addition there is the master project, which includes all projects, and is used for developing and publishing, as well as other tooling purposes.
 
 ## Documentation
 
