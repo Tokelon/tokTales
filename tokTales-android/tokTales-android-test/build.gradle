@@ -46,9 +46,6 @@ dependencies {
 
 	// Cyclic dependency, see tokTales-core-library build.gradle
 	implementation project(':tokTales-android-library')
-	
-	// WORKAROUND - When running unit tests for Android, only AndroidStudio fails to include this dependency
-	api 'org.luaj:luaj-jse:3.0.1'
 }
 
 
