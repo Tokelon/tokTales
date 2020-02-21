@@ -3,7 +3,7 @@ package com.tokelon.toktales.desktop.lwjgl.ui;
 import javax.inject.Inject;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
@@ -19,7 +19,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 
 
 	private boolean hasContext = false;
-	private WindowSizeCallback windowSizeCallback;
+	private FramebufferSizeCallback framebufferSizeCallback;
 	private IWindow window;
 	
 	private final ISurfaceHandler surfaceHandler;
@@ -34,8 +34,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	public void create(IWindow window) {
 		this.window = window;
 		
-		windowSizeCallback = new WindowSizeCallback();
-		GLFW.glfwSetWindowSizeCallback(window.getId(), windowSizeCallback);
+		framebufferSizeCallback = new FramebufferSizeCallback();
+		GLFW.glfwSetFramebufferSizeCallback(window.getId(), framebufferSizeCallback);
 		
 		surfaceHandler.setSurfaceName(window.getTitle());
 	}
@@ -47,7 +47,12 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 		GL.createCapabilities();
 		
 		
-		surfaceHandler.createSurface(window.getWidth(), window.getHeight());
+		// Determine current frame buffer size, which can be different from the window size
+		int[] width = new int[1];
+		int[] height = new int[1];
+		GLFW.glfwGetFramebufferSize(window.getId(), width, height);
+		
+		surfaceHandler.createSurface(width[0], height[0]);
 		surfaceHandler.publishSurface();
 		
 		hasContext = true;
@@ -65,7 +70,7 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	
 	@Override
 	public void destroy() {
-		GLFW.glfwSetWindowSizeCallback(getWindow().getId(), null);
+		GLFW.glfwSetFramebufferSizeCallback(getWindow().getId(), null);
 	}
 	
 	
@@ -91,11 +96,11 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	
 	
 
-	protected class WindowSizeCallback implements GLFWWindowSizeCallbackI {
+	protected class FramebufferSizeCallback implements GLFWFramebufferSizeCallbackI {
 
 		@Override
 		public void invoke(long window, int width, int height) {
-			if(hasContext) {
+			if(hasContext && getWindow().getId() == window) {
 				surfaceHandler.updateSurface(width, height);
 			}
 		}
