@@ -32,6 +32,9 @@ public interface IWindow {
 	public int getWidth();
 	public int getHeight();
 	
+	public int getPositionX();
+	public int getPositionY();
+	
 	public String getTitle();
 	
 	public long getMonitor();
@@ -40,8 +43,12 @@ public interface IWindow {
 	
 	public int getInputMode(int mode);
 	
+	public int getAttribute(int attribute);
+	
 	
 	public void setSize(int width, int height);
+	
+	public void setPosition(int x, int y);
 	
 	public void setTitle(String title);
 	
@@ -51,5 +58,7 @@ public interface IWindow {
 	public void setSwapInterval(int interval);
 	
 	public void setInputMode(int mode, int value);
+	
+	public void setAttribute(int attribute, int value);
 	
 }

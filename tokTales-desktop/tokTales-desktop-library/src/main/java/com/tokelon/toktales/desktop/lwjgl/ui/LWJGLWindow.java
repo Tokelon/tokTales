@@ -129,6 +129,22 @@ public class LWJGLWindow implements IWindow {
 	}
 	
 	@Override
+	public int getPositionX() {
+		int[] posx = new int[1];
+		GLFW.glfwGetWindowPos(windowId, posx, new int[1]);
+		
+		return posx[0];
+	}
+	
+	@Override
+	public int getPositionY() {
+		int[] posy = new int[1];
+		GLFW.glfwGetWindowPos(windowId, new int[1], posy);
+		
+		return posy[0];
+	}
+	
+	@Override
 	public String getTitle() {
 		return windowTitle;
 	}
@@ -148,10 +164,20 @@ public class LWJGLWindow implements IWindow {
 		return GLFW.glfwGetInputMode(windowId, mode);
 	}
 	
+	@Override
+	public int getAttribute(int attribute) {
+		return GLFW.glfwGetWindowAttrib(windowId, attribute);
+	}
+	
 	
 	@Override
 	public void setSize(int width, int height) {
 		GLFW.glfwSetWindowSize(windowId, width, height);
+	}
+	
+	@Override
+	public void setPosition(int x, int y) {
+		GLFW.glfwSetWindowPos(windowId, x, y);
 	}
 	
 	@Override
@@ -179,6 +205,11 @@ public class LWJGLWindow implements IWindow {
 	@Override
 	public void setInputMode(int mode, int value) {
 		GLFW.glfwSetInputMode(windowId, mode, value);
+	}
+	
+	@Override
+	public void setAttribute(int attribute, int value) {
+		GLFW.glfwSetWindowAttrib(windowId, attribute, value);
 	}
 	
 }
