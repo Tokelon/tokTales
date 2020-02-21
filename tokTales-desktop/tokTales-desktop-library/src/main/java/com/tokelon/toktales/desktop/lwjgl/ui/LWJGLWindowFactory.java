@@ -30,6 +30,11 @@ public class LWJGLWindowFactory implements IWindowFactory {
 	}
 	
 	@Override
+	public void setWindowHintString(int hint, String value) {
+		GLFW.glfwWindowHintString(hint, value);
+	}
+	
+	@Override
 	public void setDefaultWindowHints() {
 		GLFW.glfwDefaultWindowHints();
 	}
