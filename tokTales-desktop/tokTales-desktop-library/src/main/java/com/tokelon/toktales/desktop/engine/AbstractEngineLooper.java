@@ -4,33 +4,28 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineInputProcessor;
 import com.tokelon.toktales.core.engine.IEngineLooper;
-import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
-public class DefaultEngineLooper implements IEngineLooper {
+public abstract class AbstractEngineLooper implements IEngineLooper {
 
 
 	private boolean isStopped;
 	
-	private final IWindowRenderer renderer;
 	private final IEngineInputProcessor inputProcessor;
-
-	/** Constructor with a window renderer.
+	
+	/** Default constructor.
 	 * <p>
 	 * A no-op input processor will be used.
 	 * 
-	 * @param renderer
 	 */
-	public DefaultEngineLooper(IWindowRenderer renderer) {
-		this(renderer, () -> {});
+	public AbstractEngineLooper() {
+		this(() -> {});
 	}
 	
-	/** Constructor with a window renderer and an input processor.
+	/** Constructor with an input processor.
 	 * 
-	 * @param renderer
 	 * @param inputProcessor
 	 */
-	public DefaultEngineLooper(IWindowRenderer renderer, IEngineInputProcessor inputProcessor) {
-		this.renderer = renderer;
+	public AbstractEngineLooper(IEngineInputProcessor inputProcessor) {
 		this.inputProcessor = inputProcessor;
 	}
 	
@@ -55,19 +50,22 @@ public class DefaultEngineLooper implements IEngineLooper {
 	}
 
 	
+	/** Runs the rendering of the engine.
+	 * 
+	 * @param engineContext
+	 */
+	protected abstract void render(IEngineContext engineContext);
+	
+
 	/** Returns whether this looper should continue looping, or stop.
 	 * <p>
-	 * The default implementation considers whether the renderer window should close,
-	 * and whether this looper has been stopped.
+	 * The default implementation returns false if this looper has been stopped.
 	 * 
 	 * @param engineContext
 	 * @return True if looping should be continued, false if not.
 	 */
 	protected boolean shouldLoop(IEngineContext engineContext) {
-		/* Run the loop until the user has attempted to close the window,
-		 * or the looper has been stopped manually.
-		 */
-		return !isStopped && !getRenderer().getWindow().shouldClose();
+		return !isStopped();
 	}
 	
 	/** Runs the updating of the engine.
@@ -78,21 +76,6 @@ public class DefaultEngineLooper implements IEngineLooper {
 	 */
 	protected void update(IEngineContext engineContext) {
 		engineContext.getEngine().getEngineDriver().update();
-	}
-	
-	/** Runs the rendering of the engine.
-	 * <p>
-	 * The default implementation calls the frame rendering methods of this looper's renderer.
-	 * 
-	 * @param engineContext
-	 */
-	protected void render(IEngineContext engineContext) {
-		getRenderer().prepareFrame();
-		
-		//engineDriver.render(); // Move this out of the renderer and into here?
-		getRenderer().drawFrame();
-		
-		getRenderer().commitFrame();
 	}
 	
 	/** Runs the processing of input of the engine.
@@ -106,13 +89,14 @@ public class DefaultEngineLooper implements IEngineLooper {
 	}
 	
 	
-	/**
-	 * @return The window renderer for this looper.
+	/** Returns whether this looper has been stopped.
+	 * 
+	 * @return True if this looper has been stopped, false if not.
 	 */
-	protected IWindowRenderer getRenderer() {
-		return renderer;
+	protected boolean isStopped() {
+		return isStopped;
 	}
-
+	
 	/**
 	 * @return The input processor for this looper.
 	 */
