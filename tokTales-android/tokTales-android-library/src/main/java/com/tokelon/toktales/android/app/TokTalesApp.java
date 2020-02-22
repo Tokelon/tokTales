@@ -1,6 +1,7 @@
 package com.tokelon.toktales.android.app;
 
-import com.tokelon.toktales.android.engine.AndroidEngineLauncher;
+import com.tokelon.toktales.android.engine.AndroidLauncherFactory;
+import com.tokelon.toktales.android.engine.IAndroidEngineLauncher;
 import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
@@ -63,7 +64,7 @@ public class TokTalesApp extends Application {
 				logger.debug("Instantiating inject config of type {}", metaInjectConfigClass);
 				IHierarchicalInjectConfig injectConfig = metaInjectConfigClass.newInstance();
 				
-				launcher = new AndroidEngineLauncher(injectConfig, getApplicationContext());
+				launcher = new AndroidLauncherFactory().createDefaultBuilder(getApplicationContext()).withInjectConfig(injectConfig).build();
 				logger.info("Engine launcher will use inject config of type: {}", metaInjectConfigClass);
 			} catch (InstantiationException e) {
 				logger.error("Failed to create inject config. Make sure you provide a public no-args constructor. Error:", e);
@@ -129,9 +130,12 @@ public class TokTalesApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		
-		AndroidEngineLauncher androidLauncher = new AndroidEngineLauncher(new MasterAndroidInjectConfig(), getApplicationContext());
+		IAndroidEngineLauncher launcher = new AndroidLauncherFactory()
+				.createDefaultBuilder(getApplicationContext())
+				.withInjectConfig(new MasterAndroidInjectConfig())
+				.build();
 		try {
-			launchEngine(androidLauncher);
+			launchEngine(launcher);
 		} catch (EngineException e) {
 			// TODO: What to do here?
 			// Set an error in TokTales and maybe show dialog and then exit?
