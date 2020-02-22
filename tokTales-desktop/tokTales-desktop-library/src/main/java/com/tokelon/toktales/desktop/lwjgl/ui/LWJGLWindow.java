@@ -1,6 +1,7 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.desktop.ui.window.IWindow;
@@ -210,6 +211,39 @@ public class LWJGLWindow implements IWindow {
 	@Override
 	public void setAttribute(int attribute, int value) {
 		GLFW.glfwSetWindowAttrib(windowId, attribute, value);
+	}
+
+	
+	@Override
+	public void setWindowed(int x, int y, int width, int height) {
+		setAttribute(GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
+		setMonitor(0, x, y, width, height, 0); // refreshRate is ignore
+	}
+
+	@Override
+	public void setFullscreen() {
+		long monitor = GLFW.glfwGetPrimaryMonitor();
+		GLFWVidMode videoMode = GLFW.glfwGetVideoMode(monitor);
+
+		setAttribute(GLFW.GLFW_RED_BITS, videoMode.redBits());
+		setAttribute(GLFW.GLFW_GREEN_BITS, videoMode.greenBits());
+		setAttribute(GLFW.GLFW_BLUE_BITS, videoMode.blueBits());
+
+		setMonitor(monitor, 0, 0, videoMode.width(), videoMode.height(), videoMode.refreshRate());
+	}
+
+	@Override
+	public void setBorderless() {
+		long monitor = GLFW.glfwGetPrimaryMonitor();
+		GLFWVidMode videoMode = GLFW.glfwGetVideoMode(monitor);
+
+		setAttribute(GLFW.GLFW_RED_BITS, videoMode.redBits());
+		setAttribute(GLFW.GLFW_GREEN_BITS, videoMode.greenBits());
+		setAttribute(GLFW.GLFW_BLUE_BITS, videoMode.blueBits());
+
+		setAttribute(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+		
+		setMonitor(monitor, 0, 0, videoMode.width(), videoMode.height(), videoMode.refreshRate());		
 	}
 	
 }

@@ -61,4 +61,14 @@ public interface IWindow {
 	
 	public void setAttribute(int attribute, int value);
 	
+
+	public void setWindowed(int x, int y, int width, int height);
+	
+	public void setFullscreen();
+	public void setBorderless();
+
+	
+	//public int getFrameBufferWidth();
+	//public int getFrameBufferHeight();
+	
 }
