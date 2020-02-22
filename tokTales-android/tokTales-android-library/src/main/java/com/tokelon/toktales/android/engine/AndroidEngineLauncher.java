@@ -12,7 +12,7 @@ import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConf
 
 import android.content.Context;
 
-public class AndroidEngineLauncher extends BaseEngineLauncher {
+public class AndroidEngineLauncher extends BaseEngineLauncher implements IAndroidEngineLauncher {
 
 	
 	private final Context appContext;

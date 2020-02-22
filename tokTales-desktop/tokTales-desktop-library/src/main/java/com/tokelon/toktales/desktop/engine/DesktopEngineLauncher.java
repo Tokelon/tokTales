@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.desktop.engine.inject.MasterDesktopInjectConfig;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
-public class DesktopEngineLauncher extends BaseEngineLauncher {
+public class DesktopEngineLauncher extends BaseEngineLauncher implements IDesktopEngineLauncher {
 
 
 	/** Constructor with an inject config.
