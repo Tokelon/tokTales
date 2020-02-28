@@ -18,11 +18,13 @@ jobs:
       working-directory: tokTales-master
       run: ./gradlew build
     - name: Generate build number
+      if: github.ref == 'refs/heads/master'
       uses: einaregilsson/build-number@v2
       with:
         token: ${{secrets.github_token}}
         prefix: tokTales-master-0.1.0
     - name: Publish to GitHub Packages
+      if: github.ref == 'refs/heads/master'
       env:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-master
