@@ -42,6 +42,33 @@ task wrapperCustom(type: Wrapper) {
 
 
 
+// Apply Java plugin to enable Javadoc task
+apply plugin: 'java'
+
+task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all subprojects as if it was a single project.', group: 'documentation') {
+	destinationDir = file("$buildDir/docs/javadoc")
+	title = "tokTales $version API"
+	options.links (
+			'https://docs.oracle.com/javase/8/docs/api/',
+			'https://developer.android.com/reference',
+			'https://google.github.io/guice/api-docs/4.2.1/javadoc/',
+			'https://guava.dev/releases/26.0-android/api/docs/'
+	)
+	options.addBooleanOption('Xdoclint:none', true)
+
+	gradle.projectsEvaluated({
+		subprojects.each { project ->
+			project.tasks.withType(Javadoc).each { javadocTask ->
+				source += javadocTask.source
+				classpath += javadocTask.classpath
+				excludes += javadocTask.excludes
+				includes += javadocTask.includes
+			}
+		}
+	})
+}
+
+
 def pomConfig = {
 	name = 'tokTales Engine'
 	description = 'Part of tokTales Engine, a neat game engine.'

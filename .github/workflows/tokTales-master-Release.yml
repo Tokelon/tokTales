@@ -1,9 +1,12 @@
-name: tokTales-master CI
+name: tokTales-master Release
 
-on: [push]
+on:
+  release:
+    types:
+      - published
 
 jobs:
-  build:
+  release:
 
     runs-on: ubuntu-latest
 
@@ -17,15 +20,14 @@ jobs:
     - name: Build with Gradle
       working-directory: tokTales-master
       run: ./gradlew build
-    - name: Generate build number
-      if: github.ref == 'refs/heads/master'
-      uses: einaregilsson/build-number@v2
-      with:
-        token: ${{secrets.github_token}}
-        prefix: tokTales-master-0.1.0
+    - name: Deploy to Bintray
+      env:
+        BINTRAY_USER: ${{secrets.BINTRAY_USER}}
+        BINTRAY_KEY: ${{secrets.BINTRAY_KEY}}
+      working-directory: tokTales-master
+      run: ./gradlew bintrayUpload -Pbintray.version -Pbintray.user=$BINTRAY_USER -Pbintray.key=$BINTRAY_KEY
     - name: Publish to GitHub Packages
-      if: github.ref == 'refs/heads/master'
       env:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-master
-      run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
+      run: ./gradlew publish
