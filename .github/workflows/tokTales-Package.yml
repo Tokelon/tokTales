@@ -41,4 +41,4 @@ jobs:
         github_pat: ${{secrets.GITHUB_PAT}}
         source_folder: tokTales-master/build/docs/javadoc
         target_folder: api-docs/nightly/javadoc
-        commit_message: Update nightly api-docs from build $BUILD_NUMBER
+        commit_message: Update nightly api-docs from build ${{env.BUILD_NUMBER}}
