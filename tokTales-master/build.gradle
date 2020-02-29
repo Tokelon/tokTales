@@ -55,7 +55,7 @@ task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all su
 			'https://guava.dev/releases/26.0-android/api/docs/'
 	)
 	options.addBooleanOption('Xdoclint:none', true)
-	options.addBooleanOption('notimestamp', true)
+	//options.addBooleanOption('notimestamp', true) // TODO: Fix api-docs publishing before enabling this
 
 	gradle.projectsEvaluated({
 		subprojects.each { project ->
