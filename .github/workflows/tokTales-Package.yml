@@ -30,3 +30,15 @@ jobs:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-master
       run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
+    - name: Generate Javadoc
+      working-directory: tokTales-master
+      run: ./gradlew javadocAggregated
+    - name: Publish Javadoc
+      uses: seanmiddleditch/gha-publish-to-git@master
+      with:
+        repository: Tokelon/tokTales-docs
+        branch: master
+        github_pat: ${{secrets.GITHUB_PAT}}
+        source_folder: tokTales-master/build/docs/javadoc
+        target_folder: api-docs/nightly/javadoc
+        commit_message: Update nightly api-docs from build $BUILD_NUMBER
