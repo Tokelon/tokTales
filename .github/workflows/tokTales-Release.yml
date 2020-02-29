@@ -1,4 +1,4 @@
-name: tokTales-master Release
+name: tokTales Release
 
 on:
   release:

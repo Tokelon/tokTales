@@ -1,4 +1,4 @@
-name: tokTales-android CI
+name: tokTales-core Build
 
 on: [push]
 
@@ -15,5 +15,5 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      working-directory: tokTales-android
+      working-directory: tokTales-core
       run: ./gradlew build

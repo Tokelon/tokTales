@@ -1,4 +1,4 @@
-name: tokTales-desktop CI
+name: tokTales-extensions Build
 
 on: [push]
 
@@ -15,5 +15,5 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      working-directory: tokTales-desktop
+      working-directory: tokTales-extensions
       run: ./gradlew build
