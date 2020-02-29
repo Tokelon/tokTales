@@ -33,6 +33,9 @@ jobs:
     - name: Generate Javadoc
       working-directory: tokTales-master
       run: ./gradlew javadocAggregated
+    - name: Get project version from Gradle
+      working-directory: tokTales-master
+      run: echo ::set-env name=PROJECT_VERSION::$(./gradlew properties --console=plain -q | grep "^version:" | awk '{printf $2}')
     - name: Publish Javadoc
       uses: seanmiddleditch/gha-publish-to-git@master
       with:
@@ -41,4 +44,4 @@ jobs:
         github_pat: ${{secrets.GITHUB_PAT}}
         source_folder: tokTales-master/build/docs/javadoc
         target_folder: api-docs/nightly/javadoc
-        commit_message: Update nightly api-docs from build ${{env.BUILD_NUMBER}}
+        commit_message: Update nightly api-docs with version ${{env.PROJECT_VERSION}}-${{env.BUILD_NUMBER}}
