@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://api.bintray.com/packages/tokelon/tokTales/tokTales/images/download.svg) ](https://bintray.com/tokelon/tokTales/tokTales/_latestVersion)
-![tokTales-master CI](https://github.com/Tokelon/tokTales/workflows/tokTales-master%20CI/badge.svg)
+![tokTales Build](https://github.com/Tokelon/tokTales/workflows/tokTales%20Build/badge.svg?branch=master)
 
 A cross-platform game engine written in Java.
 
