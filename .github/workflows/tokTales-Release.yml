@@ -31,3 +31,18 @@ jobs:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-master
       run: ./gradlew publish
+    - name: Generate Javadoc
+      working-directory: tokTales-master
+      run: ./gradlew javadocAggregated -Pbintray.version
+    - name: Get project version from Gradle
+      working-directory: tokTales-master
+      run: echo ::set-env name=PROJECT_VERSION::$(./gradlew properties --console=plain -q | grep "^version:" | awk '{printf $2}')
+    - name: Publish release Javadoc
+      uses: seanmiddleditch/gha-publish-to-git@78b4078ce1f8925a4d99e4e18e14a37d98f27b64
+      with:
+        repository: Tokelon/tokTales-docs
+        branch: master
+        github_pat: ${{secrets.GITHUB_PAT}}
+        source_folder: tokTales-master/build/docs/javadoc
+        target_folder: api-docs/${{env.PROJECT_VERSION}}/javadoc
+        commit_message: Update release api-docs with version ${{env.PROJECT_VERSION}}
