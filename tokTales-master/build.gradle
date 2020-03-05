@@ -47,7 +47,7 @@ apply plugin: 'java'
 
 task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all subprojects as if it was a single project.', group: 'documentation') {
 	destinationDir = file("$buildDir/docs/javadoc")
-	title = "tokTales $version API"
+	title = "tokTales ${project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))} API"
 	options.links (
 			'https://docs.oracle.com/javase/8/docs/api/',
 			'https://developer.android.com/reference',
