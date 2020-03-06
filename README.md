@@ -3,7 +3,7 @@
 > A neat game engine.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Download](https://api.bintray.com/packages/tokelon/tokTales/tokTales/images/download.svg) ](https://bintray.com/tokelon/tokTales/tokTales/_latestVersion)
+[![Download](https://api.bintray.com/packages/tokelon/tokTales/tokTales/images/download.svg)](https://bintray.com/tokelon/tokTales/tokTales/_latestVersion)
 ![tokTales Build](https://github.com/Tokelon/tokTales/workflows/tokTales%20Build/badge.svg?branch=master)
 
 A cross-platform game engine written in Java.
@@ -42,8 +42,8 @@ Not everything has Javadoc attached and the Wiki and Readme need to be expanded.
 
 ## Getting Started
 
-- **[Demos](https://github.com/Tokelon/tokTales-demos)**
-- **[Template Projects](https://github.com/Tokelon/tokTales-templates)**
+- **[Demos](https://github.com/Tokelon/tokTales-demos)** - Demos and sample code
+- **[Templates](https://github.com/Tokelon/tokTales-templates)** - Template projects
 
 ## Installation
 
