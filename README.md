@@ -84,13 +84,15 @@ dependencies {
 ```
 
 ### Modules
-
+<!--- Remember to adjust for README and WIKI --->
 The engine is divided into modules: **Core**, **Desktop**, **Android**, etc.  
 Each module contains one or more libraries: `core-library` and `core-test` in Core, `desktop-library` and `desktop-test` in Desktop, and so on.
 
 The modules are built as a hierarchical structure in which platform libraries have dependencies on Core libraries, but never one platform on another. Meaning that, for example, you can use the Desktop libraries without ever getting involved with Android. But you can also develop for both and put the shared code into a core library.
 
 There are also mixed modules like **Tools**, that contain libraries for more than one platform.
+
+The full list of modules can be found **[here](https://github.com/Tokelon/tokTales/wiki/%5BAbout%5D-Modules)**.
 
 ## Building
 
@@ -133,6 +135,8 @@ Below listed are some of the technologies used in this project.
 - **[Guice](https://github.com/google/guice)** - Dependency injection
 - **[SLF4J](http://www.slf4j.org/)** - Logging
 - **[Tiled Map Editor](https://www.mapeditor.org/)** (Optional) - Level design
+
+An extensive list of technologies can be found **[here](https://github.com/Tokelon/tokTales/wiki/%5BAbout%5D-Technologies)**.
 
 ## License
 
