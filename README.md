@@ -120,7 +120,8 @@ In addition there is the master project, which includes all projects, and is use
 
 ## Documentation
 
-*[Coming Soon]*
+- **[Wiki](https://github.com/Tokelon/tokTales/wiki)** - User Guide and general information
+- **[API Reference](https://tokelon.github.io/tokTales-docs/)** - Javadoc for all engine libraries
 
 ## Technologies
 
