@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
-import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.engine.setup.DefaultEngineSetup;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
@@ -115,7 +115,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @return A new instance of the default setup implementation.
 	 */
 	protected IEngineSetup createDefaultSetup() {
-		return new BaseInjectSetup();
+		return new DefaultEngineSetup();
 	}
 	
 	

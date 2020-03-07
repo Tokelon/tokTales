@@ -19,7 +19,7 @@ import java9.util.Comparators;
 import java9.util.stream.Stream;
 import java9.util.stream.StreamSupport;
 
-public abstract class AbstractInjectSetup implements IStepsEngineSetup {
+public class BaseEngineSetup implements IStepsEngineSetup {
 
 
 	private SetupMode setupMode = SetupMode.PRODUCTION; // Default setup mode is production
@@ -29,7 +29,7 @@ public abstract class AbstractInjectSetup implements IStepsEngineSetup {
 	
 	/** Default constructor.
 	 */
-	protected AbstractInjectSetup() {
+	protected BaseEngineSetup() {
 		this(new SetupSteps(), LoggingManager.getLoggerFactory());
 	}
 	
@@ -37,7 +37,7 @@ public abstract class AbstractInjectSetup implements IStepsEngineSetup {
 	 * 
 	 * @param steps
 	 */
-	protected AbstractInjectSetup(ISetupSteps steps) {
+	protected BaseEngineSetup(ISetupSteps steps) {
 		this(steps, LoggingManager.getLoggerFactory());
 	}
 
@@ -45,7 +45,7 @@ public abstract class AbstractInjectSetup implements IStepsEngineSetup {
 	 * 
 	 * @param loggerFactory
 	 */
-	protected AbstractInjectSetup(ILoggerFactory loggerFactory) {
+	protected BaseEngineSetup(ILoggerFactory loggerFactory) {
 		this(new SetupSteps(), loggerFactory);
 	}
 	
@@ -54,7 +54,7 @@ public abstract class AbstractInjectSetup implements IStepsEngineSetup {
 	 * @param steps
 	 * @param loggerFactory
 	 */
-	protected AbstractInjectSetup(ISetupSteps steps, ILoggerFactory loggerFactory) {
+	protected BaseEngineSetup(ISetupSteps steps, ILoggerFactory loggerFactory) {
 		this.logger = loggerFactory.getLogger(getClass());
 		this.steps = new SetupSteps();
 	}

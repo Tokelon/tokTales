@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.engine.setup.steps.AddInitialGamestateStep;
 import com.tokelon.toktales.core.engine.setup.steps.InitScriptingStep;
 import com.tokelon.toktales.core.engine.setup.steps.LoadMainConfigStep;
 
-public class BaseInjectSetup extends AbstractInjectSetup {
+public class DefaultEngineSetup extends BaseEngineSetup {
 
 
 	public static final String STEP_LOAD_MAIN_CONFIG = "STEP_LOAD_MAIN_CONFIG";
@@ -13,22 +13,22 @@ public class BaseInjectSetup extends AbstractInjectSetup {
 	public static final String STEP_ADD_INITIAL_GAMESTATE = "STEP_ADD_INITIAL_GAMESTATE";
 	
 	
-	public BaseInjectSetup() {
+	public DefaultEngineSetup() {
 		super();
 		addDefaultSteps();
 	}
 
-	public BaseInjectSetup(ISetupSteps steps) {
+	public DefaultEngineSetup(ISetupSteps steps) {
 		super(steps);
 		addDefaultSteps();
 	}
 	
-	public BaseInjectSetup(ILoggerFactory loggerFactory) {
+	public DefaultEngineSetup(ILoggerFactory loggerFactory) {
 		super(loggerFactory);
 		addDefaultSteps();
 	}
 
-	public BaseInjectSetup(ISetupSteps steps, ILoggerFactory loggerFactory) {
+	public DefaultEngineSetup(ISetupSteps steps, ILoggerFactory loggerFactory) {
 		super(steps, loggerFactory);
 		addDefaultSteps();
 	}

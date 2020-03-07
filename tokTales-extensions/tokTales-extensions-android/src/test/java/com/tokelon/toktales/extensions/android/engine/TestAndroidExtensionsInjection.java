@@ -10,7 +10,7 @@ import com.tokelon.toktales.android.test.engine.inject.AndroidMockPlatformInject
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
-import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.engine.setup.DefaultEngineSetup;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 import com.tokelon.toktales.extensions.android.engine.inject.MasterAndroidExtensionsInjectConfig;
 
@@ -38,7 +38,7 @@ public class TestAndroidExtensionsInjection {
 		injectConfig.override(new AndroidMockPlatformInjectModule());
 		// No AndroidExtensionsMockPlatformInjectModule needed yet
 		
-		BaseInjectSetup setup = new BaseInjectSetup();
+		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
 	

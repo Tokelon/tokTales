@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
-import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.engine.setup.DefaultEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.core.test.engine.inject.InjectionTestHelper;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
@@ -54,7 +54,7 @@ public class TestDesktopInjection {
 
 		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
 
-		BaseInjectSetup setup = new BaseInjectSetup();
+		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
 	
@@ -65,7 +65,7 @@ public class TestDesktopInjection {
 		
 		injectConfig.override(new DesktopMockPlatformInjectModule());
 		
-		BaseInjectSetup setup = new BaseInjectSetup();
+		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
 	

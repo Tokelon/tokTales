@@ -6,7 +6,7 @@ import com.google.inject.CreationException;
 import com.google.inject.Injector;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.engine.setup.DefaultEngineSetup;
 import com.tokelon.toktales.core.game.state.IControlScheme;
 import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
 import com.tokelon.toktales.core.test.engine.inject.CoreMockPlatformInjectModule;
@@ -82,7 +82,7 @@ public class TestCoreExtensionsInjection {
 		injectConfig.extend(new CoreMockPlatformInjectModule());
 		injectConfig.extend(new CoreExtensionsMockPlatformInjectModule());
 
-		BaseInjectSetup setup = new BaseInjectSetup();
+		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
 	
