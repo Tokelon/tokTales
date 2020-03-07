@@ -98,14 +98,9 @@ public class BaseEngineLauncher implements IEngineLauncher {
 
 		// Load into TokTales
 		TokTales.load(engineContext);
-
 		
-		// Setup the engine
-		setupEngine(setup, engineContext);
-		
-		
-		// Start the engine
-		runEngine(engineContext);
+		// Run the engine
+		runEngine(setup, engineContext);
 	}
 	
 	
@@ -124,9 +119,9 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 	
 	
-	/** Extends the inject config with launching modules.
+	/** Extends the inject config with launcher modules.
 	 * <p>
-	 * The default implementation registers this launcher and the given game adapter.
+	 * The default implementation registers this launcher and the given game adapter for injection.
 	 * 
 	 * @param adapter
 	 * @param setup
@@ -152,30 +147,22 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	}
 	
 	
-	/** Runs the engine setup with the given context.
-	 * 
-	 * @param setup
-	 * @param engineContext
-	 * @throws EngineException If an error occurs during setup.
-	 */
-	protected void setupEngine(IEngineSetup setup, IEngineContext engineContext) throws EngineException {
-		// Run the given setup with the created engine context
-		setup.run(engineContext);
-	}
-	
-	
 	/** Runs the engine.<br>
 	 * The default implementation steps are as follows:<br>
-	 * 1. Start up the engine by calling {@link #startupEngine(IEngineContext)}.<br>
-	 * 2. Run the main loop by calling {@link #loop(IEngineContext, IEngineLooper)}.<br>
-	 * 3. Shut down the engine by calling {@link #shutdownEngine(IEngineContext)}, after {@link #terminate()} has been called or the looper has stopped. 
+	 * 1. Set up the engine by calling {@link #buildUpEngine(IEngineSetup, IEngineContext)}.<br>
+	 * 2. Start up the engine by calling {@link #startupEngine(IEngineContext)}.<br>
+	 * 3. Run the main loop by calling {@link #loop(IEngineContext, IEngineLooper)}.<br>
+	 * 4. Shut down the engine by calling {@link #shutdownEngine(IEngineContext)}, after {@link #terminate()} has been called or the looper has stopped.
+	 * 5. Tear down the engine by calling {@link #tearDownEngine(IEngineSetup, IEngineContext)}.<br>
 	 * <p>
 	 * Generally this method will not return until the engine should exit.
 	 * 
+	 * @param setup
 	 * @param engineContext
 	 * @throws EngineException If an error occurs during execution.
 	 */
-	protected void runEngine(IEngineContext engineContext) throws EngineException {
+	protected void runEngine(IEngineSetup setup, IEngineContext engineContext) throws EngineException {
+		buildUpEngine(setup, engineContext);
 		startupEngine(engineContext);
 
 		try {
@@ -183,7 +170,28 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		}
 		finally {
 			shutdownEngine(engineContext);
+			tearDownEngine(setup, engineContext);
 		}
+	}
+	
+	/** Builds up the engine using the given setup and the given context.
+	 * 
+	 * @param setup
+	 * @param engineContext
+	 * @throws EngineException If an error occurs during build up.
+	 */
+	protected void buildUpEngine(IEngineSetup setup, IEngineContext engineContext) throws EngineException {
+		setup.buildUp(engineContext);
+	}
+	
+	/** Tears down the engine using the given setup and the given context.
+	 * 
+	 * @param setup
+	 * @param engineContext
+	 * @throws EngineException If an error occurs during tear down.
+	 */
+	protected void tearDownEngine(IEngineSetup setup, IEngineContext engineContext) throws EngineException {
+		setup.tearDown(engineContext);
 	}
 	
 	/** Runs the startup logic for the engine.
@@ -194,7 +202,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	 * @throws EngineException If an error occurs during startup.
 	 */
 	protected void startupEngine(IEngineContext engineContext) throws EngineException {
-		engineContext.getEngine().getEngineDriver().create(); // calls onCreate on adapter
+		engineContext.getEngine().getEngineDriver().create(); // calls onCreate() for adapter
 
 		engineContext.getEngine().getEngineDriver().start();
 		engineContext.getEngine().getEngineDriver().resume();

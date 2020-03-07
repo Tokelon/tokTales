@@ -64,12 +64,16 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 
 	
 	@Override
-	public void run(IEngineContext context) throws EngineException {
+	public void buildUp(IEngineContext context) throws EngineException {
 		doRun(context);
 		
 		createGameAdapter(context.getInjector());
 	}
 
+	@Override
+	public void tearDown(IEngineContext context) throws EngineException {
+	}
+	
 	
 	@Override
 	public void setSetupMode(SetupMode mode) {

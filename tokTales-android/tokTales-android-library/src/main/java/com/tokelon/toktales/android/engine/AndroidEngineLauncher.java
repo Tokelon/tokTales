@@ -66,9 +66,14 @@ public class AndroidEngineLauncher extends BaseEngineLauncher implements IAndroi
 	 * @param engineContext
 	 */
 	@Override
-	protected void runEngine(IEngineContext engineContext) {
+	protected void runEngine(IEngineSetup setup, IEngineContext engineContext) throws EngineException {
 		// Do NOT call super here
 		// The Android lifecycle is a bit more dynamic, so we can not start anything here
+		
+		// We do need to build up the setup however
+		setup.buildUp(engineContext);
+		
+		// TODO: Call setup.tearDown() somewhere ?
 	}
 	
 }

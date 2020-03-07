@@ -10,7 +10,7 @@ public class BaseInjectSetup extends AbstractInjectSetup {
 
 
 	@Override
-	protected void doRun(IEngineContext context) throws EngineException {
+	protected void buildUp(IEngineContext context) throws EngineException {
 
 		new LoadMainConfigStep().run(context);
 
