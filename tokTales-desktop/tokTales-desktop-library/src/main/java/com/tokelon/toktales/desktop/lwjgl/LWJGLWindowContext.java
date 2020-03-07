@@ -23,67 +23,66 @@ import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFact
 public class LWJGLWindowContext implements IWindowContext {
 
 
-	private IWindowBuilder effectiveWindowBuilder;
-	private IWindowConfigurator effectiveWindowConfigurator;
-	private IWindow effectiveWindow;
-	private IDesktopInputDriver effectiveInputDriver;
-	private IWindowRenderer effectiveRenderer;
+	private IWindow window;
+	private IWindowRenderer renderer;
+	private IDesktopInputDriver inputDriver;
 
-	private boolean useDefaultInputDriver = true;
-
-	private IWindowBuilder setWindowBuilder;
-	private IWindowConfigurator setWindowConfigurator;
-	private IDesktopInputDriver setInputDriver;
-	private IWindowRenderer setRenderer;
+	private IWindowBuilder windowBuilder;
+	private IWindowConfigurator windowConfigurator;
+	private IDesktopInputDriverFactory inputDriverFactory;
+	private IWindowRendererFactory windowRendererFactory;
 	
 	private final IWindowFactory windowFactory;
 	private final IWindowToolkit windowToolkit;
 	
-	public LWJGLWindowContext() {
-		this(
-			new LWJGLWindowFactory(),
-			new LWJGLWindowToolkit()
-		);
-	}
-	
-	public LWJGLWindowContext(IWindowFactory windowFactory, IWindowToolkit windowToolkit) {
+	public LWJGLWindowContext(
+			IWindowFactory windowFactory,
+			IWindowToolkit windowToolkit,
+			IWindowBuilder windowBuilder,
+			IWindowConfigurator windowConfigurator,
+			IWindowRendererFactory windowRendererFactory,
+			IDesktopInputDriverFactory inputDriverFactory
+	) {
 		this.windowFactory = windowFactory;
 		this.windowToolkit = windowToolkit;
+		this.windowBuilder = windowBuilder;
+		this.windowConfigurator = windowConfigurator;
+		this.inputDriverFactory = inputDriverFactory;
+		this.windowRendererFactory = windowRendererFactory;
 	}
 	
 	
 	@Override
 	public void create(IEngineContext engineContext) throws EngineException {
-		effectiveWindowBuilder = setWindowBuilder == null ? createDefaultWindowBuilder() : setWindowBuilder;
-		effectiveWindowConfigurator = setWindowConfigurator == null ? createDefaultWindowConfigurator() : setWindowConfigurator;
-		effectiveRenderer = setRenderer == null ? createDefaultRenderer(engineContext) : setRenderer;
-		effectiveInputDriver = useDefaultInputDriver ? createDefaultInputDriver(engineContext) : setInputDriver;
+		this.renderer = windowRendererFactory.create(engineContext);
+		this.inputDriver = inputDriverFactory.create(engineContext);
 
+		
 		// Create window
-		effectiveWindow = getEffectiveWindowBuilder().build(getWindowFactory(), getWindowToolkit());
-		getEffectiveWindow().create();
+		this.window = getWindowBuilder().build(getWindowFactory(), getWindowToolkit());
+		getWindow().create();
 
 		// Register input driver
-		getEffectiveInputDriver().register(getEffectiveWindow());
+		getInputDriver().register(getWindow());
 
 		// Create renderer and context
-		getEffectiveRenderer().create(getEffectiveWindow());
-		getEffectiveRenderer().createContext();
+		getRenderer().create(getWindow());
+		getRenderer().createContext();
 
 		// Configure window
-		getEffectiveWindowConfigurator().configure(getEffectiveWindow());
-		getEffectiveWindow().show();
+		getWindowConfigurator().configure(getWindow());
+		getWindow().show();
 	}
 
 	@Override
 	public void destroy() throws EngineException {
-		if(getEffectiveInputDriver() != null) {
-			getEffectiveInputDriver().unregister();
+		if(getInputDriver() != null) {
+			getInputDriver().unregister();
 		}
 
-		getEffectiveRenderer().destroyContext();
-		getEffectiveRenderer().destroy();
-		getEffectiveWindow().destroy();
+		getRenderer().destroyContext();
+		getRenderer().destroy();
+		getWindow().destroy();
 	}
 
 	
@@ -99,87 +98,165 @@ public class LWJGLWindowContext implements IWindowContext {
 	
 	@Override
 	public IWindow getWindow() {
-		return getEffectiveWindow();
+		return window;
 	}
 	
 	@Override
 	public IWindowRenderer getRenderer() {
-		return getEffectiveRenderer();
+		return renderer;
 	}
 	
 	@Override
 	public IDesktopInputDriver getInputDriver() {
-		return getEffectiveInputDriver();
-	}
-	
-	
-	public void useDefaultInputDriver(boolean enabled) {
-		this.useDefaultInputDriver = enabled;
-	}
-	
-	
-	public void setWindowBuilder(IWindowBuilder builder) {
-		this.setWindowBuilder = builder;
-	}
-	
-	public void setWindowConfigurator(IWindowConfigurator configurator) {
-		this.setWindowConfigurator = configurator;
-	}
-	
-	public void setInputDriver(IDesktopInputDriver inputDriver) {
-		this.setInputDriver = inputDriver;
-	}
-	
-	public void setRenderer(IWindowRenderer renderer) {
-		this.setRenderer = renderer;
-	}
-
-
-	protected IWindowBuilder createDefaultWindowBuilder() {
-		return windowFactory.createDefaultBuilder();
-	}
-	
-	protected IWindowConfigurator createDefaultWindowConfigurator() {
-		return (window) -> {};
-	}
-	
-	protected IDesktopInputDriver createDefaultInputDriver(IEngineContext engineContext) throws EngineException {
-		IDesktopInputService desktopInputService;
-		try {
-			desktopInputService = engineContext.getInjector().getInstance(IDesktopInputService.class);
-		}
-		catch (ConfigurationException | ProvisionException e) {
-			throw new EngineException(e);
-		}
-
-		IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
-		IDesktopInputDriver inputDriver = new GLFWInputDriver(mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
 		return inputDriver;
 	}
 	
-	protected IWindowRenderer createDefaultRenderer(IEngineContext engineContext) {
-		return new DefaultGameWindowRenderer(engineContext.getEngine().getEngineDriver(), engineContext.getEngine().getRenderService().getSurfaceManager());
+	
+	protected IWindowBuilder getWindowBuilder() {
+		return windowBuilder;
+	}
+	
+	protected IWindowConfigurator getWindowConfigurator() {
+		return windowConfigurator;
 	}
 	
 	
-	protected IWindowBuilder getEffectiveWindowBuilder() {
-		return effectiveWindowBuilder;
-	}
-	
-	protected IWindowConfigurator getEffectiveWindowConfigurator() {
-		return effectiveWindowConfigurator;
-	}
-	
-	protected IWindow getEffectiveWindow() {
-		return effectiveWindow;
-	}
-	
-	protected IDesktopInputDriver getEffectiveInputDriver() {
-		return effectiveInputDriver;
-	}
-	
-	protected IWindowRenderer getEffectiveRenderer() {
-		return effectiveRenderer;
+	public static class LWJGLWindowContextBuilder implements IWindowContextBuilder {
+		private IWindowFactory windowFactory;
+		private IWindowToolkit windowToolkit;
+		private IWindowBuilder windowBuilder;
+		private IWindowConfigurator windowConfigurator;
+		private IWindowRendererFactory windowRendererFactory;
+		private IDesktopInputDriverFactory inputDriverFactory;
+
+		public LWJGLWindowContextBuilder() {
+			this(
+				new LWJGLWindowFactory(),
+				new LWJGLWindowToolkit(),
+				new LWJGLWindowFactory().createDefaultBuilder(),
+				(window) -> {},
+				new LWJGLWindowRendererFactory(),
+				new LWJGLInputDriverFactory()
+			);
+		}
+		
+		public LWJGLWindowContextBuilder(
+				IWindowFactory windowFactory,
+				IWindowToolkit windowToolkit,
+				IWindowBuilder windowBuilder,
+				IWindowConfigurator windowConfigurator,
+				IWindowRendererFactory windowRendererFactory,
+				IDesktopInputDriverFactory inputDriverFactory
+		) {
+			this.windowFactory = windowFactory;
+			this.windowToolkit = windowToolkit;
+			this.windowBuilder = windowBuilder;
+			this.windowConfigurator = windowConfigurator;
+			this.windowRendererFactory = windowRendererFactory;
+			this.inputDriverFactory = inputDriverFactory;
+		}
+		
+		
+		@Override
+		public IWindowContext build() {
+			return new LWJGLWindowContext(
+					windowFactory,
+					windowToolkit,
+					windowBuilder,
+					windowConfigurator,
+					windowRendererFactory,
+					inputDriverFactory
+			);
+		}
+
+		@Override
+		public IWindowContextBuilder withWindowFactory(IWindowFactory windowFactory) {
+			this.windowFactory = windowFactory;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withWindowToolkit(IWindowToolkit windowToolkit) {
+			this.windowToolkit = windowToolkit;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withWindow(IWindow window) {
+			this.windowBuilder = (windowFactory, windowToolkit) -> window;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withWindow(IWindowBuilder windowBuilder) {
+			this.windowBuilder = windowBuilder;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withWindowConfigurator(IWindowConfigurator windowConfigurator) {
+			this.windowConfigurator = windowConfigurator;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withRenderer(IWindowRenderer windowRenderer) {
+			this.windowRendererFactory = (engineContext) -> windowRenderer;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withRenderer(IWindowRendererFactory windowRendererFactory) {
+			this.windowRendererFactory = windowRendererFactory;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withInputDriver(IDesktopInputDriver inputDriver) {
+			this.inputDriverFactory = (engineContext) -> inputDriver;
+			return this;
+		}
+
+		@Override
+		public IWindowContextBuilder withInputDriver(IDesktopInputDriverFactory inputDriverFactory) {
+			this.inputDriverFactory = inputDriverFactory;
+			return this;
+		}
+		
+		@Override
+		public IWindowContextBuilder withInputDriverNone() {
+			this.inputDriverFactory = (engineContext) -> null;
+			return this;
+		}
+		
+		
+		public static class LWJGLInputDriverFactory implements IDesktopInputDriverFactory {
+
+			@Override
+			public IDesktopInputDriver create(IEngineContext engineContext) {
+				IDesktopInputDriver inputDriver = null;
+				try {
+					IDesktopInputService desktopInputService = engineContext.getInjector().getInstance(IDesktopInputService.class);
+
+					IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
+					inputDriver = new GLFWInputDriver(mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+				}
+				catch (ConfigurationException | ProvisionException e) {
+					// TODO: What to do here? Pass the exception? Log and continue?
+					throw e;
+				}
+				
+				return inputDriver;
+			}
+		}
+		
+		public static class LWJGLWindowRendererFactory implements IWindowRendererFactory {
+
+			@Override
+			public IWindowRenderer create(IEngineContext engineContext) {
+				return new DefaultGameWindowRenderer(engineContext.getEngine().getEngineDriver(), engineContext.getEngine().getRenderService().getSurfaceManager());
+			}
+		}
 	}
 	
 }

@@ -5,6 +5,7 @@ import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowContext;
+import com.tokelon.toktales.desktop.ui.window.IWindowContext.IWindowContextBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowHandler;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
@@ -36,6 +37,7 @@ public interface IDesktopLauncherFactory {
 		
 		public IWindowEngineLauncherBuilder withWindow(IWindowHandler windowHandler);
 		public IWindowEngineLauncherBuilder withWindow(IWindowContext windowContext);
+		public IWindowEngineLauncherBuilder withWindow(IWindowContextBuilder windowContextBuilder);
 		
 		public IWindowEngineLauncherBuilder withWindow(IWindowBuilder windowBuilder);
 		public IWindowEngineLauncherBuilder withWindow(IWindowConfigurator windowConfigurator);

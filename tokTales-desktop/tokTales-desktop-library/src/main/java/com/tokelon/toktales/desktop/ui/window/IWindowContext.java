@@ -6,7 +6,6 @@ import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
 public interface IWindowContext {
-	// TODO: Implement builder via factories with engineContext?
 
 
 	public void create(IEngineContext engineContext) throws EngineException;
@@ -25,5 +24,36 @@ public interface IWindowContext {
 	public IWindowRenderer getRenderer();
 	
 	public IDesktopInputDriver getInputDriver();
+	
+	
+	public interface IWindowContextBuilder {
+		public IWindowContext build();
+		
+		public IWindowContextBuilder withWindowFactory(IWindowFactory windowFactory);
+		public IWindowContextBuilder withWindowToolkit(IWindowToolkit windowToolkit);
+		
+		public IWindowContextBuilder withWindow(IWindow window);
+		public IWindowContextBuilder withWindow(IWindowBuilder windowBuilder);
+		
+		public IWindowContextBuilder withWindowConfigurator(IWindowConfigurator windowConfigurator);
+		
+		public IWindowContextBuilder withRenderer(IWindowRenderer windowRenderer);
+		public IWindowContextBuilder withRenderer(IWindowRendererFactory windowRendererFactory);
+		
+		public IWindowContextBuilder withInputDriver(IDesktopInputDriver inputDriver);
+		public IWindowContextBuilder withInputDriver(IDesktopInputDriverFactory inputDriverFactory);
+		public IWindowContextBuilder withInputDriverNone();
+	}
+	
+	
+	public interface IWindowRendererFactory {
+		
+		public IWindowRenderer create(IEngineContext engineContext);
+	}
+	
+	public interface IDesktopInputDriverFactory {
+		
+		public IDesktopInputDriver create(IEngineContext engineContext);
+	}
 	
 }

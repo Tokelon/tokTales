@@ -6,10 +6,11 @@ import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.desktop.engine.inject.MasterDesktopInjectConfig;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLInputProcessor;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLWindowContext;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLWindowContext.LWJGLWindowContextBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowContext;
+import com.tokelon.toktales.desktop.ui.window.IWindowContext.IWindowContextBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowHandler;
 import com.tokelon.toktales.desktop.ui.window.WindowHandler;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
@@ -109,7 +110,7 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 				new MasterDesktopInjectConfig(),
 				null,
 				LoggingManager.getLoggerFactory(),
-				new WindowHandler(new LWJGLWindowContext())
+				new WindowHandler(new LWJGLWindowContextBuilder().build())
 			);
 		}
 		
@@ -128,6 +129,7 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 		
 		@Override
 		public IWindowEngineLauncher build() {
+			// Create window handler lazily for some reason?
 			IEngineLooper looper = defaultLooper == null ? new WindowEngineLooper(windowHandler, new LWJGLInputProcessor()) : defaultLooper;
 			
 			return new WindowEngineLauncher(injectConfig, windowHandler, looper, loggerFactory);
@@ -145,28 +147,34 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 		}
 
 		@Override
+		public IWindowEngineLauncherBuilder withWindow(IWindowContextBuilder windowContextBuilder) {
+			return withWindow(new WindowHandler(windowContextBuilder.build()));
+		}
+		
+		
+		@Override
 		public IWindowEngineLauncherBuilder withWindow(IWindowBuilder windowBuilder) {
-			LWJGLWindowContext windowContext = new LWJGLWindowContext();
-			windowContext.setWindowBuilder(windowBuilder);
+			LWJGLWindowContextBuilder windowContextBuilder = new LWJGLWindowContextBuilder();
+			windowContextBuilder.withWindow(windowBuilder);
 			
-			return withWindow(new WindowHandler(windowContext));
+			return withWindow(new WindowHandler(windowContextBuilder.build()));
 		}
 
 		@Override
 		public IWindowEngineLauncherBuilder withWindow(IWindowConfigurator windowConfigurator) {
-			LWJGLWindowContext windowContext = new LWJGLWindowContext();
-			windowContext.setWindowConfigurator(windowConfigurator);;
+			LWJGLWindowContextBuilder windowContextBuilder = new LWJGLWindowContextBuilder();
+			windowContextBuilder.withWindowConfigurator(windowConfigurator);
 			
-			return withWindow(new WindowHandler(windowContext));
+			return withWindow(new WindowHandler(windowContextBuilder.build()));
 		}
 		
 		@Override
 		public IWindowEngineLauncherBuilder withWindow(IWindowBuilder windowBuilder, IWindowConfigurator windowConfigurator) {
-			LWJGLWindowContext windowContext = new LWJGLWindowContext();
-			windowContext.setWindowBuilder(windowBuilder);
-			windowContext.setWindowConfigurator(windowConfigurator);;
+			LWJGLWindowContextBuilder windowContextBuilder = new LWJGLWindowContextBuilder();
+			windowContextBuilder.withWindow(windowBuilder);
+			windowContextBuilder.withWindowConfigurator(windowConfigurator);
 			
-			return withWindow(new WindowHandler(windowContext));
+			return withWindow(new WindowHandler(windowContextBuilder.build()));
 		}
 		
 		@Override
