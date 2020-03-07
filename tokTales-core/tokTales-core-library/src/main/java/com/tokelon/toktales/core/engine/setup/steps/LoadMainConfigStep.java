@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.engine.setup.scripts;
+package com.tokelon.toktales.core.engine.setup.steps;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,13 +9,14 @@ import com.tokelon.toktales.core.config.IMainConfig;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.setup.ISetupStep;
 import com.tokelon.toktales.core.engine.storage.IStorageService;
 import com.tokelon.toktales.tools.core.config.CiniConfigStreamReader;
 import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ConfigFormatException;
 import com.tokelon.toktales.tools.core.config.MutableCiniConfig;
 
-public class LoadMainConfigSetupScript implements ISetupScript {
+public class LoadMainConfigStep implements ISetupStep {
 
 
 	public static final String MAIN_CONFIG_FILE_NAME = "main.conf";

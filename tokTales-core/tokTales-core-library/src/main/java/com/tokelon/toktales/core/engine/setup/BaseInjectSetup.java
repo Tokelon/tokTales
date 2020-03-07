@@ -2,9 +2,9 @@ package com.tokelon.toktales.core.engine.setup;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
-import com.tokelon.toktales.core.engine.setup.scripts.AddInitialGamestateSetupScript;
-import com.tokelon.toktales.core.engine.setup.scripts.InitScriptingSetupScript;
-import com.tokelon.toktales.core.engine.setup.scripts.LoadMainConfigSetupScript;
+import com.tokelon.toktales.core.engine.setup.steps.AddInitialGamestateStep;
+import com.tokelon.toktales.core.engine.setup.steps.InitScriptingStep;
+import com.tokelon.toktales.core.engine.setup.steps.LoadMainConfigStep;
 
 public class BaseInjectSetup extends AbstractInjectSetup {
 
@@ -12,11 +12,11 @@ public class BaseInjectSetup extends AbstractInjectSetup {
 	@Override
 	protected void doRun(IEngineContext context) throws EngineException {
 
-		new LoadMainConfigSetupScript().run(context);
+		new LoadMainConfigStep().run(context);
 
-		new InitScriptingSetupScript().run(context);
+		new InitScriptingStep().run(context);
 
-		new AddInitialGamestateSetupScript().run(context);
+		new AddInitialGamestateStep().run(context);
 	}
 
 

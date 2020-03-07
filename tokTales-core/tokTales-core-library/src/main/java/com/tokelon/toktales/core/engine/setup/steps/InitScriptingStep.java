@@ -1,14 +1,15 @@
-package com.tokelon.toktales.core.engine.setup.scripts;
+package com.tokelon.toktales.core.engine.setup.steps;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.log.ILogger;
+import com.tokelon.toktales.core.engine.setup.ISetupStep;
 import com.tokelon.toktales.core.location.ApplicationLocation;
 import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
 
-public class InitScriptingSetupScript implements ISetupScript {
+public class InitScriptingStep implements ISetupStep {
 
 
 	private static final String SCRIPTS_PATH = "scripts";
@@ -38,6 +39,5 @@ public class InitScriptingSetupScript implements ISetupScript {
 			logger.error("Failed to load global script objects:", e);
 		}
 	}
-
 	
 }
