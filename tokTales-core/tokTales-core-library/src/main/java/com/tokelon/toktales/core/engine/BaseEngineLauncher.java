@@ -84,8 +84,7 @@ public class BaseEngineLauncher implements IEngineLauncher {
 
 	@Override
 	public void launch(Class<? extends IGameAdapter> adapter) throws EngineException {
-		BaseInjectSetup setup = new BaseInjectSetup();
-		launchWithSetup(adapter, setup);
+		launchWithSetup(adapter, createDefaultSetup());
 	}
 	
 	
@@ -113,6 +112,15 @@ public class BaseEngineLauncher implements IEngineLauncher {
 	@Override
 	public void terminate() {
 		getDefaultLooper().stop();
+	}
+	
+	
+	/** Creates a default setup that will be used in case no setup was given. 
+	 * 
+	 * @return A new instance of the default setup implementation.
+	 */
+	protected IEngineSetup createDefaultSetup() {
+		return new BaseInjectSetup();
 	}
 	
 	
