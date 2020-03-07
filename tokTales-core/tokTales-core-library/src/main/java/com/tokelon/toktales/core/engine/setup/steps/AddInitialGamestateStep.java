@@ -10,12 +10,18 @@ public class AddInitialGamestateStep implements ISetupStep {
 
 
 	@Override
-	public void run(IEngineContext context) throws EngineException {
+	public void onBuildUp(IEngineContext engineContext) throws EngineException {
 		// Resolve and add initial state
-		InitialGamestate initialState = context.getInjector().getInstance(InitialGamestate.class);
+		InitialGamestate initialState = engineContext.getInjector().getInstance(InitialGamestate.class);
 
-		context.getGame().getStateControl().addState(GameStateValues.STATE_INITIAL, initialState);
-		context.getGame().getStateControl().changeState(GameStateValues.STATE_INITIAL);
+		engineContext.getGame().getStateControl().addState(GameStateValues.STATE_INITIAL, initialState);
+		engineContext.getGame().getStateControl().changeState(GameStateValues.STATE_INITIAL);
 	}
 
+	
+	@Override
+	public void onTearDown(IEngineContext engineContext) throws EngineException {
+		// Nothing
+	}
+	
 }

@@ -12,11 +12,11 @@ public class BaseInjectSetup extends AbstractInjectSetup {
 	@Override
 	protected void buildUp(IEngineContext context) throws EngineException {
 
-		new LoadMainConfigStep().run(context);
+		new LoadMainConfigStep().onBuildUp(context);
 
-		new InitScriptingStep().run(context);
+		new InitScriptingStep().onBuildUp(context);
 
-		new AddInitialGamestateStep().run(context);
+		new AddInitialGamestateStep().onBuildUp(context);
 	}
 
 

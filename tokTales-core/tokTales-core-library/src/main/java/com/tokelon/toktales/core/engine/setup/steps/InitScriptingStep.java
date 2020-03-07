@@ -24,20 +24,26 @@ public class InitScriptingStep implements ISetupStep {
 
 
 	@Override
-	public void run(IEngineContext context) throws EngineException {
-		ILogger logger = context.getLogging().getLogger(getClass());
+	public void onBuildUp(IEngineContext engineContext) throws EngineException {
+		ILogger logger = engineContext.getLogging().getLogger(getClass());
 		
 		ApplicationLocation scriptsLocation = new ApplicationLocation(SCRIPTS_PATH);
-		StorageLocationResourceFinder finder = new StorageLocationResourceFinder(context.getEngine().getStorageService(), scriptsLocation);
-		context.getGame().getScriptManager().getResourceFinder().addResourceFinder(finder);
+		StorageLocationResourceFinder finder = new StorageLocationResourceFinder(engineContext.getEngine().getStorageService(), scriptsLocation);
+		engineContext.getGame().getScriptManager().getResourceFinder().addResourceFinder(finder);
 
 		try {
-			IScriptModule loadModule = context.getGame().getScriptManager().loadModule(LOAD_GLOBALS_MODULE);
+			IScriptModule loadModule = engineContext.getGame().getScriptManager().loadModule(LOAD_GLOBALS_MODULE);
 
-			loadModule.callFunction("load", context.getEngine(), logger, context.getGame());
+			loadModule.callFunction("load", engineContext.getEngine(), logger, engineContext.getGame());
 		} catch (ScriptErrorException e) {
 			logger.error("Failed to load global script objects:", e);
 		}
+	}
+	
+	
+	@Override
+	public void onTearDown(IEngineContext engineContext) throws EngineException {
+		// Nothing
 	}
 	
 }

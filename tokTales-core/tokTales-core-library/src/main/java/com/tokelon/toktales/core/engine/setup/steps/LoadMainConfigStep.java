@@ -23,9 +23,9 @@ public class LoadMainConfigStep implements ISetupStep {
 	
 	
 	@Override
-	public void run(IEngineContext context) throws EngineException {
-		IMainConfig mainConfig = loadConfig(context.getEngine().getStorageService(), context.getLogging().getLogger(getClass()), MAIN_CONFIG_FILE_NAME);
-		context.getGame().getConfigManager().loadConfig(IConfigManager.MAIN_CONFIG, mainConfig);
+	public void onBuildUp(IEngineContext engineContext) throws EngineException {
+		IMainConfig mainConfig = loadConfig(engineContext.getEngine().getStorageService(), engineContext.getLogging().getLogger(getClass()), MAIN_CONFIG_FILE_NAME);
+		engineContext.getGame().getConfigManager().loadConfig(IConfigManager.MAIN_CONFIG, mainConfig);
 	}
 	
 
@@ -51,13 +51,15 @@ public class LoadMainConfigStep implements ISetupStep {
 			}
 			catch (ConfigFormatException cofoex) {
 				logger.warn("Bad config file:", cofoex);
-			} catch (ConfigDataException codaex) {
+			}
+			catch (ConfigDataException codaex) {
 				logger.warn("Unsupported config:", codaex);
 			}
 			finally {
 				try {
 					configFileIn.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					logger.warn("close() threw exception", e);
 				}
 			}
@@ -71,6 +73,12 @@ public class LoadMainConfigStep implements ISetupStep {
 
 
 		return mainConfig;
+	}
+	
+	
+	@Override
+	public void onTearDown(IEngineContext engineContext) throws EngineException {
+		// Nothing
 	}
 
 }
