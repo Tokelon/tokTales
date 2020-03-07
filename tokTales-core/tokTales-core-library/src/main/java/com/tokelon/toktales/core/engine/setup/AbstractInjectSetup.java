@@ -1,5 +1,9 @@
 package com.tokelon.toktales.core.engine.setup;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 import com.tokelon.toktales.core.engine.EngineException;
@@ -11,18 +15,30 @@ import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 import com.tokelon.toktales.tools.core.sub.inject.config.IInjectConfig;
 
-public abstract class AbstractInjectSetup implements IEngineSetup {
+import java9.util.Comparators;
+import java9.util.stream.Stream;
+import java9.util.stream.StreamSupport;
+
+public abstract class AbstractInjectSetup implements IStepsEngineSetup {
 
 
-	// Default setup mode is production
-	private SetupMode setupMode = SetupMode.PRODUCTION;
+	private SetupMode setupMode = SetupMode.PRODUCTION; // Default setup mode is production
 	
+	private final ISetupSteps steps;
 	private final ILogger logger;
 	
 	/** Default constructor.
 	 */
 	protected AbstractInjectSetup() {
-		this(LoggingManager.getLoggerFactory());
+		this(new SetupSteps(), LoggingManager.getLoggerFactory());
+	}
+	
+	/** Constructor with setup steps.
+	 * 
+	 * @param steps
+	 */
+	protected AbstractInjectSetup(ISetupSteps steps) {
+		this(steps, LoggingManager.getLoggerFactory());
 	}
 
 	/** Constructor with a logger factory.
@@ -30,25 +46,18 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 	 * @param loggerFactory
 	 */
 	protected AbstractInjectSetup(ILoggerFactory loggerFactory) {
-		this.logger = loggerFactory.getLogger(getClass());
+		this(new SetupSteps(), loggerFactory);
 	}
 	
-	
-	/**
-	 * @return A logger for this setup.
-	 */
-	protected ILogger getLogger() {
-		return logger;
-	}
-
-	/** Implement your custom setup logic here.
-	 * <p>
-	 * Called in {@link #run(IEngineContext)}.
+	/** Constructor with setup steps and a logger factory.
 	 * 
-	 * @param context The engine context created.
-	 * @throws EngineException If there was an error while running the setup.
+	 * @param steps
+	 * @param loggerFactory
 	 */
-	protected abstract void doRun(IEngineContext context) throws EngineException;
+	protected AbstractInjectSetup(ISetupSteps steps, ILoggerFactory loggerFactory) {
+		this.logger = loggerFactory.getLogger(getClass());
+		this.steps = new SetupSteps();
+	}
 
 	
 	@Override
@@ -64,16 +73,66 @@ public abstract class AbstractInjectSetup implements IEngineSetup {
 
 	
 	@Override
-	public void buildUp(IEngineContext context) throws EngineException {
-		doRun(context);
+	public void buildUp(IEngineContext engineContext) throws EngineException {
+		buildUpSteps(getSteps(), engineContext);
 		
-		createGameAdapter(context.getInjector());
-	}
-
-	@Override
-	public void tearDown(IEngineContext context) throws EngineException {
+		createGameAdapter(engineContext.getInjector());
 	}
 	
+	@Override
+	public void tearDown(IEngineContext engineContext) throws EngineException {
+		tearDownSteps(getSteps(), engineContext);
+	}
+	
+	
+	protected void buildUpSteps(ISetupSteps setupSteps, IEngineContext engineContext) throws EngineException {
+		Map<String, ISetupStep> stepsFromNames = setupSteps.createNamesToSteps();
+		Map<String, Double> positionsFromNames = setupSteps.createStepNamesToPositions();
+		
+		Stream<String> sortedStepNames = StreamSupport.stream(positionsFromNames.entrySet())
+				.sequential()
+				.sorted(Comparators.comparingDouble(e -> e.getValue()))
+				.map(entry -> entry.getKey());
+		
+		for (Iterator<String> iterator = sortedStepNames.iterator(); iterator.hasNext();) {
+			String stepName = iterator.next();
+			ISetupStep step = stepsFromNames.get(stepName);
+			
+			step.onBuildUp(engineContext);
+		}
+	}
+	
+	protected void tearDownSteps(ISetupSteps setupSteps, IEngineContext engineContext) throws EngineException {
+		Map<String, ISetupStep> stepsFromNames = setupSteps.createNamesToSteps();
+		Map<String, Double> positionsFromNames = setupSteps.createStepNamesToPositions();
+		
+		Stream<String> sortedStepNames = StreamSupport.stream(positionsFromNames.entrySet())
+				.sequential()
+				.sorted(Comparators.comparingDouble((Entry<String, Double> e) -> e.getValue()).reversed())
+				.map(entry -> entry.getKey());
+		
+		for (Iterator<String> iterator = sortedStepNames.iterator(); iterator.hasNext();) {
+			String stepName = iterator.next();
+			ISetupStep step = stepsFromNames.get(stepName);
+			
+			step.onTearDown(engineContext);
+		}
+	}
+
+
+
+	/**
+	 * @return A logger for this setup.
+	 */
+	protected ILogger getLogger() {
+		return logger;
+	}
+	
+	@Override
+	public ISetupSteps getSteps() {
+		return steps;
+	}
+
 	
 	@Override
 	public void setSetupMode(SetupMode mode) {
