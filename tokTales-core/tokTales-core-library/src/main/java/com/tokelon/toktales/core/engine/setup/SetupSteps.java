@@ -7,20 +7,20 @@ public class SetupSteps implements ISetupSteps {
 
 
 	private double nextInsertPosition = 1d;
-	
+
 	private final Map<String, Double> namesToPositions;
 	private final Map<String, ISetupStep> namesToSteps;
-	
+
 	public SetupSteps() {
 		this(new HashMap<>(), new HashMap<>());
 	}
-	
+
 	public SetupSteps(Map<String, Double> namesToPositions, Map<String, ISetupStep> namesToSteps) {
 		this.namesToPositions = namesToPositions;
 		this.namesToSteps = namesToSteps;
 	}
-	
-	
+
+
 	@Override
 	public void insertStep(String name, ISetupStep step) {
 		insertStep(name, step, nextInsertPosition++);
@@ -47,7 +47,7 @@ public class SetupSteps implements ISetupSteps {
 	public boolean hasStep(String name) {
 		return namesToSteps.containsKey(name);
 	}
-	
+
 	@Override
 	public boolean hasPosition(double position) {
 		return namesToPositions.containsValue(position);
@@ -59,7 +59,7 @@ public class SetupSteps implements ISetupSteps {
 	}
 
 	@Override
-	public double getStepPosition(String name) {
+	public Double getStepPosition(String name) {
 		return namesToPositions.get(name);
 	}
 
