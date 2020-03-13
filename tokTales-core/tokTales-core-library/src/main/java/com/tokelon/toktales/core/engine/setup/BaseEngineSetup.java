@@ -19,7 +19,7 @@ import java9.util.Comparators;
 import java9.util.stream.Stream;
 import java9.util.stream.StreamSupport;
 
-public class BaseEngineSetup implements IStepsEngineSetup {
+public class BaseEngineSetup implements IEngineSetup {
 
 
 	private SetupMode setupMode = SetupMode.PRODUCTION; // Default setup mode is production
