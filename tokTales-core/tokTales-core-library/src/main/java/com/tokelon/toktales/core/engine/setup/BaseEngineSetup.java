@@ -23,18 +23,18 @@ public class BaseEngineSetup implements IEngineSetup {
 
 
 	private SetupMode setupMode = SetupMode.PRODUCTION; // Default setup mode is production
-	
+
 	private final ISetupSteps steps;
 	private final ILogger logger;
-	
+
 	/** Default constructor.
 	 */
 	protected BaseEngineSetup() {
 		this(new SetupSteps(), LoggingManager.getLoggerFactory());
 	}
-	
+
 	/** Constructor with setup steps.
-	 * 
+	 *
 	 * @param steps
 	 */
 	protected BaseEngineSetup(ISetupSteps steps) {
@@ -42,15 +42,15 @@ public class BaseEngineSetup implements IEngineSetup {
 	}
 
 	/** Constructor with a logger factory.
-	 * 
+	 *
 	 * @param loggerFactory
 	 */
 	protected BaseEngineSetup(ILoggerFactory loggerFactory) {
 		this(new SetupSteps(), loggerFactory);
 	}
-	
+
 	/** Constructor with setup steps and a logger factory.
-	 * 
+	 *
 	 * @param steps
 	 * @param loggerFactory
 	 */
@@ -59,62 +59,66 @@ public class BaseEngineSetup implements IEngineSetup {
 		this.steps = new SetupSteps();
 	}
 
-	
+
 	@Override
 	public IEngineContext create(IHierarchicalInjectConfig injectConfig) throws EngineException {
-		logger.info("Engine creation started");
-		logger.info("Engine setup is running in mode {}", setupMode);
-		
+		getLogger().info("Engine creation started");
+		getLogger().info("Engine setup is running in mode {}", setupMode);
+
 		Injector injector = createInjector(injectConfig, setupMode);
 		IEngineContext engineContext = createEngineContext(injector);
-		
+
 		return engineContext;
 	}
 
-	
+
 	@Override
 	public void buildUp(IEngineContext engineContext) throws EngineException {
+		getLogger().debug("Running setup build up");
 		buildUpSteps(getSteps(), engineContext);
-		
+
 		createGameAdapter(engineContext.getInjector());
 	}
-	
+
 	@Override
 	public void tearDown(IEngineContext engineContext) throws EngineException {
+		getLogger().debug("Running setup tear down");
 		tearDownSteps(getSteps(), engineContext);
 	}
-	
-	
+
+
 	protected void buildUpSteps(ISetupSteps setupSteps, IEngineContext engineContext) throws EngineException {
 		Map<String, ISetupStep> stepsFromNames = setupSteps.createNamesToSteps();
 		Map<String, Double> positionsFromNames = setupSteps.createStepNamesToPositions();
-		
+
 		Stream<String> sortedStepNames = StreamSupport.stream(positionsFromNames.entrySet())
 				.sequential()
 				.sorted(Comparators.comparingDouble(e -> e.getValue()))
 				.map(entry -> entry.getKey());
-		
+
 		for (Iterator<String> iterator = sortedStepNames.iterator(); iterator.hasNext();) {
 			String stepName = iterator.next();
 			ISetupStep step = stepsFromNames.get(stepName);
-			
+
+			getLogger().debug("Running build up for setup step: {}", stepName);
 			step.onBuildUp(engineContext);
 		}
 	}
-	
+
 	protected void tearDownSteps(ISetupSteps setupSteps, IEngineContext engineContext) throws EngineException {
 		Map<String, ISetupStep> stepsFromNames = setupSteps.createNamesToSteps();
 		Map<String, Double> positionsFromNames = setupSteps.createStepNamesToPositions();
-		
+
 		Stream<String> sortedStepNames = StreamSupport.stream(positionsFromNames.entrySet())
 				.sequential()
 				.sorted(Comparators.comparingDouble((Entry<String, Double> e) -> e.getValue()).reversed())
 				.map(entry -> entry.getKey());
-		
+
 		for (Iterator<String> iterator = sortedStepNames.iterator(); iterator.hasNext();) {
 			String stepName = iterator.next();
 			ISetupStep step = stepsFromNames.get(stepName);
-			
+
+			getLogger().debug("Running tear down for setup step: {}", stepName);
 			step.onTearDown(engineContext);
 		}
 	}
@@ -127,18 +131,18 @@ public class BaseEngineSetup implements IEngineSetup {
 	protected ILogger getLogger() {
 		return logger;
 	}
-	
+
 	@Override
 	public ISetupSteps getSteps() {
 		return steps;
 	}
 
-	
+
 	@Override
 	public void setSetupMode(SetupMode mode) {
 		this.setupMode = mode;
 	}
-	
+
 	@Override
 	public SetupMode getSetupMode() {
 		return setupMode;
@@ -147,35 +151,35 @@ public class BaseEngineSetup implements IEngineSetup {
 
 	protected Injector createInjector(IInjectConfig injectConfig, SetupMode mode) throws EngineException {
 		Stage stage = mode == SetupMode.DEVELOPMENT ? Stage.DEVELOPMENT : Stage.PRODUCTION;
-		logger.info("Determined injector stage as {}", stage);
-		
-		logger.info("Creating engine injector...");
+		getLogger().info("Determined injector stage as {}", stage);
+
+		getLogger().info("Creating engine injector...");
 		long before = System.currentTimeMillis();
 
 		Injector injector = injectConfig.createInjector(stage);
-		
-		logger.info("...injector creation took {} ms", (System.currentTimeMillis() - before));
+
+		getLogger().info("...injector creation took {} ms", (System.currentTimeMillis() - before));
 		return injector;
 	}
 
 	protected IEngineContext createEngineContext(Injector injector) {
-		logger.info("Creating engine context...");
+		getLogger().info("Creating engine context...");
 		long before = System.currentTimeMillis();
-		
+
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
-		
-		logger.info("...engine context creation took {} ms", (System.currentTimeMillis() - before));
+
+		getLogger().info("...engine context creation took {} ms", (System.currentTimeMillis() - before));
 		return engineContext;
 	}
-	
+
 	protected IGameAdapter createGameAdapter(Injector injector) {
-		logger.info("Creating game adapter...");
+		getLogger().info("Creating game adapter...");
 		long before = System.currentTimeMillis();
 
 		IGameAdapter gameAdapter = injector.getInstance(IGameAdapter.class);
-		
-		logger.info("...game adapter creation took {} ms", (System.currentTimeMillis() - before));
+
+		getLogger().info("...game adapter creation took {} ms", (System.currentTimeMillis() - before));
 		return gameAdapter;
 	}
-	
+
 }
