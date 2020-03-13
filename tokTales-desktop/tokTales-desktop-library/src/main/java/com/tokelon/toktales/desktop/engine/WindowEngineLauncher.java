@@ -4,13 +4,12 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLEngineLauncher;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLInputProcessor;
 import com.tokelon.toktales.desktop.ui.window.IWindowContext;
 import com.tokelon.toktales.desktop.ui.window.IWindowHandler;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
-public class WindowEngineLauncher extends LWJGLEngineLauncher implements IWindowEngineLauncher {
+public class WindowEngineLauncher extends DesktopEngineLauncher implements IWindowEngineLauncher {
 
 
 	private IEngineLooper looper;
@@ -43,19 +42,19 @@ public class WindowEngineLauncher extends LWJGLEngineLauncher implements IWindow
 
 
 	@Override
-	protected void startupProgram(IEngineContext engineContext) throws EngineException {
-		super.startupProgram(engineContext);
+	protected void startupEngine(IEngineContext engineContext) throws EngineException {
+		super.startupEngine(engineContext);
 		
 		windowHandler.createWindowContext(engineContext);
 	}
 	
 	@Override
-	protected void shutdownProgram(IEngineContext engineContext) throws EngineException {
+	protected void shutdownEngine(IEngineContext engineContext) throws EngineException {
 		try {
 			windowHandler.destroyWindowContext();
 		}
 		finally {
-			super.shutdownProgram(engineContext);
+			super.shutdownEngine(engineContext);
 		}
 	}
 	
