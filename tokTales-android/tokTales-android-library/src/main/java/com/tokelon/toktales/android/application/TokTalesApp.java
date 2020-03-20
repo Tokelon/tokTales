@@ -109,7 +109,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 		IEngineLauncher launcher = defaultLauncher;
 		if(metaInjectConfigClass == null) {
-			getLogger().info("The default inject config will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
+			getLogger().info("The default inject config will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp defaults.");
 		}
 		else {
 			try {
@@ -129,7 +129,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 		Class<? extends IGameAdapter> gameAdapterClass = getDefaultGameAdapter();
 		if(metaGameAdapterClass == null) {
-			getLogger().info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
+			getLogger().info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp defaults.");
 		}
 		else {
 			getLogger().info("Engine launcher will use game adapter of type: {}", metaGameAdapterClass);
