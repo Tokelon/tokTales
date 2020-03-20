@@ -16,6 +16,8 @@ public interface IEngineApplication {
 	 * @param args
 	 * @throws EngineException If an exception is thrown while running the application.
 	 * @see #launchEngine(IEngineLauncher)
+	 * @see #createDefaultEngineLauncher()
+	 * @see #createDefaultInjectConfig()
 	 */
 	public void run(String[] args) throws EngineException;
 
@@ -24,7 +26,6 @@ public interface IEngineApplication {
 	 *
 	 * @param defaultLauncher
 	 * @throws EngineException If an exception is thrown while launching or running the engine.
-	 * @see #createDefaultEngineLauncher()
 	 * @see #createDefaultEngineSetup()
 	 * @see #getDefaultGameAdapter()
 	 */
@@ -33,10 +34,10 @@ public interface IEngineApplication {
 
 	/** Creates a default engine launcher that will be used in {@link #launchEngine(IEngineLauncher)}.
 	 *
+	 * @param defaultInjectConfig
 	 * @return A new instance of the default engine launcher.
-	 * @see #createDefaultInjectConfig()
 	 */
-	public IEngineLauncher createDefaultEngineLauncher();
+	public IEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig);
 
 	/** Creates a default inject config that will be used for the default engine launcher in {@link #createDefaultEngineLauncher()}.
 	 *

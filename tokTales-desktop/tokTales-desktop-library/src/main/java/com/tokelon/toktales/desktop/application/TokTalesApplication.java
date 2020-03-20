@@ -39,7 +39,7 @@ public class TokTalesApplication implements IEngineApplication {
 
 	@Override
 	public void run(String[] args) throws EngineException {
-		IDesktopEngineLauncher launcher = createDefaultEngineLauncher();
+		IDesktopEngineLauncher launcher = createDefaultEngineLauncher(createDefaultInjectConfig());
 		try {
 			launchEngine(launcher);
 		}
@@ -56,10 +56,10 @@ public class TokTalesApplication implements IEngineApplication {
 
 
 	@Override
-	public IDesktopEngineLauncher createDefaultEngineLauncher() {
+	public IDesktopEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
 		return new DesktopLauncherFactory()
 				.createDefaultLauncherBuilder()
-				.withInjectConfig(createDefaultInjectConfig())
+				.withInjectConfig(defaultInjectConfig)
 				.build();
 	}
 

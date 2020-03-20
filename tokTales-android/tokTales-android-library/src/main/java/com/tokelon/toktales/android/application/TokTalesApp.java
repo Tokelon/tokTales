@@ -72,7 +72,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 	@Override
 	public void run(String[] args) throws EngineException {
-		IAndroidEngineLauncher launcher = createDefaultEngineLauncher();
+		IAndroidEngineLauncher launcher = createDefaultEngineLauncher(createDefaultInjectConfig());
 		try {
 			launchEngine(launcher);
 		}
@@ -181,10 +181,10 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 
 	@Override
-	public IAndroidEngineLauncher createDefaultEngineLauncher() {
+	public IAndroidEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
 		return new AndroidLauncherFactory()
 				.createDefaultLauncherBuilder(getApplicationContext())
-				.withInjectConfig(createDefaultInjectConfig())
+				.withInjectConfig(defaultInjectConfig)
 				.build();
 	}
 
