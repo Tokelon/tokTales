@@ -31,10 +31,10 @@ public class LWJGLWindowContext implements IWindowContext {
 	private IWindowConfigurator windowConfigurator;
 	private IDesktopInputDriverFactory inputDriverFactory;
 	private IWindowRendererFactory windowRendererFactory;
-	
+
 	private final IWindowFactory windowFactory;
 	private final IWindowToolkit windowToolkit;
-	
+
 	public LWJGLWindowContext(
 			IWindowFactory windowFactory,
 			IWindowToolkit windowToolkit,
@@ -50,14 +50,14 @@ public class LWJGLWindowContext implements IWindowContext {
 		this.inputDriverFactory = inputDriverFactory;
 		this.windowRendererFactory = windowRendererFactory;
 	}
-	
-	
+
+
 	@Override
 	public void create(IEngineContext engineContext) throws EngineException {
 		this.renderer = windowRendererFactory.create(engineContext);
 		this.inputDriver = inputDriverFactory.create(engineContext);
 
-		
+
 		// Create window
 		this.window = getWindowBuilder().build(getWindowFactory(), getWindowToolkit());
 		getWindow().create();
@@ -70,7 +70,7 @@ public class LWJGLWindowContext implements IWindowContext {
 		getRenderer().createContext();
 
 		// Configure window
-		getWindowConfigurator().configure(getWindow());
+		getWindowConfigurator().configure(getWindow(), getWindowToolkit());
 		getWindow().show();
 	}
 
@@ -85,42 +85,42 @@ public class LWJGLWindowContext implements IWindowContext {
 		getWindow().destroy();
 	}
 
-	
+
 	@Override
 	public IWindowFactory getWindowFactory() {
 		return windowFactory;
 	}
-	
+
 	@Override
 	public IWindowToolkit getWindowToolkit() {
 		return windowToolkit;
 	}
-	
+
 	@Override
 	public IWindow getWindow() {
 		return window;
 	}
-	
+
 	@Override
 	public IWindowRenderer getRenderer() {
 		return renderer;
 	}
-	
+
 	@Override
 	public IDesktopInputDriver getInputDriver() {
 		return inputDriver;
 	}
-	
-	
+
+
 	protected IWindowBuilder getWindowBuilder() {
 		return windowBuilder;
 	}
-	
+
 	protected IWindowConfigurator getWindowConfigurator() {
 		return windowConfigurator;
 	}
-	
-	
+
+
 	public static class LWJGLWindowContextBuilder implements IWindowContextBuilder {
 		private IWindowFactory windowFactory;
 		private IWindowToolkit windowToolkit;
@@ -134,12 +134,12 @@ public class LWJGLWindowContext implements IWindowContext {
 				new LWJGLWindowFactory(),
 				new LWJGLWindowToolkit(),
 				new LWJGLWindowFactory().createDefaultBuilder(),
-				(window) -> {},
+				(window, windowToolkit) -> {},
 				new LWJGLWindowRendererFactory(),
 				new LWJGLInputDriverFactory()
 			);
 		}
-		
+
 		public LWJGLWindowContextBuilder(
 				IWindowFactory windowFactory,
 				IWindowToolkit windowToolkit,
@@ -155,8 +155,8 @@ public class LWJGLWindowContext implements IWindowContext {
 			this.windowRendererFactory = windowRendererFactory;
 			this.inputDriverFactory = inputDriverFactory;
 		}
-		
-		
+
+
 		@Override
 		public IWindowContext build() {
 			return new LWJGLWindowContext(
@@ -222,14 +222,14 @@ public class LWJGLWindowContext implements IWindowContext {
 			this.inputDriverFactory = inputDriverFactory;
 			return this;
 		}
-		
+
 		@Override
 		public IWindowContextBuilder withInputDriverNone() {
 			this.inputDriverFactory = (engineContext) -> null;
 			return this;
 		}
-		
-		
+
+
 		public static class LWJGLInputDriverFactory implements IDesktopInputDriverFactory {
 
 			@Override
@@ -245,11 +245,11 @@ public class LWJGLWindowContext implements IWindowContext {
 					// TODO: What to do here? Pass the exception? Log and continue?
 					throw e;
 				}
-				
+
 				return inputDriver;
 			}
 		}
-		
+
 		public static class LWJGLWindowRendererFactory implements IWindowRendererFactory {
 
 			@Override
@@ -258,5 +258,5 @@ public class LWJGLWindowContext implements IWindowContext {
 			}
 		}
 	}
-	
+
 }
