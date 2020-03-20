@@ -18,8 +18,8 @@ import com.tokelon.toktales.android.activity.integration.engine.IRunActivityEngi
 import com.tokelon.toktales.android.activity.integration.engine.ISingleActivityEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.engine.RunActivityEngineIntegration;
 import com.tokelon.toktales.android.activity.integration.engine.SingleActivityEngineIntegration;
-import com.tokelon.toktales.android.app.AndroidEnvironment;
 import com.tokelon.toktales.android.content.AndroidContentService;
+import com.tokelon.toktales.android.engine.AndroidEnvironment;
 import com.tokelon.toktales.android.game.state.AndroidGameStateInput;
 import com.tokelon.toktales.android.game.state.AndroidInitialGamestateInputHandler;
 import com.tokelon.toktales.android.game.state.IAndroidGameStateInput;
