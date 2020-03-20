@@ -9,7 +9,7 @@ import com.tokelon.toktales.core.script.StorageLocationResourceFinder;
 import com.tokelon.toktales.tools.script.IScriptModule;
 import com.tokelon.toktales.tools.script.ScriptErrorException;
 
-public class InitScriptingStep implements ISetupStep {
+public class InitScriptingSetupStep implements ISetupStep {
 
 
 	private static final String SCRIPTS_PATH = "scripts";

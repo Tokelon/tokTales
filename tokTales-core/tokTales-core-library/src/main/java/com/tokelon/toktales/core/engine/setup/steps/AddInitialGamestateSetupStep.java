@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.engine.setup.ISetupStep;
 import com.tokelon.toktales.core.game.state.InitialGamestate;
 import com.tokelon.toktales.core.values.GameStateValues;
 
-public class AddInitialGamestateStep implements ISetupStep {
+public class AddInitialGamestateSetupStep implements ISetupStep {
 
 
 	@Override

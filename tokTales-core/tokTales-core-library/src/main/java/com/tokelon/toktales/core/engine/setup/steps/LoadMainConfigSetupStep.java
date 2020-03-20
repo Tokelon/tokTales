@@ -16,7 +16,7 @@ import com.tokelon.toktales.tools.core.config.ConfigDataException;
 import com.tokelon.toktales.tools.core.config.ConfigFormatException;
 import com.tokelon.toktales.tools.core.config.MutableCiniConfig;
 
-public class LoadMainConfigStep implements ISetupStep {
+public class LoadMainConfigSetupStep implements ISetupStep {
 
 
 	public static final String MAIN_CONFIG_FILE_NAME = "main.conf";
