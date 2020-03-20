@@ -12,40 +12,40 @@ import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConf
 public interface IDesktopLauncherFactory {
 
 
-	public IWindowEngineLauncher createDefault();
-	public IWindowEngineLauncherBuilder createDefaultBuilder();
-	
+	public IWindowEngineLauncher createDefaultLauncher();
+	public IWindowEngineLauncherBuilder createDefaultLauncherBuilder();
+
 	public IWindowEngineLauncher createWindowLauncher();
 	public IWindowEngineLauncherBuilder createWindowLauncherBuilder();
 
 	public IDesktopEngineLauncher createDesktopLauncher();
 	public IDesktopEngineLauncherBuilder createDesktopLauncherBuilder();
-	
-	
-	
+
+
+
 	public interface IDesktopEngineLauncherBuilder {
 		public IDesktopEngineLauncher build();
-		
+
 		public IDesktopEngineLauncherBuilder withInjectConfig(IHierarchicalInjectConfig injectConfig);
-		
+
 		public IDesktopEngineLauncherBuilder withEngineLooper(IEngineLooper defaultLooper);
 		public IDesktopEngineLauncherBuilder withLoggerFactory(ILoggerFactory loggerFactory);
 	}
-	
+
 	public interface IWindowEngineLauncherBuilder {
 		public IWindowEngineLauncher build();
-		
+
 		public IWindowEngineLauncherBuilder withWindow(IWindowHandler windowHandler);
 		public IWindowEngineLauncherBuilder withWindow(IWindowContext windowContext);
 		public IWindowEngineLauncherBuilder withWindow(IWindowContextBuilder windowContextBuilder);
-		
+
 		public IWindowEngineLauncherBuilder withWindow(IWindowBuilder windowBuilder);
 		public IWindowEngineLauncherBuilder withWindow(IWindowConfigurator windowConfigurator);
 		public IWindowEngineLauncherBuilder withWindow(IWindowBuilder windowBuilder, IWindowConfigurator windowConfigurator);
-		
+
 		public IWindowEngineLauncherBuilder withInjectConfig(IHierarchicalInjectConfig injectConfig);
 		public IWindowEngineLauncherBuilder withEngineLooper(IEngineLooper defaultLooper);
 		public IWindowEngineLauncherBuilder withLoggerFactory(ILoggerFactory loggerFactory);
 	}
-	
+
 }

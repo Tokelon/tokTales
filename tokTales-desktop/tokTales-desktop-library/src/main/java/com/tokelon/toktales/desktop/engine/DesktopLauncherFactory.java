@@ -19,12 +19,12 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 
 
 	@Override
-	public IWindowEngineLauncher createDefault() {
-		return createDefaultBuilder().build();
+	public IWindowEngineLauncher createDefaultLauncher() {
+		return createDefaultLauncherBuilder().build();
 	}
 
 	@Override
-	public IWindowEngineLauncherBuilder createDefaultBuilder() {
+	public IWindowEngineLauncherBuilder createDefaultLauncherBuilder() {
 		return new WindowEngineLauncherBuilder();
 	}
 

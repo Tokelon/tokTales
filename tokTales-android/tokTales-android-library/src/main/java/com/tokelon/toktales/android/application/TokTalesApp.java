@@ -116,7 +116,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 				getLogger().debug("Instantiating inject config of type {}", metaInjectConfigClass);
 				IHierarchicalInjectConfig injectConfig = metaInjectConfigClass.newInstance();
 
-				launcher = new AndroidLauncherFactory().createDefaultBuilder(getApplicationContext()).withInjectConfig(injectConfig).build();
+				launcher = new AndroidLauncherFactory().createDefaultLauncherBuilder(getApplicationContext()).withInjectConfig(injectConfig).build();
 				getLogger().info("Engine launcher will use inject config of type: {}", metaInjectConfigClass);
 			}
 			catch(InstantiationException instantiationException) {
@@ -183,7 +183,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 	@Override
 	public IAndroidEngineLauncher createDefaultEngineLauncher() {
 		return new AndroidLauncherFactory()
-				.createDefaultBuilder(getApplicationContext())
+				.createDefaultLauncherBuilder(getApplicationContext())
 				.withInjectConfig(createDefaultInjectConfig())
 				.build();
 	}

@@ -8,8 +8,8 @@ import android.content.Context;
 public interface IAndroidLauncherFactory {
 
 
-	public IAndroidEngineLauncher createDefault(Context applicationContext);
-	public IAndroidEngineLauncherBuilder createDefaultBuilder(Context applicationContext);
+	public IAndroidEngineLauncher createDefaultLauncher(Context applicationContext);
+	public IAndroidEngineLauncherBuilder createDefaultLauncherBuilder(Context applicationContext);
 	
 	
 	public interface IAndroidEngineLauncherBuilder {

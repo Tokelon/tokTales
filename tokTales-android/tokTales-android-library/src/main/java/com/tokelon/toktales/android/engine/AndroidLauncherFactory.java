@@ -11,12 +11,12 @@ public class AndroidLauncherFactory implements IAndroidLauncherFactory {
 
 
 	@Override
-	public IAndroidEngineLauncher createDefault(Context applicationContext) {
+	public IAndroidEngineLauncher createDefaultLauncher(Context applicationContext) {
 		return new AndroidEngineLauncherBuilder(applicationContext).build();
 	}
 
 	@Override
-	public IAndroidEngineLauncherBuilder createDefaultBuilder(Context applicationContext) {
+	public IAndroidEngineLauncherBuilder createDefaultLauncherBuilder(Context applicationContext) {
 		return new AndroidEngineLauncherBuilder(applicationContext);
 	}
 

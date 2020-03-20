@@ -58,7 +58,7 @@ public class TokTalesApplication implements IEngineApplication {
 	@Override
 	public IDesktopEngineLauncher createDefaultEngineLauncher() {
 		return new DesktopLauncherFactory()
-				.createDefaultBuilder()
+				.createDefaultLauncherBuilder()
 				.withInjectConfig(createDefaultInjectConfig())
 				.build();
 	}
