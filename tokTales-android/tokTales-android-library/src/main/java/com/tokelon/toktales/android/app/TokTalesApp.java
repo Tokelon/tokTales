@@ -3,11 +3,14 @@ package com.tokelon.toktales.android.app;
 import com.tokelon.toktales.android.engine.AndroidLauncherFactory;
 import com.tokelon.toktales.android.engine.IAndroidEngineLauncher;
 import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
+import com.tokelon.toktales.android.engine.setup.AndroidEngineSetup;
+import com.tokelon.toktales.core.application.IEngineApplication;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineLauncher;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
+import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.EmptyGameAdapter;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
@@ -18,7 +21,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 
-public class TokTalesApp extends Application {
+public class TokTalesApp extends Application implements IEngineApplication {
 	// Add callback onEngineLaunch(IEngineContext context)?
 
 
@@ -37,7 +40,7 @@ public class TokTalesApp extends Application {
 	}
 
 	/** Constructor with a logger factory.
-	 * 
+	 *
 	 * @param loggerFactory
 	 */
 	protected TokTalesApp(ILoggerFactory loggerFactory) {
@@ -53,14 +56,34 @@ public class TokTalesApp extends Application {
 	}
 
 
-	/** Launches the engine.
-	 *
-	 * @param defaultLauncher A default launcher.
-	 * @throws EngineException If an exceptions is thrown while launching the engine.
-	 * @see #createDefaultEngineLauncher()
-	 * @see #getDefaultGameAdapterClass()
-	 */
-	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		try {
+			run(new String[0]);
+		}
+		catch(EngineException engineException) {
+			// TODO: What to do here?
+			// Set an error in TokTales and maybe show dialog and then exit?
+		}
+	}
+
+
+	@Override
+	public void run(String[] args) throws EngineException {
+		IAndroidEngineLauncher launcher = createDefaultEngineLauncher();
+		try {
+			launchEngine(launcher);
+		}
+		catch(EngineException engineException) {
+			getLogger().error("Error while launching engine: ", engineException);
+			throw engineException;
+		}
+	}
+
+	@Override
+	public void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
 		getLogger().debug("Default engine launcher used. Checking meta-data for launch configuration...");
 
 		Class<? extends IGameAdapter> metaGameAdapterClass = null;
@@ -104,7 +127,7 @@ public class TokTalesApp extends Application {
 			}
 		}
 
-		Class<? extends IGameAdapter> gameAdapterClass = getDefaultGameAdapterClass();
+		Class<? extends IGameAdapter> gameAdapterClass = getDefaultGameAdapter();
 		if(metaGameAdapterClass == null) {
 			getLogger().info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
 		}
@@ -115,7 +138,7 @@ public class TokTalesApp extends Application {
 
 
 		getLogger().info("Launching engine...");
-		launcher.launch(gameAdapterClass);
+		launcher.launchWithSetup(gameAdapterClass, createDefaultEngineSetup());
 	}
 
 
@@ -158,45 +181,25 @@ public class TokTalesApp extends Application {
 
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-
-		IAndroidEngineLauncher launcher = createDefaultEngineLauncher();
-		try {
-			launchEngine(launcher);
-		}
-		catch(EngineException engineException) {
-			// TODO: What to do here?
-			// Set an error in TokTales and maybe show dialog and then exit?
-			getLogger().error("Error while launching engine: ", engineException);
-		}
-	}
-
-
-	/** Creates a default engine launcher that will be used in {@link #launchEngine(IEngineLauncher)}.
-	 *
-	 * @return A new instance of the default engine launcher.
-	 * @see #createDefaultInjectConfig()
-	 */
-	protected IAndroidEngineLauncher createDefaultEngineLauncher() {
+	public IAndroidEngineLauncher createDefaultEngineLauncher() {
 		return new AndroidLauncherFactory()
 				.createDefaultBuilder(getApplicationContext())
 				.withInjectConfig(createDefaultInjectConfig())
 				.build();
 	}
 
-	/** Creates a default inject config that will be used for the default engine launcher in {@link #createDefaultEngineLauncher()}.
-	 *
-	 * @return A new instance of the default inject config.
-	 */
-	protected IHierarchicalInjectConfig createDefaultInjectConfig() {
+	@Override
+	public IHierarchicalInjectConfig createDefaultInjectConfig() {
 		return new MasterAndroidInjectConfig();
 	}
 
-	/**
-	 * @return The default game adapter class.
-	 */
-	protected Class<? extends IGameAdapter> getDefaultGameAdapterClass() {
+	@Override
+	public IEngineSetup createDefaultEngineSetup() {
+		return new AndroidEngineSetup();
+	}
+
+	@Override
+	public Class<? extends IGameAdapter> getDefaultGameAdapter() {
 		return EmptyGameAdapter.class;
 	}
 
