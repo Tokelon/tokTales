@@ -31,6 +31,8 @@ public class TokTalesApp extends Application {
 	 *
 	 * @param defaultLauncher A default launcher.
 	 * @throws EngineException If an exceptions is thrown while launching the engine.
+	 * @see #createDefaultEngineLauncher()
+	 * @see #getDefaultGameAdapterClass()
 	 */
 	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
 		logger.debug("Default engine launcher used. Checking meta-data for launch configuration...");
@@ -76,7 +78,7 @@ public class TokTalesApp extends Application {
 			}
 		}
 
-		Class<? extends IGameAdapter> gameAdapterClass = EmptyGameAdapter.class;
+		Class<? extends IGameAdapter> gameAdapterClass = getDefaultGameAdapterClass();
 		if(metaGameAdapterClass == null) {
 			logger.info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
 		}
@@ -148,6 +150,7 @@ public class TokTalesApp extends Application {
 	/** Creates a default engine launcher that will be used in {@link #launchEngine(IEngineLauncher)}.
 	 *
 	 * @return A new instance of the default engine launcher.
+	 * @see #createDefaultInjectConfig()
 	 */
 	protected IAndroidEngineLauncher createDefaultEngineLauncher() {
 		return new AndroidLauncherFactory()
@@ -162,6 +165,13 @@ public class TokTalesApp extends Application {
 	 */
 	protected IHierarchicalInjectConfig createDefaultInjectConfig() {
 		return new MasterAndroidInjectConfig();
+	}
+
+	/**
+	 * @return The default game adapter class.
+	 */
+	protected Class<? extends IGameAdapter> getDefaultGameAdapterClass() {
+		return EmptyGameAdapter.class;
 	}
 
 
