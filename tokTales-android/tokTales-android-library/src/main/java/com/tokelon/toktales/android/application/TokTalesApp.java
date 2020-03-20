@@ -1,4 +1,4 @@
-package com.tokelon.toktales.android.app;
+package com.tokelon.toktales.android.application;
 
 import com.tokelon.toktales.android.engine.AndroidLauncherFactory;
 import com.tokelon.toktales.android.engine.IAndroidEngineLauncher;
