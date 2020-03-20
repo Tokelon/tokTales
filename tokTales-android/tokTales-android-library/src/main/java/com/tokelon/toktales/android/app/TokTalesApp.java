@@ -22,19 +22,19 @@ public class TokTalesApp extends Application {
 
 
 	private static final ILogger logger = LoggingManager.getLogger(TokTalesApp.class);
-	
+
 	public static final String META_DATA_KEY_GAME_ADAPTER_CLASS = "com.tokelon.toktales.android.game_adapter_class";
 	public static final String META_DATA_KEY_INJECT_CONFIG_CLASS = "com.tokelon.toktales.android.inject_config_class";
-	
-	
-	/** Launches the engine. Override to customize the launch configuration.
-	 * 
-	 * @param defaultLauncher A default launcher you can use.
+
+
+	/** Launches the engine.
+	 *
+	 * @param defaultLauncher A default launcher.
 	 * @throws EngineException If an exceptions is thrown while launching the engine.
 	 */
 	protected void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
 		logger.debug("Default engine launcher used. Checking meta-data for launch configuration...");
-		
+
 		Class<? extends IGameAdapter> metaGameAdapterClass = null;
 		Class<? extends IHierarchicalInjectConfig> metaInjectConfigClass = null;
 		try {
@@ -46,15 +46,16 @@ public class TokTalesApp extends Application {
 			else {
 				logger.debug("Looking for game adapter entry...");
 				metaGameAdapterClass = loadClassFromApplicationInfo(IGameAdapter.class, META_DATA_KEY_GAME_ADAPTER_CLASS, ai);
-				
+
 				logger.debug("Looking for inject config entry...");
 				metaInjectConfigClass = loadClassFromApplicationInfo(IHierarchicalInjectConfig.class, META_DATA_KEY_INJECT_CONFIG_CLASS, ai);
 			}
-		} catch (NameNotFoundException e) {
-			logger.error("Failed to get meta-data from application info:", e);
 		}
-		
-		
+		catch(NameNotFoundException nameNotFoundException) {
+			logger.error("Failed to get meta-data from application info:", nameNotFoundException);
+		}
+
+
 		IEngineLauncher launcher = defaultLauncher;
 		if(metaInjectConfigClass == null) {
 			logger.info("The default inject config will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
@@ -63,16 +64,18 @@ public class TokTalesApp extends Application {
 			try {
 				logger.debug("Instantiating inject config of type {}", metaInjectConfigClass);
 				IHierarchicalInjectConfig injectConfig = metaInjectConfigClass.newInstance();
-				
+
 				launcher = new AndroidLauncherFactory().createDefaultBuilder(getApplicationContext()).withInjectConfig(injectConfig).build();
 				logger.info("Engine launcher will use inject config of type: {}", metaInjectConfigClass);
-			} catch (InstantiationException e) {
-				logger.error("Failed to create inject config. Make sure you provide a public no-args constructor. Error:", e);
-			} catch (IllegalAccessException e) {
-				logger.error("Failed to access inject config constructor. Make sure your class is public and has a public no-args constructor. Error:", e);
+			}
+			catch(InstantiationException instantiationException) {
+				logger.error("Failed to create inject config. Make sure you provide a public no-args constructor. Error:", instantiationException);
+			}
+			catch(IllegalAccessException illegalAccessException) {
+				logger.error("Failed to access inject config constructor. Make sure your class is public and has a public no-args constructor. Error:", illegalAccessException);
 			}
 		}
-		
+
 		Class<? extends IGameAdapter> gameAdapterClass = EmptyGameAdapter.class;
 		if(metaGameAdapterClass == null) {
 			logger.info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp.launchEngine().");
@@ -81,15 +84,15 @@ public class TokTalesApp extends Application {
 			logger.info("Engine launcher will use game adapter of type: {}", metaGameAdapterClass);
 			gameAdapterClass = metaGameAdapterClass;
 		}
-		
-		
+
+
 		logger.info("Launching engine...");
 		launcher.launch(gameAdapterClass);
 	}
-	
-	
-	/** Loads a class of given type for a given key from the application meta-data. 
-	 * 
+
+
+	/** Loads a class of given type for a given key from the application meta-data.
+	 *
 	 * @param typeNeeded the type the class should be assignable from
 	 * @param metaDataKey the name of the meta-data entry
 	 * @param info the application info
@@ -98,7 +101,7 @@ public class TokTalesApp extends Application {
 	@SuppressWarnings("unchecked")
 	protected <T> Class<? extends T> loadClassFromApplicationInfo(Class<T> typeNeeded, String metaDataKey, ApplicationInfo info) {
 		Class<? extends T> result = null;
-		
+
 		Object infoValue = info.metaData.get(metaDataKey);
 		if(infoValue == null) {
 			logger.debug("No meta-data for key {} found", metaDataKey);
@@ -116,34 +119,52 @@ public class TokTalesApp extends Application {
 				else {
 					logger.error("Invalid class for key {}: {} Provided class must be assignable from {}.", metaDataKey, infoClass.getName(), typeNeeded);
 				}
-			} catch (ClassNotFoundException e) {
-				logger.error("Class not found for key {}:", metaDataKey, e);
+			}
+			catch(ClassNotFoundException classNotFoundException) {
+				logger.error("Class not found for key {}:", metaDataKey, classNotFoundException);
 			}
 		}
-		
+
 		return result;
 	}
-	
-	
-	
+
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
-		IAndroidEngineLauncher launcher = new AndroidLauncherFactory()
-				.createDefaultBuilder(getApplicationContext())
-				.withInjectConfig(new MasterAndroidInjectConfig())
-				.build();
+
+		IAndroidEngineLauncher launcher = createDefaultEngineLauncher();
 		try {
 			launchEngine(launcher);
-		} catch (EngineException e) {
+		}
+		catch(EngineException engineException) {
 			// TODO: What to do here?
 			// Set an error in TokTales and maybe show dialog and then exit?
-			logger.error("Error while launching engine:", e);
+			logger.error("Error while launching engine:", engineException);
 		}
 	}
-	
-	
+
+
+	/** Creates a default engine launcher that will be used in {@link #launchEngine(IEngineLauncher)}.
+	 *
+	 * @return A new instance of the default engine launcher.
+	 */
+	protected IAndroidEngineLauncher createDefaultEngineLauncher() {
+		return new AndroidLauncherFactory()
+				.createDefaultBuilder(getApplicationContext())
+				.withInjectConfig(createDefaultInjectConfig())
+				.build();
+	}
+
+	/** Creates a default inject config that will be used for the default engine launcher in {@link #createDefaultEngineLauncher()}.
+	 *
+	 * @return A new instance of the default inject config.
+	 */
+	protected IHierarchicalInjectConfig createDefaultInjectConfig() {
+		return new MasterAndroidInjectConfig();
+	}
+
+
 	@Override
 	public void onTerminate() {
 		/* Not actually called in productive environment
@@ -152,12 +173,12 @@ public class TokTalesApp extends Application {
 		super.onTerminate();
 	}
 
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		
+
 		logger.debug("App configuration has changed");
 	}
-	
+
 }
