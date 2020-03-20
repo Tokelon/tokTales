@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
-import com.tokelon.toktales.desktop.engine.setup.DefaultDesktopEngineSetup;
+import com.tokelon.toktales.desktop.engine.setup.DesktopEngineSetup;
 import com.tokelon.toktales.desktop.engine.setup.WindowContextManageStep;
 import com.tokelon.toktales.desktop.lwjgl.LWJGLInputProcessor;
 import com.tokelon.toktales.desktop.ui.window.IWindowContext;
@@ -53,8 +53,8 @@ public class WindowEngineLauncher extends DesktopEngineLauncher implements IWind
 		getLogger().debug("Inserting setup step: {}", STEP_WINDOW_CONTEXT_MANAGE);
 		setup.getSteps().insertStep(STEP_WINDOW_CONTEXT_MANAGE, new WindowContextManageStep(windowHandler));
 
-		if(!setup.getSteps().hasStep(DefaultDesktopEngineSetup.STEP_LWJGL_PROGRAM_MANAGE)) {
-			getLogger().warn("Required setup step is not configured: {}", DefaultDesktopEngineSetup.STEP_LWJGL_PROGRAM_MANAGE);
+		if(!setup.getSteps().hasStep(DesktopEngineSetup.STEP_LWJGL_PROGRAM_MANAGE)) {
+			getLogger().warn("Required setup step is not configured: {}", DesktopEngineSetup.STEP_LWJGL_PROGRAM_MANAGE);
 		}
 
 		return super.createEngine(adapter, setup);

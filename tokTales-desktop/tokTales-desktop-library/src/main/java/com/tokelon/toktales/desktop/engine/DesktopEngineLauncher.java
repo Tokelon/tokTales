@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.engine.IEngineLooper;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.desktop.engine.inject.MasterDesktopInjectConfig;
-import com.tokelon.toktales.desktop.engine.setup.DefaultDesktopEngineSetup;
+import com.tokelon.toktales.desktop.engine.setup.DesktopEngineSetup;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
 public class DesktopEngineLauncher extends BaseEngineLauncher implements IDesktopEngineLauncher {
@@ -62,7 +62,7 @@ public class DesktopEngineLauncher extends BaseEngineLauncher implements IDeskto
 
 	@Override
 	protected IEngineSetup createDefaultSetup() {
-		return new DefaultDesktopEngineSetup();
+		return new DesktopEngineSetup();
 	}
 
 }

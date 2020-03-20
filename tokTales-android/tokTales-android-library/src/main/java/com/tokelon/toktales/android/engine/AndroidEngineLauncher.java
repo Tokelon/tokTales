@@ -2,7 +2,7 @@ package com.tokelon.toktales.android.engine;
 
 import com.tokelon.toktales.android.engine.inject.AndroidSetupInjectModule;
 import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
-import com.tokelon.toktales.android.engine.setup.DefaultAndroidEngineSetup;
+import com.tokelon.toktales.android.engine.setup.AndroidEngineSetup;
 import com.tokelon.toktales.core.engine.BaseEngineLauncher;
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
@@ -48,7 +48,7 @@ public class AndroidEngineLauncher extends BaseEngineLauncher implements IAndroi
 
 	@Override
 	protected IEngineSetup createDefaultSetup() {
-		return new DefaultAndroidEngineSetup();
+		return new AndroidEngineSetup();
 	}
 
 
