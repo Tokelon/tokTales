@@ -103,6 +103,11 @@ public class LWJGLWindow implements IWindow {
 	}
 
 	@Override
+	public void detachContext() {
+		GLFW.glfwMakeContextCurrent(MemoryUtil.NULL);
+	}
+
+	@Override
 	public void swapBuffers() {
 		GLFW.glfwSwapBuffers(windowId);
 	}
@@ -178,6 +183,27 @@ public class LWJGLWindow implements IWindow {
 	@Override
 	public int getAttribute(int attribute) {
 		return GLFW.glfwGetWindowAttrib(windowId, attribute);
+	}
+
+	@Override
+	public int getFrameBufferWidth() {
+		int[] width = new int[1];
+		GLFW.glfwGetFramebufferSize(windowId, width, new int[1]);
+
+		return width[0];
+	}
+
+	@Override
+	public int getFrameBufferHeight() {
+		int[] height = new int[1];
+		GLFW.glfwGetFramebufferSize(windowId, new int[1], height);
+
+		return height[0];
+	}
+
+	@Override
+	public boolean isVisible() {
+		return GLFW.glfwGetWindowAttrib(windowId, GLFW.GLFW_VISIBLE) == 1;
 	}
 
 	@Override

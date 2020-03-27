@@ -13,7 +13,7 @@ public interface IWindow {
 	public boolean shouldClose();
 
 	public void makeContextCurrent();
-	//public void detachContext(); // TODO: Add this?
+	public void detachContext();
 
 	public void swapBuffers();
 
@@ -35,6 +35,11 @@ public interface IWindow {
 	public int getInputMode(int mode);
 
 	public int getAttribute(int attribute);
+
+	public int getFrameBufferWidth();
+	public int getFrameBufferHeight();
+
+	public boolean isVisible();
 
 	public boolean isFullscreen();
 
@@ -68,10 +73,5 @@ public interface IWindow {
 
 	public void setBorderless(); // Should be called setBorderlessFullscreen?
 	public void setBorderless(long monitor);
-
-
-	// Add these?
-	//public int getFrameBufferWidth();
-	//public int getFrameBufferHeight();
 
 }
