@@ -3,11 +3,17 @@ package com.tokelon.toktales.desktop.ui.window;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
+/** Default implementation of {@link IWindowHandler}.
+ */
 public class WindowHandler implements IWindowHandler {
 
 
 	private final IWindowContext windowContext;
 
+	/** Constructor with a window context.
+	 *
+	 * @param windowContext
+	 */
 	public WindowHandler(IWindowContext windowContext) {
 		this.windowContext = windowContext;
 	}
