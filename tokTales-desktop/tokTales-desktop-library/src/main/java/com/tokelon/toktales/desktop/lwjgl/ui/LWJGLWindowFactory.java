@@ -14,52 +14,58 @@ public class LWJGLWindowFactory implements IWindowFactory {
 	public static final String DEFAULT_WINDOW_TITLE = "Application";
 	public static final int DEFAULT_WINDOW_WIDTH = 1280;
 	public static final int DEFAULT_WINDOW_HEIGHT = 720;
-	
-	
+
+
 	private final IWindowToolkit windowToolkit;
-	
+
 	public LWJGLWindowFactory() {
 		this(new LWJGLWindowToolkit());
 	}
-	
+
 	public LWJGLWindowFactory(IWindowToolkit windowToolkit) {
 		this.windowToolkit = windowToolkit;
 	}
-	
-	
+
+
 	@Override
-	public IWindow createDefault() {
+	public IWindowFactory withDefaultHints() {
 		// Set color bits for monitor here?
 		windowToolkit.setWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		windowToolkit.setWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 		windowToolkit.setWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
 
+		return this;
+	}
+
+	@Override
+	public IWindow createDefault() {
+		withDefaultHints();
 		return new LWJGLWindow(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE);
 	}
-	
+
 	@Override
 	public IWindowBuilder createDefaultBuilder() {
 		return (windowFactory, windowToolkit) -> {
 			return createDefault();
 		};
 	}
-	
+
 
 	@Override
 	public IWindow create(int width, int height, String title) {
 		return new LWJGLWindow(width, height, title);
 	}
-	
+
 	@Override
 	public IWindow create(int width, int height, String title, long monitor) {
 		return new LWJGLWindow(width, height, title, monitor);
 	}
-	
+
 	@Override
 	public IWindow create(int width, int height, String title, long monitor, long share) {
 		return new LWJGLWindow(width, height, title, monitor, share);
 	}
-	
+
 	@Override
 	public IWindowBuilder createBuilder(int width, int height, String title) {
 		return (windowFactory, windowToolkit) -> {
@@ -67,7 +73,21 @@ public class LWJGLWindowFactory implements IWindowFactory {
 		};
 	}
 
-	
+	@Override
+	public IWindowBuilder createBuilder(int width, int height, String title, long monitor) {
+		return (windowFactory, windowToolkit) -> {
+			return create(width, height, title, monitor);
+		};
+	}
+
+	@Override
+	public IWindowBuilder createBuilder(int width, int height, String title, long monitor, long share) {
+		return (windowFactory, windowToolkit) -> {
+			return create(width, height, title, monitor, share);
+		};
+	}
+
+
 	@Override
 	public IWindow createFullscreen(String title) {
 		long monitor = windowToolkit.getPrimaryMonitor();
@@ -90,7 +110,7 @@ public class LWJGLWindowFactory implements IWindowFactory {
 		};
 	}
 
-	
+
 	@Override
 	public IWindow createBorderless(String title) {
 		long monitor = windowToolkit.getPrimaryMonitor();
