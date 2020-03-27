@@ -2,7 +2,6 @@ package com.tokelon.toktales.desktop.lwjgl;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.ProvisionException;
-import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
@@ -53,7 +52,7 @@ public class LWJGLWindowContext implements IWindowContext {
 
 
 	@Override
-	public void create(IEngineContext engineContext) throws EngineException {
+	public void create(IEngineContext engineContext) {
 		this.renderer = windowRendererFactory.create(engineContext);
 		this.inputDriver = inputDriverFactory.create(engineContext);
 
@@ -75,7 +74,7 @@ public class LWJGLWindowContext implements IWindowContext {
 	}
 
 	@Override
-	public void destroy() throws EngineException {
+	public void destroy() {
 		if(getInputDriver() != null) {
 			getInputDriver().unregister();
 		}

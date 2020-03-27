@@ -1,6 +1,5 @@
 package com.tokelon.toktales.desktop.ui.window;
 
-import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
@@ -13,14 +12,14 @@ public class WindowHandler implements IWindowHandler {
 		this.windowContext = windowContext;
 	}
 
-	
+
 	@Override
-	public void createWindowContext(IEngineContext engineContext) throws EngineException {
+	public void createWindowContext(IEngineContext engineContext) {
 		windowContext.create(engineContext);
 	}
 
 	@Override
-	public void destroyWindowContext() throws EngineException {
+	public void destroyWindowContext() {
 		windowContext.destroy();
 	}
 
@@ -28,8 +27,8 @@ public class WindowHandler implements IWindowHandler {
 	public IWindowContext getWindowContext() {
 		return windowContext;
 	}
-	
-	
+
+
 	@Override
 	public boolean windowShouldClose() {
 		return windowContext.getWindow().shouldClose();
@@ -38,12 +37,12 @@ public class WindowHandler implements IWindowHandler {
 	@Override
 	public void renderFrame() {
 		IWindowRenderer renderer = windowContext.getRenderer();
-		
+
 		renderer.prepareFrame();
-		
+
 		//engineDriver.render(); // Move this out of the renderer and into here?
 		renderer.drawFrame();
-		
+
 		renderer.commitFrame();
 	}
 

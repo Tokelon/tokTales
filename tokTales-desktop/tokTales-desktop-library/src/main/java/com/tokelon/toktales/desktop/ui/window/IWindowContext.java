@@ -1,6 +1,5 @@
 package com.tokelon.toktales.desktop.ui.window;
 
-import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
@@ -8,9 +7,9 @@ import com.tokelon.toktales.desktop.render.IWindowRenderer;
 public interface IWindowContext {
 
 
-	public void create(IEngineContext engineContext) throws EngineException;
+	public void create(IEngineContext engineContext);
 	
-	public void destroy() throws EngineException;
+	public void destroy();
 	
 
 	
