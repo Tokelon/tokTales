@@ -35,9 +35,9 @@ public class DefaultGameWindowRenderer extends GameWindowRenderer {
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		
-		GL11.glViewport(0, 0, getWindow().getWidth(), getWindow().getHeight());
+
+
+		GL11.glViewport(0, 0, getWindow().getFrameBufferWidth(), getWindow().getFrameBufferHeight());
 	}
 
 }
