@@ -68,6 +68,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	@Override
 	public void destroy() {
 		GLFW.glfwSetFramebufferSizeCallback(getWindow().getId(), null);
+
+		GL.setCapabilities(null);
 	}
 
 
