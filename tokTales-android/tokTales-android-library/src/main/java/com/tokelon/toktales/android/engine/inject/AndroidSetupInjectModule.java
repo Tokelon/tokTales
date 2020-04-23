@@ -8,14 +8,14 @@ public class AndroidSetupInjectModule extends AbstractInjectModule {
 
 
 	private final Context appContext;
-    
+
 	/**
 	 * @param applicationContext
-	 * @throws NullPointerException If applicationContext or gameAdapter is null.
+	 * @throws NullPointerException If applicationContext is null.
 	 */
 	public AndroidSetupInjectModule(Context applicationContext) {
 		if(applicationContext == null) {
-			throw new NullPointerException();
+			throw new NullPointerException("applicationContext must not be null");
 		}
 
 		this.appContext = applicationContext;
@@ -26,5 +26,5 @@ public class AndroidSetupInjectModule extends AbstractInjectModule {
 	protected void configure() {
 		bind(Context.class).toInstance(appContext);
 	}
-    
+
 }

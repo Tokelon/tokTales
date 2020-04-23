@@ -25,54 +25,56 @@ public class TestAndroidInjection {
 			Context.class,
 			IGameAdapter.class,
 	};
-	
+
 	private static final Context mockedContext = mock(Context.class);
 
-	
+
 	@Test
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
-		
+
 		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, ANDROID_EXPECTED_BINDING_TYPES, new Class<?>[0][0]);
 	}
-	
+
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
-		
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
-		
+
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, new DefaultEngineSetup()), new AndroidSetupInjectModule(mockedContext));
+
 		Injector injector = injectConfig.createInjector();
 	}
-	
-	
+
+
 	@Test(expected = ProvisionException.class)
 	public void engineCreationWithStubs_ShouldFail() {
 		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
+
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, new DefaultEngineSetup()), new AndroidSetupInjectModule(mockedContext));
 
 		Injector injector = injectConfig.createInjector();
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 	}
-	
+
 	@Test(expected = ProvisionException.class)
 	public void setupCreationWithStubs_ShouldFail() throws EngineException {
 		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
 
 		DefaultEngineSetup setup = new DefaultEngineSetup();
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, setup), new AndroidSetupInjectModule(mockedContext));
+
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
+
 
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
 		MasterAndroidInjectConfig injectConfig = new MasterAndroidInjectConfig();
-		
+
 		injectConfig.override(new AndroidMockPlatformInjectModule());
-		
+
 		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
+
 }

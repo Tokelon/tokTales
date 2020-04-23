@@ -13,26 +13,26 @@ import com.tokelon.toktales.extensions.desktop.engine.inject.MasterDesktopExtens
 
 public class TestDesktopExtensionsInjection {
 
-	
+
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		MasterDesktopExtensionsInjectConfig injectConfig = new MasterDesktopExtensionsInjectConfig();
-		
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
-		
+
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, new DefaultEngineSetup()));
+
 		Injector injector = injectConfig.createInjector();
 	}
-	
-	
+
+
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
 		MasterDesktopExtensionsInjectConfig injectConfig = new MasterDesktopExtensionsInjectConfig();
 
 		injectConfig.override(new DesktopMockPlatformInjectModule());
 		// No DesktopDefExtensPlatformInjectModule needed yet
-		
+
 		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
+
 }

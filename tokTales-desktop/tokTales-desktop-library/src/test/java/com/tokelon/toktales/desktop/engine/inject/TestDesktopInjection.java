@@ -19,31 +19,31 @@ public class TestDesktopInjection {
 	{
 			IGameAdapter.class
 	};
-	
-	
+
+
 	@Test
 	public void injectorCreationWithoutExpectedBindings_ShouldFail() {
 		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
-		
+
 		InjectionTestHelper.assertInjectorCreationFailsWithExpectedBindings(injectConfig, DESKTOP_EXPECTED_BINDING_TYPES, new Class<?>[0][0]);
 	}
-	
-	
+
+
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
-		
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
-		
+
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, new DefaultEngineSetup()));
+
 		Injector injector = injectConfig.createInjector();
 	}
-	
+
 	@Test
 	public void engineCreationWithSetupModule_ShouldSucceed() {
 		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
-		
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, new DefaultEngineSetup()));
+
 		Injector injector = injectConfig.createInjector();
 		IEngineContext engineContext = injector.getInstance(IEngineContext.class);
 	}
@@ -52,21 +52,21 @@ public class TestDesktopInjection {
 	public void setupCreationWithSetupModule_ShouldSucceed() throws EngineException {
 		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
 
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class));
+		DefaultEngineSetup setup = new DefaultEngineSetup();
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, setup));
+
+		IEngineContext engineContext = setup.create(injectConfig);
+	}
+
+
+	@Test
+	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
+		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
+
+		injectConfig.override(new DesktopMockPlatformInjectModule());
 
 		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
-	
-	@Test
-	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
-		MasterDesktopInjectConfig injectConfig = new MasterDesktopInjectConfig();
-		
-		injectConfig.override(new DesktopMockPlatformInjectModule());
-		
-		DefaultEngineSetup setup = new DefaultEngineSetup();
-		IEngineContext engineContext = setup.create(injectConfig);
-	}
-	
+
 }
