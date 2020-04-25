@@ -1,10 +1,11 @@
-package com.tokelon.toktales.desktop.lwjgl;
+package com.tokelon.toktales.desktop.lwjgl.setup;
 
 import org.lwjgl.glfw.GLFW;
 
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.ISetupStep;
+import com.tokelon.toktales.desktop.lwjgl.LWJGLException;
 
 public class LWJGLInitGLFWSetupStep implements ISetupStep {
 

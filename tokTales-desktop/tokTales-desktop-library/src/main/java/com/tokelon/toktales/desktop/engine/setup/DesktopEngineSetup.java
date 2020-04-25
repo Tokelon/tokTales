@@ -1,10 +1,10 @@
 package com.tokelon.toktales.desktop.engine.setup;
 
 import com.tokelon.toktales.core.engine.setup.DefaultEngineSetup;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLAddErrorCallbackSetupStep;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLInitGLFWSetupStep;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLRegisterCallbacksSetupStep;
-import com.tokelon.toktales.desktop.lwjgl.LWJGLSetDebugStreamSetupStep;
+import com.tokelon.toktales.desktop.lwjgl.setup.LWJGLAddErrorCallbackSetupStep;
+import com.tokelon.toktales.desktop.lwjgl.setup.LWJGLInitGLFWSetupStep;
+import com.tokelon.toktales.desktop.lwjgl.setup.LWJGLRegisterCallbacksSetupStep;
+import com.tokelon.toktales.desktop.lwjgl.setup.LWJGLSetDebugStreamSetupStep;
 
 public class DesktopEngineSetup extends DefaultEngineSetup {
 

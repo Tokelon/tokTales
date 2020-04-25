@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl;
+package com.tokelon.toktales.desktop.lwjgl.setup;
 
 import java.io.PrintStream;
 
