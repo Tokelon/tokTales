@@ -2,13 +2,13 @@ package com.tokelon.toktales.desktop.lwjgl.ui;
 
 import javax.inject.Inject;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI;
 import org.lwjgl.opengl.GL;
 
 import com.tokelon.toktales.core.screen.surface.ISurfaceHandler;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 import com.tokelon.toktales.core.screen.surface.SurfaceHandler;
+import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputRegistration;
 import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
@@ -21,11 +21,13 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	private FramebufferSizeCallback framebufferSizeCallback;
 	private IWindow window;
 
+	private final IGLFWInputRegistration inputRegistration;
 	private final ISurfaceHandler surfaceHandler;
 
 	@Inject
-	public LWJGLWindowRenderer(ISurfaceManager surfaceManager) {
+	public LWJGLWindowRenderer(ISurfaceManager surfaceManager, IGLFWInputRegistration inputRegistration) {
 		this.surfaceHandler = new SurfaceHandler(surfaceManager, new GLSurfaceController());
+		this.inputRegistration = inputRegistration;
 	}
 
 
@@ -33,8 +35,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	public void create(IWindow window) {
 		this.window = window;
 
-		framebufferSizeCallback = new FramebufferSizeCallback();
-		GLFW.glfwSetFramebufferSizeCallback(window.getId(), framebufferSizeCallback);
+		this.framebufferSizeCallback = new FramebufferSizeCallback();
+		inputRegistration.registerFramebufferSizeCallback(window.getId(), framebufferSizeCallback);
 
 		surfaceHandler.setSurfaceName(window.getTitle());
 	}
@@ -67,7 +69,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 
 	@Override
 	public void destroy() {
-		GLFW.glfwSetFramebufferSizeCallback(getWindow().getId(), null);
+		inputRegistration.unregisterFramebufferSizeCallback(window.getId(), framebufferSizeCallback);
+		this.framebufferSizeCallback = null;
 
 		GL.setCapabilities(null);
 	}

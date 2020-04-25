@@ -6,13 +6,14 @@ import org.lwjgl.opengl.GL11;
 
 import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
+import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputRegistration;
 
 public class DefaultGameWindowRenderer extends GameWindowRenderer {
 
 
 	@Inject
-	public DefaultGameWindowRenderer(IEngineDriver engineDriver, ISurfaceManager surfaceManager) {
-		super(engineDriver, surfaceManager);
+	public DefaultGameWindowRenderer(ISurfaceManager surfaceManager, IGLFWInputRegistration inputRegistration, IEngineDriver engineDriver) {
+		super(surfaceManager, inputRegistration, engineDriver);
 	}
 
 

@@ -9,59 +9,50 @@ import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILoggerFactory;
 import com.tokelon.toktales.core.engine.log.LoggingManager;
 import com.tokelon.toktales.core.engine.log.LoggingOutputStream;
+import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputRegistration;
 
 public class LWJGLProgram {
 
 
 	private GLFWErrorCallback errorCallback;
-	
-	private final ILogger logger;
+
+	private final IGLFWInputRegistration inputRegistration;
 	private final ILoggerFactory loggerFactory;
-	
-	public LWJGLProgram() {
-		this(LoggingManager.getLoggerFactory());
+
+	public LWJGLProgram(IGLFWInputRegistration inputRegistration) {
+		this(inputRegistration, LoggingManager.getLoggerFactory());
 	}
-	
-	public LWJGLProgram(ILoggerFactory loggerFactory) {
+
+	public LWJGLProgram(IGLFWInputRegistration inputRegistration, ILoggerFactory loggerFactory) {
+		this.inputRegistration = inputRegistration;
 		this.loggerFactory = loggerFactory;
-		this.logger = loggerFactory.getLogger(getClass());
 	}
-	
-	
+
+
 	public void setup() throws LWJGLException {
-		errorCallback = createErrorCallback();
-		GLFW.glfwSetErrorCallback(errorCallback);
-		
+		this.errorCallback = createLoggingErrorCallback();
+		inputRegistration.registerErrorCallback(errorCallback);
+
 
 		if (!GLFW.glfwInit()) {
 			throw new LWJGLException("Failed to initialize GLFW");
 		}
 	}
-	
-	
-	protected GLFWErrorCallback createErrorCallback() {
+
+
+	protected GLFWErrorCallback createLoggingErrorCallback() {
 		ILogger errorCallbackLogger = loggerFactory.getLogger(GLFWErrorCallback.class);
 		LoggingOutputStream redirectOutputStream = new LoggingOutputStream((String msg) -> errorCallbackLogger.error(msg));
-		
+
 		return GLFWErrorCallback.createPrint(new PrintStream(redirectOutputStream, true)); // TODO: Select encoding?
 	}
-	
-	public void tearDown() {
-		// Terminate GLFW and free the error callback
-		GLFW.glfwTerminate();
-		GLFW.glfwSetErrorCallback(null);//.free();
-	}
-	
 
-	/*
-	//private final ExecutorService executor;
-	
-	public LWJGLProgram() {
-		//main = mainThread;
-		//executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()
-		//		, new MainThreadFactory(), new ThreadPoolExecutor.DiscardPolicy()); 
-		//executor = Executors.newSingleThreadExecutor(new MainThreadFactory());
+	public void tearDown() {
+		GLFW.glfwTerminate();
+
+		inputRegistration.unregisterErrorCallback(errorCallback);
+		errorCallback.free();
+		this.errorCallback = null;
 	}
-	*/
-	
+
 }

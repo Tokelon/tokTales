@@ -11,7 +11,9 @@ public class LWJGLProgramManageSetupStep implements ISetupStep {
 
 	@Override
 	public void onBuildUp(IEngineContext engineContext) throws EngineException {
-		this.program = new LWJGLProgram();
+		ILWJGLInputService inputService = engineContext.getInjector().getInstance(ILWJGLInputService.class);
+
+		this.program = new LWJGLProgram(inputService.getMainInputDispatch().getGLFWInputConsumer());
 		try {
 			program.setup();
 		}

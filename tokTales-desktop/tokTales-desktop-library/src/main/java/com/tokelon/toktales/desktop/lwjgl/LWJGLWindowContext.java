@@ -4,10 +4,7 @@ import com.google.inject.ConfigurationException;
 import com.google.inject.ProvisionException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
-import com.tokelon.toktales.desktop.input.IDesktopInputService;
-import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
-import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputConsumer;
 import com.tokelon.toktales.desktop.lwjgl.ui.DefaultGameWindowRenderer;
 import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowToolkit;
@@ -234,22 +231,20 @@ public class LWJGLWindowContext implements IWindowContext {
 
 			@Override
 			public IDesktopInputDriver create(IEngineContext engineContext) {
-				IDesktopInputDriver inputDriver = null;
 				try {
-					IDesktopInputService desktopInputService = engineContext.getInjector().getInstance(IDesktopInputService.class);
+					// We assume the instance will be resolved, otherwise we cannot use this input driver
+					ILWJGLInputService inputService = engineContext.getInjector().getInstance(ILWJGLInputService.class);
 
-					// We assume the cast will succeed, otherwise we cannot use this input driver
-					ILWJGLInputDispatch mainInputDispatch = (ILWJGLInputDispatch) desktopInputService.getMainInputDispatch();
-					IDesktopInputProducer mainInputProducer = mainInputDispatch.getInputProducer();
-					IGLFWInputConsumer mainGlfwInputConsumer = mainInputDispatch.getGLFWInputConsumer();
-					inputDriver = new GLFWInputDriver(mainInputProducer, mainGlfwInputConsumer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+					return new GLFWInputDriver(
+							inputService.getMainInputDispatch().getGLFWInputConsumer(),
+							inputService.getMainInputDispatch().getInputProducer(),
+							engineContext.getInjector().getInstance(IObjectPoolFactory.class)
+					);
 				}
 				catch (ConfigurationException | ProvisionException e) {
-					// TODO: What to do here? Pass the exception? Log and continue?
+					// TODO: Log an informative error message. Then re-throw exception?
 					throw e;
 				}
-
-				return inputDriver;
 			}
 		}
 
@@ -257,7 +252,19 @@ public class LWJGLWindowContext implements IWindowContext {
 
 			@Override
 			public IWindowRenderer create(IEngineContext engineContext) {
-				return new DefaultGameWindowRenderer(engineContext.getEngine().getEngineDriver(), engineContext.getEngine().getRenderService().getSurfaceManager());
+				try {
+					// We assume the instance will be resolved, otherwise we cannot use this renderer
+					ILWJGLInputService inputService = engineContext.getInjector().getInstance(ILWJGLInputService.class);
+
+					return new DefaultGameWindowRenderer(
+							engineContext.getEngine().getRenderService().getSurfaceManager(),
+							inputService.getMainInputDispatch().getGLFWInputConsumer(),
+							engineContext.getEngine().getEngineDriver());
+				}
+				catch(ConfigurationException | ProvisionException e) {
+					// TODO: Log an informative error message. Then re-throw exception?
+					throw e;
+				}
 			}
 		}
 	}

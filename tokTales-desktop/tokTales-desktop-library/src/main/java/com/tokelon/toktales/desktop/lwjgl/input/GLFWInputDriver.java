@@ -38,13 +38,13 @@ public class GLFWInputDriver implements IDesktopInputDriver {
 	private IWindow window;
 	private long windowHandle;
 
+	private final IGLFWInputConsumer inputConsumer;
 	private final IDesktopInputProducer inputProducer;
 	private final IObjectPoolFactory eventPoolFactory;
-	private final IGLFWInputConsumer inputConsumer;
 
-	public GLFWInputDriver(IDesktopInputProducer inputProducer, IGLFWInputConsumer inputConsumer, IObjectPoolFactory eventPoolFactory) {
-		this.inputProducer = inputProducer;
+	public GLFWInputDriver(IGLFWInputConsumer inputConsumer, IDesktopInputProducer inputProducer, IObjectPoolFactory eventPoolFactory) {
 		this.inputConsumer = inputConsumer;
+		this.inputProducer = inputProducer;
 		this.eventPoolFactory = eventPoolFactory;
 	}
 
