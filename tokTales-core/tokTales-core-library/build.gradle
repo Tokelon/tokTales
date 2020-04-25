@@ -104,8 +104,12 @@ dependencies {
 	// Trove
 	api 'net.sf.trove4j:trove4j:3.0.3'
 	
+	
 	// SLF4J API - No binding
 	api 'org.slf4j:slf4j-api:1.7.28'
+	
+	// SLF4J - sysout-over-slf4j (https://projects.lidalia.org.uk/sysout-over-slf4j)[MIT License]
+	implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
 }
 
 
