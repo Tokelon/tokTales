@@ -5,7 +5,7 @@ import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.setup.ISetupStep;
 import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputConsumer;
 
-public class LWJGLManageCallbacksSetupStep implements ISetupStep {
+public class LWJGLRegisterCallbacksSetupStep implements ISetupStep {
 
 
 	@Override

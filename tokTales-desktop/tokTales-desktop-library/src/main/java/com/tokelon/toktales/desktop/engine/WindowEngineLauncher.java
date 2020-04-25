@@ -53,8 +53,8 @@ public class WindowEngineLauncher extends DesktopEngineLauncher implements IWind
 		getLogger().debug("Inserting setup step: {}", SETUP_STEP_WINDOW_CONTEXT_MANAGE);
 		setup.getSteps().insertStep(SETUP_STEP_WINDOW_CONTEXT_MANAGE, new WindowContextManageSetupStep(windowHandler));
 
-		if(!setup.getSteps().hasStep(DesktopEngineSetup.SETUP_STEP_LWJGL_PROGRAM_MANAGE)) {
-			getLogger().warn("Required setup step is not configured: {}", DesktopEngineSetup.SETUP_STEP_LWJGL_PROGRAM_MANAGE);
+		if(!setup.getSteps().hasStep(DesktopEngineSetup.SETUP_STEP_LWJGL_INIT_GLFW)) {
+			getLogger().warn("Required setup step is not configured: {}", DesktopEngineSetup.SETUP_STEP_LWJGL_INIT_GLFW);
 		}
 
 		return super.createEngine(adapter, setup);
