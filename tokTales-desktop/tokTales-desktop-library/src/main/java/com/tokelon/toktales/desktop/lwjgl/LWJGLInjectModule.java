@@ -7,6 +7,7 @@ import com.tokelon.toktales.core.content.manage.sound.ISoundAssetDecoder;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.IRenderToolkit.IRenderToolkitFactory;
+import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputDispatch;
 import com.tokelon.toktales.desktop.lwjgl.content.STBBitmapDecoder;
 import com.tokelon.toktales.desktop.lwjgl.content.STBCodepointDecoder;
@@ -30,6 +31,11 @@ public class LWJGLInjectModule extends AbstractInjectModule {
 		bind(IFontAssetDecoder.class).to(STBFontDecoder.class);
 		bind(ICodepointAssetDecoder.class).to(STBCodepointDecoder.class);
 
+		
+		bind(IDesktopInputService.class).to(ILWJGLInputService.class);
+		bind(ILWJGLInputService.class).to(LWJGLInputService.class);
+		 bindInEngineScope(LWJGLInputService.class);
+		
 		bind(IDesktopInputDispatch.class).to(ILWJGLInputDispatch.class);
 		bind(ILWJGLInputDispatch.class).to(LWJGLInputDispatch.class);
 		 bind(IGLFWInputConsumer.IGLFWInputConsumerFactory.class).to(GLFWInputConsumer.GLFWInputConsumerFactory.class);
