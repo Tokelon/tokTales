@@ -7,6 +7,7 @@ import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputProducer;
 import com.tokelon.toktales.desktop.lwjgl.input.GLFWInputDriver;
+import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputConsumer;
 import com.tokelon.toktales.desktop.lwjgl.ui.DefaultGameWindowRenderer;
 import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowFactory;
 import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowToolkit;
@@ -237,8 +238,11 @@ public class LWJGLWindowContext implements IWindowContext {
 				try {
 					IDesktopInputService desktopInputService = engineContext.getInjector().getInstance(IDesktopInputService.class);
 
-					IDesktopInputProducer mainInputProducer = desktopInputService.getMainInputDispatch().getInputProducer();
-					inputDriver = new GLFWInputDriver(mainInputProducer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
+					// We assume the cast will succeed, otherwise we cannot use this input driver
+					ILWJGLInputDispatch mainInputDispatch = (ILWJGLInputDispatch) desktopInputService.getMainInputDispatch();
+					IDesktopInputProducer mainInputProducer = mainInputDispatch.getInputProducer();
+					IGLFWInputConsumer mainGlfwInputConsumer = mainInputDispatch.getGLFWInputConsumer();
+					inputDriver = new GLFWInputDriver(mainInputProducer, mainGlfwInputConsumer, engineContext.getInjector().getInstance(IObjectPoolFactory.class));
 				}
 				catch (ConfigurationException | ProvisionException e) {
 					// TODO: What to do here? Pass the exception? Log and continue?

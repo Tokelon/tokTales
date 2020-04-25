@@ -18,7 +18,6 @@ import com.tokelon.toktales.desktop.game.state.IDesktopGameStateInput;
 import com.tokelon.toktales.desktop.input.DesktopInputService;
 import com.tokelon.toktales.desktop.input.IDesktopInputService;
 import com.tokelon.toktales.desktop.input.dispatch.DesktopInputConsumer;
-import com.tokelon.toktales.desktop.input.dispatch.DesktopInputDispatch;
 import com.tokelon.toktales.desktop.input.dispatch.DesktopInputProducer;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputConsumer.IDesktopInputConsumerFactory;
 import com.tokelon.toktales.desktop.input.dispatch.IDesktopInputDispatch;
@@ -53,7 +52,6 @@ public class DesktopInjectModule extends AbstractInjectModule {
 		 bind(IDesktopInputService.class).to(DesktopInputService.class);
 		 bindInEngineScope(DesktopInputService.class);
 		 bind(IInputDispatch.class).to(IDesktopInputDispatch.class);
-		 bind(IDesktopInputDispatch.class).to(DesktopInputDispatch.class);
 		  bind(IDesktopInputProducerFactory.class).to(DesktopInputProducer.DesktopInputProducerFactory.class);
 		  bind(IDesktopInputConsumerFactory.class).to(DesktopInputConsumer.DesktopInputConsumerFactory.class);
 		  
