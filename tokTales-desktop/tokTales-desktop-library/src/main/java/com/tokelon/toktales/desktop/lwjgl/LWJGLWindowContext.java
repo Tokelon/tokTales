@@ -7,22 +7,26 @@ import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowContext;
+import com.tokelon.toktales.desktop.ui.window.IWindowContextBuilder.IWindowContextIconSetterFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowContextBuilder.IWindowContextInputDriverFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowContextBuilder.IWindowContextRendererFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
+import com.tokelon.toktales.desktop.ui.window.IWindowIconSetter;
 import com.tokelon.toktales.desktop.ui.window.IWindowToolkit;
 
 public class LWJGLWindowContext implements IWindowContext {
 
 
 	private IWindow window;
+	private IWindowIconSetter iconSetter;
 	private IWindowRenderer renderer;
 	private IDesktopInputDriver inputDriver;
 
-	private IWindowBuilder windowBuilder;
-	private IWindowConfigurator windowConfigurator;
-	private IWindowContextInputDriverFactory inputDriverFactory;
-	private IWindowContextRendererFactory rendererFactory;
+	private final IWindowBuilder windowBuilder;
+	private final IWindowConfigurator windowConfigurator;
+	private final IWindowContextIconSetterFactory iconSetterFactory;
+	private final IWindowContextInputDriverFactory inputDriverFactory;
+	private final IWindowContextRendererFactory rendererFactory;
 
 	private final IWindowFactory windowFactory;
 	private final IWindowToolkit windowToolkit;
@@ -32,6 +36,7 @@ public class LWJGLWindowContext implements IWindowContext {
 			IWindowToolkit windowToolkit,
 			IWindowBuilder windowBuilder,
 			IWindowConfigurator windowConfigurator,
+			IWindowContextIconSetterFactory iconSetterFactory,
 			IWindowContextRendererFactory rendererFactory,
 			IWindowContextInputDriverFactory inputDriverFactory
 	) {
@@ -39,6 +44,7 @@ public class LWJGLWindowContext implements IWindowContext {
 		this.windowToolkit = windowToolkit;
 		this.windowBuilder = windowBuilder;
 		this.windowConfigurator = windowConfigurator;
+		this.iconSetterFactory = iconSetterFactory;
 		this.rendererFactory = rendererFactory;
 		this.inputDriverFactory = inputDriverFactory;
 	}
@@ -46,6 +52,7 @@ public class LWJGLWindowContext implements IWindowContext {
 
 	@Override
 	public void create(IEngineContext engineContext) {
+		this.iconSetter = iconSetterFactory.create(engineContext);
 		this.renderer = rendererFactory.create(engineContext);
 		this.inputDriver = inputDriverFactory.create(engineContext);
 
@@ -62,6 +69,7 @@ public class LWJGLWindowContext implements IWindowContext {
 		getRenderer().createContext();
 
 		// Configure window
+		getWindowIconSetter().set(getWindow(), getWindowToolkit());
 		getWindowConfigurator().configure(getWindow(), getWindowToolkit());
 		getWindow().show();
 	}
@@ -75,6 +83,8 @@ public class LWJGLWindowContext implements IWindowContext {
 		getRenderer().destroyContext();
 		getRenderer().destroy();
 		getWindow().destroy();
+
+		getWindowIconSetter().dispose();
 	}
 
 
@@ -110,6 +120,10 @@ public class LWJGLWindowContext implements IWindowContext {
 
 	protected IWindowConfigurator getWindowConfigurator() {
 		return windowConfigurator;
+	}
+
+	protected IWindowIconSetter getWindowIconSetter() {
+		return iconSetter;
 	}
 
 }

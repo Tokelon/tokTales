@@ -46,6 +46,18 @@ public interface IWindowContextBuilder {
 	public IWindowContextBuilder withWindowConfigurator(IWindowConfigurator windowConfigurator);
 
 	/**
+	 * @param iconSetter
+	 * @return This builder.
+	 */
+	public IWindowContextBuilder withWindowIconSetter(IWindowIconSetter iconSetter);
+
+	/**
+	 * @param iconSetterFactory
+	 * @return This builder.
+	 */
+	public IWindowContextBuilder withWindowIconSetter(IWindowContextIconSetterFactory iconSetterFactory);
+
+	/**
 	 * @param windowRenderer
 	 * @return This builder.
 	 */
@@ -75,6 +87,19 @@ public interface IWindowContextBuilder {
 	 */
 	public IWindowContextBuilder withInputDriverNone();
 
+
+	/** Creates a window icon setter for a window context.
+	 */
+	public interface IWindowContextIconSetterFactory {
+
+
+		/** Creates a window icon setter using the given engine context.
+		 *
+		 * @param engineContext
+		 * @return A new window icon setter.
+		 */
+		public IWindowIconSetter create(IEngineContext engineContext);
+	}
 
 	/** Creates a window renderer for a window context.
 	 */
