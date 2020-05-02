@@ -1,4 +1,4 @@
-package com.tokelon.toktales.desktop.lwjgl;
+package com.tokelon.toktales.desktop.lwjgl.ui;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
