@@ -22,8 +22,10 @@ public class SetupSteps implements ISetupSteps {
 
 
 	@Override
-	public void insertStep(String name, ISetupStep step) {
-		insertStep(name, step, nextInsertPosition++);
+	public double insertStep(String name, ISetupStep step) {
+		double position = claimNextInsertPosition();
+		insertStep(name, step, position);
+		return position;
 	}
 
 	@Override
@@ -40,8 +42,11 @@ public class SetupSteps implements ISetupSteps {
 
 	@Override
 	public void moveStep(String name, double newPosition) {
-		namesToPositions.put(name, newPosition);
+		if(namesToSteps.containsKey(name)) {
+			namesToPositions.put(name, newPosition);
+		}
 	}
+
 
 	@Override
 	public boolean hasStep(String name) {
@@ -53,6 +58,7 @@ public class SetupSteps implements ISetupSteps {
 		return namesToPositions.containsValue(position);
 	}
 
+
 	@Override
 	public ISetupStep getStep(String name) {
 		return namesToSteps.get(name);
@@ -62,6 +68,17 @@ public class SetupSteps implements ISetupSteps {
 	public Double getStepPosition(String name) {
 		return namesToPositions.get(name);
 	}
+
+	@Override
+	public double peekNextInsertPosition() {
+		return nextInsertPosition + 1d;
+	}
+
+	@Override
+	public double claimNextInsertPosition() {
+		return nextInsertPosition++;
+	}
+
 
 	@Override
 	public Map<String, Double> createStepNamesToPositions() {
