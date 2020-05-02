@@ -9,10 +9,12 @@ import com.tokelon.toktales.core.engine.setup.steps.RedirectSystemOutputSetupSte
 public class DefaultEngineSetup extends BaseEngineSetup {
 
 
+	public static final String SETUP_STEP_DEFAULT_FIRST = "SETUP_STEP_DEFAULT_FIRST";
 	public static final String SETUP_STEP_REDIRECT_SYSTEM_OUTPUT = "SETUP_STEP_REDIRECT_SYSTEM_OUTPUT";
 	public static final String SETUP_STEP_LOAD_MAIN_CONFIG = "SETUP_STEP_LOAD_MAIN_CONFIG";
 	public static final String SETUP_STEP_INIT_SCRIPTING = "SETUP_STEP_INIT_SCRIPTING";
 	public static final String SETUP_STEP_ADD_INITIAL_GAMESTATE = "SETUP_STEP_ADD_INITIAL_GAMESTATE";
+	public static final String SETUP_STEP_DEFAULT_LAST = "SETUP_STEP_DEFAULT_LAST";
 
 
 	public DefaultEngineSetup() {
@@ -41,10 +43,12 @@ public class DefaultEngineSetup extends BaseEngineSetup {
 	 * Called in the constructor.
 	 */
 	protected void addDefaultSteps() {
+		getSteps().insertStep(SETUP_STEP_DEFAULT_FIRST, new EmptySetupStep());
 		getSteps().insertStep(SETUP_STEP_REDIRECT_SYSTEM_OUTPUT, new RedirectSystemOutputSetupStep());
 		getSteps().insertStep(SETUP_STEP_LOAD_MAIN_CONFIG, new LoadMainConfigSetupStep());
 		getSteps().insertStep(SETUP_STEP_INIT_SCRIPTING, new InitScriptingSetupStep());
 		getSteps().insertStep(SETUP_STEP_ADD_INITIAL_GAMESTATE, new AddInitialGamestateSetupStep());
+		getSteps().insertStep(SETUP_STEP_DEFAULT_LAST, new EmptySetupStep());
 	}
 
 }
