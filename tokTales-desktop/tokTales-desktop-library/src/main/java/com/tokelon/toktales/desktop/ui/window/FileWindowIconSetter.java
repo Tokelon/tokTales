@@ -24,9 +24,11 @@ public class FileWindowIconSetter implements IWindowIconSetter {
 	public void set(IWindow window, IWindowToolkit windowToolkit) {
 		ReadDelegateBitmapAssetKey iconBitmapKey = new ReadDelegateBitmapAssetKey(new FileKey(new File(iconPath)));
 		IBitmapAsset iconBitmapAsset = bitmapAssetManager.getAssetLoadIfNeeded(iconBitmapKey); // Use load and dispose after setting?
-		IBitmap iconBitmap = iconBitmapAsset.getBitmap();
 
-		window.setWindowIcon(iconBitmap.getWidth(), iconBitmap.getHeight(), iconBitmap.getData());
+		if(bitmapAssetManager.isAssetValid(iconBitmapAsset)) {
+			IBitmap iconBitmap = iconBitmapAsset.getBitmap();
+			window.setWindowIcon(iconBitmap.getWidth(), iconBitmap.getHeight(), iconBitmap.getData());
+		}
 	}
 
 }
