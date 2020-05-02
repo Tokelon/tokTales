@@ -18,6 +18,9 @@ public class WindowEngineLauncher extends DesktopEngineLauncher implements IWind
 
 	public static final String SETUP_STEP_WINDOW_CONTEXT_MANAGE = "SETUP_STEP_WINDOW_CONTEXT_MANAGE";
 
+	public static final String WINDOW_CONTEXT_MANAGE_RELATIVE_STEP = DesktopEngineSetup.SETUP_STEP_LWJGL_LAST;
+	public static final double WINDOW_CONTEXT_MANAGE_RELATIVE_POSITION = 0.5d;
+
 
 	private IEngineLooper looper;
 
@@ -50,8 +53,18 @@ public class WindowEngineLauncher extends DesktopEngineLauncher implements IWind
 
 	@Override
 	protected IEngineContext createEngine(Class<? extends IGameAdapter> adapter, IEngineSetup setup) throws EngineException {
-		getLogger().debug("Inserting setup step: {}", SETUP_STEP_WINDOW_CONTEXT_MANAGE);
-		setup.getSteps().insertStep(SETUP_STEP_WINDOW_CONTEXT_MANAGE, new WindowContextManageSetupStep(windowHandler));
+		WindowContextManageSetupStep windowContextManageStep = new WindowContextManageSetupStep(windowHandler);
+
+		Double relativeStepPosition = setup.getSteps().getStepPosition(WINDOW_CONTEXT_MANAGE_RELATIVE_STEP);
+		if(relativeStepPosition == null) {
+			getLogger().debug("Inserting setup step: {}", SETUP_STEP_WINDOW_CONTEXT_MANAGE);
+			setup.getSteps().insertStep(SETUP_STEP_WINDOW_CONTEXT_MANAGE, windowContextManageStep);
+		}
+		else {
+			double stepPosition = relativeStepPosition + WINDOW_CONTEXT_MANAGE_RELATIVE_POSITION;
+			getLogger().debug("Inserting setup step: {}, at position {}", SETUP_STEP_WINDOW_CONTEXT_MANAGE, stepPosition);
+			setup.getSteps().insertStep(SETUP_STEP_WINDOW_CONTEXT_MANAGE, windowContextManageStep, stepPosition);
+		}
 
 		if(!setup.getSteps().hasStep(DesktopEngineSetup.SETUP_STEP_LWJGL_INIT_GLFW)) {
 			getLogger().warn("Required setup step is not configured: {}", DesktopEngineSetup.SETUP_STEP_LWJGL_INIT_GLFW);
