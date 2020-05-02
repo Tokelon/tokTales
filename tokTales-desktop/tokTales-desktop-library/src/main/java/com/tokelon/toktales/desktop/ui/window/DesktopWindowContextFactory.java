@@ -7,4 +7,19 @@ import com.tokelon.toktales.desktop.lwjgl.ui.LWJGLWindowContextFactory;
  */
 public class DesktopWindowContextFactory extends LWJGLWindowContextFactory {
 
+
+	/** Default constructor.
+	 */
+	public DesktopWindowContextFactory() {
+		super();
+	}
+
+	/** Constructor with a default icon path.
+	 *
+	 * @param defaultIconPath
+	 */
+	public DesktopWindowContextFactory(String defaultIconPath) {
+		super(defaultIconPath);
+	}
+
 }

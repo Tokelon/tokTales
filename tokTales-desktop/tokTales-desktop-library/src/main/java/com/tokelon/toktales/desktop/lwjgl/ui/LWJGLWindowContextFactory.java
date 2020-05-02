@@ -17,6 +17,20 @@ import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFact
 public class LWJGLWindowContextFactory implements IWindowContextFactory {
 
 
+	public static final String DEFAULT_ICON_PATH = "Data/Assets/icon.png";
+
+
+	private final String defaultIconPath;
+
+	public LWJGLWindowContextFactory() {
+		this(DEFAULT_ICON_PATH);
+	}
+
+	public LWJGLWindowContextFactory(String defaultIconPath) {
+		this.defaultIconPath = defaultIconPath;
+	}
+
+
 	@Override
 	public IWindowContext createDefault() {
 		return createDefaultBuilder().build();
@@ -38,7 +52,7 @@ public class LWJGLWindowContextFactory implements IWindowContextFactory {
 
 	@Override
 	public IWindowContextIconSetterFactory createDefaultIconSetterFactory() {
-		return (engineContext) -> (window, windowToolkit) -> {};
+		return createIconSetterFactory(defaultIconPath);
 	}
 
 	@Override
