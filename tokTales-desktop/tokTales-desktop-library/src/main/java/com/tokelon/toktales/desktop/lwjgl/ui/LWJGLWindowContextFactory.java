@@ -70,7 +70,7 @@ public class LWJGLWindowContextFactory implements IWindowContextFactory {
 				// We assume the instance will be resolved, otherwise we cannot use this icon setter
 				IBitmapAssetManager bitmapAssetManager = engineContext.getInjector().getInstance(IBitmapAssetManager.class);
 
-				return new FileWindowIconSetter(bitmapAssetManager, iconPath);
+				return new FileWindowIconSetter(engineContext.getLogging(), bitmapAssetManager, iconPath);
 			}
 			catch(ConfigurationException | ProvisionException e) {
 				// TODO: Log an informative error message. Then re-throw exception?
