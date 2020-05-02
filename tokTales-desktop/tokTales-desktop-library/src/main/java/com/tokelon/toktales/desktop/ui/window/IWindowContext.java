@@ -97,10 +97,10 @@ public interface IWindowContext {
 		public IWindowContextBuilder withRenderer(IWindowRenderer windowRenderer);
 
 		/**
-		 * @param windowRendererFactory
+		 * @param rendererFactory
 		 * @return This builder.
 		 */
-		public IWindowContextBuilder withRenderer(IWindowRendererFactory windowRendererFactory);
+		public IWindowContextBuilder withRenderer(IWindowContextRendererFactory rendererFactory);
 
 		/**
 		 * @param inputDriver
@@ -112,7 +112,7 @@ public interface IWindowContext {
 		 * @param inputDriverFactory
 		 * @return This builder.
 		 */
-		public IWindowContextBuilder withInputDriver(IDesktopInputDriverFactory inputDriverFactory);
+		public IWindowContextBuilder withInputDriver(IWindowContextInputDriverFactory inputDriverFactory);
 
 		/** Disables creation of the default input driver.
 		 *
@@ -124,7 +124,7 @@ public interface IWindowContext {
 
 	/** Creates a window renderer for a window context.
 	 */
-	public interface IWindowRendererFactory {
+	public interface IWindowContextRendererFactory {
 
 
 		/** Creates a window renderer using the given engine context.
@@ -137,7 +137,7 @@ public interface IWindowContext {
 
 	/** Creates an input driver for a window context.
 	 */
-	public interface IDesktopInputDriverFactory {
+	public interface IWindowContextInputDriverFactory {
 
 
 		/** Creates an input driver using the given engine context.
