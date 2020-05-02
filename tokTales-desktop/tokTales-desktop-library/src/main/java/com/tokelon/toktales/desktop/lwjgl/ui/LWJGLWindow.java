@@ -1,8 +1,12 @@
 package com.tokelon.toktales.desktop.lwjgl.ui;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import com.tokelon.toktales.desktop.ui.window.IWindow;
@@ -85,9 +89,6 @@ public class LWJGLWindow implements IWindow {
 
 	@Override
 	public void destroy() {
-		// Free the window callbacks and destroy the window
-		//glfwFreeCallbacks(id);
-
 		GLFW.glfwDestroyWindow(windowId);
 	}
 
@@ -305,6 +306,25 @@ public class LWJGLWindow implements IWindow {
 	@Override
 	public void setAttribute(int attribute, int value) {
 		GLFW.glfwSetWindowAttrib(windowId, attribute, value);
+	}
+
+	@Override
+	public void setWindowIcon(int width, int height, ByteBuffer pixels) {
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			GLFWImage image = GLFWImage.mallocStack(stack);
+			image.set(width, height, pixels);
+
+			GLFWImage.Buffer imageBuffer = GLFWImage.mallocStack(1, stack);
+			imageBuffer.put(image);
+			imageBuffer.flip();
+
+			GLFW.glfwSetWindowIcon(windowId, imageBuffer);
+		}
+	}
+
+	@Override
+	public void removeWindowIcon() {
+		GLFW.glfwSetWindowIcon(windowId, null);
 	}
 
 

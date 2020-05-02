@@ -1,5 +1,7 @@
 package com.tokelon.toktales.desktop.ui.window;
 
+import java.nio.ByteBuffer;
+
 /** Represents a native window on a device.
  * <p>
  * A window must be created by using {@link #create()} before any methods are called on it.
@@ -207,6 +209,18 @@ public interface IWindow {
 	 * @param value
 	 */
 	public void setAttribute(int attribute, int value);
+
+	/** Sets the icon for this window to the given bitmap.
+	 *
+	 * @param width
+	 * @param height
+	 * @param pixels
+	 */
+	public void setWindowIcon(int width, int height, ByteBuffer pixels);
+
+	/** Removes the icon for this window.
+	 */
+	public void removeWindowIcon();
 
 
 
