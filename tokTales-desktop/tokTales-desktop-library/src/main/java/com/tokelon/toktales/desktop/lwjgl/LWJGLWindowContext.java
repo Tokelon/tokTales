@@ -2,14 +2,14 @@ package com.tokelon.toktales.desktop.lwjgl;
 
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
+import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory.IWindowContextIconSetterFactory;
+import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory.IWindowContextInputDriverFactory;
+import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory.IWindowContextRendererFactory;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
 import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowContext;
-import com.tokelon.toktales.desktop.ui.window.IWindowContextBuilder.IWindowContextIconSetterFactory;
-import com.tokelon.toktales.desktop.ui.window.IWindowContextBuilder.IWindowContextInputDriverFactory;
-import com.tokelon.toktales.desktop.ui.window.IWindowContextBuilder.IWindowContextRendererFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowIconSetter;
 import com.tokelon.toktales.desktop.ui.window.IWindowToolkit;

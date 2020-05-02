@@ -1,7 +1,9 @@
 package com.tokelon.toktales.desktop.ui.window;
 
-import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.desktop.input.IDesktopInputDriver;
+import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory.IWindowContextIconSetterFactory;
+import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory.IWindowContextInputDriverFactory;
+import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory.IWindowContextRendererFactory;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
 /** Builds a window context with given or default properties.
@@ -86,45 +88,5 @@ public interface IWindowContextBuilder {
 	 * @return This builder.
 	 */
 	public IWindowContextBuilder withInputDriverNone();
-
-
-	/** Creates a window icon setter for a window context.
-	 */
-	public interface IWindowContextIconSetterFactory {
-
-
-		/** Creates a window icon setter using the given engine context.
-		 *
-		 * @param engineContext
-		 * @return A new window icon setter.
-		 */
-		public IWindowIconSetter create(IEngineContext engineContext);
-	}
-
-	/** Creates a window renderer for a window context.
-	 */
-	public interface IWindowContextRendererFactory {
-
-
-		/** Creates a window renderer using the given engine context.
-		 *
-		 * @param engineContext
-		 * @return A new window renderer.
-		 */
-		public IWindowRenderer create(IEngineContext engineContext);
-	}
-
-	/** Creates an input driver for a window context.
-	 */
-	public interface IWindowContextInputDriverFactory {
-
-
-		/** Creates an input driver using the given engine context.
-		 *
-		 * @param engineContext
-		 * @return A new input driver.
-		 */
-		public IDesktopInputDriver create(IEngineContext engineContext);
-	}
 
 }
