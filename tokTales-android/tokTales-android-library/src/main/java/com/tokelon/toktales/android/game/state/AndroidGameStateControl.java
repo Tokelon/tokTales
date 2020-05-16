@@ -16,29 +16,31 @@ import com.tokelon.toktales.core.game.state.GameStateControl;
 import com.tokelon.toktales.core.game.state.IGameStateInput;
 
 public class AndroidGameStateControl extends GameStateControl {
-	
-	
+
+
 	private final AndroidGamestateInputForwarder inputForwarder;
-	
+
 	@Inject
 	public AndroidGameStateControl(ILogging logging, IAndroidInputService inputService) {
 		super(logging);
-		
+
 		this.inputForwarder = new AndroidGamestateInputForwarder();
 		inputService.getMainInputDispatch().getInputConsumer().registerInputCallback(inputForwarder);
 		inputService.getMainInputDispatch().getInputConsumer().registerInputCallback(inputForwarder, IInputCallback.class);
 	}
 
-	
-	
-	protected class AndroidGamestateInputForwarder implements
-		IInputCallback, IScreenButtonCallback, IScreenPressCallback, IScreenPointerCallback {
+
+
+	protected class AndroidGamestateInputForwarder implements IInputCallback,
+			IScreenButtonCallback,
+			IScreenPressCallback,
+			IScreenPointerCallback {
 
 
 		@Override
 		public boolean handle(IInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IAndroidGameStateInput) {
 				IAndroidGameStateInput androidStateInput = (IAndroidGameStateInput) currentStateInput;
 				return androidStateInput.handle(event);
@@ -46,52 +48,52 @@ public class AndroidGameStateControl extends GameStateControl {
 			else {
 				currentStateInput.handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IAndroidGameStateInput) {
 				IAndroidGameStateInput androidStateInput = (IAndroidGameStateInput) currentStateInput;
-				return androidStateInput.handleScreenButtonInput(event);
+				return androidStateInput.getMasterScreenButtonCallback().handleScreenButtonInput(event);
 			}
 			else {
 				currentStateInput.handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleScreenPressInput(IScreenPressInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IAndroidGameStateInput) {
 				IAndroidGameStateInput androidStateInput = (IAndroidGameStateInput) currentStateInput;
-				return androidStateInput.handleScreenPressInput(event);
+				return androidStateInput.getMasterScreenPressCallback().handleScreenPressInput(event);
 			}
 			else {
 				currentStateInput.handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleScreenPointerInput(IScreenPointerInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IAndroidGameStateInput) {
 				IAndroidGameStateInput androidStateInput = (IAndroidGameStateInput) currentStateInput;
-				return androidStateInput.handleScreenPointerInput(event);
+				return androidStateInput.getMasterScreenPointerCallback().handleScreenPointerInput(event);
 			}
 			else {
 				currentStateInput.handle(event);
 			}
-			
+
 			return false;
 		}
 	}

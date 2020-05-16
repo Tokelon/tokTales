@@ -7,14 +7,14 @@ import com.tokelon.toktales.core.engine.input.IInputEvent;
 
 public class AndroidInputProducer implements IAndroidInputProducer {
 
-	
+
 	private final IAndroidInputDispatch dispatch;
 
 	public AndroidInputProducer(IAndroidInputDispatch dispatch) {
 		this.dispatch = dispatch;
 	}
-	
-	
+
+
 	@Override
 	public void postInput(IInputEvent event) {
 		dispatch.getInputConsumer().handle(event);
@@ -22,20 +22,20 @@ public class AndroidInputProducer implements IAndroidInputProducer {
 
 	@Override
 	public void postScreenButtonInput(IScreenButtonInputEvent event) {
-		dispatch.getInputConsumer().handleScreenButtonInput(event);
+		dispatch.getInputConsumer().getMasterScreenButtonCallback().handleScreenButtonInput(event);
 	}
 
 	@Override
 	public void postScreenPointerInput(IScreenPointerInputEvent event) {
-		dispatch.getInputConsumer().handleScreenPointerInput(event);
+		dispatch.getInputConsumer().getMasterScreenPointerCallback().handleScreenPointerInput(event);
 	}
 
 	@Override
 	public void postScreenPressInput(IScreenPressInputEvent event) {
-		dispatch.getInputConsumer().handleScreenPressInput(event);
+		dispatch.getInputConsumer().getMasterScreenPressCallback().handleScreenPressInput(event);
 	}
-	
-	
+
+
 	public static class AndroidInputProducerFactory implements IAndroidInputProducerFactory {
 
 		@Override
