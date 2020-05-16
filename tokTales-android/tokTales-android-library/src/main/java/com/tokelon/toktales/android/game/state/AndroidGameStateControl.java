@@ -43,10 +43,10 @@ public class AndroidGameStateControl extends GameStateControl {
 
 			if(currentStateInput instanceof IAndroidGameStateInput) {
 				IAndroidGameStateInput androidStateInput = (IAndroidGameStateInput) currentStateInput;
-				return androidStateInput.handle(event);
+				return androidStateInput.getMasterInputCallback().handle(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -61,7 +61,7 @@ public class AndroidGameStateControl extends GameStateControl {
 				return androidStateInput.getMasterScreenButtonCallback().handleScreenButtonInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -76,7 +76,7 @@ public class AndroidGameStateControl extends GameStateControl {
 				return androidStateInput.getMasterScreenPressCallback().handleScreenPressInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -91,7 +91,7 @@ public class AndroidGameStateControl extends GameStateControl {
 				return androidStateInput.getMasterScreenPointerCallback().handleScreenPointerInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;

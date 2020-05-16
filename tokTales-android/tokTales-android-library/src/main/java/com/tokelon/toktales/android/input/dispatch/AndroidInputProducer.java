@@ -17,7 +17,7 @@ public class AndroidInputProducer implements IAndroidInputProducer {
 
 	@Override
 	public void postInput(IInputEvent event) {
-		dispatch.getInputConsumer().handle(event);
+		dispatch.getInputConsumer().getMasterInputCallback().handle(event);
 	}
 
 	@Override

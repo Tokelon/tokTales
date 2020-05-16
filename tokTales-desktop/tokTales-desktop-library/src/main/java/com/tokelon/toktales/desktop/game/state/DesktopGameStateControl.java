@@ -47,10 +47,10 @@ public class DesktopGameStateControl extends GameStateControl {
 
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handle(event);
+				return desktopStateInput.getMasterInputCallback().handle(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -65,7 +65,7 @@ public class DesktopGameStateControl extends GameStateControl {
 				return desktopStateInput.getMasterMouseButtonCallback().handleMouseButtonInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -80,7 +80,7 @@ public class DesktopGameStateControl extends GameStateControl {
 				return desktopStateInput.getMasterCursorEnterCallback().handleCursorEnterInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -95,7 +95,7 @@ public class DesktopGameStateControl extends GameStateControl {
 				return desktopStateInput.getMasterCursorPosCallback().handleCursorPosInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -110,7 +110,7 @@ public class DesktopGameStateControl extends GameStateControl {
 				return desktopStateInput.getMasterKeyInputCallback().handleKeyInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;
@@ -125,7 +125,7 @@ public class DesktopGameStateControl extends GameStateControl {
 				return desktopStateInput.getMasterCharInputCallback().handleCharInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
 
 			return false;

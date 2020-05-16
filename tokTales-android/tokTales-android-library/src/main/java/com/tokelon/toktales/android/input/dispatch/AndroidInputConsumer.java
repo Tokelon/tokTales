@@ -15,8 +15,13 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 		IScreenButtonCallback,
 		IScreenPointerCallback,
 		IScreenPressCallback {
-	// TODO: Maybe convert methods to lambdas
+	// TODO: Maybe use separate callback implementations with lambdas instead of this
 
+
+	@Override
+	public IInputCallback getMasterInputCallback() {
+		return this;
+	}
 
 	@Override
 	public IScreenButtonCallback getMasterScreenButtonCallback() {

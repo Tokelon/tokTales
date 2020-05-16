@@ -21,8 +21,13 @@ public class DesktopInputConsumer extends DesktopInputRegistration implements ID
 		ICursorPosCallback,
 		IKeyInputCallback,
 		ICharInputCallback {
-	// TODO: Maybe convert methods to lambdas
+	// TODO: Maybe use separate callback implementations with lambdas instead of this
 
+
+	@Override
+	public IInputCallback getMasterInputCallback() {
+		return this;
+	}
 
 	@Override
 	public IMouseButtonCallback getMasterMouseButtonCallback() {
