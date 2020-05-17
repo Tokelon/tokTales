@@ -12,10 +12,10 @@ public class LuaGameScriptManager extends LuaScriptManager implements IGameScrip
 	public LuaGameScriptManager() {
 		super();
 	}
-	
+
 	@Inject
 	public LuaGameScriptManager(ILoggerFactory loggerFactory) {
 		super(loggerFactory);
 	}
-	
+
 }

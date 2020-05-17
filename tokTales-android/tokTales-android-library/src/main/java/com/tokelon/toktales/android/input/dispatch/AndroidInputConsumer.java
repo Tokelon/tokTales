@@ -2,20 +2,48 @@ package com.tokelon.toktales.android.input.dispatch;
 
 import java.util.Set;
 
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenButtonCallback;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenPointerCallback;
+import com.tokelon.toktales.android.input.dispatch.IAndroidInputRegistration.IScreenPressCallback;
 import com.tokelon.toktales.android.input.events.IScreenButtonInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPointerInputEvent;
 import com.tokelon.toktales.android.input.events.IScreenPressInputEvent;
 import com.tokelon.toktales.core.engine.input.IInputCallback;
 import com.tokelon.toktales.core.engine.input.IInputEvent;
 
-public class AndroidInputConsumer extends AndroidInputRegistration implements IAndroidInputConsumer {
+public class AndroidInputConsumer extends AndroidInputRegistration implements IAndroidInputConsumer,
+		IScreenButtonCallback,
+		IScreenPointerCallback,
+		IScreenPressCallback {
+	// TODO: Maybe use separate callback implementations with lambdas instead of this
 
-	
+
+	@Override
+	public IInputCallback getMasterInputCallback() {
+		return this;
+	}
+
+	@Override
+	public IScreenButtonCallback getMasterScreenButtonCallback() {
+		return this;
+	}
+
+	@Override
+	public IScreenPointerCallback getMasterScreenPointerCallback() {
+		return this;
+	}
+
+	@Override
+	public IScreenPressCallback getMasterScreenPressCallback() {
+		return this;
+	}
+
+
 	@Override
 	public boolean handle(IInputEvent event) {
 		boolean handledHere = false;
-		
-		Set<IInputCallback> generalCallbackSet = getGeneralInputCallbackSet(); 
+
+		Set<IInputCallback> generalCallbackSet = getGeneralInputCallbackSet();
 		synchronized (generalCallbackSet) {
 			for(IInputCallback callback: generalCallbackSet) {
 				boolean callbackHandled = callback.handle(event);
@@ -23,15 +51,15 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 				event.markHandledIf(callbackHandled);
 			}
 		}
-		
+
 		return handledHere;
 	}
 
 	@Override
 	public boolean handleScreenButtonInput(IScreenButtonInputEvent event) {
 		boolean handledHere = false;
-		
-		Set<IScreenButtonCallback> screenButtonCallbackSet = getScreenButtonCallbackSet(); 
+
+		Set<IScreenButtonCallback> screenButtonCallbackSet = getScreenButtonCallbackSet();
 		synchronized (screenButtonCallbackSet) {
 			for(IScreenButtonCallback callback: screenButtonCallbackSet) {
 				boolean callbackHandled = callback.handleScreenButtonInput(event);
@@ -39,7 +67,7 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 				event.markHandledIf(callbackHandled);
 			}
 		}
-		
+
 		return handledHere;
 	}
 
@@ -47,7 +75,7 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 	@Override
 	public boolean handleScreenPressInput(IScreenPressInputEvent event) {
 		boolean handledHere = false;
-		
+
 		Set<IScreenPressCallback> screenPressCallbackSet = getScreenPressCallbackSet();
 		synchronized (screenPressCallbackSet) {
 			for(IScreenPressCallback callback: screenPressCallbackSet) {
@@ -56,14 +84,14 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 				event.markHandledIf(callbackHandled);
 			}
 		}
-		
+
 		return handledHere;
 	}
-	
+
 	@Override
 	public boolean handleScreenPointerInput(IScreenPointerInputEvent event) {
 		boolean handledHere = false;
-		
+
 		Set<IScreenPointerCallback> screenPointerCallbackSet = getScreenPointerCallbackSet();
 		synchronized (screenPointerCallbackSet) {
 			for(IScreenPointerCallback callback: screenPointerCallbackSet) {
@@ -72,12 +100,12 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 				event.markHandledIf(callbackHandled);
 			}
 		}
-		
+
 		return handledHere;
 	}
-	
-	
-	
+
+
+
 	public static class AndroidInputConsumerFactory implements IAndroidInputConsumerFactory {
 
 		@Override
@@ -85,5 +113,5 @@ public class AndroidInputConsumer extends AndroidInputRegistration implements IA
 			return new AndroidInputConsumer();
 		}
 	}
-	
+
 }

@@ -9,21 +9,36 @@ import java9.util.function.Consumer;
 public class LoggingOutputStream extends OutputStream {
 
 
+	public static final int DEFAULT_BUFFER_SIZE = 2048;
+
+
 	private final ByteArrayOutputStream bufferStream;
-	
-	private Consumer<String> loggingConsumer;
-	
+
+	private final Consumer<String> loggingConsumer;
+
 	public LoggingOutputStream(Consumer<String> loggingConsumer) {
-		this.loggingConsumer = loggingConsumer;
-		this.bufferStream = new ByteArrayOutputStream(1024);
+		this(loggingConsumer, DEFAULT_BUFFER_SIZE);
 	}
 
-	
+	public LoggingOutputStream(Consumer<String> loggingConsumer, int bufferSize) {
+		this.loggingConsumer = loggingConsumer;
+		this.bufferStream = new ByteArrayOutputStream(bufferSize);
+	}
+
+
+	protected void commitToLog() {
+		String message = bufferStream.toString(); // TODO: Use UTF-8 charset?
+		if(!message.isEmpty()) {
+			loggingConsumer.accept(message);
+		}
+
+		bufferStream.reset();
+	}
+
 	@Override
 	public void write(int b) throws IOException {
-		if(b == '\n') {
-			loggingConsumer.accept(bufferStream.toString()); // TODO: Select charset?
-			bufferStream.reset();
+		if(b == '\n' || b == '\r') {
+			commitToLog();
 		}
 		else {
 			bufferStream.write(b);

@@ -1,6 +1,6 @@
 // tokTales-master build.gradle
 group "com.tokelon.toktales"
-version "0.1.0"
+version "0.2.0-rc1"
 
 
 buildscript {
@@ -47,7 +47,7 @@ apply plugin: 'java'
 
 task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all subprojects as if it was a single project.', group: 'documentation') {
 	destinationDir = file("$buildDir/docs/javadoc")
-	title = "tokTales $version API"
+	title = "tokTales ${project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))} API"
 	options.links (
 			'https://docs.oracle.com/javase/8/docs/api/',
 			'https://developer.android.com/reference',
@@ -55,6 +55,7 @@ task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all su
 			'https://guava.dev/releases/26.0-android/api/docs/'
 	)
 	options.addBooleanOption('Xdoclint:none', true)
+	//options.addBooleanOption('notimestamp', true) // TODO: Fix api-docs publishing before enabling this
 
 	gradle.projectsEvaluated({
 		subprojects.each { project ->

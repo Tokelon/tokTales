@@ -10,36 +10,36 @@ import com.tokelon.toktales.android.test.engine.inject.AndroidMockPlatformInject
 import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.engine.inject.BaseSetupInjectModule;
-import com.tokelon.toktales.core.engine.setup.BaseInjectSetup;
+import com.tokelon.toktales.core.engine.setup.DefaultEngineSetup;
 import com.tokelon.toktales.core.test.game.DummyGameAdapter;
 import com.tokelon.toktales.extensions.android.engine.inject.MasterAndroidExtensionsInjectConfig;
 
 import android.content.Context;
 
 public class TestAndroidExtensionsInjection {
-	
+
 	private static final Context mockedContext = mock(Context.class);
 
-	
+
 	@Test
 	public void injectorCreationWithSetupModule_ShouldSucceed() {
 		MasterAndroidExtensionsInjectConfig injectConfig = new MasterAndroidExtensionsInjectConfig();
-		
-		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class), new AndroidSetupInjectModule(mockedContext));
-		
+
+		injectConfig.extend(new BaseSetupInjectModule(DummyGameAdapter.class, new DefaultEngineSetup()), new AndroidSetupInjectModule(mockedContext));
+
 		Injector injector = injectConfig.createInjector();
 	}
-	
+
 
 	@Test
 	public void setupCreationWithMockPlatform_ShouldSucceed() throws EngineException {
 		MasterAndroidExtensionsInjectConfig injectConfig = new MasterAndroidExtensionsInjectConfig();
-		
+
 		injectConfig.override(new AndroidMockPlatformInjectModule());
 		// No AndroidExtensionsMockPlatformInjectModule needed yet
-		
-		BaseInjectSetup setup = new BaseInjectSetup();
+
+		DefaultEngineSetup setup = new DefaultEngineSetup();
 		IEngineContext engineContext = setup.create(injectConfig);
 	}
-	
+
 }

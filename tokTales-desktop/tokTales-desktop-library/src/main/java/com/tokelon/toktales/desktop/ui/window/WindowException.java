@@ -1,5 +1,7 @@
 package com.tokelon.toktales.desktop.ui.window;
 
+/** Occurs when there is some unchecked window error.
+ */
 public class WindowException extends RuntimeException {
 
 
@@ -20,5 +22,5 @@ public class WindowException extends RuntimeException {
 	public WindowException(String message, Throwable cause) {
 		super(message, cause);
 	}
-	
+
 }

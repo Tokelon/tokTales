@@ -21,112 +21,115 @@ import com.tokelon.toktales.desktop.input.events.IMouseButtonInputEvent;
 
 public class DesktopGameStateControl extends GameStateControl {
 
-	
+
 	private final DesktopGamestateInputForwarder inputForwarder;
-	
+
 	@Inject
 	public DesktopGameStateControl(ILogging logging, IDesktopInputService inputService) {
 		super(logging);
-	
+
 		this.inputForwarder = new DesktopGamestateInputForwarder();
 		inputService.getMainInputDispatch().getInputConsumer().registerInputCallback(inputForwarder);
 		inputService.getMainInputDispatch().getInputConsumer().registerInputCallback(inputForwarder, IInputCallback.class);
 	}
-	
-	
-	
-	protected class DesktopGamestateInputForwarder implements
-		IInputCallback, IMouseButtonCallback, ICursorEnterCallback, ICursorPosCallback, IKeyInputCallback, ICharInputCallback {
+
+
+	protected class DesktopGamestateInputForwarder implements IInputCallback,
+			IMouseButtonCallback,
+			ICursorEnterCallback,
+			ICursorPosCallback,
+			IKeyInputCallback,
+			ICharInputCallback {
 
 		@Override
 		public boolean handle(IInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handle(event);
+				return desktopStateInput.getMasterInputCallback().handle(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleMouseButtonInput(IMouseButtonInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handleMouseButtonInput(event);
+				return desktopStateInput.getMasterMouseButtonCallback().handleMouseButtonInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleCursorEnterInput(ICursorEnterInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handleCursorEnterInput(event);
+				return desktopStateInput.getMasterCursorEnterCallback().handleCursorEnterInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleCursorPosInput(ICursorPosInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handleCursorPosInput(event);
+				return desktopStateInput.getMasterCursorPosCallback().handleCursorPosInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleKeyInput(IKeyInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handleKeyInput(event);
+				return desktopStateInput.getMasterKeyInputCallback().handleKeyInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		public boolean handleCharInput(ICharInputEvent event) {
 			IGameStateInput currentStateInput = getActiveState().getStateInput();
-			
+
 			if(currentStateInput instanceof IDesktopGameStateInput) {
 				IDesktopGameStateInput desktopStateInput = (IDesktopGameStateInput) currentStateInput;
-				return desktopStateInput.handleCharInput(event);
+				return desktopStateInput.getMasterCharInputCallback().handleCharInput(event);
 			}
 			else {
-				currentStateInput.handle(event);
+				currentStateInput.getMasterInputCallback().handle(event);
 			}
-			
+
 			return false;
 		}
 	}
-	
+
 }
