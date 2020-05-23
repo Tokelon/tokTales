@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
+import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowToolkit;
 
@@ -27,19 +28,16 @@ public class LWJGLWindowFactory implements IWindowFactory {
 	}
 
 
-	@Override
-	public IWindowFactory withDefaultHints() {
+	protected void setDefaultHintsForWindowCreation() {
 		// Set color bits for monitor here?
 		windowToolkit.setWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		windowToolkit.setWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 		windowToolkit.setWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
-
-		return this;
 	}
 
 	@Override
 	public IWindow createDefault() {
-		withDefaultHints();
+		setDefaultHintsForWindowCreation();
 		return new LWJGLWindow(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE);
 	}
 
@@ -131,6 +129,40 @@ public class LWJGLWindowFactory implements IWindowFactory {
 	public IWindowBuilder createBorderlessBuilder(String title) {
 		return (windowFactory, windowToolkit) -> {
 			return createBorderless(title);
+		};
+	}
+
+
+	@Override
+	public IWindowConfigurator getDefaultHintsConfigurator() {
+		return (window, windowToolkit) -> {
+			window.setAttribute(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+			window.setAttribute(GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
+		};
+	}
+
+	@Override
+	public IWindowConfigurator getWindowedConfigurator() {
+		return (window, windowToolkit) -> {
+			window.setAttribute(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+			window.setWindowed();
+		};
+	}
+
+	@Override
+	public IWindowConfigurator getFullscreenConfigurator() {
+		return (window, windowToolkit) -> {
+			window.setAttribute(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+			window.setFullscreen();
+		};
+	}
+
+	@Override
+	public IWindowConfigurator getBorderlessConfigurator() {
+		return (window, windowToolkit) -> {
+			windowToolkit.setWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+			windowToolkit.setWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+			window.setBorderless();
 		};
 	}
 
