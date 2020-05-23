@@ -5,13 +5,6 @@ package com.tokelon.toktales.desktop.ui.window;
 public interface IWindowFactory {
 
 
-	/** Sets the default window hints of this factory.
-	 *
-	 * @return This factory.
-	 */
-	public IWindowFactory withDefaultHints();
-
-
 	/** Creates a window with the default properties of this factory.
 	 * <p>
 	 * The default window hints will be used.
@@ -119,5 +112,30 @@ public interface IWindowFactory {
 	 * @return A window builder.
 	 */
 	public IWindowBuilder createBorderlessBuilder(String title);
+
+
+	/** Returns a configurator that will set the default hints for a window.
+	 *
+	 * @return A default hints configurator.
+	 */
+	public IWindowConfigurator getDefaultHintsConfigurator();
+
+	/** Returns a configurator that will set a window to windowed mode.
+	 *
+	 * @return A windowed mode configurator.
+	 */
+	public IWindowConfigurator getWindowedConfigurator();
+
+	/** Returns a configurator that will set a window to fullscreen mode.
+	 *
+	 * @return A fullscreen mode configurator.
+	 */
+	public IWindowConfigurator getFullscreenConfigurator();
+
+	/** Returns a configurator that will set a window to borderless fullscreen mode.
+	 *
+	 * @return A borderless fullscreen mode configurator.
+	 */
+	public IWindowConfigurator getBorderlessConfigurator();
 
 }

@@ -2,6 +2,7 @@ package com.tokelon.toktales.android.application;
 
 import com.tokelon.toktales.android.engine.AndroidLauncherFactory;
 import com.tokelon.toktales.android.engine.IAndroidEngineLauncher;
+import com.tokelon.toktales.android.engine.IAndroidLauncherFactory;
 import com.tokelon.toktales.android.engine.inject.MasterAndroidInjectConfig;
 import com.tokelon.toktales.android.engine.setup.AndroidEngineSetup;
 import com.tokelon.toktales.core.application.IEngineApplication;
@@ -29,6 +30,8 @@ public class TokTalesApp extends Application implements IEngineApplication {
 	public static final String META_DATA_KEY_INJECT_CONFIG_CLASS = "com.tokelon.toktales.android.inject_config_class";
 
 
+	private final IAndroidLauncherFactory launcherFactory;
+
 	private final ILogger logger;
 
 	/** Default constructor.
@@ -45,6 +48,8 @@ public class TokTalesApp extends Application implements IEngineApplication {
 	 */
 	protected TokTalesApp(ILoggerFactory loggerFactory) {
 		this.logger = loggerFactory.getLogger(getClass());
+
+		this.launcherFactory = createLauncherFactory();
 	}
 
 
@@ -116,7 +121,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 				getLogger().debug("Instantiating inject config of type {}", metaInjectConfigClass);
 				IHierarchicalInjectConfig injectConfig = metaInjectConfigClass.newInstance();
 
-				launcher = new AndroidLauncherFactory().createDefaultLauncherBuilder(getApplicationContext()).withInjectConfig(injectConfig).build();
+				launcher = getLauncherFactory().createDefaultLauncherBuilder(getApplicationContext()).withInjectConfig(injectConfig).build();
 				getLogger().info("Engine launcher will use inject config of type: {}", metaInjectConfigClass);
 			}
 			catch(InstantiationException instantiationException) {
@@ -182,7 +187,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 	@Override
 	public IAndroidEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
-		return new AndroidLauncherFactory()
+		return getLauncherFactory()
 				.createDefaultLauncherBuilder(getApplicationContext())
 				.withInjectConfig(defaultInjectConfig)
 				.build();
@@ -218,6 +223,23 @@ public class TokTalesApp extends Application implements IEngineApplication {
 		super.onConfigurationChanged(newConfig);
 
 		getLogger().debug("App configuration has changed");
+	}
+
+
+	/** Convenience method for accessing a launcher factory for this application.
+	 *
+	 * @return The launcher factory for this application.
+	 */
+	public IAndroidLauncherFactory getLauncherFactory() {
+		return launcherFactory;
+	}
+
+	/** Creates a launcher factory.
+	 *
+	 * @return A new instance of the default launcher factory.
+	 */
+	public IAndroidLauncherFactory createLauncherFactory() {
+		return new AndroidLauncherFactory();
 	}
 
 }
