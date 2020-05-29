@@ -134,6 +134,11 @@ public class LWJGLWindowFactory implements IWindowFactory {
 
 
 	@Override
+	public IWindowConfigurator getEmptyConfigurator() {
+		return (window, windowToolkit) -> {};
+	}
+
+	@Override
 	public IWindowConfigurator getDefaultHintsConfigurator() {
 		return (window, windowToolkit) -> {
 			window.setAttribute(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);

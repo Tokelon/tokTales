@@ -42,7 +42,7 @@ public class LWJGLWindowContextFactory implements IWindowContextFactory {
 				new LWJGLWindowFactory(),
 				new LWJGLWindowToolkit(),
 				new LWJGLWindowFactory().createDefaultBuilder(),
-				(window, windowToolkit) -> {},
+				new LWJGLWindowFactory().getEmptyConfigurator(),
 				createDefaultIconSetterFactory(),
 				createDefaultRendererFactory(),
 				createDefaultInputDriverFactory()
