@@ -17,6 +17,8 @@ import com.tokelon.toktales.desktop.engine.setup.DesktopEngineSetup;
 import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory;
 import com.tokelon.toktales.desktop.ui.window.DesktopWindowContextFactory;
 import com.tokelon.toktales.desktop.ui.window.DesktopWindowFactory;
+import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
+import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
@@ -73,6 +75,7 @@ public class TokTalesApplication implements IEngineApplication {
 		return getLauncherFactory()
 				.createDefaultLauncherBuilder()
 				.withInjectConfig(defaultInjectConfig)
+				.withWindow(createDefaultWindowBuilder(), createDefaultWindowConfigurator())
 				.build();
 	}
 
@@ -89,6 +92,23 @@ public class TokTalesApplication implements IEngineApplication {
 	@Override
 	public Class<? extends IGameAdapter> getDefaultGameAdapter() {
 		return EmptyGameAdapter.class;
+	}
+
+
+	/** Creates a default window builder that will be used for the default engine launcher in {@link #createDefaultEngineLauncher(IHierarchicalInjectConfig)}.
+	 *
+	 * @return A new instance of the default window builder.
+	 */
+	public IWindowBuilder createDefaultWindowBuilder() {
+		return getWindowFactory().createDefaultBuilder();
+	}
+
+	/** Creates a default window configurator that will be used for the default engine launcher in {@link #createDefaultEngineLauncher(IHierarchicalInjectConfig)}.
+	 *
+	 * @return A new instance of the default window configurator.
+	 */
+	public IWindowConfigurator createDefaultWindowConfigurator() {
+		return getWindowFactory().getDefaultHintsConfigurator();
 	}
 
 
