@@ -11,6 +11,8 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.tools.assets.exception.AssetException;
 import com.tokelon.toktales.tools.assets.files.FileKey;
 
+/** Implementation of {@link IWindowIconSetter} that uses an icon that is loaded from a file path into a bitmap.
+ */
 public class FileWindowIconSetter implements IWindowIconSetter {
 
 
@@ -18,6 +20,12 @@ public class FileWindowIconSetter implements IWindowIconSetter {
 	private final IBitmapAssetManager bitmapAssetManager;
 	private final String iconPath;
 
+	/** Constructor with logging, a bitmap asset manager and an icon path.
+	 *
+	 * @param logging
+	 * @param bitmapAssetManager
+	 * @param iconPath Must point to an image file.
+	 */
 	public FileWindowIconSetter(ILogging logging, IBitmapAssetManager bitmapAssetManager, String iconPath) {
 		this.logger = logging.getLogger(getClass());
 		this.bitmapAssetManager = bitmapAssetManager;

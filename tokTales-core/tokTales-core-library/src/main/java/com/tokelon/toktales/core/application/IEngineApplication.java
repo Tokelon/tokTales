@@ -6,6 +6,10 @@ import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Configures and runs the execution of the engine from the main entry point of the application.
+ * <p>
+ * Platform specific implementations are provided for your convenience.
+ */
 public interface IEngineApplication {
 
 

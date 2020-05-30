@@ -10,6 +10,8 @@ import com.tokelon.toktales.core.engine.setup.IEngineSetup;
 import com.tokelon.toktales.core.game.IGameAdapter;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Platform independent implementation of {@link IEngineLauncher}.
+ */
 public class BaseEngineLauncher implements IEngineLauncher {
 
 

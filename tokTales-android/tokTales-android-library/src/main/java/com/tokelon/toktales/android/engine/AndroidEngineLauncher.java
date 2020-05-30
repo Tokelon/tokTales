@@ -13,6 +13,8 @@ import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConf
 
 import android.content.Context;
 
+/** Base implementation of {@link IAndroidEngineLauncher}.
+ */
 public class AndroidEngineLauncher extends BaseEngineLauncher implements IAndroidEngineLauncher {
 
 
@@ -64,7 +66,7 @@ public class AndroidEngineLauncher extends BaseEngineLauncher implements IAndroi
 	}
 
 
-	/** The default implementation does nothing.
+	/** The default implementation only calls {@link #buildUpEngine(IEngineSetup, IEngineContext)}.
 	 * <p>
 	 * Because of the way Android works, {@link #loop}, as well as {@link #startupEngine} and {@link #shutdownEngine} will not be called.<br>
 	 * Instead the main loop and the driver calls will be handled inside activities (integrations).
@@ -77,9 +79,9 @@ public class AndroidEngineLauncher extends BaseEngineLauncher implements IAndroi
 		// The Android lifecycle is a bit more dynamic, so we can not start anything here
 
 		// We do need to build up the setup however
-		setup.buildUp(engineContext);
+		buildUpEngine(setup, engineContext);
 
-		// TODO: Call setup.tearDown() somewhere ?
+		// TODO: Call tearDownEngine() somewhere?
 	}
 
 }

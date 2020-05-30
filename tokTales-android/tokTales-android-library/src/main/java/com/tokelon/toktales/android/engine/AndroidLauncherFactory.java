@@ -7,6 +7,8 @@ import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConf
 
 import android.content.Context;
 
+/** Implementation of {@link IAndroidLauncherFactory}.
+ */
 public class AndroidLauncherFactory implements IAndroidLauncherFactory {
 
 
@@ -20,12 +22,18 @@ public class AndroidLauncherFactory implements IAndroidLauncherFactory {
 		return new AndroidEngineLauncherBuilder(applicationContext);
 	}
 
-	
+
+	/** Implementation of {@link IAndroidEngineLauncherBuilder}.
+	 */
 	public static class AndroidEngineLauncherBuilder implements IAndroidEngineLauncherBuilder {
 		private IHierarchicalInjectConfig injectConfig;
 		private Context applicationContext;
 		private ILoggerFactory loggerFactory;
 
+		/** Constructor with an application context and default properties.
+		 *
+		 * @param applicationContext
+		 */
 		public AndroidEngineLauncherBuilder(Context applicationContext) {
 			this(
 				new MasterAndroidInjectConfig(),
@@ -33,7 +41,13 @@ public class AndroidLauncherFactory implements IAndroidLauncherFactory {
 				LoggingManager.getLoggerFactory()
 			);
 		}
-		
+
+		/** Constructor with an application context and android engine launcher properties.
+		 *
+		 * @param injectConfig
+		 * @param applicationContext
+		 * @param loggerFactory
+		 */
 		public AndroidEngineLauncherBuilder(
 				IHierarchicalInjectConfig injectConfig,
 				Context applicationContext,
@@ -43,8 +57,8 @@ public class AndroidLauncherFactory implements IAndroidLauncherFactory {
 			this.applicationContext = applicationContext;
 			this.loggerFactory = loggerFactory;
 		}
-		
-		
+
+
 		@Override
 		public IAndroidEngineLauncher build() {
 			return new AndroidEngineLauncher(injectConfig, applicationContext, loggerFactory);
@@ -68,5 +82,5 @@ public class AndroidLauncherFactory implements IAndroidLauncherFactory {
 			return this;
 		}
 	}
-	
+
 }

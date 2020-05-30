@@ -9,6 +9,8 @@ import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowToolkit;
 
+/** LWJGL implementation of {@link IWindowFactory}.
+ */
 public class LWJGLWindowFactory implements IWindowFactory {
 
 
@@ -19,15 +21,25 @@ public class LWJGLWindowFactory implements IWindowFactory {
 
 	private final IWindowToolkit windowToolkit;
 
+	/** Default constructor.
+	 * <p>
+	 * The default window toolkit will be used.
+	 */
 	public LWJGLWindowFactory() {
 		this(new LWJGLWindowToolkit());
 	}
 
+	/** Constructor with a window toolkit.
+	 *
+	 * @param windowToolkit
+	 */
 	public LWJGLWindowFactory(IWindowToolkit windowToolkit) {
 		this.windowToolkit = windowToolkit;
 	}
 
 
+	/** Sets the default values for the window hints that will be used when a window is created.
+	 */
 	protected void setDefaultHintsForWindowCreation() {
 		// Set color bits for monitor here?
 		windowToolkit.setWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);

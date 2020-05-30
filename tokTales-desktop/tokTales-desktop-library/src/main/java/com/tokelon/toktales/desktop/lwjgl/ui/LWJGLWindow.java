@@ -12,6 +12,8 @@ import org.lwjgl.system.MemoryUtil;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 import com.tokelon.toktales.desktop.ui.window.WindowException;
 
+/** LWJGL implementation of {@link IWindow}.
+ */
 public class LWJGLWindow implements IWindow {
 
 
@@ -36,20 +38,46 @@ public class LWJGLWindow implements IWindow {
 	private final long initialMonitor;
 	private final long initialShare;
 
+	/** Constructor with a native window id and a title.
+	 *
+	 * @param id
+	 * @param title
+	 */
 	public LWJGLWindow(long id, String title) {
 		this(-1, -1, title, -1, -1);
 		this.windowId = id;
 		this.initialized = true;
 	}
 
+	/** Constructor with width, height and title.
+	 *
+	 * @param width
+	 * @param height
+	 * @param title
+	 */
 	public LWJGLWindow(int width, int height, String title) {
 		this(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
 	}
 
+	/** Constructor with width, height, title and native monitor id.
+	 *
+	 * @param width
+	 * @param height
+	 * @param title
+	 * @param monitor
+	 */
 	public LWJGLWindow(int width, int height, String title, long monitor) {
 		this(width, height, title, monitor, MemoryUtil.NULL);
 	}
 
+	/** Constructor with width, height, title, and native monitor id and native share id.
+	 *
+	 * @param width
+	 * @param height
+	 * @param title
+	 * @param monitor
+	 * @param share
+	 */
 	public LWJGLWindow(int width, int height, String title, long monitor, long share) {
 		this.initialWidth = width;
 		this.initialHeight = height;
@@ -388,6 +416,8 @@ public class LWJGLWindow implements IWindow {
 	}
 
 
+	/** Saves the current window dimensions so they can be restored later, but only if windowed mode is enabled.
+	 */
 	protected void saveWindowDimensionsIfWindowed() {
 		if(isFullscreen() || isBorderless()) {
 			return;

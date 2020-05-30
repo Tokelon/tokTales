@@ -22,6 +22,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 
+/** Android platform implementation of {@link IEngineApplication}.
+ * <p>
+ * Extends from {@link Application} and has to be declared as the application name in the Android manifest.
+ */
 public class TokTalesApp extends Application implements IEngineApplication {
 	// Add callback onEngineLaunch(IEngineContext context)?
 
@@ -35,6 +39,8 @@ public class TokTalesApp extends Application implements IEngineApplication {
 	private final ILogger logger;
 
 	/** Default constructor.
+	 * <p>
+	 * The default logger factory will be used.
 	 * <p>
 	 * A default constructor is required because it will be used to instantiate this class.
 	 */

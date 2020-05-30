@@ -13,6 +13,8 @@ import com.tokelon.toktales.desktop.lwjgl.render.GLSurfaceController;
 import com.tokelon.toktales.desktop.render.IWindowRenderer;
 import com.tokelon.toktales.desktop.ui.window.IWindow;
 
+/** LWJGL implementation of {@link IWindowRenderer}.
+ */
 public class LWJGLWindowRenderer implements IWindowRenderer {
 	// Make abstract including drawFrame and prepareFrame ?
 
@@ -24,6 +26,11 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	private final IGLFWInputRegistration inputRegistration;
 	private final ISurfaceHandler surfaceHandler;
 
+	/** Constructor with a surface manager and an input registration.
+	 *
+	 * @param surfaceManager
+	 * @param inputRegistration
+	 */
 	@Inject
 	public LWJGLWindowRenderer(ISurfaceManager surfaceManager, IGLFWInputRegistration inputRegistration) {
 		this.surfaceHandler = new SurfaceHandler(surfaceManager, new GLSurfaceController());

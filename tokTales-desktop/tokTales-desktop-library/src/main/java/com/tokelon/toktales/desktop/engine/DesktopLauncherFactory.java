@@ -15,6 +15,8 @@ import com.tokelon.toktales.desktop.ui.window.IWindowHandler;
 import com.tokelon.toktales.desktop.ui.window.WindowHandler;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Implementation of {@link IDesktopLauncherFactory}.
+ */
 public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 
 
@@ -49,12 +51,15 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 	}
 
 
-
+	/** Implementation of {@link IDesktopEngineLauncherBuilder}.
+	 */
 	public static class DesktopEngineLauncherBuilder implements IDesktopEngineLauncherBuilder {
 		private IHierarchicalInjectConfig injectConfig;
 		private IEngineLooper defaultLooper;
 		private ILoggerFactory loggerFactory;
 
+		/** Default constructor with default properties.
+		 */
 		public DesktopEngineLauncherBuilder() {
 			this(
 				new MasterDesktopInjectConfig(),
@@ -63,6 +68,12 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 			);
 		}
 
+		/** Constructor with desktop engine launcher properties.
+		 *
+		 * @param injectConfig
+		 * @param defaultLooper
+		 * @param loggerFactory
+		 */
 		public DesktopEngineLauncherBuilder(
 				IHierarchicalInjectConfig injectConfig,
 				IEngineLooper defaultLooper,
@@ -99,12 +110,16 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 	}
 
 
+	/** Implementation of {@link IWindowEngineLauncherBuilder}.
+	 */
 	public static class WindowEngineLauncherBuilder implements IWindowEngineLauncherBuilder {
 		private IHierarchicalInjectConfig injectConfig;
 		private IEngineLooper defaultLooper;
 		private ILoggerFactory loggerFactory;
 		private IWindowHandler windowHandler;
 
+		/** Default constructor with default properties.
+		 */
 		public WindowEngineLauncherBuilder() {
 			this(
 				new MasterDesktopInjectConfig(),
@@ -114,6 +129,13 @@ public class DesktopLauncherFactory implements IDesktopLauncherFactory {
 			);
 		}
 
+		/** Constructor with window engine launcher properties.
+		 *
+		 * @param injectConfig
+		 * @param defaultLooper
+		 * @param loggerFactory
+		 * @param windowHandler
+		 */
 		public WindowEngineLauncherBuilder(
 				IHierarchicalInjectConfig injectConfig,
 				IEngineLooper defaultLooper,

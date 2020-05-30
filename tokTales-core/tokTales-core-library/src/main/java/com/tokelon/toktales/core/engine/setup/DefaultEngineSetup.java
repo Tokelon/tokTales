@@ -7,6 +7,8 @@ import com.tokelon.toktales.core.engine.setup.steps.LoadMainConfigSetupStep;
 import com.tokelon.toktales.core.engine.setup.steps.RedirectScriptOutputSetupStep;
 import com.tokelon.toktales.core.engine.setup.steps.RedirectSystemOutputSetupStep;
 
+/** Default implementation of {@link IEngineSetup}.
+ */
 public class DefaultEngineSetup extends BaseEngineSetup {
 
 
@@ -19,21 +21,36 @@ public class DefaultEngineSetup extends BaseEngineSetup {
 	public static final String SETUP_STEP_DEFAULT_LAST = "SETUP_STEP_DEFAULT_LAST";
 
 
+	/** Default constructor.
+	 */
 	public DefaultEngineSetup() {
 		super();
 		addDefaultSteps();
 	}
 
+	/** Constructor with setup steps.
+	 *
+	 * @param steps
+	 */
 	public DefaultEngineSetup(ISetupSteps steps) {
 		super(steps);
 		addDefaultSteps();
 	}
 
+	/** Constructor with a logger factory.
+	 *
+	 * @param loggerFactory
+	 */
 	public DefaultEngineSetup(ILoggerFactory loggerFactory) {
 		super(loggerFactory);
 		addDefaultSteps();
 	}
 
+	/** Constructor with setup steps and a logger factory.
+	 *
+	 * @param steps
+	 * @param loggerFactory
+	 */
 	public DefaultEngineSetup(ISetupSteps steps, ILoggerFactory loggerFactory) {
 		super(steps, loggerFactory);
 		addDefaultSteps();

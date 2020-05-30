@@ -7,10 +7,19 @@ import org.lwjgl.opengl.GL11;
 import com.tokelon.toktales.core.engine.IEngineDriver;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 import com.tokelon.toktales.desktop.lwjgl.input.IGLFWInputRegistration;
+import com.tokelon.toktales.desktop.render.IWindowRenderer;
 
+/** Default implementation of {@link IWindowRenderer} for the engine, that calls render on the engine driver.
+ */
 public class DefaultGameWindowRenderer extends GameWindowRenderer {
 
 
+	/** Constructor with a surface manager, input registration and engine driver.
+	 *
+	 * @param surfaceManager
+	 * @param inputRegistration
+	 * @param engineDriver
+	 */
 	@Inject
 	public DefaultGameWindowRenderer(ISurfaceManager surfaceManager, IGLFWInputRegistration inputRegistration, IEngineDriver engineDriver) {
 		super(surfaceManager, inputRegistration, engineDriver);

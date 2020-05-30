@@ -22,6 +22,8 @@ import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Desktop platform implementation of {@link IEngineApplication}.
+ */
 public class TokTalesApplication implements IEngineApplication {
 
 
@@ -31,10 +33,18 @@ public class TokTalesApplication implements IEngineApplication {
 
 	private final ILogger logger;
 
+	/** Default constructor.
+	 * <p>
+	 * The default logger factory will be used.
+	 */
 	public TokTalesApplication() {
 		this(LoggingManager.getLoggerFactory());
 	}
 
+	/** Constructor with a logger factory.
+	 *
+	 * @param loggerFactory
+	 */
 	public TokTalesApplication(ILoggerFactory loggerFactory) {
 		this.logger = loggerFactory.getLogger(getClass());
 
@@ -45,7 +55,7 @@ public class TokTalesApplication implements IEngineApplication {
 
 
 	/**
-	 * @return The logger for this class.
+	 * @return The logger for this application.
 	 */
 	protected ILogger getLogger() {
 		return logger;
