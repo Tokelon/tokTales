@@ -71,6 +71,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 
 		surfaceHandler.recallSurface();
 
+		GL.setCapabilities(null);
+
 		window.detachContext();
 	}
 
@@ -78,8 +80,6 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	public void destroy() {
 		inputRegistration.unregisterFramebufferSizeCallback(window.getId(), framebufferSizeCallback);
 		this.framebufferSizeCallback = null;
-
-		GL.setCapabilities(null);
 	}
 
 
@@ -105,8 +105,8 @@ public class LWJGLWindowRenderer implements IWindowRenderer {
 	}
 
 
-
-	protected class FramebufferSizeCallback implements GLFWFramebufferSizeCallbackI {
+	// Either pass fields in constructor or leave private
+	private class FramebufferSizeCallback implements GLFWFramebufferSizeCallbackI {
 
 		@Override
 		public void invoke(long window, int width, int height) {
