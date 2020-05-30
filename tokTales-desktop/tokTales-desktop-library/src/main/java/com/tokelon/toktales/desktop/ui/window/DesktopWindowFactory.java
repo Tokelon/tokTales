@@ -8,6 +8,8 @@ public class DesktopWindowFactory extends LWJGLWindowFactory {
 
 
 	/** Default constructor.
+	 * <p>
+	 * The default window toolkit will be used.
 	 */
 	public DesktopWindowFactory() {
 		super();

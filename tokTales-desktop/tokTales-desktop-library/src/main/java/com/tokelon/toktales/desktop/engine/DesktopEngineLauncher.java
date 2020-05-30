@@ -8,6 +8,8 @@ import com.tokelon.toktales.desktop.engine.inject.MasterDesktopInjectConfig;
 import com.tokelon.toktales.desktop.engine.setup.DesktopEngineSetup;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Base implementation of {@link IDesktopEngineLauncher}.
+ */
 public class DesktopEngineLauncher extends BaseEngineLauncher implements IDesktopEngineLauncher {
 
 

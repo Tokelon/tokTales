@@ -4,6 +4,8 @@ import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.IGame;
 
+/** Default implementation of {@link IEngineDriver}.
+ */
 public class DefaultEngineDriver implements IEngineDriver {
 
 
@@ -13,44 +15,39 @@ public class DefaultEngineDriver implements IEngineDriver {
 	public DefaultEngineDriver(IGame game) {
 		this.game = game;
 	}
-	
-	
+
+
 	@Override
 	public void create() {
 		game.getGameControl().createGame();
 	}
-
 
 	@Override
 	public void start() {
 		game.getGameControl().startGame();
 	}
 
-
 	@Override
 	public void resume() {
 		game.getGameControl().resumeGame();
 	}
-
 
 	@Override
 	public void pause() {
 		game.getGameControl().pauseGame();
 	}
 
-
 	@Override
 	public void stop() {
 		game.getGameControl().stopGame();
 	}
 
-
 	@Override
 	public void destroy() {
 		game.getGameControl().destroyGame();
 	}
-	
-	
+
+
 	@Override
 	public void update() {
 		/*
@@ -58,7 +55,7 @@ public class DefaultEngineDriver implements IEngineDriver {
 			return;
 		}
 		*/
-		
+
 		game.getGameControl().updateGame();
 	}
 

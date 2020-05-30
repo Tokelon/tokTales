@@ -1,6 +1,6 @@
 // tokTales-tools-core build.gradle
 group "com.tokelon.toktales"
-version "0.2.0-rc2"
+version "0.2.0-rc3"
 
 
 apply plugin: 'java-library'

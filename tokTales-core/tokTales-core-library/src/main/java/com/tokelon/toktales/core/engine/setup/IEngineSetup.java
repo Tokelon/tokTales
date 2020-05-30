@@ -4,6 +4,8 @@ import com.tokelon.toktales.core.engine.EngineException;
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Manages the engine context including it's creation, configuration and destruction.
+ */
 public interface IEngineSetup {
 
 
@@ -20,22 +22,22 @@ public interface IEngineSetup {
 	}
 
 
-	/** Creates the engine context.
+	/** Creates the engine context using the given inject config.
 	 *
-	 * @param injectConfig The inject config that should be used.
+	 * @param injectConfig
 	 *
-	 * @return The engine context including the engine and the game.
+	 * @return A new engine context.
 	 */
 	public IEngineContext create(IHierarchicalInjectConfig injectConfig) throws EngineException; // Hierarchical inject config is passed here to allow the setup to modify modules
 
-	/** Prepares the engine and game for running.
+	/** Prepares the engine for running.
 	 *
-	 * @param engineContext The engine context.
+	 * @param engineContext
 	 * @throws EngineException If there is an error during setup.
 	 */
 	public void buildUp(IEngineContext engineContext) throws EngineException;
 
-	/** Cleans up after the engine and game have ran.
+	/** Cleans up after the engine has ran.
 	 *
 	 * @param engineContext
 	 * @throws EngineException If there is an error during setup.

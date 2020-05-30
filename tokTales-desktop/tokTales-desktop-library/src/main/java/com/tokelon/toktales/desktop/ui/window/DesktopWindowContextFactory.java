@@ -9,6 +9,9 @@ public class DesktopWindowContextFactory extends LWJGLWindowContextFactory {
 
 
 	/** Default constructor.
+	 * <p>
+	 * {@link #DEFAULT_ICON_PATH} will be used for the default icon path.
+	 *
 	 */
 	public DesktopWindowContextFactory() {
 		super();

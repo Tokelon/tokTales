@@ -114,6 +114,12 @@ public interface IWindowFactory {
 	public IWindowBuilder createBorderlessBuilder(String title);
 
 
+	/** Returns a configurator that does nothing.
+	 *
+	 * @return A no-op configurator.
+	 */
+	public IWindowConfigurator getEmptyConfigurator();
+
 	/** Returns a configurator that will set the default hints for a window.
 	 *
 	 * @return A default hints configurator.

@@ -17,9 +17,13 @@ import com.tokelon.toktales.desktop.engine.setup.DesktopEngineSetup;
 import com.tokelon.toktales.desktop.lwjgl.ui.IWindowContextFactory;
 import com.tokelon.toktales.desktop.ui.window.DesktopWindowContextFactory;
 import com.tokelon.toktales.desktop.ui.window.DesktopWindowFactory;
+import com.tokelon.toktales.desktop.ui.window.IWindowBuilder;
+import com.tokelon.toktales.desktop.ui.window.IWindowConfigurator;
 import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Desktop platform implementation of {@link IEngineApplication}.
+ */
 public class TokTalesApplication implements IEngineApplication {
 
 
@@ -29,10 +33,18 @@ public class TokTalesApplication implements IEngineApplication {
 
 	private final ILogger logger;
 
+	/** Default constructor.
+	 * <p>
+	 * The default logger factory will be used.
+	 */
 	public TokTalesApplication() {
 		this(LoggingManager.getLoggerFactory());
 	}
 
+	/** Constructor with a logger factory.
+	 *
+	 * @param loggerFactory
+	 */
 	public TokTalesApplication(ILoggerFactory loggerFactory) {
 		this.logger = loggerFactory.getLogger(getClass());
 
@@ -43,7 +55,7 @@ public class TokTalesApplication implements IEngineApplication {
 
 
 	/**
-	 * @return The logger for this class.
+	 * @return The logger for this application.
 	 */
 	protected ILogger getLogger() {
 		return logger;
@@ -52,7 +64,7 @@ public class TokTalesApplication implements IEngineApplication {
 
 	@Override
 	public void run(String[] args) throws EngineException {
-		IDesktopEngineLauncher launcher = createDefaultEngineLauncher(createDefaultInjectConfig());
+		IDesktopEngineLauncher launcher = makeDefaultEngineLauncher(makeDefaultInjectConfig());
 		try {
 			launchEngine(launcher);
 		}
@@ -64,31 +76,49 @@ public class TokTalesApplication implements IEngineApplication {
 
 	@Override
 	public void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
-		defaultLauncher.launchWithSetup(getDefaultGameAdapter(), createDefaultEngineSetup());
+		defaultLauncher.launchWithSetup(makeDefaultGameAdapter(), makeDefaultEngineSetup());
 	}
 
 
 	@Override
-	public IDesktopEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
+	public IDesktopEngineLauncher makeDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
 		return getLauncherFactory()
 				.createDefaultLauncherBuilder()
 				.withInjectConfig(defaultInjectConfig)
+				.withWindow(makeDefaultWindowBuilder(), makeDefaultWindowConfigurator())
 				.build();
 	}
 
 	@Override
-	public IHierarchicalInjectConfig createDefaultInjectConfig() {
+	public IHierarchicalInjectConfig makeDefaultInjectConfig() {
 		return new MasterDesktopInjectConfig();
 	}
 
 	@Override
-	public IEngineSetup createDefaultEngineSetup() {
+	public IEngineSetup makeDefaultEngineSetup() {
 		return new DesktopEngineSetup();
 	}
 
 	@Override
-	public Class<? extends IGameAdapter> getDefaultGameAdapter() {
+	public Class<? extends IGameAdapter> makeDefaultGameAdapter() {
 		return EmptyGameAdapter.class;
+	}
+
+
+	/** Returns a default window builder that will be used for the default engine launcher, in {@link #makeDefaultEngineLauncher(IHierarchicalInjectConfig)}.
+	 *
+	 * @return The default window builder.
+	 */
+	public IWindowBuilder makeDefaultWindowBuilder() {
+		return getWindowFactory().createDefaultBuilder();
+	}
+
+	/** Returns a default window configurator that will be used for the default engine launcher, in {@link #makeDefaultEngineLauncher(IHierarchicalInjectConfig)}.
+	 *
+	 * @return The default window configurator.
+	 */
+	public IWindowConfigurator makeDefaultWindowConfigurator() {
+		return getWindowFactory().getDefaultHintsConfigurator();
 	}
 
 

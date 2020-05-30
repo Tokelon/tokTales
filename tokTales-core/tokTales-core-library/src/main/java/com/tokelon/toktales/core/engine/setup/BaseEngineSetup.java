@@ -19,6 +19,8 @@ import java9.util.Comparators;
 import java9.util.stream.Stream;
 import java9.util.stream.StreamSupport;
 
+/** Platform independent implementation of {@link IEngineSetup}.
+ */
 public class BaseEngineSetup implements IEngineSetup {
 
 
@@ -87,6 +89,12 @@ public class BaseEngineSetup implements IEngineSetup {
 	}
 
 
+	/** Calls build up for all given setup steps, in order of their positions.
+	 *
+	 * @param setupSteps
+	 * @param engineContext
+	 * @throws EngineException If there are errors during build up.
+	 */
 	protected void buildUpSteps(ISetupSteps setupSteps, IEngineContext engineContext) throws EngineException {
 		Map<String, ISetupStep> stepsFromNames = setupSteps.createNamesToSteps();
 		Map<String, Double> positionsFromNames = setupSteps.createStepNamesToPositions();
@@ -105,6 +113,12 @@ public class BaseEngineSetup implements IEngineSetup {
 		}
 	}
 
+	/** Calls tear down for all given setup steps, in reverse order of their positions.
+	 *
+	 * @param setupSteps
+	 * @param engineContext
+	 * @throws EngineException If there are errors during tear down.
+	 */
 	protected void tearDownSteps(ISetupSteps setupSteps, IEngineContext engineContext) throws EngineException {
 		Map<String, ISetupStep> stepsFromNames = setupSteps.createNamesToSteps();
 		Map<String, Double> positionsFromNames = setupSteps.createStepNamesToPositions();
@@ -149,7 +163,14 @@ public class BaseEngineSetup implements IEngineSetup {
 	}
 
 
-	protected Injector createInjector(IInjectConfig injectConfig, SetupMode mode) throws EngineException {
+	/** Creates a dependency injector using the given inject config and setup mode.
+	 *
+	 * @param injectConfig
+	 * @param mode
+	 * @return An injector for the engine.
+	 * @throws EngineException If there are errors during injector creation.
+	 */
+	protected Injector createInjector(IInjectConfig injectConfig, SetupMode mode) throws EngineException { // Exception is not actually needed
 		Stage stage = mode == SetupMode.DEVELOPMENT ? Stage.DEVELOPMENT : Stage.PRODUCTION;
 		getLogger().info("Determined injector stage as {}", stage);
 
@@ -162,6 +183,11 @@ public class BaseEngineSetup implements IEngineSetup {
 		return injector;
 	}
 
+	/** Creates the engine context using the given injector.
+	 *
+	 * @param injector
+	 * @return An engine context for the engine.
+	 */
 	protected IEngineContext createEngineContext(Injector injector) {
 		getLogger().info("Creating engine context...");
 		long before = System.currentTimeMillis();
@@ -172,6 +198,11 @@ public class BaseEngineSetup implements IEngineSetup {
 		return engineContext;
 	}
 
+	/** Creates a game adapter using the given injector.
+	 *
+	 * @param injector
+	 * @return A game adapter for the engine.
+	 */
 	protected IGameAdapter createGameAdapter(Injector injector) {
 		getLogger().info("Creating game adapter...");
 		long before = System.currentTimeMillis();

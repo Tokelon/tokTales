@@ -2,6 +2,8 @@ package com.tokelon.toktales.desktop.ui.window;
 
 import com.tokelon.toktales.tools.core.dispose.IDisposable;
 
+/** Provides an icon for a given window.
+ */
 public interface IWindowIconSetter extends IDisposable {
 
 

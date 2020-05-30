@@ -5,6 +5,8 @@ import org.lwjgl.glfw.GLFW;
 
 import com.tokelon.toktales.desktop.ui.window.IWindowToolkit;
 
+/** LWJGL implementation of {@link IWindowToolkit}.
+ */
 public class LWJGLWindowToolkit implements IWindowToolkit {
 
 
@@ -12,14 +14,14 @@ public class LWJGLWindowToolkit implements IWindowToolkit {
 	public long getPrimaryMonitor() {
 		return GLFW.glfwGetPrimaryMonitor();
 	}
-	
+
 	@Override
 	public long[] getMonitors() {
 		PointerBuffer monitorsBuffer = GLFW.glfwGetMonitors();
-		
+
 		long[] monitorsArray = new long[monitorsBuffer.capacity()];
 		monitorsBuffer.get(monitorsArray);
-		
+
 		return monitorsArray;
 	}
 
@@ -27,15 +29,15 @@ public class LWJGLWindowToolkit implements IWindowToolkit {
 	public void setWindowHint(int hint, int value) {
 		GLFW.glfwWindowHint(hint, value);
 	}
-	
+
 	@Override
 	public void setWindowHintString(int hint, String value) {
 		GLFW.glfwWindowHintString(hint, value);
 	}
-	
+
 	@Override
 	public void setDefaultWindowHints() {
 		GLFW.glfwDefaultWindowHints();
 	}
-	
+
 }

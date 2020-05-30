@@ -13,6 +13,8 @@ import com.tokelon.toktales.desktop.ui.window.IWindowContext;
 import com.tokelon.toktales.desktop.ui.window.IWindowHandler;
 import com.tokelon.toktales.tools.core.sub.inject.config.IHierarchicalInjectConfig;
 
+/** Default implementation of {@link IWindowEngineLauncher}.
+ */
 public class WindowEngineLauncher extends DesktopEngineLauncher implements IWindowEngineLauncher {
 
 
@@ -26,24 +28,48 @@ public class WindowEngineLauncher extends DesktopEngineLauncher implements IWind
 
 	private final IWindowHandler windowHandler;
 
+	/** Constructor with an inject config and a window handler.
+	 *
+	 * @param injectConfig
+	 * @param windowHandler
+	 */
 	public WindowEngineLauncher(IHierarchicalInjectConfig injectConfig, IWindowHandler windowHandler) {
 		super(injectConfig, new WindowEngineLooper(windowHandler, new LWJGLInputProcessor()));
 
 		this.windowHandler = windowHandler;
 	}
 
+	/** Constructor with and inject config, a window handler and a logger factory.
+	 *
+	 * @param injectConfig
+	 * @param windowHandler
+	 * @param loggerFactory
+	 */
 	public WindowEngineLauncher(IHierarchicalInjectConfig injectConfig, IWindowHandler windowHandler, ILoggerFactory loggerFactory) {
 		super(injectConfig, new WindowEngineLooper(windowHandler, new LWJGLInputProcessor()), loggerFactory);
 
 		this.windowHandler = windowHandler;
 	}
 
+	/** Constructor with and inject config, a window handler and a looper.
+	 *
+	 * @param injectConfig
+	 * @param windowHandler
+	 * @param defaultLooper
+	 */
 	public WindowEngineLauncher(IHierarchicalInjectConfig injectConfig, IWindowHandler windowHandler, IEngineLooper defaultLooper) {
 		super(injectConfig, defaultLooper);
 
 		this.windowHandler = windowHandler;
 	}
 
+	/** Constructor with and inject config, a window handler, a looper and a logger factory.
+	 *
+	 * @param injectConfig
+	 * @param windowHandler
+	 * @param defaultLooper
+	 * @param loggerFactory
+	 */
 	public WindowEngineLauncher(IHierarchicalInjectConfig injectConfig, IWindowHandler windowHandler, IEngineLooper defaultLooper, ILoggerFactory loggerFactory) {
 		super(injectConfig, defaultLooper, loggerFactory);
 

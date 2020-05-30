@@ -14,6 +14,8 @@ import com.tokelon.toktales.desktop.ui.window.IWindowFactory;
 import com.tokelon.toktales.desktop.ui.window.IWindowIconSetter;
 import com.tokelon.toktales.desktop.ui.window.IWindowToolkit;
 
+/** LWJGL implementation of {@link IWindowContext}.
+ */
 public class LWJGLWindowContext implements IWindowContext {
 
 
@@ -31,6 +33,16 @@ public class LWJGLWindowContext implements IWindowContext {
 	private final IWindowFactory windowFactory;
 	private final IWindowToolkit windowToolkit;
 
+	/** Constructor with window context properties.
+	 *
+	 * @param windowFactory
+	 * @param windowToolkit
+	 * @param windowBuilder
+	 * @param windowConfigurator
+	 * @param iconSetterFactory
+	 * @param rendererFactory
+	 * @param inputDriverFactory
+	 */
 	public LWJGLWindowContext(
 			IWindowFactory windowFactory,
 			IWindowToolkit windowToolkit,
@@ -114,14 +126,23 @@ public class LWJGLWindowContext implements IWindowContext {
 	}
 
 
+	/**
+	 * @return The window builder for this context.
+	 */
 	protected IWindowBuilder getWindowBuilder() {
 		return windowBuilder;
 	}
 
+	/**
+	 * @return The window configurator for this context.
+	 */
 	protected IWindowConfigurator getWindowConfigurator() {
 		return windowConfigurator;
 	}
 
+	/**
+	 * @return The window icon setter for this context.
+	 */
 	protected IWindowIconSetter getWindowIconSetter() {
 		return iconSetter;
 	}
