@@ -20,8 +20,7 @@ public interface IEngineApplication {
 	 * @param args
 	 * @throws EngineException If an exception is thrown while running the application.
 	 * @see #launchEngine(IEngineLauncher)
-	 * @see #createDefaultEngineLauncher()
-	 * @see #createDefaultInjectConfig()
+	 * @see #makeDefaultEngineLauncher()
 	 */
 	public void run(String[] args) throws EngineException;
 
@@ -30,34 +29,36 @@ public interface IEngineApplication {
 	 *
 	 * @param defaultLauncher
 	 * @throws EngineException If an exception is thrown while launching or running the engine.
-	 * @see #createDefaultEngineSetup()
-	 * @see #getDefaultGameAdapter()
+	 * @see #makeDefaultEngineSetup()
+	 * @see #makeDefaultGameAdapter()
 	 */
 	public void launchEngine(IEngineLauncher defaultLauncher) throws EngineException;
 
 
-	/** Creates a default engine launcher that will be used in {@link #launchEngine(IEngineLauncher)}.
+	/** Returns a default engine launcher that will be used for {@link #launchEngine(IEngineLauncher)}.
 	 *
 	 * @param defaultInjectConfig
-	 * @return A new instance of the default engine launcher.
+	 * @return The default engine launcher.
+	 * @see #makeDefaultInjectConfig()
 	 */
-	public IEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig);
+	public IEngineLauncher makeDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig);
 
-	/** Creates a default inject config that will be used for the default engine launcher in {@link #createDefaultEngineLauncher()}.
+	/** Returns a default inject config that will be used for {@link #makeDefaultEngineLauncher()}.
 	 *
-	 * @return A new instance of the default inject config.
+	 * @return The default inject config.
 	 */
-	public IHierarchicalInjectConfig createDefaultInjectConfig();
+	public IHierarchicalInjectConfig makeDefaultInjectConfig();
 
-	/** Creates a default engine setup that will be used in {@link #launchEngine(IEngineLauncher)}.
+	/** Returns a default engine setup that will be used in {@link #launchEngine(IEngineLauncher)}.
 	 *
-	 * @return A new instance of the default engine setup.
+	 * @return The default engine setup.
 	 */
-	public IEngineSetup createDefaultEngineSetup();
+	public IEngineSetup makeDefaultEngineSetup();
 
-	/**
+	/** Returns a default game adapter that will be used in {@link #launchEngine(IEngineLauncher)}.
+	 *
 	 * @return The default game adapter class.
 	 */
-	public Class<? extends IGameAdapter> getDefaultGameAdapter();
+	public Class<? extends IGameAdapter> makeDefaultGameAdapter();
 
 }

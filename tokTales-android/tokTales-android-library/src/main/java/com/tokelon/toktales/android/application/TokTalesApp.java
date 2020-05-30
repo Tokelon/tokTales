@@ -83,7 +83,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 	@Override
 	public void run(String[] args) throws EngineException {
-		IAndroidEngineLauncher launcher = createDefaultEngineLauncher(createDefaultInjectConfig());
+		IAndroidEngineLauncher launcher = makeDefaultEngineLauncher(makeDefaultInjectConfig());
 		try {
 			launchEngine(launcher);
 		}
@@ -138,7 +138,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 			}
 		}
 
-		Class<? extends IGameAdapter> gameAdapterClass = getDefaultGameAdapter();
+		Class<? extends IGameAdapter> gameAdapterClass = makeDefaultGameAdapter();
 		if(metaGameAdapterClass == null) {
 			getLogger().info("The default game adapter will be used. To change this, add meta-data configuration to your manifest or override TokTalesApp defaults.");
 		}
@@ -149,7 +149,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 
 		getLogger().info("Launching engine...");
-		launcher.launchWithSetup(gameAdapterClass, createDefaultEngineSetup());
+		launcher.launchWithSetup(gameAdapterClass, makeDefaultEngineSetup());
 	}
 
 
@@ -192,7 +192,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 
 
 	@Override
-	public IAndroidEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
+	public IAndroidEngineLauncher makeDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
 		return getLauncherFactory()
 				.createDefaultLauncherBuilder(getApplicationContext())
 				.withInjectConfig(defaultInjectConfig)
@@ -200,17 +200,17 @@ public class TokTalesApp extends Application implements IEngineApplication {
 	}
 
 	@Override
-	public IHierarchicalInjectConfig createDefaultInjectConfig() {
+	public IHierarchicalInjectConfig makeDefaultInjectConfig() {
 		return new MasterAndroidInjectConfig();
 	}
 
 	@Override
-	public IEngineSetup createDefaultEngineSetup() {
+	public IEngineSetup makeDefaultEngineSetup() {
 		return new AndroidEngineSetup();
 	}
 
 	@Override
-	public Class<? extends IGameAdapter> getDefaultGameAdapter() {
+	public Class<? extends IGameAdapter> makeDefaultGameAdapter() {
 		return EmptyGameAdapter.class;
 	}
 
@@ -243,6 +243,7 @@ public class TokTalesApp extends Application implements IEngineApplication {
 	/** Creates a launcher factory.
 	 *
 	 * @return A new instance of the default launcher factory.
+	 * @see #getLauncherFactory()
 	 */
 	public IAndroidLauncherFactory createLauncherFactory() {
 		return new AndroidLauncherFactory();

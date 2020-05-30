@@ -64,7 +64,7 @@ public class TokTalesApplication implements IEngineApplication {
 
 	@Override
 	public void run(String[] args) throws EngineException {
-		IDesktopEngineLauncher launcher = createDefaultEngineLauncher(createDefaultInjectConfig());
+		IDesktopEngineLauncher launcher = makeDefaultEngineLauncher(makeDefaultInjectConfig());
 		try {
 			launchEngine(launcher);
 		}
@@ -76,48 +76,48 @@ public class TokTalesApplication implements IEngineApplication {
 
 	@Override
 	public void launchEngine(IEngineLauncher defaultLauncher) throws EngineException {
-		defaultLauncher.launchWithSetup(getDefaultGameAdapter(), createDefaultEngineSetup());
+		defaultLauncher.launchWithSetup(makeDefaultGameAdapter(), makeDefaultEngineSetup());
 	}
 
 
 	@Override
-	public IDesktopEngineLauncher createDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
+	public IDesktopEngineLauncher makeDefaultEngineLauncher(IHierarchicalInjectConfig defaultInjectConfig) {
 		return getLauncherFactory()
 				.createDefaultLauncherBuilder()
 				.withInjectConfig(defaultInjectConfig)
-				.withWindow(createDefaultWindowBuilder(), createDefaultWindowConfigurator())
+				.withWindow(makeDefaultWindowBuilder(), makeDefaultWindowConfigurator())
 				.build();
 	}
 
 	@Override
-	public IHierarchicalInjectConfig createDefaultInjectConfig() {
+	public IHierarchicalInjectConfig makeDefaultInjectConfig() {
 		return new MasterDesktopInjectConfig();
 	}
 
 	@Override
-	public IEngineSetup createDefaultEngineSetup() {
+	public IEngineSetup makeDefaultEngineSetup() {
 		return new DesktopEngineSetup();
 	}
 
 	@Override
-	public Class<? extends IGameAdapter> getDefaultGameAdapter() {
+	public Class<? extends IGameAdapter> makeDefaultGameAdapter() {
 		return EmptyGameAdapter.class;
 	}
 
 
-	/** Creates a default window builder that will be used for the default engine launcher in {@link #createDefaultEngineLauncher(IHierarchicalInjectConfig)}.
+	/** Returns a default window builder that will be used for the default engine launcher, in {@link #makeDefaultEngineLauncher(IHierarchicalInjectConfig)}.
 	 *
-	 * @return A new instance of the default window builder.
+	 * @return The default window builder.
 	 */
-	public IWindowBuilder createDefaultWindowBuilder() {
+	public IWindowBuilder makeDefaultWindowBuilder() {
 		return getWindowFactory().createDefaultBuilder();
 	}
 
-	/** Creates a default window configurator that will be used for the default engine launcher in {@link #createDefaultEngineLauncher(IHierarchicalInjectConfig)}.
+	/** Returns a default window configurator that will be used for the default engine launcher, in {@link #makeDefaultEngineLauncher(IHierarchicalInjectConfig)}.
 	 *
-	 * @return A new instance of the default window configurator.
+	 * @return The default window configurator.
 	 */
-	public IWindowConfigurator createDefaultWindowConfigurator() {
+	public IWindowConfigurator makeDefaultWindowConfigurator() {
 		return getWindowFactory().getDefaultHintsConfigurator();
 	}
 
