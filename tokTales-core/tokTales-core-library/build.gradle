@@ -1,6 +1,6 @@
 // tokTales-core-library build.gradle
 group "com.tokelon.toktales"
-version "0.2.0-rc3"
+version "0.2.0"
 
 
 buildscript {
