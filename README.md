@@ -12,6 +12,7 @@ A cross-platform game engine written in Java.
 
 - [About](#about)
 - [Disclaimer](#disclaimer)
+- [How to Use](#how-to-use)
 - [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Building](#building)
@@ -40,10 +41,20 @@ None of it has been tested in the wild.
 > **The documentation needs additional work.**  
 Not everything has Javadoc attached and the Wiki and Readme need to be expanded.
 
+## How to Use
+
+This project is meant to be used as a framework that provides the structure for an application.  
+In addition, it handles common tasks and provides tools that assist in implementing functionality.  
+Finally, it fully supports extensibility by allowing you to hook into any part of it.
+
 ## Getting Started
 
-- **[Demos](https://github.com/Tokelon/tokTales-demos)** - Demos and sample code
+- **[Demos](https://github.com/Tokelon/tokTales-demos)** - Demo applications
+- **[Samples](https://github.com/Tokelon/tokTales-samples)** - Sample code
 - **[Templates](https://github.com/Tokelon/tokTales-templates)** - Template projects
+- **[How to Use](https://github.com/Tokelon/tokTales/wiki/%5BAbout%5D-How-to-Use)** - Instructions for installing, building and running
+- **[Release API](https://tokelon.github.io/tokTales-docs/api-docs/release/javadoc/)** - Javadoc for the latest release
+- **[Resource Hub](https://github.com/Tokelon/tokTales/wiki/Resources)** - All resources on one page
 
 ## Installation
 
@@ -120,8 +131,8 @@ In addition there is the master project, which includes all projects, and is use
 
 ## Documentation
 
-- **[Wiki](https://github.com/Tokelon/tokTales/wiki)** - User Guide and general information
-- **[API Reference](https://tokelon.github.io/tokTales-docs/)** - Javadoc for all engine libraries
+- **[Wiki](https://github.com/Tokelon/tokTales/wiki)** - User Guide and information hub
+- **[API Reference](https://tokelon.github.io/tokTales-docs/)** - Javadoc for all libraries
 
 ## Technologies
 
