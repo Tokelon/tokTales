@@ -14,7 +14,7 @@ android {
 		versionCode 20004
 		versionName "0.2.0"
 		
-		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 	}
 	
 	buildTypes {
@@ -32,15 +32,15 @@ android {
 
 
 dependencies {
-	api 'com.android.support.test:runner:1.0.2'
-	api 'com.android.support.test.espresso:espresso-core:3.0.2'
+	api 'androidx.test.ext:junit:1.1.1'
+	api 'androidx.test.espresso:espresso-core:3.1.0'
 	
 	// Mockito for Android instrumentation tests
 	api "org.mockito:mockito-android:2.15.0" // Should be androidTestApi but needs to be exported
 	
 	
-	implementation 'com.android.support:appcompat-v7:28.0.0'
-	implementation 'com.android.support:support-v4:28.0.0'
+	implementation 'androidx.appcompat:appcompat:1.0.0'
+	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	
 	api project(':tokTales-core-test')
 
