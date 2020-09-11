@@ -39,7 +39,7 @@ dependencies {
 	api "org.mockito:mockito-android:2.15.0" // Should be androidTestApi but needs to be exported
 	
 	
-	implementation 'androidx.appcompat:appcompat:1.0.0'
+	implementation 'androidx.appcompat:appcompat:1.2.0'
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	
 	api project(':tokTales-core-test')

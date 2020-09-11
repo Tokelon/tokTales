@@ -35,7 +35,7 @@ dependencies {
 	androidTestImplementation project(':tokTales-extensions-android-test')
 
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     api project(':tokTales-android-library')
