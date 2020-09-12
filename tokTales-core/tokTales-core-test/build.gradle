@@ -9,7 +9,7 @@ dependencies {
 	// Use JUnit test framework
 	api 'junit:junit:4.12'
 	// Mockito
-	api 'org.mockito:mockito-core:2.15.0'
+	api 'org.mockito:mockito-core:3.5.10'
 	
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle
