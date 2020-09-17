@@ -59,7 +59,7 @@ dependencies {
 	}
 
 	// Redeclare to include xmlpull and xpp3 from tokTales-tools-tiled (excluded in tokTales-core)
-	implementation 'com.thoughtworks.xstream:xstream:1.4.8'
+	implementation 'com.thoughtworks.xstream:xstream:1.4.13' // Use java7 artifact?
 
 
 	/* Lib dependencies */
