@@ -10,7 +10,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.4.1'
+		classpath 'com.android.tools.build:gradle:4.0.1'
 
 		classpath 'digital.wup:android-maven-publish:3.6.3'
 
@@ -36,7 +36,7 @@ allprojects {
 
 task wrapperCustom(type: Wrapper) {
 	group 'build setup'
-	gradleVersion = '5.1.1'
+	gradleVersion = '6.1.1'
 	distributionType = Wrapper.DistributionType.ALL
 }
 
