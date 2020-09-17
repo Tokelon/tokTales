@@ -16,8 +16,8 @@ dependencies {
 	implementation 'javax.inject:javax.inject:1'
 	
 	// Streamsupport
-	//api 'net.sourceforge.streamsupport:android-retrostreams:1.6.3'
-	api 'net.sourceforge.streamsupport:android-retrofuture:1.6.3'
+	//api 'net.sourceforge.streamsupport:android-retrostreams:1.7.2'
+	api 'net.sourceforge.streamsupport:android-retrofuture:1.7.2'
 }
 
 

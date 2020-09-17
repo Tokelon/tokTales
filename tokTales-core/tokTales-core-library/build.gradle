@@ -96,10 +96,10 @@ dependencies {
 	api 'org.joml:joml:1.8.6'
 	
 	// Streamsupport
-	api 'net.sourceforge.streamsupport:android-retrostreams:1.6.3'
-	api 'net.sourceforge.streamsupport:android-retrofuture:1.6.3'
-	//api 'net.sourceforge.streamsupport:android-retroatomic:1.6.3'
-	//api 'net.sourceforge.streamsupport:android-retroflow:1.6.3'
+	api 'net.sourceforge.streamsupport:android-retrostreams:1.7.2'
+	api 'net.sourceforge.streamsupport:android-retrofuture:1.7.2'
+	//api 'net.sourceforge.streamsupport:android-retroatomic:1.7.2'
+	//api 'net.sourceforge.streamsupport:android-retroflow:1.7.2'
 	
 	// Trove
 	api 'net.sf.trove4j:trove4j:3.0.3'
