@@ -10,7 +10,7 @@ dependencies {
 
 	
 	// SLF4J
-	implementation 'org.slf4j:slf4j-api:1.7.28'
+	implementation 'org.slf4j:slf4j-api:1.7.30'
 	
 	// Guice
 	implementation 'com.google.inject:guice:4.2.1:no_aop'
