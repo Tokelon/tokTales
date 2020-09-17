@@ -25,7 +25,9 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
+		coreLibraryDesugaringEnabled true
+
+		sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
@@ -39,7 +41,9 @@ dependencies {
 	androidTestImplementation project(':tokTales-extensions-android-test')
 
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
+
+	implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     api project(':tokTales-android-library')
