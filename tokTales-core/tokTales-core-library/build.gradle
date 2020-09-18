@@ -68,8 +68,12 @@ dependencies {
 	
 	
 	// Guice
-	api 'com.google.inject:guice:4.2.1:no_aop'
-	api ('com.google.inject.extensions:guice-assistedinject:4.2.1') {
+	api 'com.google.inject:guice:4.2.3:no_aop'
+	// We have to use an older version for this library because the newer one breaks for older Android versions,
+	// since it references Java 8 APIs unsupported before Android API 26.
+	api ('com.google.inject.extensions:guice-assistedinject:4.2.2') {
+		// We need to force this version otherwise it will be overridden by the main Guice dependency
+		force true
 		// Exclude these so we can use our own versions (no-AOP for Guice and android for Guava)
 		exclude group: 'com.google.inject', module: 'guice'
 		exclude group: 'com.google.guava', module: 'guava'
