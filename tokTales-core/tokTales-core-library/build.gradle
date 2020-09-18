@@ -75,10 +75,7 @@ dependencies {
 		exclude group: 'com.google.guava', module: 'guava'
 	}
 
-	/* Guava
-	 * Do NOT update to v27.0, it does NOT work with the Android plugin right now at all, not even when jre dependencies are overridden.
-	 * There are duplicate class errors and the lint task gets stuck and never finishes.
-	 */
+	// Guava
 	api 'com.google.guava:guava:29.0-android' // This will override the version provided by Guice
 	
 	
