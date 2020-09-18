@@ -52,7 +52,7 @@ task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all su
 			'https://docs.oracle.com/javase/8/docs/api/',
 			'https://developer.android.com/reference',
 			'https://google.github.io/guice/api-docs/4.2.1/javadoc/',
-			'https://guava.dev/releases/26.0-android/api/docs/'
+			'https://guava.dev/releases/29.0-android/api/docs/'
 	)
 	options.addBooleanOption('Xdoclint:none', true)
 	//options.addBooleanOption('notimestamp', true) // TODO: Fix api-docs publishing before enabling this

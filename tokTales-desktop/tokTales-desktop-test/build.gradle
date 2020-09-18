@@ -13,7 +13,7 @@ dependencies {
 	api ('com.google.inject:guice:4.2.1') {
 		force = true
 	}
-	api ('com.google.guava:guava:26.0-jre') {
+	api ('com.google.guava:guava:29.0-jre') {
 		force true
 	}
 	
