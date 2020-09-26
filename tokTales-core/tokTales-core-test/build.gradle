@@ -7,7 +7,7 @@ apply plugin: 'java-library'
 
 dependencies {
 	// Use JUnit test framework
-	api 'junit:junit:4.12'
+	api 'junit:junit:4.13'
 	// Mockito
 	api 'org.mockito:mockito-core:3.5.13'
 	
