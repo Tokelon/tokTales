@@ -38,6 +38,9 @@ android {
 
 
 dependencies {
+	androidTestImplementation 'org.mockito:mockito-android:3.5.13'
+
+
 	implementation 'androidx.appcompat:appcompat:1.2.0'
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
