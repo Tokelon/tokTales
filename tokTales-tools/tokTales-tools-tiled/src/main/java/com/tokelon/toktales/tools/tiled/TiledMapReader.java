@@ -23,37 +23,42 @@ import com.tokelon.toktales.tools.tiled.model.TiledMapXML;
 
 public class TiledMapReader {
 
-	
-	public ITiledMap readMap(InputStream in, String fileName) throws TiledMapFormatException {
-	
-		
+
+	private final XStream xstream;
+
+	public TiledMapReader() throws TiledMapFormatException {
 		// Setup field order for classes where it matters
 		SortableFieldKeySorter sorter = new SortableFieldKeySorter();
-		
+
 		sorter.registerFieldOrder(TiledMapXML.class, TiledMapXML.FIELD_ORDER);
 		sorter.registerFieldOrder(TiledMapTilesetImpl.class, TiledMapTilesetImpl.FIELD_ORDER);
 		sorter.registerFieldOrder(TMXObjectImpl.class, TMXObjectImpl.FIELD_ORDER);
-		
-		
+
+
 		// Additional classes needed
 		FieldDictionary fieldDictionary = new FieldDictionary(sorter);
 		PureJavaReflectionProvider reflectionProvider = new PureJavaReflectionProvider(fieldDictionary);
-		
+
 		//SunLimitedUnsafeReflectionProvider		// Uses undocumented features (that might not be available)
 		//JVM.newReflectionProvider(fieldDictionary)
 
-		
-		
-		
-		
+
 		XStream xstream;
 		try {
-			xstream = new XStream(reflectionProvider);	//new DomDriver()
+			this.xstream = new XStream(reflectionProvider);	//new DomDriver()
+			//XStream.setupDefaultSecurity(xstream); // TODO: Setup security explicitly?
 		}
 		catch(InitializationException ine) {
 			throw new TiledMapFormatException(ine);
 		}
-		
+	}
+
+	public TiledMapReader(XStream xstream) {
+		this.xstream = xstream;
+	}
+
+	
+	public ITiledMap readMap(InputStream in, String fileName) throws TiledMapFormatException {
 		// Process annotations
 		xstream.processAnnotations(TiledMapXML.class);
 
@@ -73,8 +78,6 @@ public class TiledMapReader {
 		objectgroupConverter.setListener(levelHolderListener);
 		xstream.registerConverter(objectgroupConverter);
 
-
-		
 		
 		// Unmarshal
 		Object result;
@@ -87,9 +90,7 @@ public class TiledMapReader {
 		catch(TiledMapUnmarshalException ume) {
 			throw new TiledMapFormatException(ume);
 		}
-		
-		
-		
+
 		
 		if(!(result instanceof TiledMapXML)) {
 			throw new TiledMapFormatException("File is not the expected type");
@@ -100,6 +101,5 @@ public class TiledMapReader {
 		
 		return map;
 	}
-	
-	
+
 }

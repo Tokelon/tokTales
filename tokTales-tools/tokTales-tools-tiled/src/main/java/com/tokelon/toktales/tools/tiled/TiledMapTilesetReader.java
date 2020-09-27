@@ -13,31 +13,35 @@ import com.tokelon.toktales.tools.tiled.model.TiledMapTilesetImpl;
 
 public class TiledMapTilesetReader {
 
-	private XStream xstream;	
-	
-	public void setup() throws TiledMapFormatException {
 
+	private final XStream xstream;
+
+	public TiledMapTilesetReader() throws TiledMapFormatException {
 		// Setup field order for classes where it matters
 		SortableFieldKeySorter sorter = new SortableFieldKeySorter();
 		sorter.registerFieldOrder(TiledMapTilesetImpl.class, TiledMapTilesetImpl.FIELD_ORDER);
-		
+
 		// Additional classes needed
 		FieldDictionary fieldDictionary = new FieldDictionary(sorter);
 		PureJavaReflectionProvider reflectionProvider = new PureJavaReflectionProvider(fieldDictionary);
-		
-		
+
+
 		try {
-			xstream = new XStream(reflectionProvider);	//new DomDriver()
+			this.xstream = new XStream(reflectionProvider);	//new DomDriver()
 		}
 		catch(InitializationException ine) {
 			throw new TiledMapFormatException(ine);
 		}
-		
+
 		// Process annotations
 		xstream.processAnnotations(TiledMapTilesetImpl.class);
 	}
-	
-	
+
+	public TiledMapTilesetReader(XStream xstream) {
+		this.xstream = xstream;
+	}
+
+
 	public TiledMapTilesetImpl readTileset(InputStream in) throws TiledMapFormatException {
 		
 		Object result;
