@@ -24,7 +24,7 @@ jobs:
       uses: einaregilsson/build-number@v2
       with:
         token: ${{secrets.github_token}}
-        prefix: tokTales-master-0.2.0
+        prefix: tokTales-master-0.2.1
     - name: Publish to GitHub Packages
       env:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
