@@ -54,8 +54,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 		this.world = world;
 	}
 	
-	
-	
+
 	/** Opens an InputStream to the target file.
 	 * 
 	 * @param storageLocation
@@ -77,8 +76,6 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 		this.mapfilelocation = storageLocation;
 	}
 	
-		
-	
 
 	@Override
 	public void runComplete() throws MapLoaderException, MapFormatException, IOException {
@@ -90,14 +87,12 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 	}
 
 	
-	
 	@Override
 	public void initialize() throws MapFormatException, IOException {
 		if(mapIn == null || mapfilename == null) {
 			throw new NullPointerException("No target set");
 		}
-		
-		
+
 		
 		// Check for config file
 		
@@ -161,7 +156,6 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 				if(configFileIn != null) configFileIn.close();
 			}
 			*/
-			
 		}
 		
 		
@@ -189,8 +183,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 			logger.info("Map config was loaded: {}", configFile.getName());
 			mapConfig = tiledMapConfig;
 		}
-		
-		
+
 		
 		initialized = true;
 	}
@@ -236,16 +229,12 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 			throw new MapLoaderException(tmfe);
 		}
 		
-		
-		
-		
+
 		/* Create wrapper map */
 		TiledWrapperMap wrapperMap = new TiledWrapperMap(loadedMap, mapConfig, world);
 		
 		/* Build the map */
 		wrapperMap.build();
-		
-		
 		
 
 		blockMap = wrapperMap;
@@ -253,21 +242,15 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 	
 	
 	private List<ITiledMapTileset> processExternalTilesets(List<? extends ITiledMapTileset> mapTilesets) throws TiledMapFormatException {
-
-
 		ArrayList<ITiledMapTileset> externalTilesetList = new ArrayList<ITiledMapTileset>();
 		
 		if(mapTilesets.isEmpty()) {
 			return externalTilesetList;
 		}
-		
 
 		
 		TiledMapTilesetReader tilesetReader = new TiledMapTilesetReader();
-		tilesetReader.setup();
-		
-		
-		
+
 
 		Iterator<? extends ITiledMapTileset> mapTilesetsIt = mapTilesets.iterator();
 		ITiledMapTileset tileset;
@@ -275,9 +258,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 			tileset = mapTilesetsIt.next();
 			
 			if(tileset.isReferenceToExternal()) {
-				
-				
-				
+
 				/* If the external tileset fails to load for whatever reason, we can
 				 * 1. Remove the tileset from the map and accept that for all tiles in that tileset nothing will be rendered
 				 * 2. Throw an Exception and refuse to load the map
@@ -331,8 +312,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 					continue;
 				}
 				
-				
-				
+
 				logger.info("Loading external tileset... : {}", externalSource);
 				
 				TiledMapTilesetImpl externalTileset = tilesetReader.readTileset(tilesetInput);
@@ -347,9 +327,7 @@ public class StorageTiledMapLoaderAuto implements IMapLoader {
 	
 		return externalTilesetList;
 	}
-	
-	
-	
+
 
 	@Override
 	public IBlockMap getLoadedMap() {

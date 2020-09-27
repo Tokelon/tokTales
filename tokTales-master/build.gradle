@@ -1,6 +1,6 @@
 // tokTales-master build.gradle
 group "com.tokelon.toktales"
-version "0.2.0"
+version "0.2.1-rc1"
 
 
 buildscript {
@@ -10,11 +10,11 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.4.1'
+		classpath 'com.android.tools.build:gradle:4.0.1'
 
 		classpath 'digital.wup:android-maven-publish:3.6.3'
 
-		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
 	}
 }
 
@@ -36,7 +36,7 @@ allprojects {
 
 task wrapperCustom(type: Wrapper) {
 	group 'build setup'
-	gradleVersion = '5.1.1'
+	gradleVersion = '6.1.1'
 	distributionType = Wrapper.DistributionType.ALL
 }
 
@@ -51,11 +51,10 @@ task javadocAggregated(type: Javadoc, description: 'Generate Javadoc from all su
 	options.links (
 			'https://docs.oracle.com/javase/8/docs/api/',
 			'https://developer.android.com/reference',
-			'https://google.github.io/guice/api-docs/4.2.1/javadoc/',
-			'https://guava.dev/releases/26.0-android/api/docs/'
+			'https://google.github.io/guice/api-docs/4.2.3/javadoc/',
+			'https://guava.dev/releases/29.0-android/api/docs/'
 	)
 	options.addBooleanOption('Xdoclint:none', true)
-	//options.addBooleanOption('notimestamp', true) // TODO: Fix api-docs publishing before enabling this
 
 	gradle.projectsEvaluated({
 		subprojects.each { project ->

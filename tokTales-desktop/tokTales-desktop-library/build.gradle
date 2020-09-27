@@ -1,6 +1,6 @@
 // tokTales-desktop-library build.gradle
 group "com.tokelon.toktales"
-version "0.2.0"
+version "0.2.1-rc1"
 
 
 // Apply the java-library plugin to add support for Java Library
@@ -33,7 +33,7 @@ targetCompatibility = "1.8"
 
 
 // LWJGL configuration
-project.ext.lwjglVersion = "3.1.6"
+project.ext.lwjglVersion = "3.2.3"
 
 dependencies {
 	/* Test dependencies */
@@ -48,18 +48,18 @@ dependencies {
 		exclude group: 'com.google.guava', module: 'guava'
 		exclude group: 'com.google.inject', module: 'guice'
 	}
-	api ('com.google.inject:guice:4.2.1') {
+	api ('com.google.inject:guice:4.2.3') {
 		// Replace Guice dependency with AOP version
 		force = true
 	}
-	api ('com.google.guava:guava:26.0-jre') {
+	api ('com.google.guava:guava:29.0-jre') {
 		// Force override transient dependencies from Guice and tokTales-core-library with the version we want
 		// Whether we have to exclude and force depends on whether the overridden version is newer
 		force true
 	}
 
 	// Redeclare to include xmlpull and xpp3 from tokTales-tools-tiled (excluded in tokTales-core)
-	implementation 'com.thoughtworks.xstream:xstream:1.4.8'
+	implementation 'com.thoughtworks.xstream:xstream:1.4.13' // Use java7 artifact?
 
 
 	/* Lib dependencies */

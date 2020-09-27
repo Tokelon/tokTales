@@ -1,15 +1,15 @@
 // tokTales-core-test build.gradle
 group "com.tokelon.toktales"
-version "0.2.0"
+version "0.2.1-rc1"
 
 
 apply plugin: 'java-library'
 
 dependencies {
 	// Use JUnit test framework
-	api 'junit:junit:4.12'
+	api 'junit:junit:4.13'
 	// Mockito
-	api 'org.mockito:mockito-core:2.15.0'
+	api 'org.mockito:mockito-core:3.5.13'
 	
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle

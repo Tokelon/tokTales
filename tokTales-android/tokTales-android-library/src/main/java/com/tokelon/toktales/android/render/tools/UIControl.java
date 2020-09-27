@@ -19,7 +19,7 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
-import android.support.v4.view.MotionEventCompat;
+import androidx.core.view.MotionEventCompat;
 import android.view.MotionEvent;
 
 public class UIControl implements IUIControl {

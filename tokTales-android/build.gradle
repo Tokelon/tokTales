@@ -1,7 +1,7 @@
 // tokTales-android build.gradle
 // settings in this file will only apply to subprojects if this is the root project
 group "com.tokelon.toktales"
-version "0.2.0"
+version "0.2.1-rc1"
 
 
 buildscript {
@@ -11,7 +11,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.4.1'
+		classpath 'com.android.tools.build:gradle:4.0.1'
 	}
 }
 
@@ -27,6 +27,6 @@ allprojects {
 
 task wrapperCustom(type: Wrapper) {
 	group 'build setup'
-	gradleVersion = '5.1.1'
+	gradleVersion = '6.1.1'
 	distributionType = Wrapper.DistributionType.ALL
 }

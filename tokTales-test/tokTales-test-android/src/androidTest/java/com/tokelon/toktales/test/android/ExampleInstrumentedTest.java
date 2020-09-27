@@ -1,11 +1,12 @@
 package com.tokelon.toktales.test.android;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
 
@@ -19,8 +20,16 @@ public class ExampleInstrumentedTest {
 	@Test
 	public void useAppContext() throws Exception {
 		// Context of the app under test.
-		Context appContext = InstrumentationRegistry.getTargetContext();
-		
+		Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+		assertEquals("com.tokelon.toktales.test.android.test", appContext.getPackageName());
+	}
+
+	@Test
+	public void useMockito() throws Exception {
+		Context appContext = Mockito.mock(Context.class);
+		Mockito.when(appContext.getPackageName()).thenReturn("com.tokelon.toktales.test.android.test");
+
 		assertEquals("com.tokelon.toktales.test.android.test", appContext.getPackageName());
 	}
 }

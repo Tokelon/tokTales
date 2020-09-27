@@ -1,6 +1,6 @@
 // tokTales-tools-assets build.gradle
 group "com.tokelon.toktales"
-version "0.2.0"
+version "0.2.1-rc1"
 
 
 apply plugin: 'java-library'
@@ -10,14 +10,14 @@ dependencies {
 
 
 	// SLF4J
-	implementation 'org.slf4j:slf4j-api:1.7.28'
+	implementation 'org.slf4j:slf4j-api:1.7.30'
 	
 	// Javax Inject
 	implementation 'javax.inject:javax.inject:1'
 	
 	// Streamsupport
-	//api 'net.sourceforge.streamsupport:android-retrostreams:1.6.3'
-	api 'net.sourceforge.streamsupport:android-retrofuture:1.6.3'
+	//api 'net.sourceforge.streamsupport:android-retrostreams:1.7.2'
+	api 'net.sourceforge.streamsupport:android-retrofuture:1.7.2'
 }
 
 

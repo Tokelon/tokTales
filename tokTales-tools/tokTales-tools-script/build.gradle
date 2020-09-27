@@ -1,13 +1,13 @@
 // tokTales-tools-script build.gradle
 group "com.tokelon.toktales"
-version "0.2.0"
+version "0.2.1-rc1"
 
 
 apply plugin: 'java-library'
 
 dependencies {
 	// SLF4J
-	implementation 'org.slf4j:slf4j-api:1.7.28'
+	implementation 'org.slf4j:slf4j-api:1.7.30'
 	
 	// LuaJ
 	implementation 'org.luaj:luaj-jse:3.0.1' // change to api?
