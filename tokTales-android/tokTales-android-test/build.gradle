@@ -1,6 +1,6 @@
 // tokTales-android-test build.gradle
 group "com.tokelon.toktales"
-version "0.2.1-rc1"
+version "0.2.1"
 
 
 apply plugin: 'com.android.library'
@@ -11,8 +11,8 @@ android {
 	defaultConfig {
 		minSdkVersion 21
 		targetSdkVersion 30
-		versionCode 20100
-		versionName "0.2.1-rc1"
+		versionCode 20101
+		versionName "0.2.1"
 		
 		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 	}
