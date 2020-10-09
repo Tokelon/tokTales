@@ -2,16 +2,15 @@ These files can be included so that Eclipse can resolve them as dependencies for
 
 
 #android
---sdk\platforms\android-26
+--sdk\platforms\android-30
 android.jar [android.jar]
 
 
-#appcompat-v7 
---sdk\extras\android\m2repository\com\android\support\appcompat-v7
-appcompat-v7-26.0.0-alpha1.aar -> \classes.jar [android-appcompat-v7-classes.jar]
-
-
-#support-v4
---sdk\extras\android\m2repository\com\android\support\support-v4
-support-v4-24.1.1.aar -> \libs\internal_impl-24.1.1.jar [android-support-v4-internal.jar]
-support-v4-24.1.1.aar -> \classes.jar [android-support-v4-classes.jar]
+#androidx.appcompat
+--JCenter
+appcompat-1.2.0.aar -> \classes.jar [appcompat-1.2.0.jar]
+core-1.3.0.aar -> \classes.jar [core-1.3.0.jar]
+drawerlayout-1.0.0.aar -> \classes.jar [drawerlayout-1.0.0.jar]
+fragment-1.0.0.aar -> \classes.jar [fragment-1.0.0.jar]
+lifecycle-common-2.0.0.jar -> [lifecycle-common-2.0.0.jar]
+lifecycle-viewmodel-2.0.0.aar -> \classes.jar [lifecycle-viewmodel-2.0.0.jar]

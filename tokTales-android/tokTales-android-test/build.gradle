@@ -61,13 +61,10 @@ eclipse.classpath.file.withXml { xml ->
 	
 	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core-test' ])
 	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-android-library' ]) // Cyclic dependency
+
 	
-	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android-test/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar' ])
-	
-	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android.jar' ])
-	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-appcompat-v7-classes.jar' ])
-	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-classes.jar' ])
-	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android/libs/android/android-support-v4-internal.jar' ])
+	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android-test/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/R.jar' ])
+    
 	if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
 		node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
 	}
