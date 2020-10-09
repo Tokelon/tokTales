@@ -6,31 +6,31 @@ version "0.2.1"
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+	compileSdkVersion 30
 
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 20101
-        versionName "0.2.1"
+	defaultConfig {
+		minSdkVersion 21
+		targetSdkVersion 30
+		versionCode 20101
+		versionName "0.2.1"
 
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-    }
+		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
 
-    compileOptions {
+	compileOptions {
 		coreLibraryDesugaringEnabled true
 
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-	
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
 	packagingOptions {
 		exclude 'META-INF/DEPENDENCIES' // Exclude duplicate files from Guice
 	}
@@ -38,7 +38,7 @@ android {
 
 
 dependencies {
-    testImplementation project(':tokTales-android-test')
+	testImplementation project(':tokTales-android-test')
 	androidTestImplementation project(':tokTales-android-test')
 
 	// Mockito Android needed for mocking in instrumentation tests
@@ -47,32 +47,32 @@ dependencies {
 
 	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-	
+	implementation 'androidx.appcompat:appcompat:1.2.0'
+	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
 	api project(':tokTales-tools-android')
-	
-    api project(':tokTales-core-library')
+
+	api project(':tokTales-core-library')
 }
 
 
 // Tell Gradle eclipse plugin to add dependencies to classpath
 eclipse.classpath.file.withXml { xml ->
-    def node = xml.asNode()
+	def node = xml.asNode()
 
-    node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-android-test' ])
-	
+	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-android-test' ])
+
 	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-tools-android' ])
 	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-core-library' ])
-    
-    
-    // Export for dependent projects?
+
+
+	// Export for dependent projects?
 	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-android-library/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/R.jar' ])
-	
-    // for some reason there can be a second entry sometimes
-    if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
-    	node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
-    }
+
+	// for some reason there can be a second entry sometimes
+	if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
+		node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
+	}
 }
 
 // Only declared for eclipse
@@ -80,7 +80,7 @@ sourceSets {
 	main {
 		java {
 			srcDir 'src/main/java'
-			
+
 			srcDir 'exp/main/java'
 		}
 	}
@@ -88,7 +88,7 @@ sourceSets {
 		java {
 			srcDir 'src/test/java'
 			//srcDir 'src/androidTest/java // Ignore for now
-			
+
 			srcDir 'exp/test/java'
 		}
 	}

@@ -55,7 +55,7 @@ eclipse.classpath.file.withXml { xml ->
 	
 	
 	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-extensions-android-test/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/R.jar' ])
-    
+
 	if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
 		node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
 	}

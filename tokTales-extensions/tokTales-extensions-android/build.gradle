@@ -6,30 +6,30 @@ version "0.2.1"
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+	compileSdkVersion 30
 
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 20101
-        versionName "0.2.1"
+	defaultConfig {
+		minSdkVersion 21
+		targetSdkVersion 30
+		versionCode 20101
+		versionName "0.2.1"
 
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-    }
+		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
 
-    compileOptions {
+	compileOptions {
 		coreLibraryDesugaringEnabled true
 
 		sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
 
 	packagingOptions {
 		exclude 'META-INF/DEPENDENCIES'
@@ -46,9 +46,9 @@ dependencies {
 	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
 
 	implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    api project(':tokTales-android-library')
+	api project(':tokTales-android-library')
 	
 	api project(':tokTales-extensions-core')
 }
@@ -57,19 +57,19 @@ dependencies {
 
 // Only for eclipse
 eclipse.classpath.file.withXml { xml ->
-    def node = xml.asNode()
-    
-    node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android-test' ])
-    
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-android-library' ])
-    node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-core' ])
-    
-    
+	def node = xml.asNode()
+
+	node.appendNode('classpathentry', [ exported: false, kind: 'src', path: '/tokTales-extensions-android-test' ])
+
+	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-android-library' ])
+	node.appendNode('classpathentry', [ exported: true, kind: 'src', path: '/tokTales-extensions-core' ])
+
+
 	node.appendNode('classpathentry', [ exported: false, kind: 'lib', path: '/tokTales-extensions-android/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/R.jar' ])
 	
-    if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
-    	node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
-    }
+	if(node.children().find( {it.@path == "org.eclipse.jdt.junit.JUNIT_CONTAINER/4"} ) == null) {
+		node.appendNode('classpathentry', [ exported: false, kind: 'con', path: 'org.eclipse.jdt.junit.JUNIT_CONTAINER/4' ])
+	}
 }
 
 // Only for eclipse

@@ -6,21 +6,21 @@ version "0.2.1"
 apply plugin: 'java-library'
 
 dependencies {
-    testImplementation project(':tokTales-extensions-desktop-test')
+	testImplementation project(':tokTales-extensions-desktop-test')
 
-    
-    api project(':tokTales-desktop-library')
-    
-    api (project(':tokTales-extensions-core')) {
-        exclude group: 'com.google.guava', module: 'guava'
+
+	api project(':tokTales-desktop-library')
+
+	api (project(':tokTales-extensions-core')) {
+		exclude group: 'com.google.guava', module: 'guava'
 		exclude group: 'com.google.inject', module: 'guice'
 	}
 	api ('com.google.inject:guice:4.2.3') {
 		force = true
 	}
-    api ('com.google.guava:guava:29.0-jre') {
-        force true
-    }
+	api ('com.google.guava:guava:29.0-jre') {
+		force true
+	}
 }
 
 sourceSets {

@@ -6,9 +6,9 @@ version "0.2.1"
 apply plugin: 'java-library'
 
 dependencies {
-    testImplementation project(':tokTales-extensions-core-test')
+	testImplementation project(':tokTales-extensions-core-test')
 
-    api project(':tokTales-core-library')
+	api project(':tokTales-core-library')
 }
 
 sourceSets {
@@ -34,10 +34,10 @@ targetCompatibility = "1.8"
 
 // Export project and dependencies for Android
 eclipse.classpath.file.withXml { xml ->
-    def node = xml.asNode()
-    
-    def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
-    if(con) {
-        con.@exported = 'true'
-    }
+	def node = xml.asNode()
+
+	def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+	if(con) {
+		con.@exported = 'true'
+	}
 }

@@ -9,7 +9,7 @@ dependencies {
 	api project(':tokTales-extensions-core-test')
 	
 	// Cyclic dependency, see tokTales-core-library build.gradle
-    implementation project(':tokTales-extensions-core')
+	implementation project(':tokTales-extensions-core')
 }
 
 
@@ -38,10 +38,10 @@ targetCompatibility = "1.8"
 
 // Export project and dependencies for Android
 eclipse.classpath.file.withXml { xml ->
-    def node = xml.asNode()
+	def node = xml.asNode()
 
-    def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
-    if(con) {
-        con.@exported = 'true'
-    }
+	def con = node.children().find( {it.@path == "org.eclipse.buildship.core.gradleclasspathcontainer"} )
+	if(con) {
+		con.@exported = 'true'
+	}
 }
