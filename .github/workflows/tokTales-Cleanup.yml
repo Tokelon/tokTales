@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Remove package versions from GitHub Packages
         uses: EpitomeGlobal/remove-package-versions@1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # Number of versions to keep
           keep-versions: 50 # default is 5
