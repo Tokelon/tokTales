@@ -1,0 +1,21 @@
+name: Remove package versions
+on:
+  schedule:
+    - cron:  '0 12 * * 0'
+
+jobs:
+  remove-package-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Remove package versions from GitHub Packages
+        uses: EpitomeGlobal/remove-package-versions@1.0
+        with:
+          # Number of versions to keep
+          keep-versions: 50 # default is 5
+          # Whether or not to remove semver versions
+          remove-semver: false # default is false
+          # Number of prerelease versions to keep
+          keep-prerelease-versions: 50 # default is 5
+          # Whether or not to remove semver of prerelease versions
+          remove-prerelease-semver: false # default is false
