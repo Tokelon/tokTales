@@ -36,7 +36,7 @@ jobs:
       run: ./gradlew javadocAggregated -Pbintray.version
     - name: Get project version from Gradle
       working-directory: tokTales-master
-      run: echo ::set-env name=PROJECT_VERSION::$(./gradlew properties --console=plain -q | grep "^version:" | awk '{printf $2}')
+      run: echo "PROJECT_VERSION=$(./gradlew properties --console=plain -q | grep "^version:" | awk '{printf $2}')" >> $GITHUB_ENV
     - name: Publish versioned Javadoc
       uses: seanmiddleditch/gha-publish-to-git@v2
       with:
