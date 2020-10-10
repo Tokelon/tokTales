@@ -33,7 +33,7 @@ jobs:
       run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
     - name: Generate Javadoc
       working-directory: tokTales-master
-      run: ./gradlew javadocAggregated -Pbintray.version
+      run: ./gradlew javadocAggregated -PbuildNumber=nightly
     - name: Get project version from Gradle
       working-directory: tokTales-master
       run: echo "PROJECT_VERSION=$(./gradlew properties --console=plain -q | grep "^version:" | awk '{printf $2}')" >> $GITHUB_ENV
