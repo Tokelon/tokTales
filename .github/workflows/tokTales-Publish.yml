@@ -26,6 +26,7 @@ jobs:
         token: ${{secrets.github_token}}
         prefix: tokTales-master-0.2.1
     - name: Publish to GitHub Packages
+      if: false # Disable because we hit the storage limit and are not allowed to delete public packages
       env:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-master
