@@ -192,7 +192,7 @@ subprojects { -> project
 				defaults {
 					publications('maven')
 
-					publishBuildInfo = false
+					publishBuildInfo = true
 					publishArtifacts = true
 					publishPom = true
 				}
@@ -274,7 +274,7 @@ subprojects { -> project
 					defaults {
 						publications('maven')
 
-						publishBuildInfo = false
+						publishBuildInfo = true
 						publishArtifacts = true
 						publishPom = true
 					}
