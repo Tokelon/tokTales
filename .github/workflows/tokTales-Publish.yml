@@ -32,6 +32,9 @@ jobs:
       working-directory: tokTales-master
       run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
     - name: Publish to Artifactory
+      env:
+        BINTRAY_USER: ${{secrets.BINTRAY_USER}}
+        BINTRAY_KEY: ${{secrets.BINTRAY_KEY}}
       working-directory: tokTales-master
       run: ./gradlew artifactoryPublish -Pbintray.user=$BINTRAY_USER -Pbintray.key=$BINTRAY_KEY
     - name: Generate Javadoc
