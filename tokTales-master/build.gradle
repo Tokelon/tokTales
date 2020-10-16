@@ -12,9 +12,12 @@ buildscript {
 	dependencies {
 		classpath 'com.android.tools.build:gradle:4.0.1'
 
+		// TODO: Replace with 'maven-publish' plugin, as it supports Android by now
 		classpath 'digital.wup:android-maven-publish:3.6.3'
 
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+
+		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.17.2"
 	}
 }
 
@@ -25,6 +28,8 @@ allprojects {
 	}
 
 	apply plugin: 'eclipse'
+
+	apply plugin: "com.jfrog.artifactory"
 
 	task printVersion {
 		doLast {
@@ -170,9 +175,35 @@ subprojects { -> project
 				version {
 					name = project.version
 					desc = project.version
-					released  = new Date()
+					released = new Date()
 				}
 			}
+		}
+
+		artifactory {
+			contextUrl = "http://oss.jfrog.org"
+			publish {
+				repository {
+					repoKey = 'oss-snapshot-local'
+					username = project.findProperty('bintray.user')
+					password = project.findProperty('bintray.key')
+					maven = true
+				}
+				defaults {
+					publications('maven')
+
+					publishBuildInfo = false
+					publishArtifacts = true
+					publishPom = true
+				}
+			}
+			resolve {
+				repository {
+					repoKey = 'jcenter'
+				}
+			}
+
+			//clientConfig.info.setBuildNumber(System.getProperty('build.number'))
 		}
 	}
 
@@ -226,9 +257,35 @@ subprojects { -> project
 					version {
 						name = project.version
 						desc = project.version
-						released  = new Date()
+						released = new Date()
 					}
 				}
+			}
+
+			artifactory {
+				contextUrl = "http://oss.jfrog.org"
+				publish {
+					repository {
+						repoKey = 'oss-snapshot-local'
+						username = project.findProperty('bintray.user')
+						password = project.findProperty('bintray.key')
+						maven = true
+					}
+					defaults {
+						publications('maven')
+
+						publishBuildInfo = false
+						publishArtifacts = true
+						publishPom = true
+					}
+				}
+				resolve {
+					repository {
+						repoKey = 'jcenter'
+					}
+				}
+
+				//clientConfig.info.setBuildNumber(System.getProperty('build.number'))
 			}
 		}
 
