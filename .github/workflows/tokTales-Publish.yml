@@ -31,6 +31,9 @@ jobs:
         GITHUB_TOKEN: ${{secrets.PRIVATE_PACKAGES_TOKEN}}
       working-directory: tokTales-master
       run: ./gradlew publish -PbuildNumber=$BUILD_NUMBER
+    - name: Publish to Artifactory
+      working-directory: tokTales-master
+      run: ./gradlew artifactoryPublish -PbuildNumber=$BUILD_NUMBER -Pbintray.user=$BINTRAY_USER -Pbintray.key=$BINTRAY_KEY
     - name: Generate Javadoc
       working-directory: tokTales-master
       run: ./gradlew javadocAggregated -PbuildNumber=nightly
