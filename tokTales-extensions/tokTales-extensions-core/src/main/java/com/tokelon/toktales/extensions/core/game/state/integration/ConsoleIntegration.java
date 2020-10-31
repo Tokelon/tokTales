@@ -3,7 +3,7 @@ package com.tokelon.toktales.extensions.core.game.state.integration;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.order.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.extensions.core.game.renderer.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extensions.core.game.renderer.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
@@ -72,7 +72,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 	
 	
 
-	private static class ConsoleRenderCallback implements IRenderCallback {
+	private static class ConsoleRenderCallback implements IRenderCall {
 		
 		private final IConsoleOverlayRenderer renderer;
 		

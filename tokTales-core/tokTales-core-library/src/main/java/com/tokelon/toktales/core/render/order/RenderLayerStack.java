@@ -8,21 +8,21 @@ import java.util.Map.Entry;
 
 public class RenderLayerStack implements IRenderLayerStack {
 
-	private final TreeMap<Double, IRenderCallback> callbackMap;
+	private final TreeMap<Double, IRenderCall> callbackMap;
 	
 	private final Collection<Double> unmodCallbackKeys;
-	private final Collection<IRenderCallback> unmodCallbackValues;
+	private final Collection<IRenderCall> unmodCallbackValues;
 	
 	
 	public RenderLayerStack() {
-		callbackMap = new TreeMap<Double, IRenderCallback>();
+		callbackMap = new TreeMap<Double, IRenderCall>();
 		unmodCallbackKeys = Collections.unmodifiableCollection(callbackMap.keySet());
 		unmodCallbackValues = Collections.unmodifiableCollection(callbackMap.values());
 	}
 	
 	
 	@Override
-	public synchronized void addCallbackAt(double position, IRenderCallback callback) {
+	public synchronized void addCallbackAt(double position, IRenderCall callback) {
 		if(callback == null) {
 			throw new IllegalArgumentException("callback must not be null");
 		}
@@ -37,13 +37,13 @@ public class RenderLayerStack implements IRenderLayerStack {
 	}
 	
 	@Override
-	public IRenderCallback getCallbackAt(double position) {
+	public IRenderCall getCallbackAt(double position) {
 		return callbackMap.get(position);
 	}
 	
 	
 	@Override
-	public Collection<IRenderCallback> getCallbacks() {
+	public Collection<IRenderCall> getCallbacks() {
 		return unmodCallbackValues;
 	}
 
@@ -92,10 +92,10 @@ public class RenderLayerStack implements IRenderLayerStack {
 		private boolean isValid = false;
 		
 		private double currentPosition = 0d;
-		private IRenderCallback currentCallback = null;
+		private IRenderCall currentCallback = null;
 		
 		
-		private void setValid(double pos, IRenderCallback call) {
+		private void setValid(double pos, IRenderCall call) {
 			this.currentPosition = pos;
 			this.currentCallback = call;
 			this.isValid = true;
@@ -115,7 +115,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 		
 		@Override
 		public boolean navigateToPosition(double position) {
-			IRenderCallback call = callbackMap.get(position);
+			IRenderCall call = callbackMap.get(position);
 			if(call == null) {
 				setInvalid();
 			}
@@ -130,7 +130,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 		public boolean navigateToNext() {
 			checkValid();
 			
-			Entry<Double, IRenderCallback> nextEntry = callbackMap.higherEntry(currentPosition);
+			Entry<Double, IRenderCall> nextEntry = callbackMap.higherEntry(currentPosition);
 			if(nextEntry == null) {
 				setInvalid();
 			}
@@ -145,7 +145,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 		public boolean navigateToPrevious() {
 			checkValid();
 			
-			Entry<Double, IRenderCallback> previousEntry = callbackMap.lowerEntry(currentPosition);
+			Entry<Double, IRenderCall> previousEntry = callbackMap.lowerEntry(currentPosition);
 			if(previousEntry == null) {
 				setInvalid();
 			}
@@ -158,7 +158,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 
 		@Override
 		public boolean navigateToFirst() {
-			Entry<Double, IRenderCallback> firstEntry = callbackMap.firstEntry();
+			Entry<Double, IRenderCall> firstEntry = callbackMap.firstEntry();
 			if(firstEntry == null) {
 				setInvalid();
 			}
@@ -171,7 +171,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 
 		@Override
 		public boolean navigateToLast() {
-			Entry<Double, IRenderCallback> lastEntry = callbackMap.lastEntry();
+			Entry<Double, IRenderCall> lastEntry = callbackMap.lastEntry();
 			if(lastEntry == null) {
 				setInvalid();
 			}
@@ -194,7 +194,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 		}
 
 		@Override
-		public IRenderCallback getCurrentCallback() {
+		public IRenderCall getCurrentCallback() {
 			checkValid();
 			return currentCallback;
 		}
@@ -212,7 +212,7 @@ public class RenderLayerStack implements IRenderLayerStack {
 		
 		synchronized (base) {
 			Iterator<Double> positionsIterator = base.getPositions().iterator();
-			Iterator<IRenderCallback> callbacksIterator = base.getCallbacks().iterator();
+			Iterator<IRenderCall> callbacksIterator = base.getCallbacks().iterator();
 			
 			for(int i = 0; i < base.getStackSize(); i++) {
 				result.addCallbackAt(positionsIterator.next(), callbacksIterator.next());

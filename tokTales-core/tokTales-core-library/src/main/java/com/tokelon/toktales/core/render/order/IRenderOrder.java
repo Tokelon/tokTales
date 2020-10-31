@@ -103,7 +103,7 @@ public interface IRenderOrder {
 	 * @param callback
 	 * @return True if the call was immediately added, false if not.
 	 */
-	public boolean registerCall(String layerName, double position, IRenderCallback callback);
+	public boolean registerCall(String layerName, double position, IRenderCall callback);
 	
 	/** Removes the registered call for the given layer name and position.
 	 * <br><br>
@@ -410,7 +410,7 @@ public interface IRenderOrder {
 		 * @return The callback for the current position.
 		 * @throws IllegalStateException If the current position is invalid.
 		 */
-		public IRenderCallback getCurrentCallback();
+		public IRenderCall getCurrentCallback();
 		
 	}
 	

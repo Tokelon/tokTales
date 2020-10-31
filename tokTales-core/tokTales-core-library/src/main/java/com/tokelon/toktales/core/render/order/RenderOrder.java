@@ -216,7 +216,7 @@ public class RenderOrder implements IRenderOrder {
 
 	
 	@Override
-	public synchronized boolean registerCall(String layerName, double position, IRenderCallback callback) {
+	public synchronized boolean registerCall(String layerName, double position, IRenderCall callback) {
 		IRenderLayerStack registerStack = registerMap.get(layerName);
 		if(registerStack == null) {
 			registerStack = new RenderLayerStack();
@@ -654,7 +654,7 @@ public class RenderOrder implements IRenderOrder {
 		}
 
 		@Override
-		public IRenderCallback getCurrentCallback() {
+		public IRenderCall getCurrentCallback() {
 			checkValid();
 			return currentStackNavigator.getCurrentCallback();
 		}

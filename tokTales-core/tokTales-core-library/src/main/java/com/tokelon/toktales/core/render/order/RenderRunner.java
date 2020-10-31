@@ -23,7 +23,7 @@ public class RenderRunner {
 					String currentLayer = navigator.getCurrentLayer();
 					
 					double currentPosition = navigator.getCurrentPosition();
-					IRenderCallback callback = navigator.getCurrentCallback();
+					IRenderCall callback = navigator.getCurrentCallback();
 					
 					//System.out.println(String.format("%d : %s | ", currentIndex, currentPosition));
 					callback.renderCall(currentLayer, currentPosition);

@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.game.state.render;
 
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.order.IRenderCall;
 import com.tokelon.toktales.core.render.renderer.IRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.screen.view.IViewTransformer;
 /** Manages the rendering context for a state.
  * Can be used as the main renderer.
  */
-public interface IGameStateRenderer extends ISurfaceCallback, IRenderCallback {
+public interface IGameStateRenderer extends ISurfaceCallback, IRenderCall {
 	/* TODO:
 	 * Move render order into here?
 	 * Maybe add prepare() and call in gamestate before calling render order

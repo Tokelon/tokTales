@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.render.order;
 import com.tokelon.toktales.tools.core.annotations.compatibility.CompatFunctionalInterface;
 
 @CompatFunctionalInterface
-public interface IRenderCallback {
+public interface IRenderCall {
 	// add prepare() and isReady()/canRender() ?
 	// add callCount ?
 

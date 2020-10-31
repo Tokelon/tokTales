@@ -3,12 +3,6 @@ package com.tokelon.toktales.core.render.order;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.tokelon.toktales.core.render.order.IRenderCallback;
-import com.tokelon.toktales.core.render.order.IRenderLayerStack;
-import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.core.render.order.RenderOrder;
-import com.tokelon.toktales.core.render.order.RenderRunner;
-
 public class TestRenderOrder {
 
 
@@ -97,10 +91,10 @@ public class TestRenderOrder {
 
 
 				synchronized(stack) {
-					Iterator<IRenderCallback> renderCallbackIterator = stack.getCallbacks().iterator();
+					Iterator<IRenderCall> renderCallbackIterator = stack.getCallbacks().iterator();
 					Iterator<Double> positionIterator = stack.getPositions().iterator();
 					while(renderCallbackIterator.hasNext()) {
-						IRenderCallback callback = renderCallbackIterator.next();
+						IRenderCall callback = renderCallbackIterator.next();
 						double position = positionIterator.next();
 
 						callback.renderCall(layerName, position);
@@ -122,7 +116,7 @@ public class TestRenderOrder {
 	}
 	
 	
-	private static class TestRenderCallback implements IRenderCallback {
+	private static class TestRenderCallback implements IRenderCall {
 		
 		private final String description;
 		

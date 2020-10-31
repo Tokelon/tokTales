@@ -24,7 +24,7 @@ public interface IRenderLayerStack {	//IRenderStack
 	 * @param callback The callback.
 	 * 
 	 */
-	public void addCallbackAt(double position, IRenderCallback callback);
+	public void addCallbackAt(double position, IRenderCall callback);
 	//public void setPreCallback(double prePosition, IRenderCallback callback);
 	//public void setPostCallback(double postPosition, IRenderCallback callback);
 	
@@ -44,7 +44,7 @@ public interface IRenderLayerStack {	//IRenderStack
 	 * @param position
 	 * @return The callback for the given positions, or null if there is none.
 	 */
-	public IRenderCallback getCallbackAt(double position);
+	public IRenderCall getCallbackAt(double position);
 	//public IRenderCallback getPreCallback(double prePosition);
 	//public IRenderCallback getPostCallback(double postPosition);
 	
@@ -54,7 +54,7 @@ public interface IRenderLayerStack {	//IRenderStack
 	 * 
 	 * @return An unmodifiable collection containing all callbacks sorted from lowest to highest position.
 	 */
-	public Collection<IRenderCallback> getCallbacks();
+	public Collection<IRenderCall> getCallbacks();
 	
 	/** Note that when iterating over the returned collection you must synchronize on this object to ensure thread safety.
 	 * 
@@ -170,7 +170,7 @@ public interface IRenderLayerStack {	//IRenderStack
 		 * @return The callback for the current position.
 		 * @throws IllegalStateException If the current position is invalid.
 		 */
-		public IRenderCallback getCurrentCallback();
+		public IRenderCall getCurrentCallback();
 		
 	}
 	
