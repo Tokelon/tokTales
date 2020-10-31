@@ -31,7 +31,7 @@ public class RenderRunner {
 						((IMultiRenderCall) callback).updatePosition(currentLayer, currentPosition); // TODO: Separate this in API?
 					}
 
-					callback.renderCall();
+					callback.render();
 				}
 				while (navigator.navigateToNextValidPosition());
 			}

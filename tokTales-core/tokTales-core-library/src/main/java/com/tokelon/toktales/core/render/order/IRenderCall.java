@@ -8,7 +8,7 @@ public interface IRenderCall {
 
 	/** Renders this call's content.
 	 */
-	public void renderCall(); // int calls
+	public void render(); // int calls
 
 	/**
 	 * @return A brief description or name for this call.

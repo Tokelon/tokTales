@@ -133,7 +133,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 	}
 
 	@Override
-	public void renderCall() {
+	public void render() {
 		if(!hasView) {
 			assert false : ASSERT_NOT_READY;
 			return;

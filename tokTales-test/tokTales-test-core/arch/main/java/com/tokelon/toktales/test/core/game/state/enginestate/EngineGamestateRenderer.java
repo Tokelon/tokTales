@@ -24,7 +24,7 @@ public class EngineGamestateRenderer extends AbstractGameStateRenderer implement
 
 	
 	@Override
-	public void renderCall() {
+	public void render() {
 		// TODO Auto-generated method stub
 
 	}

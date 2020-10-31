@@ -12,7 +12,7 @@ public class UserGamestateRenderer extends AbstractGameStateRenderer {
 
 	
 	@Override
-	public void renderCall() {
+	public void render() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -24,7 +24,7 @@ public class EmptyGameStateRenderer extends AbstractGameStateRenderer {
 
 	
 	@Override
-	public void renderCall() { }
+	public void render() { }
 
 	@Override
 	public String getDescription() {

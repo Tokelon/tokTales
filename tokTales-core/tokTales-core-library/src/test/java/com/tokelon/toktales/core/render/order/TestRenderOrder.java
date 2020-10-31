@@ -97,7 +97,7 @@ public class TestRenderOrder {
 						IRenderCall callback = renderCallbackIterator.next();
 						double position = positionIterator.next();
 
-						callback.renderCall(layerName, position);
+						callback.render(layerName, position);
 					}
 				}
 
