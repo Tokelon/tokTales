@@ -28,18 +28,18 @@ public class RenderContextManager implements IRenderContextManager {
 
 
 	@Override
-	public boolean isCreated() {
+	public boolean isContextCreated() {
 		return isCreated;
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isContextValid() {
 		return isValid;
 	}
 
 
 	@Override
-	public void addManagedRenderer(IRenderContext context) {
+	public void addContext(IRenderContext context) {
 		if(renderContextList.contains(context)) {
 			return;
 		}
@@ -56,7 +56,7 @@ public class RenderContextManager implements IRenderContextManager {
 	}
 
 	@Override
-	public boolean removeManagedRenderer(IRenderContext context) {
+	public boolean removeContext(IRenderContext context) {
 		boolean contains = renderContextList.contains(context);
 		if(contains && isCreated) {
 			context.contextDestroyed();
@@ -67,7 +67,7 @@ public class RenderContextManager implements IRenderContextManager {
 	}
 
 	@Override
-	public boolean hasManagedRenderer(IRenderContext context) {
+	public boolean hasContext(IRenderContext context) {
 		return renderContextList.contains(context);
 	}
 

@@ -130,14 +130,14 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 		
 		public void register() {
 			// Add to managed renderers
-			gamestate.getStateRenderer().getContextManager().addManagedRenderer(dialogRenderer);
+			gamestate.getStateRenderer().getContextManager().addContext(dialogRenderer);
 
 			// Add to render order
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DIALOG, this);
 		}
 		
 		public void unregister() {
-			gamestate.getStateRenderer().getContextManager().removeManagedRenderer(dialogRenderer);
+			gamestate.getStateRenderer().getContextManager().removeContext(dialogRenderer);
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(CALLBACK_POSITION_DIALOG);
 		}
 

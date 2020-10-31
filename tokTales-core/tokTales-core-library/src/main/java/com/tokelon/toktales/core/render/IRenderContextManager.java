@@ -6,12 +6,12 @@ public interface IRenderContextManager extends IRenderContext {
 
 
 	// Move into IRenderContext?
-	public boolean isCreated();
-	public boolean isValid();
+	public boolean isContextCreated();
+	public boolean isContextValid();
 
-	public void addManagedRenderer(IRenderContext context);
-	public boolean removeManagedRenderer(IRenderContext context);
-	public boolean hasManagedRenderer(IRenderContext context);
+	public void addContext(IRenderContext context);
+	public boolean removeContext(IRenderContext context);
+	public boolean hasContext(IRenderContext context);
 
 	public List<IRenderContext> getContextList();
 

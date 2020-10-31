@@ -97,11 +97,11 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 		
 		this.renderContextManager = new RenderContextManager();
 
-		getContextManager().addManagedRenderer(this.mapRenderer = mapRendererFactory.createForTypedGamestate(gamestate));
-		getContextManager().addManagedRenderer(this.playerRenderer = playerRendererFactory.createForTypedGamestate(gamestate));
-		getContextManager().addManagedRenderer(this.entityRenderer = entityRendererFactory.createForTypedGamestate(gamestate));
-		getContextManager().addManagedRenderer(this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate));
-		getContextManager().addManagedRenderer(this.objectRenderer = objecRendererFactory.createForTypedGamestate(gamestate));
+		getContextManager().addContext(this.mapRenderer = mapRendererFactory.createForTypedGamestate(gamestate));
+		getContextManager().addContext(this.playerRenderer = playerRendererFactory.createForTypedGamestate(gamestate));
+		getContextManager().addContext(this.entityRenderer = entityRendererFactory.createForTypedGamestate(gamestate));
+		getContextManager().addContext(this.debugRenderer = debugRendererFactory.createForTypedGamestate(gamestate));
+		getContextManager().addContext(this.objectRenderer = objecRendererFactory.createForTypedGamestate(gamestate));
 		
 		this.defaultViewTransformer = new DefaultViewTransformer();
 		this.currentViewTransformer = defaultViewTransformer;
