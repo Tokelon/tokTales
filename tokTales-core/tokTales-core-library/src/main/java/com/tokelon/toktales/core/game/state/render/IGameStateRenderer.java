@@ -2,6 +2,7 @@ package com.tokelon.toktales.core.game.state.render;
 
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.render.IRenderCall;
+import com.tokelon.toktales.core.render.IRenderContextManager;
 import com.tokelon.toktales.core.render.renderer.IRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
@@ -11,7 +12,7 @@ import com.tokelon.toktales.core.screen.view.IViewTransformer;
 /** Manages the rendering context for a state.
  * Can be used as the main renderer.
  */
-public interface IGameStateRenderer extends ISurfaceCallback, IRenderCall {
+public interface IGameStateRenderer extends ISurfaceCallback, IRenderCall, IRenderContextManager {
 	/* TODO:
 	 * Move render order into here?
 	 * Maybe add prepare() and call in gamestate before calling render order
@@ -50,16 +51,5 @@ public interface IGameStateRenderer extends ISurfaceCallback, IRenderCall {
 	
 	
 	public ITextureCoordinator getTextureCoordinator();
-	
-	
-	// TODO: Implement with abstract class
-	public void addManagedRenderer(String name, IRenderer renderer); // what if the name is taken?
-	public IRenderer getManagedRenderer(String name);
-	public IRenderer removeManagedRenderer(String name); // better pass IRenderer instead of name?
-	public boolean hasManagedRenderer(String name);
-	
-	// Do like above or like below?
-	//public void addManagedRenderer(IRenderer renderer);
-	//public boolean removeManagedRenderer(IRenderer renderer);
 	
 }
