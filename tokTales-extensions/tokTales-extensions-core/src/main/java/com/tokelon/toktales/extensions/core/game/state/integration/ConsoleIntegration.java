@@ -97,7 +97,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		}
 		
 		@Override
-		public void renderCall(String layerName, double stackPosition) {
+		public void renderCall() {
 			renderer.drawConsoleOverlay(controller);
 		}
 

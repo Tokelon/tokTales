@@ -14,6 +14,7 @@ import com.tokelon.toktales.core.game.model.map.IBlockMap;
 import com.tokelon.toktales.core.game.model.map.ILevelReference;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
+import com.tokelon.toktales.core.render.IMultiRenderCall;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
@@ -36,7 +37,7 @@ import com.tokelon.toktales.extensions.core.game.renderer.IObjectRenderer.IObjec
 import com.tokelon.toktales.extensions.core.game.renderer.IPlayerRenderer.IPlayerRendererFactory;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
-public class LocalMapStateRenderer implements ILocalMapStateRenderer {
+public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRenderCall {
 
 	private static final String ASSERT_NOT_READY = "renderer not ready";
 	
@@ -67,7 +68,10 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	private IViewTransformer currentViewTransformer;
 	private Matrix4f currentProjectionMatrix;
 	private ISurface currentSurface;
-	
+
+	private String layer;
+	private double position;
+
 
 	private final IMapRenderer mapRenderer;
 	private final IPlayerRenderer playerRenderer;
@@ -77,7 +81,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	
 	private final ITextureCoordinator textureCoordinator;
 	private final ILocalMapGamestate gamestate;
-	
+
 	@Inject
 	public LocalMapStateRenderer(
 			IPlayerRendererFactory playerRendererFactory,
@@ -120,21 +124,27 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer {
 	public boolean isDebugRenderingEnabled() {
 		return debugRenderingEnabled;
 	}
-	
-	
+
+
 	@Override
-	public void renderCall(String layerName, double stackPosition) {
+	public void updatePosition(String layer, double position) {
+		this.layer = layer;
+		this.position = position;
+	}
+
+	@Override
+	public void renderCall() {
 		if(!hasView) {
 			assert false : ASSERT_NOT_READY;
 			return;
 		}
 		
-		if(IRenderOrder.LAYER_BOTTOM.equals(layerName) && stackPosition == CALLBACK_POSITION_PREPARE) {
+		if(IRenderOrder.LAYER_BOTTOM.equals(layer) && position == CALLBACK_POSITION_PREPARE) {
 			prepare();
 			clearDraw();
 		}
 		else {
-			renderLayerInternal(layerName, stackPosition);
+			renderLayerInternal(layer, position);
 		}
 	}
 

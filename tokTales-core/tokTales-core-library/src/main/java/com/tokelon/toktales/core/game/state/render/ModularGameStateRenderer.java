@@ -103,7 +103,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 	
 	
 	@Override
-	public void renderCall(String layerName, double stackPosition) {
+	public void renderCall() {
 		if(!hasView) {
 			return;
 		}

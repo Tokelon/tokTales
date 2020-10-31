@@ -146,7 +146,7 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 
 		
 		@Override
-		public void renderCall(String layerName, double stackPosition) {
+		public void renderCall() {
 			// This is the render call
 			
 			dialogRenderer.drawDialog(gamescene.getDialogController());

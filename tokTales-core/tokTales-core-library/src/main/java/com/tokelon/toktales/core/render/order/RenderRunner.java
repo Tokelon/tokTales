@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.render.order;
 
+import com.tokelon.toktales.core.render.IMultiRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder.IOrderNavigator;
 
 public class RenderRunner {
@@ -26,7 +27,11 @@ public class RenderRunner {
 					IRenderCall callback = navigator.getCurrentCallback();
 					
 					//System.out.println(String.format("%d : %s | ", currentIndex, currentPosition));
-					callback.renderCall(currentLayer, currentPosition);
+					if(callback instanceof IMultiRenderCall) {
+						((IMultiRenderCall) callback).updatePosition(currentLayer, currentPosition); // TODO: Separate this in API?
+					}
+
+					callback.renderCall();
 				}
 				while (navigator.navigateToNextValidPosition());
 			}
