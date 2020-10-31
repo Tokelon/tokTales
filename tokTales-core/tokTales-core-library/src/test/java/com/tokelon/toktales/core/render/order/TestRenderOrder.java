@@ -1,5 +1,6 @@
 package com.tokelon.toktales.core.render.order;
 
+import com.tokelon.toktales.core.render.IMultiRenderCall;
 import com.tokelon.toktales.core.render.IRenderCall;
 
 import java.util.Collection;
@@ -99,7 +100,11 @@ public class TestRenderOrder {
 						IRenderCall callback = renderCallbackIterator.next();
 						double position = positionIterator.next();
 
-						callback.render(layerName, position);
+						if(callback instanceof IMultiRenderCall) {
+							((IMultiRenderCall) callback).updatePosition(layerName, position);
+						}
+
+						callback.render();
 					}
 				}
 
@@ -118,7 +123,7 @@ public class TestRenderOrder {
 	}
 	
 	
-	private static class TestRenderCallback implements IRenderCall {
+	private static class TestRenderCallback implements IMultiRenderCall {
 		
 		private final String description;
 		
@@ -126,10 +131,15 @@ public class TestRenderOrder {
 			this.description = description;
 		}
 
-		
+
 		@Override
-		public void renderCall(String layerName, double stackPosition) {
-			System.out.println(String.format("Callback for layer: %s with position: %s", layerName, stackPosition));
+		public void updatePosition(String layer, double position) {
+			System.out.println(String.format("Update position: %s with position: %s", layer, position));
+		}
+
+		@Override
+		public void render() {
+			System.out.println("Render call");
 		}
 
 		@Override
