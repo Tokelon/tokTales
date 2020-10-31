@@ -1,5 +1,7 @@
 package com.tokelon.toktales.core.render.order;
 
+import com.tokelon.toktales.core.render.IRenderCall;
+
 import java.util.Collection;
 
 /** A continuous list of render calls ordered by the positions they have been assigned to.

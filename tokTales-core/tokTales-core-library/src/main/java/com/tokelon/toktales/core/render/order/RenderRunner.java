@@ -1,6 +1,7 @@
 package com.tokelon.toktales.core.render.order;
 
 import com.tokelon.toktales.core.render.IMultiRenderCall;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder.IOrderNavigator;
 
 public class RenderRunner {

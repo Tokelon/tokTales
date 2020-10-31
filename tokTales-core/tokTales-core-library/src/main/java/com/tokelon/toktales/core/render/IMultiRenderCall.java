@@ -1,7 +1,5 @@
 package com.tokelon.toktales.core.render;
 
-import com.tokelon.toktales.core.render.order.IRenderCall;
-
 public interface IMultiRenderCall extends IRenderCall {
 
 

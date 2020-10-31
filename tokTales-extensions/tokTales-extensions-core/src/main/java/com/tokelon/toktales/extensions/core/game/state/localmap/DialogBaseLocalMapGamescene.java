@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.scene.InjectGameScene;
 import com.tokelon.toktales.core.game.world.IWorldspace;
-import com.tokelon.toktales.core.render.order.IRenderCall;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extensions.core.game.controller.IDialogController;

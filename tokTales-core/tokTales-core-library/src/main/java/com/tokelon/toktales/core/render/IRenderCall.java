@@ -1,4 +1,4 @@
-package com.tokelon.toktales.core.render.order;
+package com.tokelon.toktales.core.render;
 
 import com.tokelon.toktales.tools.core.annotations.compatibility.CompatFunctionalInterface;
 

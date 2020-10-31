@@ -1,7 +1,7 @@
 package com.tokelon.toktales.core.game.state.render;
 
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.render.order.IRenderCall;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.renderer.IRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
