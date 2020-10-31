@@ -5,8 +5,6 @@ import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import org.joml.Matrix4f;
 
 public interface IRenderContext {
-	//public boolean isCreated();
-	//public boolean isValid();
 
 
 	/** Called when the render context has been created.

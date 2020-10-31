@@ -12,7 +12,7 @@ import com.tokelon.toktales.core.screen.view.IViewTransformer;
 /** Manages the rendering context for a state.
  * Can be used as the main renderer.
  */
-public interface IGameStateRenderer extends ISurfaceCallback, IRenderCall, IRenderContextManager {
+public interface IGameStateRenderer extends IRenderCall {
 	/* TODO:
 	 * Move render order into here?
 	 * Maybe add prepare() and call in gamestate before calling render order
@@ -51,5 +51,9 @@ public interface IGameStateRenderer extends ISurfaceCallback, IRenderCall, IRend
 	
 	
 	public ITextureCoordinator getTextureCoordinator();
-	
+
+	public IRenderContextManager getContextManager();
+
+	public ISurfaceCallback getSurfaceCallback();
+
 }

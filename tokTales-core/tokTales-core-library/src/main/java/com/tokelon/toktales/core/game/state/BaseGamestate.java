@@ -889,13 +889,21 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		if(renderer == null) {
 			throw new NullPointerException();
 		}
-		
-		getEngine().getRenderService().getSurfaceManager().removeCallback(this.gameStateRenderer);
-		
+
+		if(gameStateRenderer != null) {
+			getEngine().getRenderService().getSurfaceManager().removeCallback(gameStateRenderer.getSurfaceCallback());
+		}
+
 		gamestateInjector.injectInto(renderer);
 		this.gameStateRenderer = renderer;
-		
-		getEngine().getRenderService().getSurfaceManager().addCallback(renderer);
+
+		ISurfaceCallback surfaceCallback = renderer.getSurfaceCallback();
+		if(surfaceCallback == null) {
+			logger.debug("No surface callback was registered for state renderer: {} [{}]", renderer.getDescription(), renderer);
+		}
+		else {
+			getEngine().getRenderService().getSurfaceManager().addCallback(surfaceCallback);
+		}
 	}
 
 	/** Sets the state input handler.

@@ -12,8 +12,6 @@ import com.tokelon.toktales.extensions.core.game.state.integration.IConsoleInteg
 public class ConsoleIntegration implements IConsoleIntegration {
 
 	
-	public static final String CONSOLE_OVERLAY_RENDERER_NAME = "console_integration_overlay_renderer";
-	
 	private static final double DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION = 100d;
 
 	
@@ -87,12 +85,12 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		}
 		
 		public void register() {
-			gamestate.getStateRenderer().addManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME, renderer);
+			gamestate.getStateRenderer().getContextManager().addManagedRenderer(renderer);
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
 		}
 		
 		public void unregister() {
-			gamestate.getStateRenderer().removeManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME);
+			gamestate.getStateRenderer().getContextManager().removeManagedRenderer(renderer);
 			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION);
 		}
 		

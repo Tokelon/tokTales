@@ -1,26 +1,28 @@
 package com.tokelon.toktales.core.game.state.render;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.joml.Matrix4f;
-
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.render.IRenderContextManager;
+import com.tokelon.toktales.core.render.RenderContextManager;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.core.render.renderer.IRenderer;
 import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
 import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 import com.tokelon.toktales.core.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 
-public class ModularGameStateRenderer implements IModularGameStateRenderer {
+import org.joml.Matrix4f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ModularGameStateRenderer implements IModularGameStateRenderer, ISurfaceManager.ISurfaceCallback {
 
 	
 	private static final double CALLBACK_RENDER = 0d;
@@ -30,17 +32,17 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 	private final IViewTransformer contextViewTransformer;
 
 	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<>();
-	private final Map<String, IRenderer> managedRendererMap = new HashMap<>();
 
 	private final List<IViewTransformer> viewTransformerList = new ArrayList<>();
 	
 	
 	private boolean hasSurface = false;
-	private boolean hasView = false;
+	private boolean surfaceIsValid = false;
 	
 	private ISurface currentSurface;
-	
-	
+
+
+	private final IRenderContextManager renderContextManager;
 	private final ITextureCoordinator textureCoordinator;
 	private final IRenderingStrategy mStrategy;
 	private final IGameState mGamestate;
@@ -49,6 +51,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 		this.mStrategy = strategy;
 		this.mGamestate = gamestate;
 
+		this.renderContextManager = new RenderContextManager();
 		this.contextViewTransformer = new DefaultViewTransformer();
 		this.textureCoordinator = new DefaultTextureCoordinator(gamestate.getGame().getContentManager().getTextureManager());
 
@@ -65,7 +68,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 		if(hasSurface) {
 			renderer.contextCreated();
 			
-			if(hasView) {
+			if(surfaceIsValid) {
 				IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), getCurrentCamera(), name);
 				
 				renderer.contextChanged(rendererViewTransformer, currentSurface.getProjectionMatrix());
@@ -104,7 +107,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 	
 	@Override
 	public void render() {
-		if(!hasView) {
+		if(!surfaceIsValid) {
 			return;
 		}
 		
@@ -155,56 +158,30 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 		return textureCoordinator;
 	}
 
-
 	@Override
-	public void addManagedRenderer(String name, IRenderer renderer) {
-		managedRendererMap.put(name, renderer);
-		
-		if(hasSurface) {
-			renderer.contextCreated();
-			
-			if(hasView) {
-				renderer.contextChanged(contextViewTransformer, contextProjectionMatrix);
-			}
-		}
+	public IRenderContextManager getContextManager() {
+		return renderContextManager;
 	}
 
 	@Override
-	public IRenderer getManagedRenderer(String name) {
-		return managedRendererMap.get(name);
+	public ISurfaceManager.ISurfaceCallback getSurfaceCallback() {
+		return this;
 	}
 
-	@Override
-	public IRenderer removeManagedRenderer(String name) {
-		IRenderer renderer = managedRendererMap.get(name);
-		if(renderer != null && hasSurface) {
-			renderer.contextDestroyed();
-		}
-		
-		return managedRendererMap.remove(name);
-	}
-
-	@Override
-	public boolean hasManagedRenderer(String name) {
-		return managedRendererMap.containsKey(name);
-	}
-	
-	
 
 	// synchronize when iterating over renderers?
 	
 	@Override
 	public void surfaceCreated(ISurface surface) {
-		currentSurface = surface;
-		hasSurface = true;
+		this.surfaceIsValid = false;
+		this.currentSurface = surface;
+		this.hasSurface = true;
 		
 		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
 			segmentRenderer.contextCreated();
 		}
-		
-		for(IRenderer managedRenderer: managedRendererMap.values()) {
-			managedRenderer.contextCreated();
-		}
+
+		renderContextManager.contextCreated();
 	}
 
 	@Override
@@ -218,10 +195,9 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 
 		contextProjectionMatrix.set(surface.getProjectionMatrix());
 
-		// Really do this before renderer callbacks?
-		hasView = true;
 
-		
+		this.surfaceIsValid = true;
+
 		viewTransformerList.clear();
 		
 		for(String rendererName: segmentRendererMap.keySet()) {
@@ -234,11 +210,9 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 			
 			renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);
 		}
-		
-		for(IRenderer managedRenderer: managedRendererMap.values()) {
-			managedRenderer.contextChanged(contextViewTransformer, contextProjectionMatrix);
-		}
-		
+
+		renderContextManager.contextChanged(contextViewTransformer, contextProjectionMatrix);
+
 
 		/* Implement camera adjust ?
 		 * 
@@ -256,17 +230,15 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 
 	@Override
 	public void surfaceDestroyed(ISurface surface) {
-		currentSurface = null;
-		hasSurface = false;
-		hasView = false;
+		this.currentSurface = null;
+		this.hasSurface = false;
+		this.surfaceIsValid = false;
 		
 		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
 			segmentRenderer.contextDestroyed();
 		}
-		
-		for(IRenderer managedRenderer: managedRendererMap.values()) {
-			managedRenderer.contextDestroyed();
-		}
+
+		renderContextManager.contextDestroyed();
 	}
-	
+
 }
