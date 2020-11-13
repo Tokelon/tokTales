@@ -17,7 +17,7 @@ buildscript {
 
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
 
-		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.17.2"
+		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.18.0"
 	}
 }
 
@@ -203,7 +203,7 @@ subprojects { -> project
 				}
 			}
 
-			//clientConfig.info.setBuildNumber(System.getProperty('build.number'))
+			clientConfig.info.setBuildNumber(project.findProperty('artifactory.buildNumber') ?: clientConfig.info.getBuildNumber())
 		}
 	}
 
@@ -285,7 +285,7 @@ subprojects { -> project
 					}
 				}
 
-				//clientConfig.info.setBuildNumber(System.getProperty('build.number'))
+				clientConfig.info.setBuildNumber(project.findProperty('artifactory.buildNumber') ?: clientConfig.info.getBuildNumber())
 			}
 		}
 
