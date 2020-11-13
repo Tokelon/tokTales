@@ -12,9 +12,6 @@ buildscript {
 	dependencies {
 		classpath 'com.android.tools.build:gradle:4.0.1'
 
-		// TODO: Replace with 'maven-publish' plugin, as it supports Android by now
-		classpath 'digital.wup:android-maven-publish:3.6.3'
-
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
 
 		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.18.0"
@@ -102,6 +99,7 @@ def pomConfig = {
 	}
 }
 
+
 subprojects { -> project
 	apply plugin: 'com.jfrog.bintray'
 
@@ -147,6 +145,7 @@ subprojects { -> project
 				maven(MavenPublication) {
 					version project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))
 					from(components.java)
+
 					artifact sourcesJar
 					artifact javadocJar
 
@@ -237,6 +236,33 @@ subprojects { -> project
 				archives sourcesJar
 			}
 
+
+			project.apply plugin: 'maven-publish'
+
+			publishing {
+				repositories {
+					maven {
+						name = "GitHubPackages"
+						url = uri("https://maven.pkg.github.com/" + (project.findProperty("gpr.repo") ?: System.getenv("GITHUB_REPOSITORY")))
+						credentials {
+							username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+							password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+						}
+					}
+				}
+				publications {
+					maven(MavenPublication) {
+						version project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))
+						from(components.release)
+
+						artifact sourcesJar
+						artifact javadocJar
+
+						pom pomConfig
+					}
+				}
+			}
+
 			bintray {
 				user = project.findProperty('bintray.user')
 				key = project.findProperty('bintray.key')
@@ -286,30 +312,6 @@ subprojects { -> project
 				}
 
 				clientConfig.info.setBuildNumber(project.findProperty('artifactory.buildNumber') ?: clientConfig.info.getBuildNumber())
-			}
-		}
-
-
-		project.apply plugin: 'digital.wup.android-maven-publish'
-
-		publishing {
-			repositories {
-				maven {
-					name = "GitHubPackages"
-					url = uri("https://maven.pkg.github.com/" + (project.findProperty("gpr.repo") ?: System.getenv("GITHUB_REPOSITORY")))
-					credentials {
-						username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-						password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-					}
-				}
-			}
-			publications {
-				maven(MavenPublication) {
-					version project.version + (project.hasProperty("bintray.version") ? "" : ("-" + (project.findProperty("buildNumber") ?: "SNAPSHOT")))
-					from components.android
-
-					pom pomConfig
-				}
 			}
 		}
 	}
