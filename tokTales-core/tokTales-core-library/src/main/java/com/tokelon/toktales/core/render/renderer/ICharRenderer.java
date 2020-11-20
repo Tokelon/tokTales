@@ -3,7 +3,7 @@ package com.tokelon.toktales.core.render.renderer;
 import com.tokelon.toktales.core.content.graphics.IRGBAColor;
 import com.tokelon.toktales.core.content.text.IFont;
 
-public interface ICharRenderer extends IChunkRenderer {
+public interface ICharRenderer extends IBatchRenderer {
 	// Maybe use ICharPaint object that contains the properties below and pass when drawing?
 
 

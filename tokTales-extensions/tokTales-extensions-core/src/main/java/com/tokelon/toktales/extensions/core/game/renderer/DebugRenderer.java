@@ -256,14 +256,14 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private void drawText(String text, float posx, float posy, float fontSize, float charDistance) {
 		float x = posx, y = posy;
 		charRenderer.setColor(frameInfoColor);
-		charRenderer.startBatchDraw();
+		charRenderer.startBatch();
 		for(char c: text.toCharArray()) {
 			charRenderer.setPosition(x, y);
 			charRenderer.drawChar(c);
 			
 			x += fontSize + charDistance;
 		}
-		charRenderer.finishBatchDraw();
+		charRenderer.finishBatch();
 	}
 	
 	

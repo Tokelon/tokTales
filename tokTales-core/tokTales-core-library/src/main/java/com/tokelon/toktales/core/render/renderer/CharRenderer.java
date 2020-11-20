@@ -81,14 +81,14 @@ public class CharRenderer extends AbstractRenderer implements ICharRenderer {
 
 	
 	@Override
-	public void startBatchDraw() {
+	public void startBatch() {
 		fontDriver.use(getMatrixProjectionAndView());
 		
 		isInBatchDraw = true;
 	}
 	
 	@Override
-	public void finishBatchDraw() {
+	public void finishBatch() {
 		isInBatchDraw = false;
 		
 		fontDriver.release();

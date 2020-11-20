@@ -2,7 +2,7 @@ package com.tokelon.toktales.core.render.renderer;
 
 import com.tokelon.toktales.core.render.texture.ITexture;
 
-public interface IImageRenderer extends IChunkRenderer {
+public interface IImageRenderer extends IBatchRenderer {
 
 
 	//public void drawImage(IRenderTexture renderTexture, WRectangle target);

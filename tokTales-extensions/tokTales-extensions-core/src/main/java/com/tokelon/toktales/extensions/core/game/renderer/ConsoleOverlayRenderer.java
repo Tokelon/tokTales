@@ -173,7 +173,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		float vDist = textSize;
 		float currX = startX;
 		float currY = startY;
-		charRenderer.startBatchDraw();
+		charRenderer.startBatch();
 		try {
 			String consolePrompt = console.getPrompt();
 			int promptCodepointCount = consolePrompt.codePointCount(0, consolePrompt.length());
@@ -210,7 +210,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 			
 		}
 		finally {
-			charRenderer.finishBatchDraw();	
+			charRenderer.finishBatch();	
 		}
 	}
 	
