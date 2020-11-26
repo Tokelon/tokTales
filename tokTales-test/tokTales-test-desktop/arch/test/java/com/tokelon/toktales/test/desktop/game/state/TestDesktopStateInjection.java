@@ -10,7 +10,6 @@ import com.google.inject.Injector;
 import com.tokelon.toktales.test.core.game.state.enginestate.DefaultEngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.IEngineGamescene;
-import com.tokelon.toktales.test.desktop.game.state.DesktopTestStatesInjectModule;
 import com.tokelon.toktales.test.desktop.game.state.enginestate.DesktopEngineGamestateControlScheme;
 import com.tokelon.toktales.test.desktop.game.state.enginestate.DesktopEngineGamestateInputHandler;
 
@@ -36,7 +35,6 @@ public class TestDesktopStateInjection {
 		
 		assertNotSame(gamestate01, gamestate02);
 
-		assertNotSame(gamestate01.getRenderOrder(), gamestate02.getRenderOrder());
 		assertNotSame(gamestate01.getStateInput(), gamestate02.getStateInput());
 		
 		assertNotSame(gamestate01.getStateInputHandler(), gamestate02.getStateInputHandler());

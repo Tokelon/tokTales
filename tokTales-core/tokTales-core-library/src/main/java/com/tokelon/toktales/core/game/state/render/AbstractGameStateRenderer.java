@@ -1,8 +1,14 @@
 package com.tokelon.toktales.core.game.state.render;
 
+import org.joml.Matrix4f;
+
 import com.tokelon.toktales.core.game.model.ICamera;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.IRenderContextManager;
 import com.tokelon.toktales.core.render.RenderContextManager;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
+import com.tokelon.toktales.core.render.order.RenderOrder;
+import com.tokelon.toktales.core.render.order.RenderRunner;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
@@ -10,8 +16,6 @@ import com.tokelon.toktales.core.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
-
-import org.joml.Matrix4f;
 
 public abstract class AbstractGameStateRenderer implements IGameStateRenderer, ISurfaceManager.ISurfaceCallback {
 
@@ -25,6 +29,9 @@ public abstract class AbstractGameStateRenderer implements IGameStateRenderer, I
 
 	private ISurface currentSurface;
 
+	private final IRenderOrder renderOrder;
+	private final RenderRunner renderRunner;
+
 	private final IRenderContextManager renderContextManager;
 	private final ITextureCoordinator textureCoordinator;
 	
@@ -33,6 +40,9 @@ public abstract class AbstractGameStateRenderer implements IGameStateRenderer, I
 
 		this.renderContextManager = new RenderContextManager();
 		this.viewTransformer = new DefaultViewTransformer();
+		
+		this.renderOrder = new RenderOrder();
+		this.renderRunner = new RenderRunner(renderOrder);
 	}
 
 	
@@ -79,6 +89,11 @@ public abstract class AbstractGameStateRenderer implements IGameStateRenderer, I
 	public ISurfaceManager.ISurfaceCallback getSurfaceCallback() {
 		return this;
 	}
+	
+	@Override
+	public IRenderOrder getRenderOrder() {
+		return renderOrder;
+	}
 
 
 	@Override
@@ -91,6 +106,16 @@ public abstract class AbstractGameStateRenderer implements IGameStateRenderer, I
 		return currentSurface;
 	}
 	
+	
+	@Override
+	public IRenderCall getRenderCall(String renderName) {
+		return () -> {};
+	}
+	
+	@Override
+	public void renderState() {
+		renderRunner.run();
+	}
 	
 
 	@Override

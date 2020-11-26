@@ -224,7 +224,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	protected void registerMapRenderCallbacks(IGameState gamestate, IMapController mapController) {
 		IBlockMap map = mapController.getMap();
 		
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
+		IRenderOrder renderOrder = gamestate.getStateRenderer().getRenderOrder();
 		IGameStateRenderer renderer = gamestate.getStateRenderer();
 		synchronized (renderOrder) {
 			
@@ -235,7 +235,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 				
 				renderOrder.insertTaggedLayerAt(index, layerName, RENDER_LAYER_TAG);
 				IRenderLayerStack stack = renderOrder.getStackForIndex(index);
-				stack.addCallbackAt(0d, renderer);
+				stack.addCallbackAt(0d, renderer.getRenderCall(layerName));
 				
 				index++;
 			}
@@ -243,7 +243,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	}
 	
 	protected void unregisterMapRenderCallbacks(IGameState gamestate) {
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
+		IRenderOrder renderOrder = gamestate.getStateRenderer().getRenderOrder();
 
 		synchronized (renderOrder) {
 			// Remove previous map callbacks

@@ -5,8 +5,8 @@ import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.extensions.core.game.renderer.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extensions.core.game.renderer.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
+import com.tokelon.toktales.extensions.core.game.renderer.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extensions.core.game.state.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 
 public class ConsoleIntegration implements IConsoleIntegration {
@@ -86,12 +86,12 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		
 		public void register() {
 			gamestate.getStateRenderer().getContextManager().addContext(renderer);
-			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
+			gamestate.getStateRenderer().getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
 		}
 		
 		public void unregister() {
 			gamestate.getStateRenderer().getContextManager().removeContext(renderer);
-			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION);
+			gamestate.getStateRenderer().getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION);
 		}
 		
 		@Override

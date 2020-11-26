@@ -1,10 +1,20 @@
 package com.tokelon.toktales.core.game.state.render;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.joml.Matrix4f;
+
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.IRenderContextManager;
 import com.tokelon.toktales.core.render.RenderContextManager;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
+import com.tokelon.toktales.core.render.order.RenderOrder;
+import com.tokelon.toktales.core.render.order.RenderRunner;
 import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
 import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
@@ -15,17 +25,11 @@ import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 
-import org.joml.Matrix4f;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ModularGameStateRenderer implements IModularGameStateRenderer, ISurfaceManager.ISurfaceCallback {
 
 	
-	private static final double CALLBACK_RENDER = 0d;
+	private static final String STRATEGY_RENDER_CALL_DESCRIPTION = "Renders the strategy";
+	private static final double STRATEGY_RENDER_CALL_POSITION = 0d;
 
 	private final AccurateViewport contextViewport = new AccurateViewport();
 	private final Matrix4f contextProjectionMatrix = new Matrix4f();
@@ -42,23 +46,30 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	private ISurface currentSurface;
 
 
+	private final IRenderOrder renderOrder;
+	private final RenderRunner renderRunner;
+
+	private final StrategyRenderCall strategyRenderCall;
+
 	private final IRenderContextManager renderContextManager;
 	private final ITextureCoordinator textureCoordinator;
-	private final IRenderingStrategy mStrategy;
-	private final IGameState mGamestate;
+	private final IRenderingStrategy renderingStrategy;
+	private final IGameState gamestate;
 	
 	public ModularGameStateRenderer(IRenderingStrategy strategy, IGameState gamestate) {
-		this.mStrategy = strategy;
-		this.mGamestate = gamestate;
+		this.renderingStrategy = strategy;
+		this.gamestate = gamestate;
 
 		this.renderContextManager = new RenderContextManager();
 		this.contextViewTransformer = new DefaultViewTransformer();
 		this.textureCoordinator = new DefaultTextureCoordinator(gamestate.getGame().getContentManager().getTextureManager());
 
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
-		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(CALLBACK_RENDER, this);
+		this.renderOrder = new RenderOrder();
+		this.renderRunner = new RenderRunner(renderOrder);
+		
+		this.strategyRenderCall = new StrategyRenderCall();
+		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(STRATEGY_RENDER_CALL_POSITION, strategyRenderCall);
 	}
-	
 	
 	
 	@Override
@@ -69,7 +80,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 			renderer.contextCreated();
 			
 			if(surfaceIsValid) {
-				IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), getCurrentCamera(), name);
+				IViewTransformer rendererViewTransformer = renderingStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), getCurrentCamera(), name);
 				
 				renderer.contextChanged(rendererViewTransformer, currentSurface.getProjectionMatrix());
 			}
@@ -100,27 +111,24 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	
 	@Override
 	public IGameState getGamestate() {
-		return mGamestate;
+		return gamestate;
 	}
 	
 	
-	
 	@Override
-	public void render() {
-		if(!surfaceIsValid) {
-			return;
-		}
-		
-		//if(stackPosition == CALLBACK_RENDER)
-		
-		mStrategy.prepareFrame(this);
-		mStrategy.renderFrame(this);
-		//mStrategy.renderCall(this, layerName, stackPosition);
+	public IRenderCall getRenderCall(String renderName) {
+		return () -> {
+			ISegmentRenderer renderer = segmentRendererMap.get(renderName);
+			if(renderer != null) {
+				renderer.prepare(gamestate.getGame().getTimeManager().getGameTimeMillis());
+				renderer.drawFull(null);
+			}
+		};
 	}
 	
 	@Override
-	public String getDescription() {
-		return mStrategy.getDescription();
+	public void renderState() {
+		renderRunner.run();
 	}
 	
 	
@@ -136,6 +144,11 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	@Override
 	public ICamera getCurrentCamera() {
 		return getViewTransformer().getCurrentCamera();
+	}
+	
+	@Override
+	public IRenderOrder getRenderOrder() {
+		return renderOrder;
 	}
 	
 	@Override
@@ -205,7 +218,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 			ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
 			
 			
-			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(ModularGameStateRenderer.this, masterViewport, getCurrentCamera(), rendererName);
+			IViewTransformer rendererViewTransformer = renderingStrategy.createViewTransformerForRenderer(ModularGameStateRenderer.this, masterViewport, getCurrentCamera(), rendererName);
 			viewTransformerList.add(rendererViewTransformer);
 			
 			renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);
@@ -241,4 +254,27 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 		renderContextManager.contextDestroyed();
 	}
 
+	
+	
+	private class StrategyRenderCall implements IRenderCall {
+
+		@Override
+		public void render() {
+			if(!surfaceIsValid) {
+				return;
+			}
+			
+			//if(stackPosition == CALLBACK_RENDER)
+			
+			renderingStrategy.prepareFrame(ModularGameStateRenderer.this);
+			renderingStrategy.renderFrame(ModularGameStateRenderer.this);
+			//mStrategy.renderCall(this, layerName, stackPosition);			
+		}
+		
+		@Override
+		public String getDescription() {
+			return STRATEGY_RENDER_CALL_DESCRIPTION;
+		}
+	}
+	
 }

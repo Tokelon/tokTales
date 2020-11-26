@@ -9,7 +9,6 @@ import com.tokelon.toktales.core.game.state.render.IGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneAssignment;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneControl;
-import com.tokelon.toktales.core.render.order.IRenderOrder;
 
 public interface IGameState {
 
@@ -146,11 +145,6 @@ public interface IGameState {
 	//public IGameStateIntegrator getIntegrator();
 	
 	
-	/** Returns the render order for this state.
-	 * 
-	 * @return A render order.
-	 */
-	public IRenderOrder getRenderOrder();
 	
 	/** Returns the state renderer for this state.
 	 * 

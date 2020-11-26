@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.google.inject.Injector;
-import com.tokelon.toktales.test.core.game.state.CoreTestStatesInjectModule;
 import com.tokelon.toktales.test.core.game.state.enginestate.DefaultEngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestate;
 import com.tokelon.toktales.test.core.game.state.enginestate.EngineGamestateControlHandler;
@@ -37,8 +36,6 @@ public class TestCoreStateInjection {
 		
 		assertNotSame(gamestate01, gamestate02);
 
-		assertNotSame(gamestate01.getRenderOrder(), gamestate02.getRenderOrder());
-		
 		assertNotSame(gamestate01.getStateRenderer(), gamestate02.getStateRenderer());
 		assertNotSame(gamestate01.getStateControlHandler(), gamestate02.getStateControlHandler());
 	}

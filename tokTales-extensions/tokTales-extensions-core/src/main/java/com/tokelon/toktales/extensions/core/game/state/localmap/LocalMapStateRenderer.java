@@ -1,5 +1,7 @@
 package com.tokelon.toktales.extensions.core.game.state.localmap;
 
+import org.joml.Matrix4f;
+
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.tokelon.toktales.core.content.graphics.RGBAColor;
@@ -9,11 +11,14 @@ import com.tokelon.toktales.core.game.model.map.ILevelReference;
 import com.tokelon.toktales.core.game.model.map.IMapLayer;
 import com.tokelon.toktales.core.render.DebugRenderingEnabled;
 import com.tokelon.toktales.core.render.IMultiRenderCall;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.IRenderContextManager;
 import com.tokelon.toktales.core.render.IRenderToolkit;
 import com.tokelon.toktales.core.render.RenderContextManager;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
+import com.tokelon.toktales.core.render.order.RenderOrder;
+import com.tokelon.toktales.core.render.order.RenderRunner;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
@@ -33,17 +38,15 @@ import com.tokelon.toktales.extensions.core.game.renderer.IPlayerRenderer.IPlaye
 import com.tokelon.toktales.extensions.core.game.renderer.PlayerRenderer;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
-import org.joml.Matrix4f;
+public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceManager.ISurfaceCallback {
 
-public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRenderCall, ISurfaceManager.ISurfaceCallback {
-
+	
 	private static final String ASSERT_NOT_READY = "renderer not ready";
 	
-	
-	private static final String DESCRIPTION = "Renders the local map";
-	
-	private static final double CALLBACK_POSITION_PREPARE = -100d;
-	private static final double CALLBACK_POSITION_DEBUG = 5d;
+	private static final String MAP_RENDER_CALL_DESCRIPTION = "Render the local map";
+
+	private static final double MAP_RENDER_CALL_POSITION_MAP = 0d;
+	private static final double MAP_RENDER_CALL_POSITION_DEBUG = 5d;
 	
 	private static final RGBAColor CLEAR_COLOR = RGBAColor.createFromCode("#000");
 
@@ -67,9 +70,11 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 	private Matrix4f currentProjectionMatrix;
 	private ISurface currentSurface;
 
-	private String layer;
-	private double position;
 
+	private final IRenderOrder renderOrder;
+	private final RenderRunner renderRunner;
+	
+	private final MapRenderCall mapRenderCall;
 
 	private final IMapRenderer mapRenderer;
 	private final IPlayerRenderer playerRenderer;
@@ -106,11 +111,13 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 		this.defaultViewTransformer = new DefaultViewTransformer();
 		this.currentViewTransformer = defaultViewTransformer;
 		
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
-		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(CALLBACK_POSITION_PREPARE, this);
-		renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DEBUG, this);
+		this.renderOrder = new RenderOrder();
+		this.renderRunner = new RenderRunner(renderOrder);
+		
+		this.mapRenderCall = new MapRenderCall();
+		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(MAP_RENDER_CALL_POSITION_MAP, mapRenderCall);
+		renderOrder.getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(MAP_RENDER_CALL_POSITION_DEBUG, mapRenderCall);
 	}
-	
 	
 	
 	@Override
@@ -125,31 +132,16 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 
 
 	@Override
-	public void updatePosition(String layer, double position) {
-		this.layer = layer;
-		this.position = position;
-	}
-
-	@Override
-	public void render() {
+	public void renderState() {
 		if(!surfaceIsValid) {
 			assert false : ASSERT_NOT_READY;
 			return;
 		}
 		
-		if(IRenderOrder.LAYER_BOTTOM.equals(layer) && position == CALLBACK_POSITION_PREPARE) {
-			prepare();
-			clearDraw();
-		}
-		else {
-			renderLayerInternal(layer, position);
-		}
-	}
-
-	
-	@Override
-	public String getDescription() {
-		return DESCRIPTION;
+		prepare();
+		clearDraw();
+		
+		renderRunner.run();
 	}
 
 	
@@ -167,6 +159,10 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 		renderToolkit.clearSurface(CLEAR_COLOR);
 	}
 
+	@Override
+	public IRenderCall getRenderCall(String renderName) {
+		return () -> renderLayerInternal(renderName, 0d);
+	}
 	
 	@SuppressWarnings("unused") // TODO: Old - Remove
 	private void renderFrame() {
@@ -199,7 +195,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 	
 	private void renderLayerInternal(String layerName, double position) {
 		if(IRenderOrder.LAYER_TOP.equals(layerName)) {
-			if(debugRenderingEnabled && position == CALLBACK_POSITION_DEBUG) {
+			if(debugRenderingEnabled && position == MAP_RENDER_CALL_POSITION_DEBUG) {
 				debugRenderer.drawFull(options);
 			}
 		}
@@ -256,6 +252,11 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 		getViewTransformer().updateCamera(camera);
 	}
 	
+
+	@Override
+	public IRenderOrder getRenderOrder() {
+		return renderOrder;
+	}
 	
 	@Override
 	public boolean hasSurface() {
@@ -287,6 +288,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 		return this;
 	}
 
+	
 
 	/* Assumes that there is one view transformer for all renderers.
 	 * Possibly refactor this.
@@ -335,6 +337,29 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, IMultiRend
 
 		this.currentViewTransformer = defaultViewTransformer;
 		this.currentProjectionMatrix = null;
+	}
+	
+	
+	
+	private class MapRenderCall implements IMultiRenderCall {
+		private String layer;
+		private double position;
+		
+		@Override
+		public void render() {
+			renderLayerInternal(layer, position);
+		}
+		
+		@Override
+		public String getDescription() {
+			return MAP_RENDER_CALL_DESCRIPTION;
+		}
+
+		@Override
+		public void updatePosition(String layer, double position) {
+			this.layer = layer;
+			this.position = position;
+		}
 	}
 
 }
