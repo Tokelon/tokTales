@@ -4,11 +4,12 @@ import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager
 import com.tokelon.toktales.core.engine.IEngineContext;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
 
-public interface IConsoleOverlayRenderer extends ISegmentRenderer {
+public interface IConsoleOverlayRenderer extends ISingleRenderer {
+
 
 	//public ICamera getCustomCamera();
 	//public void enableCustomCamera(boolean enable);

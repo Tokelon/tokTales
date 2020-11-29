@@ -24,19 +24,18 @@ import com.tokelon.toktales.core.game.world.IWorld;
 import com.tokelon.toktales.core.render.FontTextSizeHelper;
 import com.tokelon.toktales.core.render.IRenderDriver;
 import com.tokelon.toktales.core.render.RenderException;
+import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.core.render.model.IFontModel;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.view.DefaultViewGridTransformer;
 import com.tokelon.toktales.core.screen.view.IViewGridTransformer;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
-import com.tokelon.toktales.core.render.model.FontModel;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
-import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
-public class ConsoleRenderer implements ISegmentRenderer {
+public class ConsoleRenderer implements ISingleRenderer {
 
 
 	public static final float CHAR_HOR_DISTANCE_MODIFIER_BASED_ON_TILESIZE = 0;//- 0.25f;
@@ -135,28 +134,8 @@ public class ConsoleRenderer implements ISegmentRenderer {
 	}
 	
 	
-	
 	@Override
-	public void prepare(long currentTimeMillis) {
-		if(gridTransformer == null) {
-			assert false : "Cannot prepare without view";
-			return;
-		}
-		
-		// Those are equal
-		//dmeta.tilePixeSize = gridTransformer.getGridTileSize() * viewTransformer.getCameraToViewportScale();
-		dmeta.tilePixeSize = gridTransformer.getScreenTileSize();
-	}
-
-	
-	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		// Nothing
-	}
-
-	
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents() {
 		if(gridTransformer == null) {
 			assert false : "Cannot draw without view";
 			return;
@@ -176,6 +155,11 @@ public class ConsoleRenderer implements ISegmentRenderer {
 			return; // Can't render without a font
 		}
 		
+
+		// Those are equal
+		//dmeta.tilePixeSize = gridTransformer.getGridTileSize() * viewTransformer.getCameraToViewportScale();
+		dmeta.tilePixeSize = gridTransformer.getScreenTileSize();
+
 		
 		fontDriver.use(matrixProjectionAndView);
 

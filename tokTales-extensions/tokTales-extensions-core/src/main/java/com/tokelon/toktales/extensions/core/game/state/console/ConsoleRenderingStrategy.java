@@ -3,15 +3,13 @@ package com.tokelon.toktales.extensions.core.game.state.console;
 import javax.inject.Inject;
 
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.render.IModularGameStateRenderer;
 import com.tokelon.toktales.core.game.state.render.IRenderingStrategy;
 import com.tokelon.toktales.core.render.opengl.gl20.IGL11;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
-import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	// Implement conditional clear or limit to 30 fps since we don't need the performance?
@@ -20,8 +18,6 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 	public static final String RENDER_LAYER_MAIN = "console_rendering_stategy";
 	private static final String RENDER_DESCRIPTION = "ConsoleRenderingStrategy";
 
-	
-	private final NamedOptionsImpl mNamedOptions = new NamedOptionsImpl();
 	
 	private final IGL11 gl11;
 	
@@ -53,26 +49,14 @@ public class ConsoleRenderingStrategy implements IRenderingStrategy {
 		gl11.glClear(IGL11.GL_COLOR_BUFFER_BIT | IGL11.GL_DEPTH_BUFFER_BIT);
 		
 		
-		IGameState gamestate = baseRenderer.getGamestate();
-		long gameTimeMillis = gamestate.getGame().getTimeManager().getGameTimeMillis();
+		ISingleRenderer consoleRenderer = baseRenderer.getRenderer(ConsoleGamestate.RENDERER_CONSOLE_NAME);
+		consoleRenderer.renderContents();
 		
+		//ISingleRenderer textRenderer = baseRenderer.getRenderer(ConsoleGamestate.RENDERER_TEXT_NAME);
+		//textRenderer.renderFrame();
 		
-		ISegmentRenderer consoleRenderer = baseRenderer.getSegmentRenderer(ConsoleGamestate.RENDERER_CONSOLE_NAME); 
-		
-		consoleRenderer.prepare(gameTimeMillis);
-		consoleRenderer.drawFull(mNamedOptions);
-		
-		
-		ISegmentRenderer textRenderer = baseRenderer.getSegmentRenderer(ConsoleGamestate.RENDERER_TEXT_NAME);
-		
-		textRenderer.prepare(gameTimeMillis);
-		//textRenderer.drawFull(mNamedOptions);
-		
-		
-		ISegmentRenderer dialogRenderer = baseRenderer.getSegmentRenderer(ConsoleGamestate.RENDERER_DIALOG_NAME);
-		dialogRenderer.prepare(gameTimeMillis);
-		dialogRenderer.drawFull(mNamedOptions);
-		
+		ISingleRenderer dialogRenderer = baseRenderer.getRenderer(ConsoleGamestate.RENDERER_DIALOG_NAME);
+		dialogRenderer.renderContents();
 	}
 	
 	@Override

@@ -136,7 +136,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 	
 	
 	@Override
-	public void prepare(long currentTimeMillis) {
+	public void prepareFrame(long currentTimeMillis) {
 		// if !view
 		
 		// Nothing
@@ -144,8 +144,7 @@ public class PlayerRenderer implements IPlayerRenderer {
 	
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-
+	public void renderContent(String contentName, INamedOptions options) {
 		if(options.has(OPTION_MAP_LAYER)) {
 			IMapLayer mapLayer = (IMapLayer) options.get(OPTION_MAP_LAYER);
 			
@@ -264,12 +263,6 @@ public class PlayerRenderer implements IPlayerRenderer {
 	}
 	
 
-	
-	@Override
-	public void drawFull(INamedOptions options) {
-		drawPlayer(playerControllerSupplier.get());
-	}
-	
 	
 	public static class PlayerRendererFactory implements IPlayerRendererFactory {
 		

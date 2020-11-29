@@ -11,8 +11,8 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.state.BaseGamestate;
 import com.tokelon.toktales.core.game.state.IGameStateInputHandler;
-import com.tokelon.toktales.core.game.state.render.ModularGameStateRenderer;
 import com.tokelon.toktales.core.game.state.render.IRenderingStrategy;
+import com.tokelon.toktales.core.game.state.render.ModularGameStateRenderer;
 import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultConsoleController;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultDialogController;
@@ -23,10 +23,10 @@ import com.tokelon.toktales.extensions.core.game.model.Console;
 import com.tokelon.toktales.extensions.core.game.model.ScreenDialog;
 import com.tokelon.toktales.extensions.core.game.model.TextBox;
 import com.tokelon.toktales.extensions.core.game.renderer.ConsoleRenderer;
-import com.tokelon.toktales.extensions.core.game.renderer.IDialogRenderer;
-import com.tokelon.toktales.extensions.core.game.renderer.TextBoxRenderer;
 import com.tokelon.toktales.extensions.core.game.renderer.ConsoleRenderer.ConsoleRendererFactory;
 import com.tokelon.toktales.extensions.core.game.renderer.DialogRenderer.DialogRendererFactory;
+import com.tokelon.toktales.extensions.core.game.renderer.IDialogRenderer;
+import com.tokelon.toktales.extensions.core.game.renderer.TextBoxRenderer;
 import com.tokelon.toktales.extensions.core.game.renderer.TextBoxRenderer.TextBoxRendererFactory;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.sub.inject.scope.ForClass;
@@ -127,10 +127,10 @@ public class ConsoleGamestate extends BaseGamestate<IGameScene> implements ICons
 		// State renderer
 		ModularGameStateRenderer baseStateRenderer = new ModularGameStateRenderer(renderingStrategy, this);
 		
-		baseStateRenderer.addSegmentRenderer(RENDERER_CONSOLE_NAME, consoleSegmentRenderer);
-		baseStateRenderer.addSegmentRenderer(RENDERER_DIALOG_NAME, dialogSegmentRenderer);
+		baseStateRenderer.addRenderer(RENDERER_CONSOLE_NAME, consoleSegmentRenderer);
+		baseStateRenderer.addRenderer(RENDERER_DIALOG_NAME, dialogSegmentRenderer);
 		
-		baseStateRenderer.addSegmentRenderer(RENDERER_TEXT_NAME, textSegmentRenderer);
+		baseStateRenderer.addRenderer(RENDERER_TEXT_NAME, textSegmentRenderer);
 		
 		
 		baseStateRenderer.updateCamera(getActiveScene().getSceneCamera());

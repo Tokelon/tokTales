@@ -20,7 +20,6 @@ public interface IGameStateRenderer {
 
 
 	/** Renders the state this renderer is assigned to.
-	 * 
 	 */
 	public void renderState();
 	
@@ -29,7 +28,7 @@ public interface IGameStateRenderer {
 	 * @param renderName
 	 * @return A render call for the given name.
 	 */
-	public IRenderCall getRenderCall(String renderName); // Pass IOptions?
+	public IRenderCall getRenderCall(String renderName); // Pass INamedOptions?
 	
 
 	/** Returns the render order for this renderer.

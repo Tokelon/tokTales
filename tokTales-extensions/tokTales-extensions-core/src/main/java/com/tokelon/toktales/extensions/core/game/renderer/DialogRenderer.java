@@ -19,7 +19,6 @@ import com.tokelon.toktales.extensions.core.game.model.IScreenDialog;
 import com.tokelon.toktales.extensions.core.render.TextRenderer;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
-import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class DialogRenderer extends AbstractRenderer implements IDialogRenderer {
 
@@ -78,21 +77,9 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 		shapeRenderer.contextDestroyed();
 	}
 	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		// if !view
-		
-		// Nothing yet
-	}
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		assert false : "Not supported";
-	}
-
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents() {
 		IDialogController dialogController = dialogControllerSupplier.get();
 		if(dialogController == null) {
 			logger.info("Draw was called but no dialog is available");

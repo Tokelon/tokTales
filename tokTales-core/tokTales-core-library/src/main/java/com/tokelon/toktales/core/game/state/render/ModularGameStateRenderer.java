@@ -15,7 +15,7 @@ import com.tokelon.toktales.core.render.RenderContextManager;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.core.render.order.RenderOrder;
 import com.tokelon.toktales.core.render.order.RenderRunner;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
@@ -35,7 +35,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	private final Matrix4f contextProjectionMatrix = new Matrix4f();
 	private final IViewTransformer contextViewTransformer;
 
-	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<>();
+	private final Map<String, ISingleRenderer> rendererMap = new HashMap<>();
 
 	private final List<IViewTransformer> viewTransformerList = new ArrayList<>();
 	
@@ -73,8 +73,8 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	
 	
 	@Override
-	public void addSegmentRenderer(String name, ISegmentRenderer renderer) {
-		segmentRendererMap.put(name, renderer);
+	public void addRenderer(String name, ISingleRenderer renderer) {
+		rendererMap.put(name, renderer);
 		
 		if(hasSurface) {
 			renderer.contextCreated();
@@ -88,40 +88,34 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	}
 	
 	@Override
-	public ISegmentRenderer getSegmentRenderer(String name) {
-		return segmentRendererMap.get(name);
+	public ISingleRenderer getRenderer(String name) {
+		return rendererMap.get(name);
 	}
 	
 	@Override
-	public boolean hasSegmentRenderer(String name) {
-		return segmentRendererMap.containsKey(name);
+	public boolean hasRenderer(String name) {
+		return rendererMap.containsKey(name);
 	}
 	
 	@Override
-	public void removeSegmentRenderer(String name) {
-		segmentRendererMap.remove(name);
-	}
-	
-	
-	@Override
-	public Map<String, ISegmentRenderer> getRenderers() {	// Return immutable map ?
-		return segmentRendererMap;
+	public void removeRenderer(String name) {
+		rendererMap.remove(name);
 	}
 	
 	
 	@Override
-	public IGameState getGamestate() {
-		return gamestate;
+	public Map<String, ISingleRenderer> getRenderers() { // Return immutable map ?
+		return rendererMap;
 	}
 	
 	
 	@Override
 	public IRenderCall getRenderCall(String renderName) {
 		return () -> {
-			ISegmentRenderer renderer = segmentRendererMap.get(renderName);
+			ISingleRenderer renderer = rendererMap.get(renderName);
 			if(renderer != null) {
-				renderer.prepare(gamestate.getGame().getTimeManager().getGameTimeMillis());
-				renderer.drawFull(null);
+				//renderer.prepare(gamestate.getGame().getTimeManager().getGameTimeMillis());
+				renderer.renderContents();
 			}
 		};
 	}
@@ -190,8 +184,8 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 		this.currentSurface = surface;
 		this.hasSurface = true;
 		
-		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
-			segmentRenderer.contextCreated();
+		for(ISingleRenderer renderer: rendererMap.values()) {
+			renderer.contextCreated();
 		}
 
 		renderContextManager.contextCreated();
@@ -213,9 +207,9 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 
 		viewTransformerList.clear();
 		
-		for(String rendererName: segmentRendererMap.keySet()) {
+		for(String rendererName: rendererMap.keySet()) {
 			
-			ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
+			ISingleRenderer renderer = rendererMap.get(rendererName);
 			
 			
 			IViewTransformer rendererViewTransformer = renderingStrategy.createViewTransformerForRenderer(ModularGameStateRenderer.this, masterViewport, getCurrentCamera(), rendererName);
@@ -247,8 +241,8 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 		this.hasSurface = false;
 		this.surfaceIsValid = false;
 		
-		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
-			segmentRenderer.contextDestroyed();
+		for(ISingleRenderer renderer: rendererMap.values()) {
+			renderer.contextDestroyed();
 		}
 
 		renderContextManager.contextDestroyed();

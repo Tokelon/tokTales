@@ -23,7 +23,6 @@ import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
-import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {
 
@@ -102,28 +101,10 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		charRenderer.contextDestroyed();
 		charRenderer = null;
 	}
-	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		if(!hasView()) {
-			assert false : "Cannot prepare without view";
-			return;
-		}
-		
-		// Should not use prepare because it's omitted when calling specific draw methods
-	}
-	
-
-	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		// Not supported
-		assert false : "Not supported";
-	}
 
 	
 	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents() {
 		IConsoleController consoleController = consoleControllerSupplier.get();
 		if(consoleController == null) {
 			logger.info("Draw was called but no console is available");

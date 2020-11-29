@@ -38,7 +38,6 @@ import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.view.DefaultViewGridTransformer;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
-import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
@@ -150,22 +149,10 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		
 		gridTransformer = null;
 	}
-	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		// if !view
-		charRenderer.setFont(getFont());
-		charRenderer.setSize(fontSize, fontSize);
-	}
 
+	
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		assert false : "Not supported";
-	}
-
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents() {
 		IPlayerController playerController = playerControllerSupplier.get();
 		IWorldspace worldspace = worlspaceSupplier.get();
 
@@ -180,6 +167,10 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 			assert false : "Cannot draw without view";
 			return;
 		}
+
+		charRenderer.setFont(getFont());
+		charRenderer.setSize(fontSize, fontSize);
+
 		
 		drawGrid();
 		drawCameraOrigin();

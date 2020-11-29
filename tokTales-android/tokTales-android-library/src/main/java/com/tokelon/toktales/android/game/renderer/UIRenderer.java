@@ -15,15 +15,14 @@ import com.tokelon.toktales.android.render.tools.IUIOverlayProvider;
 import com.tokelon.toktales.core.engine.log.ILogger;
 import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.RenderException;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
-import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.opengl.GLES20;
 
-public class UIRenderer implements ISegmentRenderer {
+public class UIRenderer implements ISingleRenderer {
 
 
 	private static final String COLOR_S = "#077570";
@@ -161,8 +160,6 @@ public class UIRenderer implements ISegmentRenderer {
 			logger.error("Failed to create shader program:", oglex);
 			return;
 		}
-		
-		
 	}
 	
 	
@@ -293,7 +290,6 @@ public class UIRenderer implements ISegmentRenderer {
 				0.0f, 1.0f, 0.0f);
 
 		matrixProjection.mul(matrixView, matrixProjectionAndView);
-		
 	}
 	
 
@@ -322,25 +318,8 @@ public class UIRenderer implements ISegmentRenderer {
 	}
 	
 	
-	
-
-	
 	@Override
-	public void prepare(long currentTimeMillis) {
-		// if !view
-		
-		// Nothing
-	}
-	
-	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		//assert false : "Not supported";
-		throw new UnsupportedOperationException("Unsupported draw call. Use drawAll() for this renderer");
-	}
-	
-
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents() {
 		if(viewTransformer == null) {
 			//assert false : "Cannot draw without view";
 			throw new RenderException("Cannot draw without view");
@@ -412,24 +391,20 @@ public class UIRenderer implements ISegmentRenderer {
 		
 		
 		GLES20.glDisableVertexAttribArray(mCOCShader.getAttributeLocation("vPosition"));
-		
 	}
 	
 	
 	private void drawControl(String positionAttrName, int colorHdl, FloatBuffer verticesBuffer, int color) {
-		
 		mVCShader.setAttribute(positionAttrName, 3, verticesBuffer);
 		
 		GLES20.glUniform4f(colorHdl, Color.red(color) / 255.0f, Color.green(color) / 255.0f, Color.blue(color) / 255.0f, Color.alpha(color) / 255.0f);
 		
 		
 		GLES20.glDrawArrays(GLES20.GL_LINE_LOOP, 0, 4);
-		
 	}
 	
 	
 	private void drawButton(String positionAttrName, int colorHdl, int centerRadiusHdl, FloatBuffer verticesBuffer, int color, Rect buttonRect) {
-		
 		mCOCShader.setAttribute(positionAttrName, 3, verticesBuffer);
 		
 		GLES20.glUniform4f(colorHdl, Color.red(color) / 255.0f, Color.green(color) / 255.0f, Color.blue(color) / 255.0f, Color.alpha(color) / 255.0f);
@@ -440,7 +415,6 @@ public class UIRenderer implements ISegmentRenderer {
 		
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 4);
-		
 	}
 
 }

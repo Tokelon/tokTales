@@ -6,11 +6,11 @@ import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.ITypedGameState;
 import com.tokelon.toktales.core.game.state.scene.IExtendedGameScene;
 import com.tokelon.toktales.core.game.world.IWorld;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.IMultiRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
 
-public interface IMapRenderer extends ISegmentRenderer {
+public interface IMapRenderer extends IMultiRenderer {
 
 	//public void drawElementSprite(ISprite sprite, DrawingMeta dmeta)
 	

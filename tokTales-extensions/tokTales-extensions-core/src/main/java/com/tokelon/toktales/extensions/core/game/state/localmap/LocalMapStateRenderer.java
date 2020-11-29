@@ -148,11 +148,10 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 	private void prepare() {
 		long gameTime = gamestate.getGame().getTimeManager().getGameTimeMillis();
 		
-		mapRenderer.prepare(gameTime);
-		playerRenderer.prepare(gameTime);
-		entityRenderer.prepare(gameTime);
-		debugRenderer.prepare(gameTime);
-		objectRenderer.prepare(gameTime);
+		mapRenderer.prepareFrame(gameTime);
+		playerRenderer.prepareFrame(gameTime);
+		entityRenderer.prepareFrame(gameTime);
+		objectRenderer.prepareFrame(gameTime);
 	}
 
 	private void clearDraw() {
@@ -182,10 +181,10 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 			
 			options.set(PlayerRenderer.OPTION_MAP_LAYER, layer);
 			
-			mapRenderer.drawLayer(options, layerName);
-			playerRenderer.drawLayer(options, layerName);
-			entityRenderer.drawLayer(options, layerName);
-			objectRenderer.drawLayer(options, layerName);
+			mapRenderer.renderContent(layerName, options);
+			playerRenderer.renderContent(layerName, options);
+			entityRenderer.renderContent(layerName, options);
+			objectRenderer.renderContent(layerName, options);
 		}
 		
 		// TODO: What to do with this?
@@ -196,7 +195,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 	private void renderLayerInternal(String layerName, double position) {
 		if(IRenderOrder.LAYER_TOP.equals(layerName)) {
 			if(debugRenderingEnabled && position == MAP_RENDER_CALL_POSITION_DEBUG) {
-				debugRenderer.drawFull(options);
+				debugRenderer.renderContents();
 			}
 		}
 		else {
@@ -206,10 +205,10 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 			if(layer != null) {
 				options.set(PlayerRenderer.OPTION_MAP_LAYER, layer);
 				
-				mapRenderer.drawLayer(options, layerName);
-				playerRenderer.drawLayer(options, layerName);
-				entityRenderer.drawLayer(options, layerName);
-				objectRenderer.drawLayer(options, layerName);
+				mapRenderer.renderContent(layerName, options);
+				playerRenderer.renderContent(layerName, options);
+				entityRenderer.renderContent(layerName, options);
+				objectRenderer.renderContent(layerName, options);
 			}
 		}
 	}

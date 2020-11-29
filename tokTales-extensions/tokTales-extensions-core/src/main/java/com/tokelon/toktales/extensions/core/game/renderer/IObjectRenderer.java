@@ -5,11 +5,11 @@ import com.tokelon.toktales.core.game.controller.map.IMapController;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.ITypedGameState;
 import com.tokelon.toktales.core.game.state.scene.IExtendedGameScene;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.IMultiRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
 
-public interface IObjectRenderer extends ISegmentRenderer {
+public interface IObjectRenderer extends IMultiRenderer {
 
 	
 	public void drawObjectsOnMapLayer(IMapController mapController, String layerName);

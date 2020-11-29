@@ -171,21 +171,21 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 	
 	
 	@Override
-	public void prepare(long currentTimeMillis) {
+	public void prepareFrame(long currentTimeMillis) {
 		// if !view
 		
 		// Nothing
 	}
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
+	public void renderContent(String contentName, INamedOptions options) {
 		IMapController mapController = mapControllerSupplier.get();
 		if(mapController == null) {
 			logger.info("Draw was called but no Map is available");
 			return;
 		}
 		
-		drawObjectsOnMapLayer(mapController, layerName);
+		drawObjectsOnMapLayer(mapController, contentName);
 	}
 	
 	
@@ -392,12 +392,6 @@ public class ObjectRenderer extends AbstractRenderer implements IObjectRenderer 
 		}
 	}
 
-	
-	@Override
-	public void drawFull(INamedOptions options) {
-		assert false : "Not supported";
-	}
-	
 	
 	public static class ObjectRendererFactory implements IObjectRendererFactory {
 		
