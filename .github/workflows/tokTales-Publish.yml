@@ -21,7 +21,7 @@ jobs:
       working-directory: tokTales-master
       run: ./gradlew build
     - name: Generate build number
-      uses: einaregilsson/build-number@v2
+      uses: einaregilsson/build-number@v3
       with:
         token: ${{secrets.github_token}}
         prefix: tokTales-master-0.2.1
