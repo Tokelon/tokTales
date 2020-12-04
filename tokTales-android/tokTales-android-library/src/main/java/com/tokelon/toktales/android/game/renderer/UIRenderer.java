@@ -17,6 +17,7 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.render.RenderException;
 import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -319,7 +320,7 @@ public class UIRenderer implements ISingleRenderer {
 	
 	
 	@Override
-	public void renderContents() {
+	public void renderContents(INamedOptions renderOptions) {
 		if(viewTransformer == null) {
 			//assert false : "Cannot draw without view";
 			throw new RenderException("Cannot draw without view");

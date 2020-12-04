@@ -23,6 +23,7 @@ import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsoleOverlayRenderer {
 
@@ -104,7 +105,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 
 	
 	@Override
-	public void renderContents() {
+	public void renderContents(INamedOptions renderOptions) {
 		IConsoleController consoleController = consoleControllerSupplier.get();
 		if(consoleController == null) {
 			logger.info("Draw was called but no console is available");

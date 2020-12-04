@@ -18,6 +18,7 @@ import com.tokelon.toktales.extensions.core.game.model.ITextBox;
 import com.tokelon.toktales.extensions.core.render.TextRenderer;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class TextBoxRenderer extends AbstractRenderer implements ISingleRenderer {
 
@@ -76,7 +77,7 @@ public class TextBoxRenderer extends AbstractRenderer implements ISingleRenderer
 	
 
 	@Override
-	public void renderContents() {
+	public void renderContents(INamedOptions renderOptions) {
 		ITextBoxController textBoxController = textBoxControllerSupplier.get();
 		if(textBoxController == null) {
 			logger.info("Draw was called but no text box is available");

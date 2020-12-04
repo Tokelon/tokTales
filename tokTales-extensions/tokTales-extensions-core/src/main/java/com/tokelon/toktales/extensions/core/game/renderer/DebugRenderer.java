@@ -38,6 +38,7 @@ import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.view.DefaultViewGridTransformer;
 import com.tokelon.toktales.core.util.FrameTool;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.registry.IBasicRegistry;
 
 public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
@@ -152,7 +153,7 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 
 	
 	@Override
-	public void renderContents() {
+	public void renderContents(INamedOptions renderOptions) {
 		IPlayerController playerController = playerControllerSupplier.get();
 		IWorldspace worldspace = worlspaceSupplier.get();
 

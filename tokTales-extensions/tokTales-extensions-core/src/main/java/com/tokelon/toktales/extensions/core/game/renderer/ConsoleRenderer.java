@@ -33,6 +33,7 @@ import com.tokelon.toktales.core.screen.view.IViewGridTransformer;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
 import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class ConsoleRenderer implements ISingleRenderer {
@@ -135,7 +136,7 @@ public class ConsoleRenderer implements ISingleRenderer {
 	
 	
 	@Override
-	public void renderContents() {
+	public void renderContents(INamedOptions renderOptions) {
 		if(gridTransformer == null) {
 			assert false : "Cannot draw without view";
 			return;

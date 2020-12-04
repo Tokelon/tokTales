@@ -36,6 +36,7 @@ import com.tokelon.toktales.extensions.core.game.renderer.IObjectRenderer.IObjec
 import com.tokelon.toktales.extensions.core.game.renderer.IPlayerRenderer;
 import com.tokelon.toktales.extensions.core.game.renderer.IPlayerRenderer.IPlayerRendererFactory;
 import com.tokelon.toktales.extensions.core.game.renderer.PlayerRenderer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 
 public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceManager.ISurfaceCallback {
@@ -51,7 +52,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 	private static final RGBAColor CLEAR_COLOR = RGBAColor.createFromCode("#000");
 
 	
-	private final NamedOptionsImpl options = new NamedOptionsImpl();
+	private final NamedOptionsImpl renderOptions = new NamedOptionsImpl();
 	
 	private IRenderToolkit renderToolkit;
 	
@@ -159,8 +160,8 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 	}
 
 	@Override
-	public IRenderCall getRenderCall(String renderName) {
-		return () -> renderLayerInternal(renderName, 0d);
+	public IRenderCall getRenderCall(String contentName, INamedOptions renderOptions) {
+		return () -> renderLayerInternal(contentName, 0d);
 	}
 	
 	@SuppressWarnings("unused") // TODO: Old - Remove
@@ -179,12 +180,12 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 			IMapLayer layer = map.getLayerOnLevel(level);
 			String layerName = layer.getName();
 			
-			options.set(PlayerRenderer.OPTION_MAP_LAYER, layer);
+			renderOptions.set(PlayerRenderer.OPTION_MAP_LAYER, layer);
 			
-			mapRenderer.renderContent(layerName, options);
-			playerRenderer.renderContent(layerName, options);
-			entityRenderer.renderContent(layerName, options);
-			objectRenderer.renderContent(layerName, options);
+			mapRenderer.renderContent(layerName, renderOptions);
+			playerRenderer.renderContent(layerName, renderOptions);
+			entityRenderer.renderContent(layerName, renderOptions);
+			objectRenderer.renderContent(layerName, renderOptions);
 		}
 		
 		// TODO: What to do with this?
@@ -195,7 +196,7 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 	private void renderLayerInternal(String layerName, double position) {
 		if(IRenderOrder.LAYER_TOP.equals(layerName)) {
 			if(debugRenderingEnabled && position == MAP_RENDER_CALL_POSITION_DEBUG) {
-				debugRenderer.renderContents();
+				debugRenderer.renderContents(renderOptions);
 			}
 		}
 		else {
@@ -203,12 +204,12 @@ public class LocalMapStateRenderer implements ILocalMapStateRenderer, ISurfaceMa
 			IMapLayer layer = map.getLayerForName(layerName);
 			
 			if(layer != null) {
-				options.set(PlayerRenderer.OPTION_MAP_LAYER, layer);
+				renderOptions.set(PlayerRenderer.OPTION_MAP_LAYER, layer);
 				
-				mapRenderer.renderContent(layerName, options);
-				playerRenderer.renderContent(layerName, options);
-				entityRenderer.renderContent(layerName, options);
-				objectRenderer.renderContent(layerName, options);
+				mapRenderer.renderContent(layerName, renderOptions);
+				playerRenderer.renderContent(layerName, renderOptions);
+				entityRenderer.renderContent(layerName, renderOptions);
+				objectRenderer.renderContent(layerName, renderOptions);
 			}
 		}
 	}

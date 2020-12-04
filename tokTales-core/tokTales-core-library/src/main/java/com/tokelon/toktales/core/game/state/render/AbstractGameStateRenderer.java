@@ -16,6 +16,7 @@ import com.tokelon.toktales.core.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public abstract class AbstractGameStateRenderer implements IGameStateRenderer, ISurfaceManager.ISurfaceCallback {
 
@@ -108,7 +109,7 @@ public abstract class AbstractGameStateRenderer implements IGameStateRenderer, I
 	
 	
 	@Override
-	public IRenderCall getRenderCall(String renderName) {
+	public IRenderCall getRenderCall(String contentName, INamedOptions renderOptions) {
 		return () -> {};
 	}
 	

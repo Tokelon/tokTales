@@ -4,6 +4,7 @@ import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public interface IRenderingStrategy {
 	//public void handleSurfaceChange(ISurface surface);
@@ -20,10 +21,11 @@ public interface IRenderingStrategy {
 	 * 
 	 * @param baseRenderer
 	 * @param contentName
+	 * @param renderOptions
 	 * @return A render call.
 	 */
-	public default IRenderCall getRenderCall(IModularGameStateRenderer baseRenderer, String contentName) {
-		return baseRenderer.getRenderCall(contentName);
+	public default IRenderCall getRenderCall(IModularGameStateRenderer baseRenderer, String contentName, INamedOptions renderOptions) {
+		return baseRenderer.getRenderCall(contentName, renderOptions);
 	}
 
 

@@ -24,6 +24,7 @@ import com.tokelon.toktales.core.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 public class ModularGameStateRenderer implements IModularGameStateRenderer, ISurfaceManager.ISurfaceCallback {
 
@@ -110,11 +111,11 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	
 	
 	@Override
-	public IRenderCall getRenderCall(String renderName) {
+	public IRenderCall getRenderCall(String contentName, INamedOptions renderOptions) {
 		return () -> {
-			ISingleRenderer renderer = rendererMap.get(renderName);
+			ISingleRenderer renderer = rendererMap.get(contentName);
 			if(renderer != null) {
-				renderer.renderContents();
+				renderer.renderContents(renderOptions);
 			}
 		};
 	}
