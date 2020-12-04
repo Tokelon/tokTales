@@ -12,7 +12,7 @@ public class UserGamestateRenderer extends AbstractGameStateRenderer {
 
 	
 	@Override
-	public void renderCall(String layerName, double stackPosition) {
+	public void renderState() {
 		// TODO Auto-generated method stub
 		
 	}

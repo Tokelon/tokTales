@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderLayerStack.IStackNavigator;
 
 public class RenderOrder implements IRenderOrder {
@@ -216,7 +217,7 @@ public class RenderOrder implements IRenderOrder {
 
 	
 	@Override
-	public synchronized boolean registerCall(String layerName, double position, IRenderCallback callback) {
+	public synchronized boolean registerCall(String layerName, double position, IRenderCall callback) {
 		IRenderLayerStack registerStack = registerMap.get(layerName);
 		if(registerStack == null) {
 			registerStack = new RenderLayerStack();
@@ -654,7 +655,7 @@ public class RenderOrder implements IRenderOrder {
 		}
 
 		@Override
-		public IRenderCallback getCurrentCallback() {
+		public IRenderCall getCurrentCallback() {
 			checkValid();
 			return currentStackNavigator.getCurrentCallback();
 		}

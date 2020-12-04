@@ -102,28 +102,10 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		charRenderer.contextDestroyed();
 		charRenderer = null;
 	}
-	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		if(!hasView()) {
-			assert false : "Cannot prepare without view";
-			return;
-		}
-		
-		// Should not use prepare because it's omitted when calling specific draw methods
-	}
-	
-
-	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		// Not supported
-		assert false : "Not supported";
-	}
 
 	
 	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents(INamedOptions renderOptions) {
 		IConsoleController consoleController = consoleControllerSupplier.get();
 		if(consoleController == null) {
 			logger.info("Draw was called but no console is available");
@@ -173,7 +155,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 		float vDist = textSize;
 		float currX = startX;
 		float currY = startY;
-		charRenderer.startBatchDraw();
+		charRenderer.startBatch();
 		try {
 			String consolePrompt = console.getPrompt();
 			int promptCodepointCount = consolePrompt.codePointCount(0, consolePrompt.length());
@@ -210,7 +192,7 @@ public class ConsoleOverlayRenderer extends AbstractRenderer implements IConsole
 			
 		}
 		finally {
-			charRenderer.finishBatchDraw();	
+			charRenderer.finishBatch();	
 		}
 	}
 	

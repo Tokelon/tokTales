@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.engine.render.IRenderService;
 import com.tokelon.toktales.core.game.state.GameStateSuppliers;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.render.renderer.AbstractRenderer;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.extensions.core.game.controller.ITextBoxController;
 import com.tokelon.toktales.extensions.core.game.model.ITextBox;
@@ -20,7 +20,7 @@ import com.tokelon.toktales.extensions.core.values.ControllerExtensionsValues;
 import com.tokelon.toktales.tools.core.inject.ISupplier;
 import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
-public class TextBoxRenderer extends AbstractRenderer implements ISegmentRenderer {
+public class TextBoxRenderer extends AbstractRenderer implements ISingleRenderer {
 
 
 	private IRGBAColor color = RGBAColor.createFromCode("FFF");
@@ -75,19 +75,9 @@ public class TextBoxRenderer extends AbstractRenderer implements ISegmentRendere
 		textRenderer.contextDestroyed();		
 	}
 	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		// Nothing
-	}
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		// Not supported
-	}
-
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents(INamedOptions renderOptions) {
 		ITextBoxController textBoxController = textBoxControllerSupplier.get();
 		if(textBoxController == null) {
 			logger.info("Draw was called but no text box is available");

@@ -141,7 +141,7 @@ public class MapRenderer implements IMapRenderer {
 	
 
 	@Override
-	public void prepare(long currentTimeMillis) {
+	public void prepareFrame(long currentTimeMillis) {
 		if(mGridTransformer == null) {
 			assert false : "Cannot prepare without view";
 			return;
@@ -166,20 +166,18 @@ public class MapRenderer implements IMapRenderer {
 	}
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
+	public void renderContent(String contentName, INamedOptions options) {
 		IMapController mapController = mapControllerSupplier.get();
 		if(mapController == null) {
 			logger.info("Draw was called but no map is available");
 			return;
 		}
 		
-		drawMapLayer(mapController, layerName);
+		drawMapLayer(mapController, contentName);
 	}
 	
-	@Override
-	public void drawFull(INamedOptions options) {
-		assert false : "Not supported";
 
+	private void drawFull(INamedOptions options) {
 		/* This does not work because depth testing does not play along with transparency
 		 * 
 		IMapController mapController = mGamestate.getMapController();
@@ -356,7 +354,6 @@ public class MapRenderer implements IMapRenderer {
 	
 	
 	
-	
 	private class DrawingMeta {
 		
 		private float tilePixeSize = 0;
@@ -368,7 +365,6 @@ public class MapRenderer implements IMapRenderer {
 		private final Point2fImpl tileTranslation = new Point2fImpl();
 		
 	}
-
 
 	
 	public static class MapRendererFactory implements IMapRendererFactory {

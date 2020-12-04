@@ -78,21 +78,9 @@ public class DialogRenderer extends AbstractRenderer implements IDialogRenderer 
 		shapeRenderer.contextDestroyed();
 	}
 	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		// if !view
-		
-		// Nothing yet
-	}
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		assert false : "Not supported";
-	}
-
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents(INamedOptions renderOptions) {
 		IDialogController dialogController = dialogControllerSupplier.get();
 		if(dialogController == null) {
 			logger.info("Draw was called but no dialog is available");

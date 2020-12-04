@@ -21,14 +21,5 @@ public class EmptyGameStateRenderer extends AbstractGameStateRenderer {
 
 	@Override
 	protected void onSurfaceDestroyed() { }
-
-	
-	@Override
-	public void renderCall(String layerName, double stackPosition) { }
-
-	@Override
-	public String getDescription() {
-		return "EmptyStateRenderer";
-	}
 	
 }

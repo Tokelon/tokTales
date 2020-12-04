@@ -1,24 +1,39 @@
 package com.tokelon.toktales.core.game.state.render;
 
 import com.tokelon.toktales.core.game.model.ICamera;
-import com.tokelon.toktales.core.render.order.IRenderCallback;
-import com.tokelon.toktales.core.render.renderer.IRenderer;
+import com.tokelon.toktales.core.render.IRenderCall;
+import com.tokelon.toktales.core.render.IRenderContextManager;
+import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager.ISurfaceCallback;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
 /** Manages the rendering context for a state.
- * Can be used as the main renderer.
  */
-public interface IGameStateRenderer extends ISurfaceCallback, IRenderCallback {
-	/* TODO:
-	 * Move render order into here?
-	 * Maybe add prepare() and call in gamestate before calling render order
-	 * Maybe add current* prefix to indicate that surface camera etc can change?
-	*/
+public interface IGameStateRenderer {
 
 
+	/** Renders the state this renderer is assigned to.
+	 */
+	public void renderState();
+	
+	/** Returns an optional render call for the given name.
+	 * 
+	 * @param contentName
+	 * @param renderOptions
+	 * @return A render call for the given name.
+	 */
+	public IRenderCall getRenderCall(String contentName, INamedOptions renderOptions);
+	
+
+	/** Returns the render order for this renderer.
+	 * 
+	 * @return A render order.
+	 */
+	public IRenderOrder getRenderOrder();
+	
 	/**
 	 * @return True if there is a surface, false if not.
 	 */
@@ -28,12 +43,19 @@ public interface IGameStateRenderer extends ISurfaceCallback, IRenderCallback {
 	 * @return The current surface, or null if there is none.
 	 */
 	public ISurface getSurface(); // Get currentSurface?
-	//public ISurfaceHandler getSurfaceHandler(); Useful?
 
 	
 	
 	// TODO: This method should make sure that the camera is not updated while rendering is running
+	/** Sets the camera that should be used for rendering.
+	 * 
+	 * @param camera
+	 */
 	public void updateCamera(ICamera camera);
+
+	/**
+	 * @return The current camera.
+	 */
 	public ICamera getCurrentCamera();
 
 	
@@ -46,20 +68,26 @@ public interface IGameStateRenderer extends ISurfaceCallback, IRenderCallback {
 	// Can't do that because there might be multiple? -> this will be the main one
 	// TODO: Check whether this should return null until the surface is assigned or not
 	// And also document that the object can change
+	/** Returns the current view transformer that is used as the main view transformer.
+	 * 
+	 * @return A view transformer.
+	 */
 	public IViewTransformer getViewTransformer();
 	
 	
+	/**
+	 * @return The texture coordinator for this state renderer.
+	 */
 	public ITextureCoordinator getTextureCoordinator();
-	
-	
-	// TODO: Implement with abstract class
-	public void addManagedRenderer(String name, IRenderer renderer); // what if the name is taken?
-	public IRenderer getManagedRenderer(String name);
-	public IRenderer removeManagedRenderer(String name); // better pass IRenderer instead of name?
-	public boolean hasManagedRenderer(String name);
-	
-	// Do like above or like below?
-	//public void addManagedRenderer(IRenderer renderer);
-	//public boolean removeManagedRenderer(IRenderer renderer);
-	
+
+	/**
+	 * @return The context manager for this state renderer. 
+	 */
+	public IRenderContextManager getContextManager();
+
+	/**
+	 * @return The surface callback for this state renderer, or null if there is none.
+	 */
+	public ISurfaceCallback getSurfaceCallback();
+
 }

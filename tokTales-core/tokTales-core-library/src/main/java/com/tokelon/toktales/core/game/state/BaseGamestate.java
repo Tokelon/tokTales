@@ -20,8 +20,6 @@ import com.tokelon.toktales.core.game.state.scene.IGameScene;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneAssignment;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneControl.IGameSceneControlFactory;
 import com.tokelon.toktales.core.game.state.scene.IGameSceneControl.IModifiableGameSceneControl;
-import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.core.render.order.RenderRunner;
 import com.tokelon.toktales.core.screen.surface.ISurface;
 import com.tokelon.toktales.core.screen.surface.ISurfaceManager.ISurfaceCallback;
 import com.tokelon.toktales.tools.core.inject.parameter.IParameterInjector;
@@ -50,8 +48,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	
 	/* Base objects */
-	private RenderRunner renderRunner;
-	
 	private StateSurfaceCallback currentSurfaceCallback;
 	private ISurface currentSurface;
 
@@ -65,7 +61,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	private IParameterInjector gamestateInjector;
 	private IGameStateIntegrator stateIntegrator;
-	private IRenderOrder stateRenderOrder;
 
 	private IGameStateInput stateInput;
 
@@ -261,7 +256,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	protected void injectDependencies(
 			IParameterInjectorFactory parameterInjectorFactory,
 			IGameStateIntegratorFactory gamestateIntegratorFactory,
-			IRenderOrder renderOrder,
 			IEngineContext engineContext,
 			IGameStateInput gamestateInput,
 			IGameSceneControlFactory gamesceneControlFactory,
@@ -273,8 +267,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		// Initialize internal dependencies
 		this.gamestateInjector = parameterInjectorFactory.create(InjectGameState.class, this);
 		this.stateIntegrator = gamestateIntegratorFactory.create(this);
-		this.stateRenderOrder = renderOrder;
-		this.renderRunner = new RenderRunner(stateRenderOrder);
 
 		// Dependencies have been injected
 		afterDependencyInjection();
@@ -526,7 +518,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 	@Override
 	public void onRender() {
-		renderRunner.run();
+		getStateRenderer().renderState();
 		
 		
 		getIntegrator().onRender();
@@ -732,11 +724,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		return game;
 	}
 
-	@Override
-	public IRenderOrder getRenderOrder() {
-		return stateRenderOrder;
-	}
-
 
 	@Override
 	public IGameStateRenderer getStateRenderer() {
@@ -889,13 +876,21 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 		if(renderer == null) {
 			throw new NullPointerException();
 		}
-		
-		getEngine().getRenderService().getSurfaceManager().removeCallback(this.gameStateRenderer);
-		
+
+		if(gameStateRenderer != null) {
+			getEngine().getRenderService().getSurfaceManager().removeCallback(gameStateRenderer.getSurfaceCallback());
+		}
+
 		gamestateInjector.injectInto(renderer);
 		this.gameStateRenderer = renderer;
-		
-		getEngine().getRenderService().getSurfaceManager().addCallback(renderer);
+
+		ISurfaceCallback surfaceCallback = renderer.getSurfaceCallback();
+		if(surfaceCallback == null) {
+			logger.debug("No surface callback was registered for state renderer: {} [{}]", renderer.getClass().getName(), renderer);
+		}
+		else {
+			getEngine().getRenderService().getSurfaceManager().addCallback(surfaceCallback);
+		}
 	}
 
 	/** Sets the state input handler.

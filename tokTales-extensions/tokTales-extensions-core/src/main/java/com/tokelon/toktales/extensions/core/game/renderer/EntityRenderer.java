@@ -139,14 +139,14 @@ public class EntityRenderer implements IEntityRenderer {
 	
 
 	@Override
-	public void prepare(long currentTimeMillis) {
+	public void prepareFrame(long currentTimeMillis) {
 		// if !view
 		
 		// Nothing
 	}
 
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
+	public void renderContent(String contentName, INamedOptions options) {
 		if(options.has(OPTION_MAP_LAYER)) {
 			IMapLayer mapLayer = (IMapLayer) options.get(OPTION_MAP_LAYER);
 			
@@ -167,18 +167,6 @@ public class EntityRenderer implements IEntityRenderer {
 		int drawDepth = options.getAsExactOrDefault(OPTION_DRAW_DEPTH, -1);
 		
 		
-		IWorldspace worldspace = worldspaceSupplier.get();
-		if(worldspace == null) {
-			logger.info("Draw was called but no worldspace is available");
-			return;
-		}
-		
-		drawEntities(worldspace);
-	}
-
-	
-	@Override
-	public void drawFull(INamedOptions options) {
 		IWorldspace worldspace = worldspaceSupplier.get();
 		if(worldspace == null) {
 			logger.info("Draw was called but no worldspace is available");

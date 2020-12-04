@@ -17,6 +17,8 @@ import com.tokelon.toktales.core.game.world.IWorldspace;
 import com.tokelon.toktales.core.render.order.IRenderLayerStack;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.core.values.ControllerValues;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
+import com.tokelon.toktales.tools.core.objects.options.NamedOptionsImpl;
 import com.tokelon.toktales.tools.core.sub.inject.annotations.RequiresInjection;
 import com.tokelon.toktales.tools.script.annotation.ScriptAccess;
 
@@ -27,6 +29,8 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	// Register DefaultControllersSetterInterceptor on controller manager as default?
 	
 	private static final String RENDER_LAYER_TAG = "BaseGamescene_Map";
+
+	private final INamedOptions renderOptions = new NamedOptionsImpl();
 
 	
 	private boolean initialMapRenderRegistrationPending = false;
@@ -224,7 +228,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	protected void registerMapRenderCallbacks(IGameState gamestate, IMapController mapController) {
 		IBlockMap map = mapController.getMap();
 		
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
+		IRenderOrder renderOrder = gamestate.getStateRenderer().getRenderOrder();
 		IGameStateRenderer renderer = gamestate.getStateRenderer();
 		synchronized (renderOrder) {
 			
@@ -235,7 +239,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 				
 				renderOrder.insertTaggedLayerAt(index, layerName, RENDER_LAYER_TAG);
 				IRenderLayerStack stack = renderOrder.getStackForIndex(index);
-				stack.addCallbackAt(0d, renderer);
+				stack.addCallbackAt(0d, renderer.getRenderCall(layerName, renderOptions));
 				
 				index++;
 			}
@@ -243,7 +247,7 @@ public class ExtendedGamescene extends BaseGamescene implements IExtendedGameSce
 	}
 	
 	protected void unregisterMapRenderCallbacks(IGameState gamestate) {
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
+		IRenderOrder renderOrder = gamestate.getStateRenderer().getRenderOrder();
 
 		synchronized (renderOrder) {
 			// Remove previous map callbacks

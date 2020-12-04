@@ -3,16 +3,14 @@ package com.tokelon.toktales.extensions.core.game.state.integration;
 import com.tokelon.toktales.core.content.manage.codepoint.ICodepointAssetManager;
 import com.tokelon.toktales.core.game.controller.IConsoleController;
 import com.tokelon.toktales.core.game.state.IGameState;
-import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.extensions.core.game.renderer.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extensions.core.game.renderer.ConsoleOverlayRenderer.ConsoleOverlayRendererFactory;
+import com.tokelon.toktales.extensions.core.game.renderer.IConsoleOverlayRenderer;
 import com.tokelon.toktales.extensions.core.game.state.integration.IConsoleIntegrationControlHandler.IConsoleIntegrationControlHandlerFactory;
 
 public class ConsoleIntegration implements IConsoleIntegration {
 
-	
-	public static final String CONSOLE_OVERLAY_RENDERER_NAME = "console_integration_overlay_renderer";
 	
 	private static final double DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION = 100d;
 
@@ -72,7 +70,7 @@ public class ConsoleIntegration implements IConsoleIntegration {
 	
 	
 
-	private static class ConsoleRenderCallback implements IRenderCallback {
+	private static class ConsoleRenderCallback implements IRenderCall {
 		
 		private final IConsoleOverlayRenderer renderer;
 		
@@ -87,17 +85,17 @@ public class ConsoleIntegration implements IConsoleIntegration {
 		}
 		
 		public void register() {
-			gamestate.getStateRenderer().addManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME, renderer);
-			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
+			gamestate.getStateRenderer().getContextManager().addContext(renderer);
+			gamestate.getStateRenderer().getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION, this);
 		}
 		
 		public void unregister() {
-			gamestate.getStateRenderer().removeManagedRenderer(CONSOLE_OVERLAY_RENDERER_NAME);
-			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION);
+			gamestate.getStateRenderer().getContextManager().removeContext(renderer);
+			gamestate.getStateRenderer().getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(DEFAULT_CONSOLE_OVERLAY_RENDER_POSITION);
 		}
 		
 		@Override
-		public void renderCall(String layerName, double stackPosition) {
+		public void render() {
 			renderer.drawConsoleOverlay(controller);
 		}
 

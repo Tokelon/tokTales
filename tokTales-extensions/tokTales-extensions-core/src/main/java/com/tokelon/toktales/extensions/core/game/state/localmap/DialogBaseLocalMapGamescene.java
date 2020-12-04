@@ -11,7 +11,7 @@ import com.tokelon.toktales.core.game.model.entity.IGameEntity;
 import com.tokelon.toktales.core.game.state.IGameState;
 import com.tokelon.toktales.core.game.state.scene.InjectGameScene;
 import com.tokelon.toktales.core.game.world.IWorldspace;
-import com.tokelon.toktales.core.render.order.IRenderCallback;
+import com.tokelon.toktales.core.render.IRenderCall;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
 import com.tokelon.toktales.extensions.core.game.controller.DefaultDialogController;
 import com.tokelon.toktales.extensions.core.game.controller.IDialogController;
@@ -113,11 +113,8 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 	}
 	
 	
-	protected static class DialogRenderCallback implements IRenderCallback {
+	protected static class DialogRenderCallback implements IRenderCall {
 
-		private static final String DIALOG_RENDERER_NAME = "DialogBaseLocalMapGamescene_DialogRenderer";
-		
-		
 		private final DialogRenderer dialogRenderer;
 
 		private final IGameState gamestate;
@@ -133,20 +130,20 @@ public class DialogBaseLocalMapGamescene extends LocalMapGamescene {
 		
 		public void register() {
 			// Add to managed renderers
-			gamestate.getStateRenderer().addManagedRenderer(DIALOG_RENDERER_NAME, dialogRenderer);
+			gamestate.getStateRenderer().getContextManager().addContext(dialogRenderer);
 
 			// Add to render order
-			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DIALOG, this);
+			gamestate.getStateRenderer().getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).addCallbackAt(CALLBACK_POSITION_DIALOG, this);
 		}
 		
 		public void unregister() {
-			gamestate.getStateRenderer().removeManagedRenderer(DIALOG_RENDERER_NAME);
-			gamestate.getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(CALLBACK_POSITION_DIALOG);
+			gamestate.getStateRenderer().getContextManager().removeContext(dialogRenderer);
+			gamestate.getStateRenderer().getRenderOrder().getStackForLayer(IRenderOrder.LAYER_TOP).removeCallbackAt(CALLBACK_POSITION_DIALOG);
 		}
 
 		
 		@Override
-		public void renderCall(String layerName, double stackPosition) {
+		public void render() {
 			// This is the render call
 			
 			dialogRenderer.drawDialog(gamescene.getDialogController());

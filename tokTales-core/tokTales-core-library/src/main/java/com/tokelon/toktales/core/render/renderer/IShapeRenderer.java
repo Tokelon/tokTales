@@ -6,7 +6,7 @@ import com.tokelon.toktales.core.render.shapes.IPointShape;
 import com.tokelon.toktales.core.render.shapes.IRectangleShape;
 import com.tokelon.toktales.core.render.shapes.ITriangleShape;
 
-public interface IShapeRenderer extends IChunkRenderer {
+public interface IShapeRenderer extends IBatchRenderer {
 	// TODO: Use IShapePaint object for properties below
 
 

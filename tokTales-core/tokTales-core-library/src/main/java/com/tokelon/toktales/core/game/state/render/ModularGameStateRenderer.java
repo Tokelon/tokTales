@@ -9,64 +9,79 @@ import org.joml.Matrix4f;
 
 import com.tokelon.toktales.core.game.model.ICamera;
 import com.tokelon.toktales.core.game.state.IGameState;
+import com.tokelon.toktales.core.render.IRenderCall;
+import com.tokelon.toktales.core.render.IRenderContextManager;
+import com.tokelon.toktales.core.render.RenderContextManager;
 import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.core.render.renderer.IRenderer;
-import com.tokelon.toktales.core.render.renderer.ISegmentRenderer;
+import com.tokelon.toktales.core.render.order.RenderOrder;
+import com.tokelon.toktales.core.render.order.RenderRunner;
+import com.tokelon.toktales.core.render.renderer.ISingleRenderer;
 import com.tokelon.toktales.core.render.texture.DefaultTextureCoordinator;
 import com.tokelon.toktales.core.render.texture.ITextureCoordinator;
 import com.tokelon.toktales.core.screen.surface.ISurface;
+import com.tokelon.toktales.core.screen.surface.ISurfaceManager;
 import com.tokelon.toktales.core.screen.view.AccurateViewport;
 import com.tokelon.toktales.core.screen.view.DefaultViewTransformer;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.core.screen.view.IViewTransformer;
+import com.tokelon.toktales.tools.core.objects.options.INamedOptions;
 
-public class ModularGameStateRenderer implements IModularGameStateRenderer {
+public class ModularGameStateRenderer implements IModularGameStateRenderer, ISurfaceManager.ISurfaceCallback {
 
 	
-	private static final double CALLBACK_RENDER = 0d;
+	private static final String STRATEGY_RENDER_CALL_DESCRIPTION = "Renders the strategy";
+	private static final double STRATEGY_RENDER_CALL_POSITION = 0d;
 
 	private final AccurateViewport contextViewport = new AccurateViewport();
 	private final Matrix4f contextProjectionMatrix = new Matrix4f();
 	private final IViewTransformer contextViewTransformer;
 
-	private final Map<String, ISegmentRenderer> segmentRendererMap = new HashMap<>();
-	private final Map<String, IRenderer> managedRendererMap = new HashMap<>();
+	private final Map<String, ISingleRenderer> rendererMap = new HashMap<>();
 
 	private final List<IViewTransformer> viewTransformerList = new ArrayList<>();
 	
 	
 	private boolean hasSurface = false;
-	private boolean hasView = false;
+	private boolean surfaceIsValid = false;
 	
 	private ISurface currentSurface;
-	
-	
+
+
+	private final IRenderOrder renderOrder;
+	private final RenderRunner renderRunner;
+
+	private final StrategyRenderCall strategyRenderCall;
+
+	private final IRenderContextManager renderContextManager;
 	private final ITextureCoordinator textureCoordinator;
-	private final IRenderingStrategy mStrategy;
-	private final IGameState mGamestate;
+	private final IRenderingStrategy renderingStrategy;
+	private final IGameState gamestate;
 	
 	public ModularGameStateRenderer(IRenderingStrategy strategy, IGameState gamestate) {
-		this.mStrategy = strategy;
-		this.mGamestate = gamestate;
+		this.renderingStrategy = strategy;
+		this.gamestate = gamestate;
 
+		this.renderContextManager = new RenderContextManager();
 		this.contextViewTransformer = new DefaultViewTransformer();
 		this.textureCoordinator = new DefaultTextureCoordinator(gamestate.getGame().getContentManager().getTextureManager());
 
-		IRenderOrder renderOrder = gamestate.getRenderOrder();
-		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(CALLBACK_RENDER, this);
+		this.renderOrder = new RenderOrder();
+		this.renderRunner = new RenderRunner(renderOrder);
+		
+		this.strategyRenderCall = new StrategyRenderCall();
+		renderOrder.getStackForLayer(IRenderOrder.LAYER_BOTTOM).addCallbackAt(STRATEGY_RENDER_CALL_POSITION, strategyRenderCall);
 	}
 	
 	
-	
 	@Override
-	public void addSegmentRenderer(String name, ISegmentRenderer renderer) {
-		segmentRendererMap.put(name, renderer);
+	public void addRenderer(String name, ISingleRenderer renderer) {
+		rendererMap.put(name, renderer);
 		
 		if(hasSurface) {
 			renderer.contextCreated();
 			
-			if(hasView) {
-				IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), getCurrentCamera(), name);
+			if(surfaceIsValid) {
+				IViewTransformer rendererViewTransformer = renderingStrategy.createViewTransformerForRenderer(this, currentSurface.getViewport(), getCurrentCamera(), name);
 				
 				renderer.contextChanged(rendererViewTransformer, currentSurface.getProjectionMatrix());
 			}
@@ -74,50 +89,40 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 	}
 	
 	@Override
-	public ISegmentRenderer getSegmentRenderer(String name) {
-		return segmentRendererMap.get(name);
+	public ISingleRenderer getRenderer(String name) {
+		return rendererMap.get(name);
 	}
 	
 	@Override
-	public boolean hasSegmentRenderer(String name) {
-		return segmentRendererMap.containsKey(name);
+	public boolean hasRenderer(String name) {
+		return rendererMap.containsKey(name);
 	}
 	
 	@Override
-	public void removeSegmentRenderer(String name) {
-		segmentRendererMap.remove(name);
-	}
-	
-	
-	@Override
-	public Map<String, ISegmentRenderer> getRenderers() {	// Return immutable map ?
-		return segmentRendererMap;
+	public void removeRenderer(String name) {
+		rendererMap.remove(name);
 	}
 	
 	
 	@Override
-	public IGameState getGamestate() {
-		return mGamestate;
+	public Map<String, ISingleRenderer> getRenderers() { // Return immutable map ?
+		return rendererMap;
 	}
 	
 	
-	
 	@Override
-	public void renderCall(String layerName, double stackPosition) {
-		if(!hasView) {
-			return;
-		}
-		
-		//if(stackPosition == CALLBACK_RENDER)
-		
-		mStrategy.prepareFrame(this);
-		mStrategy.renderFrame(this);
-		//mStrategy.renderCall(this, layerName, stackPosition);
+	public IRenderCall getRenderCall(String contentName, INamedOptions renderOptions) {
+		return () -> {
+			ISingleRenderer renderer = rendererMap.get(contentName);
+			if(renderer != null) {
+				renderer.renderContents(renderOptions);
+			}
+		};
 	}
 	
 	@Override
-	public String getDescription() {
-		return mStrategy.getDescription();
+	public void renderState() {
+		renderRunner.run();
 	}
 	
 	
@@ -133,6 +138,11 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 	@Override
 	public ICamera getCurrentCamera() {
 		return getViewTransformer().getCurrentCamera();
+	}
+	
+	@Override
+	public IRenderOrder getRenderOrder() {
+		return renderOrder;
 	}
 	
 	@Override
@@ -155,56 +165,28 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 		return textureCoordinator;
 	}
 
-
 	@Override
-	public void addManagedRenderer(String name, IRenderer renderer) {
-		managedRendererMap.put(name, renderer);
-		
-		if(hasSurface) {
-			renderer.contextCreated();
-			
-			if(hasView) {
-				renderer.contextChanged(contextViewTransformer, contextProjectionMatrix);
-			}
-		}
+	public IRenderContextManager getContextManager() {
+		return renderContextManager;
 	}
 
 	@Override
-	public IRenderer getManagedRenderer(String name) {
-		return managedRendererMap.get(name);
+	public ISurfaceManager.ISurfaceCallback getSurfaceCallback() {
+		return this;
 	}
 
-	@Override
-	public IRenderer removeManagedRenderer(String name) {
-		IRenderer renderer = managedRendererMap.get(name);
-		if(renderer != null && hasSurface) {
-			renderer.contextDestroyed();
-		}
-		
-		return managedRendererMap.remove(name);
-	}
 
-	@Override
-	public boolean hasManagedRenderer(String name) {
-		return managedRendererMap.containsKey(name);
-	}
-	
-	
-
-	// synchronize when iterating over renderers?
-	
 	@Override
 	public void surfaceCreated(ISurface surface) {
-		currentSurface = surface;
-		hasSurface = true;
+		this.surfaceIsValid = false;
+		this.currentSurface = surface;
+		this.hasSurface = true;
 		
-		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
-			segmentRenderer.contextCreated();
+		for(ISingleRenderer renderer: rendererMap.values()) {
+			renderer.contextCreated();
 		}
-		
-		for(IRenderer managedRenderer: managedRendererMap.values()) {
-			managedRenderer.contextCreated();
-		}
+
+		renderContextManager.contextCreated();
 	}
 
 	@Override
@@ -218,27 +200,24 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 
 		contextProjectionMatrix.set(surface.getProjectionMatrix());
 
-		// Really do this before renderer callbacks?
-		hasView = true;
 
-		
+		this.surfaceIsValid = true;
+
 		viewTransformerList.clear();
 		
-		for(String rendererName: segmentRendererMap.keySet()) {
+		for(String rendererName: rendererMap.keySet()) {
 			
-			ISegmentRenderer renderer = segmentRendererMap.get(rendererName);
+			ISingleRenderer renderer = rendererMap.get(rendererName);
 			
 			
-			IViewTransformer rendererViewTransformer = mStrategy.createViewTransformerForRenderer(ModularGameStateRenderer.this, masterViewport, getCurrentCamera(), rendererName);
+			IViewTransformer rendererViewTransformer = renderingStrategy.createViewTransformerForRenderer(ModularGameStateRenderer.this, masterViewport, getCurrentCamera(), rendererName);
 			viewTransformerList.add(rendererViewTransformer);
 			
 			renderer.contextChanged(rendererViewTransformer, contextProjectionMatrix);
 		}
-		
-		for(IRenderer managedRenderer: managedRendererMap.values()) {
-			managedRenderer.contextChanged(contextViewTransformer, contextProjectionMatrix);
-		}
-		
+
+		renderContextManager.contextChanged(contextViewTransformer, contextProjectionMatrix);
+
 
 		/* Implement camera adjust ?
 		 * 
@@ -256,16 +235,33 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer {
 
 	@Override
 	public void surfaceDestroyed(ISurface surface) {
-		currentSurface = null;
-		hasSurface = false;
-		hasView = false;
+		this.currentSurface = null;
+		this.hasSurface = false;
+		this.surfaceIsValid = false;
 		
-		for(ISegmentRenderer segmentRenderer: segmentRendererMap.values()) {
-			segmentRenderer.contextDestroyed();
+		for(ISingleRenderer renderer: rendererMap.values()) {
+			renderer.contextDestroyed();
+		}
+
+		renderContextManager.contextDestroyed();
+	}
+
+	
+	
+	private class StrategyRenderCall implements IRenderCall {
+
+		@Override
+		public void render() {
+			if(!surfaceIsValid) {
+				return;
+			}
+			
+			renderingStrategy.renderContents(ModularGameStateRenderer.this);
 		}
 		
-		for(IRenderer managedRenderer: managedRendererMap.values()) {
-			managedRenderer.contextDestroyed();
+		@Override
+		public String getDescription() {
+			return STRATEGY_RENDER_CALL_DESCRIPTION;
 		}
 	}
 	

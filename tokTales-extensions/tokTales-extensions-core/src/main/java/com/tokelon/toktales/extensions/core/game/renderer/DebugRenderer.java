@@ -150,22 +150,10 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 		
 		gridTransformer = null;
 	}
-	
-	
-	@Override
-	public void prepare(long currentTimeMillis) {
-		// if !view
-		charRenderer.setFont(getFont());
-		charRenderer.setSize(fontSize, fontSize);
-	}
 
+	
 	@Override
-	public void drawLayer(INamedOptions options, String layerName) {
-		assert false : "Not supported";
-	}
-
-	@Override
-	public void drawFull(INamedOptions options) {
+	public void renderContents(INamedOptions renderOptions) {
 		IPlayerController playerController = playerControllerSupplier.get();
 		IWorldspace worldspace = worlspaceSupplier.get();
 
@@ -180,6 +168,10 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 			assert false : "Cannot draw without view";
 			return;
 		}
+
+		charRenderer.setFont(getFont());
+		charRenderer.setSize(fontSize, fontSize);
+
 		
 		drawGrid();
 		drawCameraOrigin();
@@ -256,14 +248,14 @@ public class DebugRenderer extends AbstractRenderer implements IDebugRenderer {
 	private void drawText(String text, float posx, float posy, float fontSize, float charDistance) {
 		float x = posx, y = posy;
 		charRenderer.setColor(frameInfoColor);
-		charRenderer.startBatchDraw();
+		charRenderer.startBatch();
 		for(char c: text.toCharArray()) {
 			charRenderer.setPosition(x, y);
 			charRenderer.drawChar(c);
 			
 			x += fontSize + charDistance;
 		}
-		charRenderer.finishBatchDraw();
+		charRenderer.finishBatch();
 	}
 	
 	

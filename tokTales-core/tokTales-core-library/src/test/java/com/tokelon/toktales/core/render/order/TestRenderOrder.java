@@ -1,13 +1,10 @@
 package com.tokelon.toktales.core.render.order;
 
+import com.tokelon.toktales.core.render.IMultiRenderCall;
+import com.tokelon.toktales.core.render.IRenderCall;
+
 import java.util.Collection;
 import java.util.Iterator;
-
-import com.tokelon.toktales.core.render.order.IRenderCallback;
-import com.tokelon.toktales.core.render.order.IRenderLayerStack;
-import com.tokelon.toktales.core.render.order.IRenderOrder;
-import com.tokelon.toktales.core.render.order.RenderOrder;
-import com.tokelon.toktales.core.render.order.RenderRunner;
 
 public class TestRenderOrder {
 
@@ -97,13 +94,17 @@ public class TestRenderOrder {
 
 
 				synchronized(stack) {
-					Iterator<IRenderCallback> renderCallbackIterator = stack.getCallbacks().iterator();
+					Iterator<IRenderCall> renderCallbackIterator = stack.getCallbacks().iterator();
 					Iterator<Double> positionIterator = stack.getPositions().iterator();
 					while(renderCallbackIterator.hasNext()) {
-						IRenderCallback callback = renderCallbackIterator.next();
+						IRenderCall callback = renderCallbackIterator.next();
 						double position = positionIterator.next();
 
-						callback.renderCall(layerName, position);
+						if(callback instanceof IMultiRenderCall) {
+							((IMultiRenderCall) callback).updatePosition(layerName, position);
+						}
+
+						callback.render();
 					}
 				}
 
@@ -122,7 +123,7 @@ public class TestRenderOrder {
 	}
 	
 	
-	private static class TestRenderCallback implements IRenderCallback {
+	private static class TestRenderCallback implements IMultiRenderCall {
 		
 		private final String description;
 		
@@ -130,10 +131,15 @@ public class TestRenderOrder {
 			this.description = description;
 		}
 
-		
+
 		@Override
-		public void renderCall(String layerName, double stackPosition) {
-			System.out.println(String.format("Callback for layer: %s with position: %s", layerName, stackPosition));
+		public void updatePosition(String layer, double position) {
+			System.out.println(String.format("Update position: %s with position: %s", layer, position));
+		}
+
+		@Override
+		public void render() {
+			System.out.println("Render call");
 		}
 
 		@Override
