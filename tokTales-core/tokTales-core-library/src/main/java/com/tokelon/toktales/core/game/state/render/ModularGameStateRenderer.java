@@ -114,7 +114,6 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 		return () -> {
 			ISingleRenderer renderer = rendererMap.get(renderName);
 			if(renderer != null) {
-				//renderer.prepare(gamestate.getGame().getTimeManager().getGameTimeMillis());
 				renderer.renderContents();
 			}
 		};
@@ -176,8 +175,6 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 	}
 
 
-	// synchronize when iterating over renderers?
-	
 	@Override
 	public void surfaceCreated(ISurface surface) {
 		this.surfaceIsValid = false;
@@ -258,11 +255,7 @@ public class ModularGameStateRenderer implements IModularGameStateRenderer, ISur
 				return;
 			}
 			
-			//if(stackPosition == CALLBACK_RENDER)
-			
-			renderingStrategy.prepareFrame(ModularGameStateRenderer.this);
-			renderingStrategy.renderFrame(ModularGameStateRenderer.this);
-			//mStrategy.renderCall(this, layerName, stackPosition);			
+			renderingStrategy.renderContents(ModularGameStateRenderer.this);
 		}
 		
 		@Override
