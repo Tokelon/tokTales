@@ -183,13 +183,12 @@ subprojects { -> project
 		generateMetadataFileForMavenPublication.enabled = false
 
 		artifactory {
-			contextUrl = "http://oss.jfrog.org"
+			contextUrl = "https://oss.jfrog.org/artifactory"
 			publish {
 				repository {
 					repoKey = 'oss-snapshot-local'
 					username = project.findProperty('bintray.user')
 					password = project.findProperty('bintray.key')
-					maven = true
 				}
 				defaults {
 					publications('maven')
@@ -199,13 +198,6 @@ subprojects { -> project
 					publishPom = true
 				}
 			}
-			resolve {
-				repository {
-					repoKey = 'jcenter'
-				}
-			}
-
-			clientConfig.info.setBuildNumber(project.findProperty('artifactory.buildNumber') ?: clientConfig.info.getBuildNumber())
 		}
 	}
 
@@ -295,13 +287,12 @@ subprojects { -> project
 			generateMetadataFileForMavenPublication.enabled = false
 
 			artifactory {
-				contextUrl = "http://oss.jfrog.org"
+				contextUrl = "https://oss.jfrog.org/artifactory"
 				publish {
 					repository {
 						repoKey = 'oss-snapshot-local'
 						username = project.findProperty('bintray.user')
 						password = project.findProperty('bintray.key')
-						maven = true
 					}
 					defaults {
 						publications('maven')
@@ -311,13 +302,6 @@ subprojects { -> project
 						publishPom = true
 					}
 				}
-				resolve {
-					repository {
-						repoKey = 'jcenter'
-					}
-				}
-
-				clientConfig.info.setBuildNumber(project.findProperty('artifactory.buildNumber') ?: clientConfig.info.getBuildNumber())
 			}
 		}
 	}
