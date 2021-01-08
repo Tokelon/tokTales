@@ -179,6 +179,9 @@ subprojects { -> project
 			}
 		}
 
+		// Disable Gradle metadata file (.module) creation because we cannot load LWJGL native-libs when used
+		generateMetadataFileForMavenPublication.enabled = false
+
 		artifactory {
 			contextUrl = "http://oss.jfrog.org"
 			publish {
@@ -287,6 +290,9 @@ subprojects { -> project
 					}
 				}
 			}
+
+			// Disable Gradle metadata file (.module) creation because we cannot load LWJGL native-libs when used
+			generateMetadataFileForMavenPublication.enabled = false
 
 			artifactory {
 				contextUrl = "http://oss.jfrog.org"
