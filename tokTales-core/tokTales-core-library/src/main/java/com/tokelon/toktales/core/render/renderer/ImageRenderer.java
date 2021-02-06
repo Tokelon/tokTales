@@ -91,8 +91,11 @@ public class ImageRenderer extends AbstractRenderer implements IImageRenderer {
 				getViewTransformer().cameraToScreenY(maxY - minY)
 		);
 
-		model.setTranslation2D(minX, minY);
-		
+		model.setTranslation2D(
+				getViewTransformer().cameraToScreenX(minX),
+				getViewTransformer().cameraToScreenY(minY)
+		);
+
 		model.setTargetTexture(renderTexture);
 		
 		if(isInBatchDraw) {
