@@ -20,6 +20,8 @@ import com.tokelon.toktales.core.content.manage.resources.ResourceAssetReader;
 import com.tokelon.toktales.core.content.manage.resources.ResourceScannerAssetReader;
 import com.tokelon.toktales.core.engine.inject.AbstractInjectModule;
 import com.tokelon.toktales.core.engine.inject.annotation.UserDir;
+import com.tokelon.toktales.core.location.ApplicationLocation;
+import com.tokelon.toktales.core.location.IApplicationLocation;
 import com.tokelon.toktales.tools.assets.annotation.AssetReaders;
 import com.tokelon.toktales.tools.assets.annotation.ParentIdentifiers;
 import com.tokelon.toktales.tools.assets.annotation.ParentResolvers;
@@ -43,28 +45,34 @@ public class AssetReadersInjectModule extends AbstractInjectModule {
 		configureAssetReaders();
 		configureAssetReadersBinder();
 	}
-	
-	
+
+
 	protected void configureParentIdentifiersBinder() {
 		MapBinder<Object, File> fileParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, File.class, ParentIdentifiers.class);
 		fileParentIdentifierBinder.addBinding(UserDir.class).toInstance(new File("."));
+
+		MapBinder<Object, IApplicationLocation> applicationLocationParentIdentifierBinder = MapBinder.newMapBinder(binder(), Object.class, IApplicationLocation.class, ParentIdentifiers.class);
+		applicationLocationParentIdentifierBinder.addBinding(UserDir.class).toInstance(new ApplicationLocation("."));
 	}
-	
+
 	protected void configureParentResolversBinder() {
 		Multibinder<IParentResolver<File>> fileParentResolverBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<File>>() {}, ParentResolvers.class);
 		fileParentResolverBinder.addBinding().to(FileParentResolver.class);
+
+		Multibinder<IParentResolver<IApplicationLocation>> applicationLocationParentResolverBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<IParentResolver<IApplicationLocation>>() {}, ParentResolvers.class);
+		applicationLocationParentResolverBinder.addBinding().to(ApplicationLocationParentResolver.class);
 	}
-	
+
 	protected void configureAssetReaders() {
 		bind(IFileAssetReader.class).to(FileAssetReader.class);
 		bind(IRelativeFileAssetReader.class).to(RelativeFileAssetReader.class);
 		bind(IResourceAssetReader.class).to(ResourceAssetReader.class);
 		bind(IResourceScannerAssetReader.class).to(ResourceScannerAssetReader.class);
 		bind(IContentAssetReader.class).to(ContentAssetReader.class);
-		
+
 		bind(IEmbeddedAssetReader.class).to(EmbeddedAssetReader.class);
 	}
-	
+
 	protected void configureAssetReadersBinder() {
 		MapBinder<Type, IManagedAssetReader> assetReaderBinder = MapBinder.newMapBinder(binder(), Type.class, IManagedAssetReader.class, AssetReaders.class);
 		assetReaderBinder.addBinding(IFileKey.class).to(IFileAssetReader.class);
@@ -72,8 +80,8 @@ public class AssetReadersInjectModule extends AbstractInjectModule {
 		assetReaderBinder.addBinding(IResourceKey.class).to(IResourceAssetReader.class);
 		assetReaderBinder.addBinding(IResourceScannerKey.class).to(IResourceScannerAssetReader.class);
 		assetReaderBinder.addBinding(IContentKey.class).to(IContentAssetReader.class);
-		
+
 		assetReaderBinder.addBinding(IEmbeddedAssetKey.class).to(IEmbeddedAssetReader.class);
 	}
-	
+
 }
