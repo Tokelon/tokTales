@@ -19,8 +19,8 @@ import com.tokelon.toktales.core.engine.log.ILogging;
 import com.tokelon.toktales.core.screen.view.IScreenViewport;
 import com.tokelon.toktales.tools.core.objects.pools.IObjectPool.IObjectPoolFactory;
 
-import androidx.core.view.MotionEventCompat;
 import android.view.MotionEvent;
+import androidx.core.view.MotionEventCompat;
 
 public class UIControl implements IUIControl {
 
@@ -137,61 +137,58 @@ public class UIControl implements IUIControl {
 		pointerControl.onTouch(event);
 		
 
+		boolean consumed = false;
 		
 		// Handling through UIOverlay
-		if(!mOverlayProvider.hasUIOverlay()) {
-			return true;
-		}
-		IUIOverlay overlay = mOverlayProvider.getUIOverlay();
-
-		
-		
-		int actionMasked = MotionEventCompat.getActionMasked(event);
-		
-		int pointerCount = event.getPointerCount();
-		boolean multiPtrs = pointerCount > 1;
-		
-		boolean consumed = false;
-		if(multiPtrs && actionMasked == MotionEvent.ACTION_MOVE) {
-			// Call all call controls one single time
-
-			// Call cross control
-			callControlCross.onTouchMultiMove(overlay, event);
-			
-			// Call button control
-			callControlButtons.onTouchMultiMove(overlay, event);
+		if(mOverlayProvider.hasUIOverlay()) {
+			IUIOverlay overlay = mOverlayProvider.getUIOverlay();
 
 			
-			// Always return true here ?
-			// What happens if false is returned ?
-		}
-		else {
-			
-			int pointerIndex = MotionEventCompat.getActionIndex(event);		//event.getActionIndex();
-			int pointerId = MotionEventCompat.getPointerId(event, pointerIndex);	//event.getPointerId(pointerIndex);
+			int actionMasked = MotionEventCompat.getActionMasked(event);
 
-			int screenx = (int) MotionEventCompat.getX(event, pointerIndex);
-			int screeny = (int) MotionEventCompat.getY(event, pointerIndex);
-			
-			if(uiViewport != null) {
-				// This is not synchronized with the viewport setter
-				// So it could cause a nullpointerexception or something else
+			int pointerCount = event.getPointerCount();
+			boolean multiPtrs = pointerCount > 1;
+			if(multiPtrs && actionMasked == MotionEvent.ACTION_MOVE) {
+				// Call all call controls one single time
+
+				// Call cross control
+				callControlCross.onTouchMultiMove(overlay, event);
+
+				// Call button control
+				callControlButtons.onTouchMultiMove(overlay, event);
+
 				
-				screenx = (int) uiViewport.transformX(screenx);
-				screeny = (int) uiViewport.transformY(screeny);
+				// Always return true here ?
+				// What happens if false is returned ?
 			}
-			
-			
-			// Call cross control
-			consumed = callControlCross.onTouch(overlay, multiPtrs, actionMasked, pointerId, screenx, screeny);
-			
-			// Call button control
-			if(!consumed) {
-				consumed = callControlButtons.onTouch(overlay, multiPtrs, actionMasked, pointerId, screenx, screeny);
+			else {
+
+				int pointerIndex = MotionEventCompat.getActionIndex(event); //event.getActionIndex();
+				int pointerId = MotionEventCompat.getPointerId(event, pointerIndex); //event.getPointerId(pointerIndex);
+
+				int screenx = (int) MotionEventCompat.getX(event, pointerIndex);
+				int screeny = (int) MotionEventCompat.getY(event, pointerIndex);
+
+				if(uiViewport != null) {
+					// This is not synchronized with the viewport setter
+					// So it could cause a nullpointerexception or something else
+
+					screenx = (int) uiViewport.transformX(screenx);
+					screeny = (int) uiViewport.transformY(screeny);
+				}
+
+
+				// Call cross control
+				consumed = callControlCross.onTouch(overlay, multiPtrs, actionMasked, pointerId, screenx, screeny);
+
+				// Call button control
+				if(!consumed) {
+					consumed = callControlButtons.onTouch(overlay, multiPtrs, actionMasked, pointerId, screenx, screeny);
+				}
 			}
-			
 		}
 		
+
 		// Event was handled by one of the controls
 		if(consumed) {
 			return true;
