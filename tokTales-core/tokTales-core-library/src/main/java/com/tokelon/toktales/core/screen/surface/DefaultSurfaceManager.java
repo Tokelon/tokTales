@@ -68,7 +68,9 @@ public class DefaultSurfaceManager implements ISurfaceManager {
 	
 	@Override
 	public void addCallback(ISurfaceCallback callback) {
-		callbackSet.add(callback);
+		if(!callbackSet.add(callback)) {
+			return; // Skip triggering if already registered
+		}
 		
 		synchronized (surfaceMap) {
 			for(Entry<ISurface, SurfaceData> entry: surfaceMap.entrySet()) {
