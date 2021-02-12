@@ -463,8 +463,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 
 	@Override
 	public void onEngage() {
-		getEngine().getRenderService().getSurfaceManager().addCallback(currentSurfaceCallback = new StateSurfaceCallback());
-		
 		
 		getIntegrator().onEngage();
 	}
@@ -472,6 +470,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	@Override
 	public void onEnter() {
+		getEngine().getRenderService().getSurfaceManager().addCallback(currentSurfaceCallback = new StateSurfaceCallback());
 		
 		getIntegrator().onEnter();
 	}
@@ -494,6 +493,7 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	@Override
 	public void onExit() {
+		getEngine().getRenderService().getSurfaceManager().removeCallback(currentSurfaceCallback);
 		
 		getIntegrator().onExit();
 	}
@@ -501,8 +501,6 @@ public class BaseGamestate<T extends IGameScene> implements ITypedGameState<T> {
 	
 	@Override
 	public void onDisengage() {
-		getEngine().getRenderService().getSurfaceManager().removeCallback(currentSurfaceCallback);
-		
 		
 		getIntegrator().onDisengage();
 	}
