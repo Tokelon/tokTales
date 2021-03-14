@@ -170,6 +170,10 @@ public class BaseEngineLauncher implements IEngineLauncher {
 		try {
 			loop(engineContext, getDefaultLooper());
 		}
+		catch(RuntimeException re) {
+			logger.error("Exception in engine loop", re);
+			throw re;
+		}
 		finally {
 			shutdownEngine(engineContext);
 			tearDownEngine(setup, engineContext);
